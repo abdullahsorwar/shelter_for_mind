@@ -68,20 +68,37 @@
                         <Insets top="0" right="20" bottom="0" left="20" />
                     </padding>
                     <Region VBox.vgrow="ALWAYS" />
-                    <Label text="ID" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
+                    <Label text="Soul_ID" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
                         style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
-                    <TextField fx:id="tfLoginId" promptText="Unique alphabetical id"
+                    <TextField fx:id="tfLoginId"
                         prefWidth="240" maxWidth="240" />
                     <Label fx:id="errLoginId" wrapText="true" alignment="TOP_LEFT"
                         prefWidth="240" maxWidth="240"
                         style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
-                    <Label text="Key" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
+                    <!-- Key -->
+                    <Label text="Soul_Key" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
                         style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
+
+                    <!-- password field (default visible) -->
                     <PasswordField fx:id="pfLoginKey" promptText="A-Z, a-z, 0-9, _ only"
                         prefWidth="240" maxWidth="240" />
+
+                    <!-- plain text mirror (hidden until 'Show' is checked) -->
+                    <TextField fx:id="tfLoginKeyVisible" promptText="A-Z, a-z, 0-9, _ only"
+                        prefWidth="240" maxWidth="240"
+                        visible="false" managed="false" />
+
+                    <!-- 'Show' checkbox (right aligned) -->
+                    <HBox alignment="CENTER_RIGHT" prefWidth="240" maxWidth="240">
+                        <CheckBox fx:id="cbShowLoginKey" text="Show"
+                            style="-fx-font-size: 10px; -fx-text-fill: #555;" />
+                    </HBox>
+
+                    <!-- error stays below -->
                     <Label fx:id="errLoginKey" wrapText="true" alignment="TOP_LEFT"
                         prefWidth="240" maxWidth="240"
                         style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
+
                     <HBox alignment="CENTER" prefWidth="240" maxWidth="240">
                         <Button fx:id="btnLoginSubmit" text="log in" prefWidth="200" />
                     </HBox>
@@ -128,15 +145,33 @@
                         prefWidth="240" maxWidth="240"
                         style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
 
+                    <!-- Soul_Key -->
                     <Label text="Soul_Key" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
                         style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
+
+                    <!-- password field (default visible) -->
                     <PasswordField fx:id="pfSoulKey" promptText="A-Z, a-z, 0-9, _ only"
                         prefWidth="240" maxWidth="240" />
+
+                    <!-- plain text mirror (hidden until 'Show' is checked) -->
+                    <TextField fx:id="tfSoulKeyVisible" promptText="A-Z, a-z, 0-9, _ only"
+                        prefWidth="240" maxWidth="240"
+                        visible="false" managed="false" />
+
+                    <!-- 'Show' checkbox (right aligned) -->
+                    <HBox alignment="CENTER_RIGHT" prefWidth="240" maxWidth="240">
+                        <CheckBox fx:id="cbShowSignupKey" text="Show"
+                            style="-fx-font-size: 10px; -fx-text-fill: #555;" />
+                    </HBox>
+
+                    <!-- error stays below -->
                     <Label fx:id="errSoulKey" wrapText="true" alignment="TOP_LEFT"
                         prefWidth="240" maxWidth="240"
                         style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
 
-                    <Label text="Phone" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
+
+                    <Label text="Phone Number" alignment="BASELINE_LEFT" prefWidth="240"
+                        maxWidth="240"
                         style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
                     <HBox alignment="CENTER_LEFT" spacing="8" prefWidth="240" maxWidth="240">
                         <ComboBox fx:id="cbCountryCode" prefWidth="110" maxWidth="110">

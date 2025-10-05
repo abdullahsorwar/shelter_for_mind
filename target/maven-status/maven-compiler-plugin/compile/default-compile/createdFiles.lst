@@ -1,5 +1,9 @@
 com\the_pathfinders\App.class
-com\the_pathfinders\PrimaryController.class
-module-info.class
+com\the_pathfinders\db\SoulRepository$DuplicateIdException.class
+com\the_pathfinders\db\DB.class
 com\the_pathfinders\LoginSignupController.class
-com\the_pathfinders\SecondaryController.class
+com\the_pathfinders\LoginSignupController$UGeom.class
+com\the_pathfinders\db\SoulRepository.class
+com\the_pathfinders\db\SoulRepository$Soul.class
+com\the_pathfinders\db\DbMigrations.class
+com\the_pathfinders\LoginSignupController$1.class

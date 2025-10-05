@@ -1,37 +1,45 @@
 package com.the_pathfinders;
 
+import com.the_pathfinders.db.DB;
+import com.the_pathfinders.db.DbMigrations;
+import com.the_pathfinders.db.SoulRepository;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
-/**
- * JavaFX App
- */
 public class App extends Application {
-    private static Scene scene;
+
     @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("login_signup"), 800, 480);
-        scene.setFill(javafx.scene.paint.Color.WHITE);
+    public void start(Stage stage) throws Exception {
+        // --- Initialize Neon connection (your exact JDBC URL) ---
+        final String JDBC_URL =
+            "jdbc:postgresql://ep-bold-rice-a1c5g7lk-pooler.ap-southeast-1.aws.neon.tech/neondb"
+          + "?user=neondb_owner&password=npg_Qg23VZhTbANS&sslmode=require&channelBinding=require";
+
+        DB.init(JDBC_URL);
+        DbMigrations.runAll(); // create table if missing
+
+        // --- Load UI ---
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login_signup.fxml"));
+        Parent root = loader.load();
+
+        // Give controller a repository (DB-backed)
+        LoginSignupController controller = loader.getController();
+        controller.setRepository(new SoulRepository());
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Shelter of Mind");
         stage.setMinWidth(800);
         stage.setMinHeight(480);
-    stage.setTitle("Shelter of Mind");
-    stage.setScene(scene);
-    stage.centerOnScreen();
-    stage.show();
+        stage.show();
+
+        stage.setOnCloseRequest(e -> DB.shutdown());
     }
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
+
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }
