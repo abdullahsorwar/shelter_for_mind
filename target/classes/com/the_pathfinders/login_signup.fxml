@@ -80,11 +80,11 @@
                         style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
 
                     <!-- password field (default visible) -->
-                    <PasswordField fx:id="pfLoginKey" promptText="A-Z, a-z, 0-9, _ only"
+                    <PasswordField fx:id="pfLoginKey"
                         prefWidth="240" maxWidth="240" />
 
                     <!-- plain text mirror (hidden until 'Show' is checked) -->
-                    <TextField fx:id="tfLoginKeyVisible" promptText="A-Z, a-z, 0-9, _ only"
+                    <TextField fx:id="tfLoginKeyVisible"
                         prefWidth="240" maxWidth="240"
                         visible="false" managed="false" />
 
