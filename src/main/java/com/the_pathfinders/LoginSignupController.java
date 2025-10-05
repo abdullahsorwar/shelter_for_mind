@@ -1,0 +1,374 @@
+package com.the_pathfinders;
+
+import javafx.animation.*;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
+import javafx.util.Duration;
+import javafx.util.StringConverter;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+public class LoginSignupController implements Initializable {
+
+    // Left header
+    @FXML private ImageView logoImage;
+    @FXML private Label titleLabel, subtitleLabel;
+
+    // Tabs / U-border
+    @FXML private VBox rightPane;
+    @FXML private Button signUpBtn, loginBtn;
+    @FXML private HBox   menuBar;
+    @FXML private Pane   menuBorder;
+    @FXML private Path   borderPath;
+
+    // Login
+    @FXML private VBox loginForm;
+    @FXML private TextField tfLoginId;
+    @FXML private PasswordField pfLoginKey;
+    @FXML private Label errLoginId, errLoginKey, lblLoginStatus;
+    @FXML private Button btnLoginSubmit;
+
+    // Signup
+    @FXML private VBox signupForm;
+    @FXML private TextField tfSoulName, tfSoulId, tfMobile;
+    @FXML private PasswordField pfSoulKey;
+    @FXML private DatePicker dpDob;
+    @FXML private ComboBox<String> cbCountryCode;
+    @FXML private Label errSoulName, errDob, errSoulId, errSoulKey, errMobile, lblSubmitStatus;
+    @FXML private Button btnSubmit;
+
+    // Subtitles
+    private final String[] subtitles = {
+        "A place for refreshing the soul",
+        "The ultimate home for your closest ones"
+    };
+    private int subtitleIndex = 0;
+
+    // Tab state
+    private boolean isLoginSelected = true;
+    private boolean wasLoginSelected = true;
+
+    // U-border geometry
+    private static final double ARC_RADIUS = 0.8;         // tiny curve
+    private static final double PADDING_X = 6;
+    private static final double PADDING_Y_TOP = 3;
+    private static final double PADDING_Y_BOTTOM = 3;
+    private static final double ANIM_MS = 360;
+
+    private MoveTo e0; private LineTo e1, e2, e4, e6, e7; private ArcTo e3, e5;
+
+    // In-memory store
+    private final Map<String, String> accounts = new HashMap<>();
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        loadLogo();
+        playIntroAnimation();
+        startSubtitleAlternation();
+
+        // tab actions
+        signUpBtn.setOnAction(e -> switchMenu(false));
+        loginBtn.setOnAction(e -> switchMenu(true));
+
+        // path setup
+        borderPath.setStroke(Color.web("#1f1f1f"));
+        borderPath.setStrokeWidth(1.25);
+        borderPath.setFill(Color.TRANSPARENT);
+        borderPath.setStrokeLineCap(StrokeLineCap.ROUND);
+        borderPath.setStrokeLineJoin(StrokeLineJoin.ROUND);
+        ensurePathElements();
+
+        // forms
+        configureDobAsDDMMYYYY(dpDob);
+        cbCountryCode.getItems().setAll("+1 (USA)", "+91 (IND)", "+880 (BAN)");
+        cbCountryCode.getSelectionModel().selectFirst();
+
+        btnSubmit.setOnAction(e -> onSubmitSignup());
+        btnLoginSubmit.setOnAction(e -> onSubmitLogin());
+
+        // Keep action buttons ~25% of rightPane width
+        rightPane.widthProperty().addListener((o, ov, nv) -> {
+            double w = nv.doubleValue() * 0.25;
+            btnSubmit.setPrefWidth(w);
+            btnLoginSubmit.setPrefWidth(w);
+        });
+
+        // Re-snap border any time layout could change
+        Runnable resnap = () -> snapBorderTo(isLoginSelected ? loginBtn : signUpBtn);
+        menuBar.layoutBoundsProperty().addListener((o, a, b) -> resnap.run());
+        menuBorder.widthProperty().addListener((o, a, b) -> resnap.run());
+        signUpBtn.widthProperty().addListener((o, a, b) -> resnap.run());
+        loginBtn.widthProperty().addListener((o, a, b) -> resnap.run());
+
+        // Re-snap after scene is set and at the end of first layout pass
+        Platform.runLater(() -> {
+            applyTabStyles(true);
+            setRightContentForCurrentTab();
+            resnap.run();
+            // one more tick after CSS
+            Platform.runLater(resnap);
+        });
+    }
+
+    /* ---------- Logo & intro ---------- */
+    private void loadLogo() {
+        try {
+            URL a = getClass().getResource("/com/the_pathfinders/logo.png");
+            URL b = getClass().getResource("/logo.png");
+            URL chosen = (a != null) ? a : b;
+            if (chosen != null) {
+                Image img = new Image(chosen.toExternalForm(), true);
+                logoImage.setImage(img);
+                logoImage.setPreserveRatio(true);
+                logoImage.setSmooth(true);
+                if (logoImage.getFitHeight() <= 0) logoImage.setFitHeight(48);
+            }
+        } catch (Exception ignore) {}
+    }
+
+    private void playIntroAnimation() {
+        logoImage.setOpacity(0);
+        logoImage.setScaleX(1.5); logoImage.setScaleY(1.5);
+        titleLabel.setOpacity(0); titleLabel.setScaleX(1.5); titleLabel.setScaleY(1.5);
+        subtitleLabel.setOpacity(0); subtitleLabel.setScaleX(1.5); subtitleLabel.setScaleY(1.5);
+
+        FadeTransition fadeLogo = new FadeTransition(Duration.seconds(1.2), logoImage);
+        fadeLogo.setFromValue(0.0); fadeLogo.setToValue(1.0);
+        ScaleTransition scaleLogo = new ScaleTransition(Duration.seconds(1.2), logoImage);
+        scaleLogo.setFromX(1.5); scaleLogo.setFromY(1.5); scaleLogo.setToX(1.0); scaleLogo.setToY(1.0);
+
+        FadeTransition fadeTitle = new FadeTransition(Duration.seconds(1.2), titleLabel);
+        fadeTitle.setFromValue(0.0); fadeTitle.setToValue(1.0);
+        ScaleTransition scaleTitle = new ScaleTransition(Duration.seconds(1.2), titleLabel);
+        scaleTitle.setFromX(1.5); scaleTitle.setFromY(1.5); scaleTitle.setToX(1.0); scaleTitle.setToY(1.0);
+
+        FadeTransition fadeSubtitle = new FadeTransition(Duration.seconds(1.2), subtitleLabel);
+        fadeSubtitle.setFromValue(0.0); fadeSubtitle.setToValue(1.0);
+        ScaleTransition scaleSubtitle = new ScaleTransition(Duration.seconds(1.2), subtitleLabel);
+        scaleSubtitle.setFromX(1.5); scaleSubtitle.setFromY(1.5); scaleSubtitle.setToX(1.0); scaleSubtitle.setToY(1.0);
+
+        new ParallelTransition(fadeLogo, scaleLogo, fadeTitle, scaleTitle, fadeSubtitle, scaleSubtitle).play();
+    }
+
+    // cross-fade subtitles (no translate → no layout shift)
+    private void startSubtitleAlternation() {
+        Timeline t = new Timeline(new KeyFrame(Duration.seconds(3), e -> switchSubtitle()));
+        t.setCycleCount(Animation.INDEFINITE);
+        t.play();
+    }
+    private void switchSubtitle() {
+        FadeTransition outF = new FadeTransition(Duration.millis(220), subtitleLabel);
+        outF.setToValue(0.0);
+        outF.setOnFinished(ev -> {
+            subtitleLabel.setText(nextSubtitle());
+            FadeTransition inF = new FadeTransition(Duration.millis(220), subtitleLabel);
+            inF.setToValue(1.0);
+            inF.play();
+        });
+        outF.play();
+    }
+    private String nextSubtitle() {
+        subtitleIndex = (subtitleIndex + 1) % subtitles.length;
+        return subtitles[subtitleIndex];
+    }
+
+    /* ---------- U-border ---------- */
+    private void ensurePathElements() {
+        if (borderPath.getElements().size() == 8) {
+            e0 = (MoveTo) borderPath.getElements().get(0);
+            e1 = (LineTo) borderPath.getElements().get(1);
+            e2 = (LineTo) borderPath.getElements().get(2);
+            e3 = (ArcTo)  borderPath.getElements().get(3);
+            e4 = (LineTo) borderPath.getElements().get(4);
+            e5 = (ArcTo)  borderPath.getElements().get(5);
+            e6 = (LineTo) borderPath.getElements().get(6);
+            e7 = (LineTo) borderPath.getElements().get(7);
+        } else {
+            e0 = new MoveTo();
+            e1 = new LineTo(); e2 = new LineTo();
+            e3 = new ArcTo(ARC_RADIUS, ARC_RADIUS, 0, 0, 0, false, true);
+            e4 = new LineTo();
+            e5 = new ArcTo(ARC_RADIUS, ARC_RADIUS, 0, 0, 0, false, true);
+            e6 = new LineTo(); e7 = new LineTo();
+            borderPath.getElements().setAll(e0, e1, e2, e3, e4, e5, e6, e7);
+        }
+    }
+
+    private static class UGeom {
+        final double leftX, rightX, topY, bottomY, leftEdge, rightEdge, r;
+        UGeom(double leftX, double rightX, double topY, double bottomY,
+              double leftEdge, double rightEdge, double r) {
+            this.leftX = leftX; this.rightX = rightX; this.topY = topY; this.bottomY = bottomY;
+            this.leftEdge = leftEdge; this.rightEdge = rightEdge; this.r = r;
+        }
+    }
+
+    /** Coordinates in menuBorder local space (works across resizes). */
+    private UGeom computeGeometryFor(Button target) {
+        Bounds sceneB = target.localToScene(target.getBoundsInLocal());
+        Bounds b = menuBorder.sceneToLocal(sceneB);
+
+        double leftX   = b.getMinX() - PADDING_X;
+        double rightX  = b.getMaxX() + PADDING_X;
+        double topY    = b.getMinY() - PADDING_Y_TOP;
+        double bottomY = b.getMaxY() + PADDING_Y_BOTTOM;
+
+        double leftEdge  = 0;
+        double rightEdge = menuBorder.getWidth();
+
+        return new UGeom(leftX, rightX, topY, bottomY, leftEdge, rightEdge, ARC_RADIUS);
+    }
+
+    private void applyToElements(UGeom g) {
+        double r = g.r;
+        e0.setX(g.leftEdge);  e0.setY(g.bottomY);
+        e1.setX(g.leftX);     e1.setY(g.bottomY);
+        e2.setX(g.leftX);     e2.setY(g.topY + r);
+        e3.setRadiusX(r); e3.setRadiusY(r); e3.setX(g.leftX + r); e3.setY(g.topY);
+        e4.setX(g.rightX - r); e4.setY(g.topY);
+        e5.setRadiusX(r); e5.setRadiusY(r); e5.setX(g.rightX); e5.setY(g.topY + r);
+        e6.setX(g.rightX); e6.setY(g.bottomY);
+        e7.setX(g.rightEdge); e7.setY(g.bottomY);
+    }
+
+    private void snapBorderTo(Button target) { applyToElements(computeGeometryFor(target)); }
+
+    private void animateBorder(boolean fromLogin, boolean toLogin) {
+        UGeom g = computeGeometryFor(toLogin ? loginBtn : signUpBtn);
+
+        boolean movingLeft  = fromLogin && !toLogin;  // login → sign
+        boolean movingRight = !fromLogin &&  toLogin; // sign  → login
+
+        Duration tLead = Duration.millis(ANIM_MS * 0.6);
+        Duration tFollow = Duration.millis(ANIM_MS);
+        Interpolator LEAD = Interpolator.SPLINE(0.2, 0.9, 0.2, 1.0);
+        Interpolator LAG  = Interpolator.SPLINE(0.3, 0.0, 0.2, 1.0);
+
+        Timeline tl = new Timeline(
+            new KeyFrame(tFollow, new KeyValue(e0.yProperty(), g.bottomY, LAG)),
+            new KeyFrame(tFollow, new KeyValue(e1.yProperty(), g.bottomY, LAG)),
+            new KeyFrame(tFollow, new KeyValue(e2.yProperty(), g.topY + g.r, LAG)),
+            new KeyFrame(tFollow, new KeyValue(e3.yProperty(), g.topY, LAG)),
+            new KeyFrame(tFollow, new KeyValue(e4.yProperty(), g.topY, LAG)),
+            new KeyFrame(tFollow, new KeyValue(e5.yProperty(), g.topY + g.r, LAG)),
+            new KeyFrame(tFollow, new KeyValue(e6.yProperty(), g.bottomY, LAG)),
+            new KeyFrame(tFollow, new KeyValue(e7.yProperty(), g.bottomY, LAG))
+        );
+
+        if (movingLeft) {
+            tl.getKeyFrames().addAll(
+                new KeyFrame(tLead,   new KeyValue(e1.xProperty(), g.leftX,       LEAD)),
+                new KeyFrame(tLead,   new KeyValue(e2.xProperty(), g.leftX,       LEAD)),
+                new KeyFrame(tLead,   new KeyValue(e3.xProperty(), g.leftX + g.r, LEAD)),
+                new KeyFrame(tFollow, new KeyValue(e4.xProperty(), g.rightX - g.r,LAG)),
+                new KeyFrame(tFollow, new KeyValue(e5.xProperty(), g.rightX,      LAG)),
+                new KeyFrame(tFollow, new KeyValue(e6.xProperty(), g.rightX,      LAG)),
+                new KeyFrame(tFollow, new KeyValue(e0.xProperty(), g.leftEdge,    LAG)),
+                new KeyFrame(tFollow, new KeyValue(e7.xProperty(), g.rightEdge,   LAG))
+            );
+        } else if (movingRight) {
+            tl.getKeyFrames().addAll(
+                new KeyFrame(tFollow, new KeyValue(e1.xProperty(), g.leftX,       LAG)),
+                new KeyFrame(tFollow, new KeyValue(e2.xProperty(), g.leftX,       LAG)),
+                new KeyFrame(tFollow, new KeyValue(e3.xProperty(), g.leftX + g.r, LAG)),
+                new KeyFrame(tLead,   new KeyValue(e4.xProperty(), g.rightX - g.r,LEAD)),
+                new KeyFrame(tLead,   new KeyValue(e5.xProperty(), g.rightX,      LEAD)),
+                new KeyFrame(tLead,   new KeyValue(e6.xProperty(), g.rightX,      LEAD)),
+                new KeyFrame(tFollow, new KeyValue(e0.xProperty(), g.leftEdge,    LAG)),
+                new KeyFrame(tFollow, new KeyValue(e7.xProperty(), g.rightEdge,   LAG))
+            );
+        }
+        tl.play();
+    }
+
+    /* ---------- Tabs ---------- */
+    private void switchMenu(boolean toLogin) {
+        if (isLoginSelected == toLogin) return;
+        wasLoginSelected = isLoginSelected;
+        isLoginSelected  = toLogin;
+        applyTabStyles(toLogin);
+        setRightContentForCurrentTab();
+        animateBorder(wasLoginSelected, isLoginSelected);
+    }
+
+    private void applyTabStyles(boolean loginSelectedNow) {
+        if (loginSelectedNow) {
+            loginBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1f1f1f;");
+            signUpBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 15px; -fx-font-weight: normal; -fx-text-fill: #1f1f1f;");
+        } else {
+            signUpBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1f1f1f;");
+            loginBtn.setStyle("-fx-background-color: transparent; -fx-font-size: 15px; -fx-font-weight: normal; -fx-text-fill: #1f1f1f;");
+        }
+    }
+
+    private void setRightContentForCurrentTab() {
+        boolean showSignup = !isLoginSelected;
+        signupForm.setVisible(showSignup); signupForm.setManaged(showSignup);
+        loginForm.setVisible(!showSignup); loginForm.setManaged(!showSignup);
+    }
+
+    /* ---------- Formatters ---------- */
+    private void configureDobAsDDMMYYYY(DatePicker dp) {
+        final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        dp.setPromptText("DD/MM/YYYY");
+        dp.setConverter(new StringConverter<LocalDate>() {
+            @Override public String toString(LocalDate date) { return date == null ? "" : fmt.format(date); }
+            @Override public LocalDate fromString(String s) {
+                if (s == null || s.trim().isEmpty()) return null;
+                try { return LocalDate.parse(s.trim(), fmt); } catch (Exception ex) { return null; }
+            }
+        });
+    }
+
+    /* ---------- Sign Up ---------- */
+    private void onSubmitSignup() {
+        clearSignupErrors(); lblSubmitStatus.setText("");
+        String name = value(tfSoulName);
+        if (name.isEmpty() || !name.matches("^[A-Za-z]+(?:\\s+[A-Za-z]+)*$")) { errSoulName.setText("ERROR! Name should only contain Latin Alphabets"); return; }
+        LocalDate dob = dpDob.getValue();
+        if (dob == null) { errDob.setText("ERROR! Please select a valid date of birth"); return; }
+        String soulId = value(tfSoulId);
+        if (soulId.isEmpty() || !soulId.matches("^[A-Za-z]+$")) { errSoulId.setText("ERROR! soul_id should contain alphabets only"); return; }
+        String idKey = soulId.toLowerCase();
+        if (accounts.containsKey(idKey)) { errSoulId.setText("ERROR! Duplicate id found! Enter a new one"); return; }
+        String soulKey = value(pfSoulKey);
+        if (soulKey.isEmpty() || !soulKey.matches("^[A-Za-z0-9_]+$")) { errSoulKey.setText("ERROR! soul_key can contain A-Z,a-z,0-9 and _ only"); return; }
+        String mobile = value(tfMobile);
+        if (mobile.isEmpty() || !mobile.matches("^\\d+$")) { errMobile.setText("ERROR! Must be a number"); return; }
+        accounts.put(idKey, soulKey);
+        lblSubmitStatus.setText("Success! Your data is saved!");
+    }
+    private void clearSignupErrors() {
+        errSoulName.setText(""); errDob.setText(""); errSoulId.setText("");
+        errSoulKey.setText(""); errMobile.setText("");
+    }
+
+    /* ---------- Log in ---------- */
+    private void onSubmitLogin() {
+        clearLoginErrors(); lblLoginStatus.setText("");
+        String id = value(tfLoginId);
+        if (id.isEmpty() || !id.matches("^[A-Za-z0-9_]+$")) { errLoginId.setText("ERROR! Soul_ID can contain A-Z,a-z,0-9 and _ only"); return; }
+        String key = value(pfLoginKey);
+        if (key.isEmpty() || !key.matches("^[A-Za-z0-9_]+$")) { errLoginKey.setText("ERROR! Soul_Key can contain A-Z,a-z,0-9 and _ only"); return; }
+        String stored = accounts.get(id.toLowerCase());
+        if (stored == null || !stored.equals(key)) { errLoginKey.setText("ERROR! Invalid id or key"); return; }
+        lblLoginStatus.setText("Success! You are logged in!");
+    }
+    private void clearLoginErrors() { errLoginId.setText(""); errLoginKey.setText(""); }
+
+    private String value(TextInputControl c) {
+        String s = c.getText();
+        return s == null ? "" : s.trim();
+    }
+}
