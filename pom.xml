@@ -84,9 +84,15 @@
         <version>0.0.8</version>
         <configuration>
           <mainClass>${main.class}</mainClass>
-          <!-- explicitly declare used modules so the plugin resolves platform artifacts -->
           <launcher>app</launcher>
-          <addModules>javafx.controls,javafx.fxml,javafx.media</addModules>
+          <jlinkImageName>shelter_of_mind</jlinkImageName>
+          <compress>2</compress>
+          <noHeaderFiles>true</noHeaderFiles>
+          <noManPages>true</noManPages>
+          <options>
+            <option>--add-modules</option>
+            <option>javafx.controls,javafx.fxml,javafx.media</option>
+          </options>
         </configuration>
       </plugin>
 

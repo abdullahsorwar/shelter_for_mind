@@ -21,9 +21,9 @@
 .label.subtext {
     -fx-text-fill: #ffffff;
     -fx-font-size: 16px;
-    -fx-font-weight: bold;
+    -fx-font-weight: light;
     -fx-padding: 0 0 20 0;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 4, 0.2, 0, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 0, 0.6), 4, 0.2, 0, 1);
 }
 
 /* Text-only tabs */

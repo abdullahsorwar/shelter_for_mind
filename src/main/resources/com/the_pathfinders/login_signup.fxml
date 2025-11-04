@@ -1,99 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Path?>
 
-<AnchorPane fx:id="root" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.the_pathfinders.LoginSignupController"
-            stylesheets="@login_signup.css"
-            prefWidth="900" prefHeight="600">
+<AnchorPane fx:id="root" prefHeight="720" prefWidth="1280" stylesheets="@login_signup.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.LoginSignupController">
 
     <children>
 
         <!-- HEADER (logo + subtitle) — centered in the upper area -->
-        <StackPane AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <StackPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="20.0">
             <!-- Logo on top -->
-            <ImageView fx:id="logoImage" fitHeight="140" preserveRatio="true" />
-            <!-- Subtitle below with some bottom padding -->
-            <Label fx:id="subtitleLabel" styleClass="subtext" text="A place for refreshing the soul"
-                   StackPane.alignment="BOTTOM_CENTER" />
+            <ImageView fx:id="logoImage" fitHeight="200" fitWidth="200.0" preserveRatio="true" StackPane.alignment="CENTER" />
         </StackPane>
 
                         <!-- Theme toggle (top-right) -->
-                        <ToggleButton fx:id="themeToggle" text="Dark" styleClass="theme-toggle"
-                                                    AnchorPane.topAnchor="12.0" AnchorPane.rightAnchor="18.0"/>
+                        <ToggleButton fx:id="themeToggle" styleClass="theme-toggle" text="Dark" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="12.0" />
 
         <!-- FROSTED PANEL -->
-        <VBox fx:id="rightPane" alignment="CENTER" spacing="22"
-              AnchorPane.leftAnchor="250" AnchorPane.rightAnchor="250"
-              AnchorPane.topAnchor="195" AnchorPane.bottomAnchor="60"
-              styleClass="pane">
+        <VBox fx:id="rightPane" alignment="CENTER" spacing="22" styleClass="pane" AnchorPane.bottomAnchor="60" AnchorPane.leftAnchor="250" AnchorPane.rightAnchor="250" AnchorPane.topAnchor="195">
 
             <!-- Tab row: fixed-width buttons + border overlay -->
             <StackPane fx:id="tabStack" alignment="CENTER" minHeight="50">
-                <HBox fx:id="menuBar" alignment="CENTER" minWidth="300" maxWidth="300">
-                    <Button fx:id="loginBtn" text="Login" styleClass="tab-text" 
-                            minWidth="140" prefWidth="140" maxWidth="140"
-                            minHeight="45" prefHeight="45" maxHeight="45"/>
-                    <Region minWidth="20" prefWidth="20" maxWidth="20"/>
-                    <Button fx:id="signUpBtn" text="Sign Up" styleClass="tab-text"
-                            minWidth="140" prefWidth="140" maxWidth="140"
-                            minHeight="45" prefHeight="45" maxHeight="45"/>
+                <HBox fx:id="menuBar" alignment="CENTER" maxWidth="300" minWidth="300">
+                    <Button fx:id="loginBtn" maxHeight="45" maxWidth="140" minHeight="45" minWidth="140" prefHeight="45" prefWidth="140" styleClass="tab-text" text="Login" />
+                    <Region maxWidth="20" minWidth="20" prefWidth="20" />
+                    <Button fx:id="signUpBtn" maxHeight="45" maxWidth="140" minHeight="45" minWidth="140" prefHeight="45" prefWidth="140" styleClass="tab-text" text="Sign Up" />
                 </HBox>
                 <!-- Path drawn OVER the tab texts -->
-                <Pane fx:id="borderLayer" pickOnBounds="false" minWidth="300" maxWidth="300">
-                    <Path fx:id="borderPath"/>
+                <Pane fx:id="borderLayer" maxWidth="300" minWidth="300" pickOnBounds="false">
+                    <Path fx:id="borderPath" />
                 </Pane>
             </StackPane>
 
             <!-- LOGIN FORM -->
-            <VBox fx:id="loginForm" alignment="CENTER" spacing="12" maxWidth="560">
-                <TextField     fx:id="tfLoginId"        promptText="Soul ID"   maxWidth="560"/>
-                <PasswordField fx:id="pfLoginKey"       promptText="Soul Key"  maxWidth="560"/>
-                <TextField     fx:id="tfLoginKeyVisible" promptText="Soul Key" visible="false" managed="false" maxWidth="560"/>
-                <CheckBox      fx:id="cbShowLoginKey" text="Show Key"/>
-
-                <!-- Primary action (fixed slot) -->
-                <Region minHeight="6"/>
-                <!-- Fixed size container for button -->
-                <HBox alignment="CENTER">
-                    <Button fx:id="btnLoginSubmit" text="Login" styleClass="primary-button"
-                           minWidth="220" prefWidth="220" maxWidth="220"
-                           minHeight="50" prefHeight="50" maxHeight="50"/>
-                </HBox>
-                <!-- Reserve space so it never jumps -->
-                <Label fx:id="lblLoginStatus" minHeight="18" maxWidth="560" alignment="CENTER"/>
+            <VBox fx:id="loginForm" alignment="CENTER" maxWidth="560" spacing="12">
+                <TextField fx:id="tfLoginId" maxWidth="560" promptText="Soul ID" />
+                <PasswordField fx:id="pfLoginKey" maxWidth="560" promptText="Soul Key" />
+                <TextField fx:id="tfLoginKeyVisible" managed="false" maxWidth="560" promptText="Soul Key" visible="false" />
+                <CheckBox fx:id="cbShowLoginKey" text="Show Key" />
             </VBox>
-
+                <!-- Fixed size container for button -->
+            <HBox alignment="CENTER">
+                <Button fx:id="btnLoginSubmit" maxHeight="50" maxWidth="220" minHeight="50" minWidth="220" prefHeight="50" prefWidth="220" styleClass="primary-button" text="Login" />
+                
+                <!-- Reserve space so it never jumps -->
+                <Label fx:id="lblLoginStatus" alignment="CENTER" maxWidth="560" minHeight="18" />
+            </HBox>
             <!-- SIGNUP FORM -->
-            <VBox fx:id="signupForm" alignment="CENTER" spacing="12" maxWidth="560"
-                  visible="false" managed="false">
+            <VBox fx:id="signupForm" alignment="CENTER" managed="false" maxWidth="560" spacing="12" visible="false">
 
-                <TextField fx:id="tfSoulName" promptText="Name" maxWidth="560"/>
-                <TextField fx:id="tfDob" promptText="DD/MM/YYYY" maxWidth="560"/>
-                <TextField fx:id="tfSoulId" promptText="Soul ID" maxWidth="560"/>
-                <PasswordField fx:id="pfSoulKey" promptText="Soul Key" maxWidth="560"/>
-                <TextField fx:id="tfSoulKeyVisible" promptText="Soul Key" visible="false" managed="false" maxWidth="560"/>
+                <TextField fx:id="tfSoulName" maxWidth="560" promptText="Name" />
+                <TextField fx:id="tfDob" maxWidth="560" promptText="DD/MM/YYYY" />
+                <TextField fx:id="tfSoulId" maxWidth="560" promptText="Soul ID" />
+                <PasswordField fx:id="pfSoulKey" maxWidth="560" promptText="Soul Key" />
+                <TextField fx:id="tfSoulKeyVisible" managed="false" maxWidth="560" promptText="Soul Key" visible="false" />
 
                 <HBox alignment="CENTER" spacing="8">
-                    <ComboBox fx:id="cbCountryCode" prefWidth="140"/>
+                    <ComboBox fx:id="cbCountryCode" prefWidth="140" />
                     <TextField fx:id="tfMobile" promptText="Phone Number" HBox.hgrow="ALWAYS" />
                 </HBox>
 
-                <CheckBox fx:id="cbShowSignupKey" text="Show Key"/>
+                <CheckBox fx:id="cbShowSignupKey" text="Show Key" />
 
-                <Region minHeight="6"/>
+                <Region minHeight="6" />
                 <!-- Fixed size container for button -->
                 <HBox alignment="CENTER">
-                    <Button fx:id="btnSubmit" text="Sign Up" styleClass="primary-button"
-                           minWidth="220" prefWidth="220" maxWidth="220"
-                           minHeight="50" prefHeight="50" maxHeight="50"/>
+                    <Button fx:id="btnSubmit" maxHeight="50" maxWidth="220" minHeight="50" minWidth="220" prefHeight="50" prefWidth="220" styleClass="primary-button" text="Sign Up" />
                 </HBox>
-                <Label fx:id="lblSubmitStatus" minHeight="18" maxWidth="560" alignment="CENTER"/>
+                <Label fx:id="lblSubmitStatus" alignment="CENTER" maxWidth="560" minHeight="18" />
             </VBox>
 
         </VBox>
+         <!-- Subtitle below with some bottom padding -->
+         <Label fx:id="subtitleLabel" alignment="CENTER" layoutX="487.0" layoutY="149.0" prefHeight="46.0" prefWidth="300.0" styleClass="subtext" text="A place for refreshing the soul" textAlignment="CENTER" />
     </children>
 </AnchorPane>
