@@ -33,7 +33,18 @@ public class DashboardController {
             System.out.println("Journaling clicked");
         });
         blogsBtn.setOnAction(e -> {
-            System.out.println("Blogs clicked");
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/blog.fxml"));
+                Parent blogRoot = loader.load();
+                BlogController blogController = loader.getController();
+                // pass current user id if available
+                blogController.setSoulId(this.soulId == null ? "" : this.soulId);
+                if (root != null && root.getScene() != null) {
+                    root.getScene().setRoot(blogRoot);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         logoutBtn.setOnAction(e -> onLogout());
