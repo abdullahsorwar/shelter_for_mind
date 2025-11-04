@@ -34,7 +34,7 @@ public class DashboardController {
         });
         blogsBtn.setOnAction(e -> {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/blog.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/blog.fxml"));
                 Parent blogRoot = loader.load();
                 BlogController blogController = loader.getController();
                 // pass current user id if available
@@ -56,7 +56,7 @@ public class DashboardController {
         // try to load a username.jpg from resources (fallback to nothing)
         try {
             URL u = getClass().getResource("/com/the_pathfinders/" + this.soulId + ".jpg");
-            if (u == null) u = getClass().getResource("/com/the_pathfinders/username.png");
+            if (u == null) u = getClass().getResource("/assets/icons/username.png");
             if (u != null && userImage != null) {
                 Image img = new Image(u.toExternalForm(), 38, 38, true, true);
                 userImage.setImage(img);

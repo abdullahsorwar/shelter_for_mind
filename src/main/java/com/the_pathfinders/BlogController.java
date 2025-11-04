@@ -142,7 +142,7 @@ public class BlogController {
 
     private void goBackToDashboard() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml"));
             Parent dash = loader.load();
             DashboardController controller = loader.getController();
             controller.setUser(this.soulId, "");

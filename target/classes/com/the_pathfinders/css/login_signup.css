@@ -20,7 +20,7 @@
 /* Subtitle under logo */
 .label.subtext {
     -fx-text-fill: #ffffff;
-    -fx-font-size: 16px;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding: 0 0 20 0;
     -fx-effect: dropshadow(three-pass-box, rgba(209, 43, 173, 0.6), 4, 0.2, 0, 1);
