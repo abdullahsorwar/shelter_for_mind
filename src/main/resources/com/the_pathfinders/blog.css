@@ -1,0 +1,19 @@
+/* Minimal, aesthetic, pastel-themed blog styles */
+:root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.category-box {
+    -fx-font-size: 13px;
+    -fx-text-fill: #333;
+}
+
+/* page background: very light and minimal */
+.root {
+    -fx-background-color: #fbfbfc;
+}
+
+/* list view items spacing */
+.list-cell {
+    -fx-padding: 10 12 10 12;
+}

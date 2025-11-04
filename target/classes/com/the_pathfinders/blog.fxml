@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.BlogController"
+      spacing="12" alignment="TOP_CENTER" stylesheets="/com/the_pathfinders/blog.css">
+
+    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 12 16 0 16; -fx-background-color: transparent;">
+        <Button fx:id="backBtn" text="← Back" />
+        <Label fx:id="pageTitle" text="Blog" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+    </HBox>
+
+    <FlowPane fx:id="categoriesPane" hgap="10" vgap="10" prefWrapLength="600" style="-fx-padding: 8 16 0 16;" />
+
+    <ListView fx:id="postsListView" VBox.vgrow="ALWAYS" style="-fx-padding: 8 16 16 16;" />
+
+</VBox>
