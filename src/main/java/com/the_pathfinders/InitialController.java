@@ -82,7 +82,7 @@ public class InitialController implements Initializable {
     }
 
     private void playIntroSequence() {
-        FadeTransition fadeCover = new FadeTransition(Duration.seconds(5), whiteOverlay);
+        FadeTransition fadeCover = new FadeTransition(Duration.seconds(2), whiteOverlay);
         fadeCover.setFromValue(1.0);
         fadeCover.setToValue(0.0);
         fadeCover.setInterpolator(Interpolator.EASE_BOTH);
