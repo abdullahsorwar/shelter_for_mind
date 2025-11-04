@@ -25,8 +25,8 @@ public class App extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Shelter of Mind");
-        stage.setMinWidth(800);
-        stage.setMinHeight(480);
+        stage.setMinWidth(1280);
+        stage.setMinHeight(720);
         stage.show();
 
         stage.setOnCloseRequest(e -> DB.shutdown());

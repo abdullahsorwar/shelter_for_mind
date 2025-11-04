@@ -1,207 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
+
 <?import javafx.scene.control.*?>
-<?import javafx.scene.shape.Path?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Path?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-    fx:controller="com.the_pathfinders.LoginSignupController"
-    prefWidth="800.0" prefHeight="480.0"
-    style="-fx-background-color: white;">
-    <center>
-        <HBox spacing="0" prefWidth="800.0" prefHeight="480.0">
-            <!-- Left fills all remaining width -->
-            <VBox fx:id="leftPane" alignment="CENTER"
-                HBox.hgrow="ALWAYS"
-                prefWidth="440.0" minWidth="200.0"
-                prefHeight="480.0"
-                style="-fx-background-color: #AFE1AF;">
-                <VBox alignment="CENTER" spacing="10">
-                    <ImageView fx:id="logoImage" fitWidth="110.0" fitHeight="110.0"
-                        pickOnBounds="true" preserveRatio="true" />
-                    <Label fx:id="titleLabel" text="Shelter of Mind"
-                        style="-fx-font-size: 32px; -fx-font-weight: bold;" />
-                    <Label fx:id="subtitleLabel" text="A place for refreshing the soul"
-                        style="-fx-font-size: 16px; -fx-font-weight: normal;" />
-                </VBox>
+<AnchorPane fx:id="root" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.the_pathfinders.LoginSignupController"
+            stylesheets="@login_signup.css"
+            prefWidth="900" prefHeight="600">
+
+    <children>
+
+        <!-- HEADER (logo + subtitle) — stays OUTSIDE the glass, perfectly centered -->
+                        <VBox spacing="8" alignment="TOP_CENTER"
+                            AnchorPane.topAnchor="32.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                        <!-- Reduce image height so header doesn't become too tall and push the subtitle down -->
+                        <ImageView fx:id="logoImage" fitHeight="160" preserveRatio="true" pickOnBounds="false" />
+            <Label fx:id="subtitleLabel" styleClass="subtext" text="A place for refreshing the soul"/>
+        </VBox>
+
+                        <!-- Theme toggle (top-right) -->
+                        <ToggleButton fx:id="themeToggle" text="Dark" styleClass="theme-toggle"
+                                                    AnchorPane.topAnchor="12.0" AnchorPane.rightAnchor="18.0"/>
+
+        <!-- FROSTED PANEL -->
+        <VBox fx:id="rightPane" alignment="CENTER" spacing="22"
+              AnchorPane.leftAnchor="250" AnchorPane.rightAnchor="250"
+              AnchorPane.topAnchor="195" AnchorPane.bottomAnchor="60"
+              styleClass="pane">
+
+            <!-- Tab row: text-only buttons + border overlay -->
+            <StackPane fx:id="tabStack" alignment="CENTER">
+                <HBox fx:id="menuBar" spacing="30" alignment="CENTER">
+                    <Button fx:id="loginBtn"  text="Login"  styleClass="tab-text"/>
+                    <Button fx:id="signUpBtn" text="Sign Up" styleClass="tab-text"/>
+                </HBox>
+                <!-- Path drawn OVER the tab texts -->
+                <Pane fx:id="borderLayer" pickOnBounds="false">
+                    <Path fx:id="borderPath"/>
+                </Pane>
+            </StackPane>
+
+            <!-- LOGIN FORM -->
+            <VBox fx:id="loginForm" alignment="CENTER" spacing="12" maxWidth="560">
+                <TextField     fx:id="tfLoginId"        promptText="Soul ID"   maxWidth="560"/>
+                <PasswordField fx:id="pfLoginKey"       promptText="Soul Key"  maxWidth="560"/>
+                <TextField     fx:id="tfLoginKeyVisible" promptText="Soul Key" visible="false" managed="false" maxWidth="560"/>
+                <CheckBox      fx:id="cbShowLoginKey" text="Show Key"/>
+
+                <!-- Primary action (fixed slot) -->
+                <Region minHeight="6"/>
+                <Button fx:id="btnLoginSubmit" text="Login" styleClass="primary-button"/>
+                <!-- Reserve space so it never jumps -->
+                <Label fx:id="lblLoginStatus" minHeight="18" maxWidth="560" alignment="CENTER"/>
             </VBox>
 
-            <!-- Right stays at 360px -->
-            <VBox fx:id="rightPane" alignment="TOP_CENTER"
-                HBox.hgrow="NEVER"
-                prefWidth="360.0" minWidth="360.0" maxWidth="360.0"
-                prefHeight="480.0"
-                style="-fx-background-color: #FFFFFF;">
+            <!-- SIGNUP FORM -->
+            <VBox fx:id="signupForm" alignment="CENTER" spacing="12" maxWidth="560"
+                  visible="false" managed="false">
 
-                <!-- Tabs/Header row — compact -->
-                <StackPane prefHeight="44.0" minHeight="44.0" maxHeight="44.0"
-                    prefWidth="360.0" minWidth="360.0" maxWidth="360.0">
-                    <VBox.margin>
-                        <Insets top="4" left="0" right="0" bottom="0" />
-                    </VBox.margin>
+                <TextField fx:id="tfSoulName" promptText="Name" maxWidth="560"/>
+                <DatePicker fx:id="dpDob" promptText="DD/MM/YYYY" maxWidth="560"/>
+                <TextField fx:id="tfSoulId" promptText="Soul ID" maxWidth="560"/>
+                <PasswordField fx:id="pfSoulKey" promptText="Soul Key" maxWidth="560"/>
+                <TextField fx:id="tfSoulKeyVisible" promptText="Soul Key" visible="false" managed="false" maxWidth="560"/>
 
-                    <Pane fx:id="menuBorder" pickOnBounds="false"
-                        prefHeight="44.0" prefWidth="360.0" minWidth="360.0" maxWidth="360.0"
-                        style="-fx-background-color: transparent;">
-                        <Path fx:id="borderPath" stroke="#1f1f1f" strokeWidth="1.25"
-                            fill="transparent" />
-                    </Pane>
+                <HBox alignment="CENTER" spacing="8">
+                    <ComboBox fx:id="cbCountryCode" prefWidth="140"/>
+                    <TextField fx:id="tfMobile" promptText="Phone Number" HBox.hgrow="ALWAYS" />
+                </HBox>
 
-                    <HBox fx:id="menuBar" alignment="CENTER" spacing="6"
-                        prefHeight="44.0" prefWidth="360.0" minWidth="360.0" maxWidth="360.0">
-                        <Button fx:id="signUpBtn" text="Sign Up"
-                            prefWidth="140" minWidth="140" maxWidth="140"
-                            style="-fx-background-color: transparent; -fx-font-size: 15px; -fx-text-fill: #1f1f1f; -fx-padding: 4 12 4 12; -fx-alignment: CENTER;" />
-                        <Button fx:id="loginBtn" text="Log in"
-                            prefWidth="140" minWidth="140" maxWidth="140"
-                            style="-fx-background-color: transparent; -fx-font-size: 15px; -fx-text-fill: #1f1f1f; -fx-padding: 4 12 4 12; -fx-alignment: CENTER;" />
-                    </HBox>
-                </StackPane>
+                <CheckBox fx:id="cbShowSignupKey" text="Show Key"/>
 
-                <!-- Log in (centered vertically) -->
-                <VBox fx:id="loginForm" alignment="CENTER" spacing="4" fillWidth="false"
-                    visible="true" managed="true" VBox.vgrow="ALWAYS">
-                    <padding>
-                        <Insets top="0" right="20" bottom="0" left="20" />
-                    </padding>
-                    <Region VBox.vgrow="ALWAYS" />
-                    <Label text="Soul_ID" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
-                    <TextField fx:id="tfLoginId"
-                        prefWidth="240" maxWidth="240" />
-                    <Label fx:id="errLoginId" wrapText="true" alignment="TOP_LEFT"
-                        prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
-                    <!-- Key -->
-                    <Label text="Soul_Key" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
-
-                    <!-- password field (default visible) -->
-                    <PasswordField fx:id="pfLoginKey"
-                        prefWidth="240" maxWidth="240" />
-
-                    <!-- plain text mirror (hidden until 'Show' is checked) -->
-                    <TextField fx:id="tfLoginKeyVisible"
-                        prefWidth="240" maxWidth="240"
-                        visible="false" managed="false" />
-
-                    <!-- 'Show' checkbox (right aligned) -->
-                    <HBox alignment="CENTER_RIGHT" prefWidth="240" maxWidth="240">
-                        <CheckBox fx:id="cbShowLoginKey" text="Show"
-                            style="-fx-font-size: 10px; -fx-text-fill: #555;" />
-                    </HBox>
-
-                    <!-- error stays below -->
-                    <Label fx:id="errLoginKey" wrapText="true" alignment="TOP_LEFT"
-                        prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
-
-                    <HBox alignment="CENTER" prefWidth="240" maxWidth="240">
-                        <Button fx:id="btnLoginSubmit" text="log in" prefWidth="200" />
-                    </HBox>
-                    <Label fx:id="lblLoginStatus"
-                        style="-fx-text-fill: #2e7d32; -fx-font-size: 12px;"
-                        alignment="CENTER" maxWidth="240" />
-                    <Region VBox.vgrow="ALWAYS" />
-                </VBox>
-
-                <!-- Sign up -->
-                <!-- ===== Sign Up (VERTICALLY CENTERED) ===== -->
-                <VBox fx:id="signupForm" alignment="CENTER" spacing="4" fillWidth="false"
-                    visible="false" managed="false" VBox.vgrow="ALWAYS">
-                    <padding>
-                        <Insets top="0" right="20" bottom="0" left="20" />
-                    </padding>
-
-                    <!-- spacer pushes content toward the middle -->
-                    <Region VBox.vgrow="ALWAYS" />
-
-                    <Label text="Soul Name" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
-                    <TextField fx:id="tfSoulName"
-                        promptText="Enter your name (Latin alphabets only)"
-                        prefWidth="240" maxWidth="240" />
-                    <Label fx:id="errSoulName" wrapText="true" alignment="TOP_LEFT"
-                        prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
-
-                    <Label text="Date of Birth" alignment="BASELINE_LEFT" prefWidth="240"
-                        maxWidth="240"
-                        style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
-                    <DatePicker fx:id="dpDob" promptText="DD/MM/YYYY"
-                        prefWidth="240" maxWidth="240" />
-                    <Label fx:id="errDob" wrapText="true" alignment="TOP_LEFT"
-                        prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
-
-                    <Label text="Soul_ID" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
-                    <TextField fx:id="tfSoulId" promptText="Unique id using A-Z, a-z, 0-9, _ only"
-                        prefWidth="240" maxWidth="240" />
-                    <Label fx:id="errSoulId" wrapText="true" alignment="TOP_LEFT"
-                        prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
-
-                    <!-- Soul_Key -->
-                    <Label text="Soul_Key" alignment="BASELINE_LEFT" prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
-
-                    <!-- password field (default visible) -->
-                    <PasswordField fx:id="pfSoulKey" promptText="A-Z, a-z, 0-9, _ only"
-                        prefWidth="240" maxWidth="240" />
-
-                    <!-- plain text mirror (hidden until 'Show' is checked) -->
-                    <TextField fx:id="tfSoulKeyVisible" promptText="A-Z, a-z, 0-9, _ only"
-                        prefWidth="240" maxWidth="240"
-                        visible="false" managed="false" />
-
-                    <!-- 'Show' checkbox (right aligned) -->
-                    <HBox alignment="CENTER_RIGHT" prefWidth="240" maxWidth="240">
-                        <CheckBox fx:id="cbShowSignupKey" text="Show"
-                            style="-fx-font-size: 10px; -fx-text-fill: #555;" />
-                    </HBox>
-
-                    <!-- error stays below -->
-                    <Label fx:id="errSoulKey" wrapText="true" alignment="TOP_LEFT"
-                        prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
-
-
-                    <Label text="Phone Number" alignment="BASELINE_LEFT" prefWidth="240"
-                        maxWidth="240"
-                        style="-fx-text-fill: #1f1f1f; -fx-font-size: 12px;" />
-                    <HBox alignment="CENTER_LEFT" spacing="8" prefWidth="240" maxWidth="240">
-                        <ComboBox fx:id="cbCountryCode" prefWidth="110" maxWidth="110">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="+1 (USA)" />
-                                    <String fx:value="+91 (IND)" />
-                                    <String fx:value="+880 (BAN)" />
-                                </FXCollections>
-                            </items>
-                        </ComboBox>
-                        <TextField fx:id="tfMobile" promptText="Digits only"
-                            prefWidth="122" maxWidth="122" />
-                    </HBox>
-                    <Label fx:id="errMobile" wrapText="true" alignment="TOP_LEFT"
-                        prefWidth="240" maxWidth="240"
-                        style="-fx-text-fill: #e53935; -fx-font-size: 10px;" />
-
-                    <HBox alignment="CENTER" prefWidth="240" maxWidth="240">
-                        <Button fx:id="btnSubmit" text="sign up" prefWidth="200" />
-                    </HBox>
-
-                    <Label fx:id="lblSubmitStatus"
-                        style="-fx-text-fill: #2e7d32; -fx-font-size: 12px;"
-                        alignment="CENTER" maxWidth="240" />
-
-                    <!-- spacer pushes content toward the middle -->
-                    <Region VBox.vgrow="ALWAYS" />
-                </VBox>
+                <Region minHeight="6"/>
+                <Button fx:id="btnSubmit" text="Sign Up" styleClass="primary-button"/>
+                <Label fx:id="lblSubmitStatus" minHeight="18" maxWidth="560" alignment="CENTER"/>
             </VBox>
-        </HBox>
-    </center>
-</BorderPane>
+
+        </VBox>
+    </children>
+</AnchorPane>

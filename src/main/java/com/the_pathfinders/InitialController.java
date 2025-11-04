@@ -60,7 +60,7 @@ public class InitialController implements Initializable {
             contentPane.boundsInParentProperty().addListener((o, ov, nv) -> centerContent());
         });
 
-        trySetImage(bgImage, "/com/the_pathfinders/background.png", "/background.png");
+        trySetImage(bgImage, "/com/the_pathfinders/green_bg.jpg", "/green_bg.jpg");
         trySetImage(logoImage, "/com/the_pathfinders/logo_new.png", "/logo_new.png");
 
         playIntroSequence();

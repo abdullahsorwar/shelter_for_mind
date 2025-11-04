@@ -1,0 +1,29 @@
+/* Minimal dashboard styles */
+.root {
+	-fx-font-family: "Poppins", "Segoe UI", sans-serif;
+	-fx-background-color: linear-gradient(to bottom right, rgba(10,12,18,0.65), rgba(20,24,34,0.65));
+}
+
+/* Top-right user label */
+.label {
+	-fx-text-fill: #eaf0ff;
+}
+
+/* Buttons in the center */
+Button {
+	-fx-pref-width: 180;
+	-fx-pref-height: 48;
+	-fx-background-radius: 12;
+	-fx-background-color: linear-gradient(to right, #4a90e2, #657ced);
+	-fx-text-fill: white;
+	-fx-font-weight: bold;
+}
+
+/* Logout small button */
+#logoutBtn {
+	-fx-background-color: transparent;
+	-fx-border-color: rgba(255,255,255,0.12);
+	-fx-border-radius: 8;
+	-fx-text-fill: #ffffff;
+	-fx-padding: 6 10;
+}

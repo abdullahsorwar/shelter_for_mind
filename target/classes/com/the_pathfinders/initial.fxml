@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -10,43 +11,31 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="root"
-      xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.the_pathfinders.InitialController"
-      prefHeight="480.0" prefWidth="800.0"
-      style="-fx-background-color: black;"> <!-- black base to hide any rounding line -->
+<Pane fx:id="root" prefHeight="480.0" prefWidth="800.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.InitialController"> <!-- black base to hide any rounding line -->
    <children>
 
       <!-- Background image: no offsets; controller binds to window size -->
-      <ImageView fx:id="bgImage"
-                 layoutX="0.0" layoutY="0.0"
-                 fitWidth="800.0" fitHeight="480.0"
-                 pickOnBounds="true" preserveRatio="false">
-         <image><Image url="@background.png"/></image>
+      <ImageView fx:id="bgImage" fitHeight="480.0" fitWidth="800.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="false">
+         <image><Image url="@green_bg.jpg" /></image>
       </ImageView>
 
       <!-- Fixed-size content centered by controller -->
-      <Pane fx:id="contentPane" prefWidth="707.0" prefHeight="450.0" pickOnBounds="false">
+      <Pane fx:id="contentPane" pickOnBounds="false" prefHeight="450.0" prefWidth="707.0">
          <children>
 
             <!-- Logo block -->
             <Pane fx:id="logoBlock" layoutX="253.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="logoImage"
-                             fitHeight="376.0" fitWidth="408.0"
-                             layoutX="-96.0" layoutY="-88.0" preserveRatio="true">
-                     <image><Image url="@logo_new.png"/></image>
+                  <ImageView fx:id="logoImage" fitHeight="376.0" fitWidth="408.0" layoutX="-96.0" layoutY="-88.0" preserveRatio="true">
+                     <image><Image url="@logo_new.png" /></image>
                   </ImageView>
 
                   <!-- 'Login As' (animates in) -->
                   <Pane layoutX="-58.0" layoutY="200.0" prefHeight="98.0" prefWidth="313.0">
-                     <effect><DropShadow/></effect>
+                     <effect><DropShadow /></effect>
                      <children>
-                        <Text fx:id="loginAsText"
-                              layoutX="65.0" layoutY="76.0"
-                              strokeType="OUTSIDE" strokeWidth="0.0" text="Login As"
-                              opacity="0.0" scaleX="0.85" scaleY="0.85">
-                           <font><Font name="Agency FB" size="70.0"/></font>
+                        <Text fx:id="loginAsText" fill="WHITE" layoutX="65.0" layoutY="76.0" opacity="0.0" scaleX="0.85" scaleY="0.85" strokeType="OUTSIDE" strokeWidth="0.0" text="Login As">
+                           <font><Font name="Agency FB" size="70.0" /></font>
                         </Text>
                      </children>
                   </Pane>
@@ -54,50 +43,37 @@
             </Pane>
 
             <!-- Buttons row -->
-            <Pane fx:id="buttonsPane" layoutX="0.0" layoutY="310.0" prefHeight="129.0" prefWidth="707.0"
-                  opacity="0.0" scaleX="0.9" scaleY="0.9">
+            <Pane fx:id="buttonsPane" layoutX="0.0" layoutY="310.0" opacity="0.0" prefHeight="129.0" prefWidth="707.0" scaleX="0.9" scaleY="0.9">
                <children>
                   <!-- SOUL -->
-                  <Rectangle fx:id="soulRect"
-                             arcHeight="5.0" arcWidth="5.0"
-                             height="63.0" layoutX="80.0" layoutY="33.0"
-                             stroke="WHITE" strokeType="INSIDE" width="182.0"
-                             style="-fx-cursor: hand;">
+                  <Rectangle fx:id="soulRect" arcHeight="5.0" arcWidth="5.0" height="63.0" layoutX="80.0" layoutY="33.0" stroke="WHITE" strokeType="INSIDE" style="-fx-cursor: hand;" width="182.0">
                      <fill>
                         <!-- Blue → Green -->
-                        <LinearGradient startX="0.0" startY="0.0" endX="1.0" endY="0.0">
+                        <LinearGradient endX="1.0" endY="0.0" startX="0.0" startY="0.0">
                            <stops>
-                              <Stop offset="0.0"><color><Color red="0.23137255" green="0.50980392" blue="0.96470588"/></color></Stop>
-                              <Stop offset="1.0"><color><Color red="0.06274510" green="0.72549020" blue="0.50588235"/></color></Stop>
+                              <Stop offset="0.0"><color><Color red="0.23137255" green="0.50980392" blue="0.96470588" /></color></Stop>
+                              <Stop offset="1.0"><color><Color red="0.06274510" green="0.72549020" blue="0.50588235" /></color></Stop>
                            </stops>
                         </LinearGradient>
                      </fill>
                   </Rectangle>
-                  <Text fx:id="soulText" layoutX="141.0" layoutY="76.0"
-                        strokeType="OUTSIDE" strokeWidth="0.0" text="Soul"
-                        style="-fx-cursor: hand;">
-                     <font><Font name="Exo 2 Regular" size="30.0"/></font>
+                  <Text fx:id="soulText" layoutX="141.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Soul">
+                     <font><Font name="Exo 2 Regular" size="30.0" /></font>
                   </Text>
 
                   <!-- SOUL KEEPER -->
-                  <Rectangle fx:id="keeperRect"
-                             arcHeight="5.0" arcWidth="5.0"
-                             height="63.0" layoutX="444.0" layoutY="33.0"
-                             stroke="WHITE" strokeType="INSIDE" width="182.0"
-                             style="-fx-cursor: hand;">
+                  <Rectangle fx:id="keeperRect" arcHeight="5.0" arcWidth="5.0" height="63.0" layoutX="444.0" layoutY="33.0" stroke="WHITE" strokeType="INSIDE" style="-fx-cursor: hand;" width="182.0">
                      <fill>
-                        <LinearGradient startX="0.0" startY="0.0" endX="1.0" endY="0.0">
+                        <LinearGradient endX="1.0" endY="0.0" startX="0.0" startY="0.0">
                            <stops>
-                              <Stop offset="0.0"><color><Color red="0.23137255" green="0.50980392" blue="0.96470588"/></color></Stop>
-                              <Stop offset="1.0"><color><Color red="0.06274510" green="0.72549020" blue="0.50588235"/></color></Stop>
+                              <Stop offset="0.0"><color><Color red="0.23137255" green="0.50980392" blue="0.96470588" /></color></Stop>
+                              <Stop offset="1.0"><color><Color red="0.06274510" green="0.72549020" blue="0.50588235" /></color></Stop>
                            </stops>
                         </LinearGradient>
                      </fill>
                   </Rectangle>
-                  <Text fx:id="keeperText" layoutX="454.0" layoutY="76.0"
-                        strokeType="OUTSIDE" strokeWidth="0.0" text="Soul Keeper"
-                        style="-fx-cursor: hand;">
-                     <font><Font name="Exo 2 Regular" size="30.0"/></font>
+                  <Text fx:id="keeperText" layoutX="454.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Soul Keeper">
+                     <font><Font name="Exo 2 Regular" size="30.0" /></font>
                   </Text>
                </children>
             </Pane>
@@ -106,6 +82,6 @@
       </Pane>
 
       <!-- White overlay (fades out over 5s; clicks disabled after fade in controller) -->
-      <Rectangle fx:id="whiteOverlay" x="0.0" y="0.0" width="800.0" height="480.0" fill="WHITE" strokeType="INSIDE"/>
+      <Rectangle fx:id="whiteOverlay" fill="WHITE" height="480.0" strokeType="INSIDE" width="800.0" x="0.0" y="0.0" />
    </children>
 </Pane>
