@@ -1,19 +1,79 @@
-/* Minimal, aesthetic, pastel-themed blog styles */
-:root {
-    -fx-font-family: "Segoe UI", Arial, sans-serif;
-}
-
-.category-box {
-    -fx-font-size: 13px;
-    -fx-text-fill: #333;
-}
-
-/* page background: very light and minimal */
 .root {
-    -fx-background-color: #fbfbfc;
+    -fx-background-color: linear-gradient(to bottom right, #f6f8fb, #f3f6fa);
+    -fx-font-family: "Segoe UI";
 }
 
-/* list view items spacing */
-.list-cell {
-    -fx-padding: 10 12 10 12;
+/* Header */
+.page-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2b2b2b;
 }
+
+.back-arrow {
+    -fx-font-size: 18px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #555;
+    -fx-cursor: hand;
+}
+.back-arrow:hover {
+    -fx-text-fill: #000;
+}
+
+.search-bar {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #dcdcdc;
+    -fx-padding: 6 15 6 15;
+    -fx-font-size: 14px;
+}
+
+/* Category buttons (boxes) */
+.category-box {
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+    -fx-pref-width: 340;
+    -fx-pref-height: 160;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-padding: 10 15 10 15;
+    -fx-wrap-text: true;
+}
+
+.category-box:hover {
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0.4, 0, 6);
+}
+
+/* Star button in post list */
+.star-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 18px;
+    -fx-text-fill: #aaa;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.4), 2, 0, 0, 0);
+}
+
+.star-button:hover {
+    -fx-text-fill: #f5b700;
+    -fx-effect: dropshadow(gaussian, rgba(255,215,0,0.5), 6, 0.8, 0, 0);
+}
+
+/* Glowing "saved" star */
+.star-button.saved {
+    -fx-text-fill: #f5b700;
+    -fx-effect: dropshadow(gaussian, rgba(255,215,0,0.9), 10, 0.8, 0, 0);
+}
+
+/* Post list style */
+.post-list {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+

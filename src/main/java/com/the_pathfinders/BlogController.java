@@ -1,5 +1,7 @@
 package com.the_pathfinders;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,7 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
+import javafx.util.Duration;
 import java.util.*;
 
 public class BlogController {
@@ -25,19 +27,12 @@ public class BlogController {
     private final ObservableList<Blog> allPosts = FXCollections.observableArrayList();
 
     private final List<String> categories = Arrays.asList(
-            "Depression",
-            "Anxiety Disorders",
-            "Bipolar Disorder",
-            "Schizophrenia",
-            "Obsessive-Compulsive Disorder",
-            "Post-Traumatic Stress Disorder",
-            "Eating Disorders",
-            "Personality Disorders",
-            "Neurodevelopmental Disorders",
-            "Substance-Related Disorders"
+            "Depression", "Anxiety Disorders", "Bipolar Disorder", "Schizophrenia",
+            "Obsessive-Compulsive Disorder", "Post-Traumatic Stress Disorder",
+            "Eating Disorder", "Personality Disorder", "Neurodevelopmental Disorder",
+            "ADHD", "OCD", "Social Anxiety Disorder"
     );
 
-    // Soft pastel colors (minimal)
     private final List<String> pastelColors = Arrays.asList(
             "#FDE8E8","#EAF7F3","#F9F0EA","#F2E7FF","#F0F8FF",
             "#FFF4E6","#F7F6F8","#E8F6FF","#FFF1F6","#F8FFF4"
@@ -49,27 +44,15 @@ public class BlogController {
 
     @FXML
     public void initialize() {
-        // set minimal page title
-        if (pageTitle != null) pageTitle.setText("Blog — Mental Health Categories");
+        if (pageTitle != null) pageTitle.setText("Find Your Calm 🌿");
 
-        // populate a few sample posts
         int i = 1;
         for (String cat : categories) {
-            allPosts.add(new Blog("b" + i, cat + " — understanding", "A short introduction to " + cat + ".", cat));
+            allPosts.add(new Blog("b" + i, cat + " — Understanding", "A short introduction to " + cat + ".", cat));
             i++;
         }
 
-        // build category boxes
-        for (int idx = 0; idx < categories.size(); idx++) {
-            String cat = categories.get(idx);
-            String color = pastelColors.get(idx % pastelColors.size());
-
-            Button box = new Button(cat);
-            box.getStyleClass().add("category-box");
-            box.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 8; -fx-border-radius: 8; -fx-padding: 8 12 8 12; -fx-cursor: hand;");
-            box.setOnAction(e -> filterByCategory(cat));
-            categoriesPane.getChildren().add(box);
-        }
+        buildCategoryBoxes();
 
         postsListView.setItems(FXCollections.observableArrayList(allPosts));
         postsListView.setCellFactory(lv -> new ListCell<>() {
@@ -77,21 +60,28 @@ public class BlogController {
             protected void updateItem(Blog item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
-                    setText(null);
                     setGraphic(null);
                 } else {
                     Label title = new Label(item.getTitle());
-                    title.setStyle("-fx-font-weight: bold; -fx-padding: 0 8 0 0;");
+                    title.setStyle("-fx-font-weight: bold;");
                     Label category = new Label(item.getCategory());
                     category.setStyle("-fx-font-size: 11; -fx-text-fill: #666;");
-                    Button save = new Button(item.isSavedForLater() ? "Saved" : "Save for later");
-                    save.setOnAction(evt -> {
+
+                    Button star = new Button(item.isSavedForLater() ? "★" : "☆");
+                    star.getStyleClass().add("star-button");
+                    if (item.isSavedForLater()) star.getStyleClass().add("saved");
+                    Tooltip.install(star, new Tooltip(item.isSavedForLater() ? "Saved" : "Save for later"));
+
+                    star.setOnAction(evt -> {
                         item.setSavedForLater(!item.isSavedForLater());
-                        save.setText(item.isSavedForLater() ? "Saved" : "Save for later");
+                        star.setText(item.isSavedForLater() ? "★" : "☆");
+                        if (item.isSavedForLater()) star.getStyleClass().add("saved");
+                        else star.getStyleClass().remove("saved");
                     });
 
-                    HBox h = new HBox(10, title, category, save);
-                    setGraphic(h);
+                    HBox row = new HBox(10, title, category, star);
+                    row.setStyle("-fx-alignment: CENTER_LEFT;");
+                    setGraphic(row);
                 }
             }
         });
@@ -99,14 +89,55 @@ public class BlogController {
         if (backBtn != null) backBtn.setOnAction(e -> goBackToDashboard());
     }
 
-    private void filterByCategory(String category) {
-        if (category == null || category.isBlank()) {
-            postsListView.setItems(FXCollections.observableArrayList(allPosts));
-            return;
+    // ✅ FIXED METHOD — correctly contains the box click behavior
+    private void buildCategoryBoxes() {
+        categoriesPane.getChildren().clear();
+
+        for (int idx = 0; idx < categories.size(); idx++) {
+            String cat = categories.get(idx);
+            String color = pastelColors.get(idx % pastelColors.size());
+
+            Button box = new Button(cat);
+            box.getStyleClass().add("category-box");
+            box.setStyle("-fx-background-color: " + color + ";");
+
+            // Smooth hover
+            box.setOnMouseEntered(e -> box.setScaleX(1.03));
+            box.setOnMouseExited(e -> box.setScaleX(1.0));
+
+            // ✅ on click: filter + popup
+            box.setOnAction(e -> {
+                filterByCategory(cat);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Coming Soon 💫");
+                alert.setHeaderText(cat);
+                alert.setContentText("Blogs for \"" + cat + "\" are on their way!\nStay tuned 🌸");
+                alert.showAndWait();
+            });
+
+            categoriesPane.getChildren().add(box);
         }
+    }
+
+    private void filterByCategory(String category) {
         List<Blog> filtered = new ArrayList<>();
-        for (Blog b : allPosts) if (category.equals(b.getCategory())) filtered.add(b);
+        for (Blog b : allPosts)
+            if (category.equals(b.getCategory())) filtered.add(b);
+
+        postsListView.setOpacity(0);
         postsListView.setItems(FXCollections.observableArrayList(filtered));
+
+        FadeTransition fade = new FadeTransition(Duration.millis(400), postsListView);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+
+        TranslateTransition slide = new TranslateTransition(Duration.millis(400), postsListView);
+        slide.setFromX(30);
+        slide.setToX(0);
+
+        fade.play();
+        slide.play();
     }
 
     private void goBackToDashboard() {
@@ -123,4 +154,3 @@ public class BlogController {
         }
     }
 }
- 
