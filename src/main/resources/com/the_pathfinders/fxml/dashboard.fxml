@@ -5,7 +5,7 @@
 
 <AnchorPane fx:id="root" xmlns:fx="http://javafx.com/fxml"
 			fx:controller="com.the_pathfinders.DashboardController"
-			stylesheets="/com/the_pathfinders/css/dashboard.css"
+			stylesheets="@css/dashboard.css"
 			prefWidth="900" prefHeight="600">
 
 	<children>
