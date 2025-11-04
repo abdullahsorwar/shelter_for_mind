@@ -6,8 +6,6 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,7 +15,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.*;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -44,9 +41,7 @@ public class LoginSignupController implements Initializable {
     /* Tabs + border */
     @FXML private StackPane tabStack;
     @FXML private HBox menuBar;
-    @FXML private Pane borderLayer;
     @FXML private Button loginBtn, signUpBtn;
-    @FXML private Path borderPath;
 
     /* Forms */
     @FXML private VBox loginForm, signupForm;
@@ -61,17 +56,6 @@ public class LoginSignupController implements Initializable {
 
     /* State */
     private boolean isLoginSelected = true;
-    private static final double ANIM_MS = 420;
-
-    /* Border path elements:
-       m0 -> bottom start at barLeft
-       l1 -> bottom to leftX (grow/shrink)
-       l2 -> up leftX to top
-       l3 -> across top to rightX
-       l4 -> down to bottom (rightX)
-       l5 -> bottom to barRight
-    */
-    private MoveTo m0; private LineTo l1,l2,l3,l4,l5;
 
     /* Styles for status labels */
     private static final String OK_STYLE  = "-fx-text-fill: #2e7d32; -fx-font-size: 12px;";
@@ -152,12 +136,7 @@ public class LoginSignupController implements Initializable {
             themeToggle.setOnAction(e -> toggleThemeWithFade());
         }
 
-        // Border path setup
-        borderPath.setStroke(Color.web("#4a90e2"));
-        borderPath.setStrokeWidth(2);
-        borderPath.setFill(Color.TRANSPARENT);
-        borderPath.setStrokeLineJoin(StrokeLineJoin.ROUND);
-        ensurePath();
+        // Border path removed
 
         // Form wiring
         tfLoginKeyVisible.textProperty().bindBidirectional(pfLoginKey.textProperty());
@@ -176,19 +155,17 @@ public class LoginSignupController implements Initializable {
         btnLoginSubmit.setPrefSize(220, 50);
         btnSubmit.setPrefSize(220, 50);
 
+    // Initial visibility: show login primary button by default, hide signup primary button
+    if (btnLoginSubmit != null) { btnLoginSubmit.setVisible(true); btnLoginSubmit.setManaged(true); }
+    if (btnSubmit != null) { btnSubmit.setVisible(false); btnSubmit.setManaged(false); }
+    if (lblLoginStatus != null) { lblLoginStatus.setVisible(true); lblLoginStatus.setManaged(true); }
+    if (lblSubmitStatus != null) { lblSubmitStatus.setVisible(false); lblSubmitStatus.setManaged(false); }
+
         // Reserve space for messages so layout never jumps
         lblLoginStatus.setMinHeight(18);
         lblSubmitStatus.setMinHeight(18);
 
-        // Initial snap and resize listeners (no drift)
-        Platform.runLater(() -> {
-            snapBorderTo(loginBtn); // default active
-            tabStack.widthProperty().addListener((o,ov,nv)->snapBorderTo(isLoginSelected?loginBtn:signUpBtn));
-            tabStack.heightProperty().addListener((o,ov,nv)->snapBorderTo(isLoginSelected?loginBtn:signUpBtn));
-            menuBar.widthProperty().addListener((o,ov,nv)->snapBorderTo(isLoginSelected?loginBtn:signUpBtn));
-            loginBtn.widthProperty().addListener((o,ov,nv)->snapBorderTo(isLoginSelected?loginBtn:signUpBtn));
-            signUpBtn.widthProperty().addListener((o,ov,nv)->snapBorderTo(isLoginSelected?loginBtn:signUpBtn));
-        });
+
     }
 
     /**
@@ -245,83 +222,27 @@ public class LoginSignupController implements Initializable {
         out.play();
     }
 
-    /* ---------- Path building ---------- */
-    private void ensurePath() {
-        m0 = new MoveTo();
-        l1 = new LineTo(); l2 = new LineTo(); l3 = new LineTo(); l4 = new LineTo(); l5 = new LineTo();
-        borderPath.getElements().setAll(m0,l1,l2,l3,l4,l5);
-    }
 
-    /* Map node bounds into borderLayer space */
-    private Bounds toLayer(Node n) {
-        return borderLayer.sceneToLocal(n.localToScene(n.getBoundsInLocal()));
-    }
-
-    private void snapBorderTo(Button activeBtn) {
-        // Bounds of active button text within the layer
-        Bounds a = toLayer(activeBtn);
-        Bounds bar = toLayer(menuBar);
-
-        double leftX   = a.getMinX();
-        double rightX  = a.getMaxX();
-        double topY    = a.getMinY();
-        double bottomY = a.getMaxY();
-
-        double barLeft  = bar.getMinX();
-        double barRight = bar.getMaxX();
-
-        // Draw according to spec:
-        // bottom line from barLeft to leftX
-        // U-cap up/over/right of active
-        // bottom line from rightX to barRight
-        m0.setX(barLeft);  m0.setY(bottomY);
-        l1.setX(leftX);    l1.setY(bottomY);
-        l2.setX(leftX);    l2.setY(topY);
-        l3.setX(rightX);   l3.setY(topY);
-        l4.setX(rightX);   l4.setY(bottomY);
-        l5.setX(barRight); l5.setY(bottomY);
-    }
-
-    private void animateBorderTo(Button activeBtn) {
-        Bounds a = toLayer(activeBtn);
-        Bounds bar = toLayer(menuBar);
-
-        double leftX   = a.getMinX();
-        double rightX  = a.getMaxX();
-        double bottomY = a.getMaxY();
-
-        double barLeft  = bar.getMinX();
-        double barRight = bar.getMaxX();
-
-        // Animate only the horizontal positions that should move
-        Timeline tl = new Timeline(
-            new KeyFrame(Duration.millis(ANIM_MS),
-                new KeyValue(m0.xProperty(), barLeft),
-                new KeyValue(l1.xProperty(), leftX),
-                new KeyValue(l2.xProperty(), leftX),
-                new KeyValue(l3.xProperty(), rightX),
-                new KeyValue(l4.xProperty(), rightX),
-                new KeyValue(l5.xProperty(), barRight),
-                new KeyValue(m0.yProperty(), bottomY), // keep Y steady
-                new KeyValue(l1.yProperty(), bottomY),
-                new KeyValue(l4.yProperty(), bottomY),
-                new KeyValue(l5.yProperty(), bottomY)
-        ));
-        tl.play();
-    }
 
     /* ---------- Tabs ---------- */
     private void switchMenu(boolean toLogin) {
         if (isLoginSelected == toLogin) return;
         isLoginSelected = toLogin;
 
+        // Clear all form fields and error messages
+        clearAllFields();
+
         // Show/Hide forms (centered; button slot fixed)
         boolean showSignup = !isLoginSelected;
         signupForm.setVisible(showSignup); signupForm.setManaged(showSignup);
         loginForm.setVisible(!showSignup); loginForm.setManaged(!showSignup);
 
-        // Animate border to the new active tab
-        animateBorderTo(isLoginSelected ? loginBtn : signUpBtn);
+        // Toggle which primary button is visible at the bottom and which status label is shown
+        if (btnLoginSubmit != null) { btnLoginSubmit.setVisible(isLoginSelected); btnLoginSubmit.setManaged(isLoginSelected); }
+        if (btnSubmit != null) { btnSubmit.setVisible(!isLoginSelected); btnSubmit.setManaged(!isLoginSelected); }
+        if (lblLoginStatus != null) { lblLoginStatus.setVisible(isLoginSelected); lblLoginStatus.setManaged(isLoginSelected); }
+        if (lblSubmitStatus != null) { lblSubmitStatus.setVisible(!isLoginSelected); lblSubmitStatus.setManaged(!isLoginSelected); }
+
         // Update css classes (glow) to reflect active tab
         updateActiveStyles();
     }
@@ -340,6 +261,31 @@ public class LoginSignupController implements Initializable {
 
 
     private String value(TextInputControl c) { String s=c.getText(); return s==null?"":s.trim(); }
+
+    /* Clear all form fields and error messages */
+    private void clearAllFields() {
+        // Clear login form
+        tfLoginId.clear();
+        pfLoginKey.clear();
+        tfLoginKeyVisible.clear();
+        lblLoginStatus.setText("");
+
+        // Clear signup form
+        tfSoulName.clear();
+        tfSoulId.clear();
+        pfSoulKey.clear();
+        tfSoulKeyVisible.clear();
+        tfMobile.clear();
+        tfDob.clear();
+        lblSubmitStatus.setText("");
+
+        // Reset checkboxes
+        cbShowLoginKey.setSelected(false);
+        cbShowSignupKey.setSelected(false);
+
+        // Reset country code
+        cbCountryCode.getSelectionModel().selectFirst();
+    }
 
     /* ---------- Submit handlers (unchanged logic shell) ---------- */
     private void onSubmitLogin() {

@@ -72,7 +72,7 @@ public class DashboardController {
         Optional<ButtonType> res = a.showAndWait();
         if (res.isPresent() && res.get() == ButtonType.OK) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/login_signup.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/login_signup.fxml"));
                 Parent loginRoot = loader.load();
                 LoginSignupController loginController = loader.getController();
                 loginController.setRepository(new SoulRepository()); // Pass a fresh repository instance
