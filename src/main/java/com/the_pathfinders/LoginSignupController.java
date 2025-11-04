@@ -347,23 +347,71 @@ public class LoginSignupController implements Initializable {
         }
     }
 
+    /* Validation helpers */
+    private boolean isValidName(String name) {
+        return name.matches("^[a-zA-Z][a-zA-Z .\\-]*[a-zA-Z]$");
+    }
+
+    private boolean isValidSoulId(String id) {
+        return id.matches("^[a-zA-Z0-9_]+$");
+    }
+
+    private boolean isValidSoulKey(String key) {
+        return key.matches("^[a-zA-Z0-9_]{8,}$");
+    }
+
+    private boolean isValidPhone(String phone) {
+        return phone.matches("^[0-9]+$") && phone.length() >= 8 && phone.length() <= 12;
+    }
+
     private void onSubmitSignup() {
+        // Clear previous status message first
+        lblSubmitStatus.setText("");
+        
         String n=value(tfSoulName), id=value(tfSoulId), key=value(pfSoulKey), mob=value(tfMobile), dob=value(tfDob);
-        if (n.isEmpty() || id.isEmpty() || key.isEmpty() || mob.isEmpty()) { setErr(lblSubmitStatus,"Fill all fields!"); return; }
-        try{
+        if (n.isEmpty() || id.isEmpty() || key.isEmpty() || mob.isEmpty()) { 
+            setErr(lblSubmitStatus,"Fill all fields!"); 
+            return; 
+        }
+
+        // Validate name format
+        if (!isValidName(n)) {
+            setErr(lblSubmitStatus, "Name must contain only letters, spaces, dots, and hyphens");
+            return;
+        }
+
+        // Validate date format first
+        LocalDate dobDate = null;
+        if (!dob.isEmpty()) {
+            try {
+                dobDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            } catch (Exception e) {
+                setErr(lblSubmitStatus, "Invalid date format! Use DD/MM/YYYY"); 
+                return;
+            }
+        }
+
+        // Validate soul ID format
+        if (!isValidSoulId(id)) {
+            setErr(lblSubmitStatus, "Soul ID can only contain letters, numbers, and underscore");
+            return;
+        }
+
+        // Validate soul key format and length
+        if (!isValidSoulKey(key)) {
+            setErr(lblSubmitStatus, "Soul Key must be at least 8 characters and contain only letters, numbers, and underscore");
+            return;
+        }
+
+        // Validate phone number
+        if (!isValidPhone(mob)) {
+            setErr(lblSubmitStatus, "Phone number must be between 8 and 12 digits");
+            return;
+        }
+
+        try {
             if (repo==null) throw new IllegalStateException("Repository not set");
             if (repo.idExists(id)) { setErr(lblSubmitStatus,"Duplicate ID!"); return; }
-            
-            // Parse date if provided
-            LocalDate dobDate = null;
-            if (!dob.isEmpty()) {
-                try {
-                    dobDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                } catch (Exception e) {
-                    setErr(lblSubmitStatus, "Invalid date format! Use DD/MM/YYYY"); 
-                    return;
-                }
-            }
             
             repo.create(new SoulRepository.Soul(id, key, n, dobDate, mob, cbCountryCode.getSelectionModel().getSelectedItem()));
             setOk(lblSubmitStatus,"Success! Your data is saved!");
