@@ -16,7 +16,7 @@
 
       <!-- Background image: no offsets; controller binds to window size -->
       <ImageView fx:id="bgImage" fitHeight="480.0" fitWidth="800.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="false">
-         <image><Image url="@../../../assets/images/green_bg.jpg" /></image>
+         <image><Image url="@/assets/images/green_bg.jpg" /></image>
       </ImageView>
 
       <!-- Fixed-size content centered by controller -->
@@ -27,7 +27,7 @@
             <Pane fx:id="logoBlock" layoutX="253.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <ImageView fx:id="logoImage" fitHeight="376.0" fitWidth="408.0" layoutX="-96.0" layoutY="-88.0" preserveRatio="true">
-                     <image><Image url="@../../../assets/images/logo_new.png" /></image>
+                     <image><Image url="@/assets/images/logo_new.png" /></image>
                   </ImageView>
 
                   <!-- 'Login As' (animates in) -->

@@ -5,7 +5,7 @@
 <VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.the_pathfinders.BlogController"
       spacing="12" alignment="TOP_CENTER"
-      stylesheets="/com/the_pathfinders/blog.css">
+      stylesheets="/com/the_pathfinders/css/blog.css">
 
     <!-- Header -->
     <HBox spacing="10" alignment="CENTER" style="-fx-padding: 16 30 0 30;">

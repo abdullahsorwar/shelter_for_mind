@@ -19,7 +19,7 @@ public class App extends Application {
         DB.init(JDBC_URL);
         DbMigrations.runAll();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("initial.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/initial.fxml"));
         Parent root = loader.load();
 
         Scene scene = new Scene(root);

@@ -60,8 +60,8 @@ public class InitialController implements Initializable {
             contentPane.boundsInParentProperty().addListener((o, ov, nv) -> centerContent());
         });
 
-        trySetImage(bgImage, "/com/the_pathfinders/green_bg.jpg", "/green_bg.jpg");
-        trySetImage(logoImage, "/com/the_pathfinders/logo_new.png", "/logo_new.png");
+        trySetImage(bgImage, "/assets/images/green_bg.jpg", "/green_bg.jpg");
+        trySetImage(logoImage, "/assets/images/logo_new.png", "/logo_new.png");
 
         playIntroSequence();
 
@@ -114,7 +114,7 @@ public class InitialController implements Initializable {
 
     private void goToLoginSignup() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("login_signup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/login_signup.fxml"));
             Parent loginRoot = loader.load();
             LoginSignupController controller = loader.getController();
             controller.setRepository(new SoulRepository());

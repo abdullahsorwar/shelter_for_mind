@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Path?>
 
-<AnchorPane fx:id="root" prefHeight="720" prefWidth="1280" stylesheets="@css/login_signup.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.LoginSignupController">
+<AnchorPane fx:id="root" prefHeight="720" prefWidth="1280" stylesheets="/com/the_pathfinders/css/login_signup.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.LoginSignupController">
 
     <children>
 

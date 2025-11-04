@@ -90,7 +90,7 @@ public class LoginSignupController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Logo (centered, big)
         try {
-            URL a = getClass().getResource("/com/the_pathfinders/logo_new.png");
+            URL a = getClass().getResource("/assets/images/logo_new.png");
             if (a != null) {
                 Image img = new Image(a.toExternalForm(), 360, 360, true, true);
                 logoImage.setImage(img);
@@ -99,7 +99,7 @@ public class LoginSignupController implements Initializable {
 
         // Background video (if provided) — play behind the UI and add a subtle dark overlay
         try {
-            URL v = getClass().getResource("/com/the_pathfinders/background.mp4");
+            URL v = getClass().getResource("/assets/videos/background.mp4");
             if (v != null && root != null) {
                 Media media = new Media(v.toExternalForm());
                 bgPlayer = new MediaPlayer(media);
@@ -372,7 +372,7 @@ public class LoginSignupController implements Initializable {
     // Load dashboard.fxml, set user context and swap scene root
     private void openDashboard(String id, String name) {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/the_pathfinders/dashboard.fxml"));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml"));
             javafx.scene.Parent dashRoot = loader.load();
             Object controller = loader.getController();
             if (controller instanceof DashboardController dc) {
