@@ -20,7 +20,10 @@
 /* Subtitle under logo */
 .label.subtext {
     -fx-text-fill: #ffffff;
-    -fx-font-size: 14px;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 20 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 4, 0.2, 0, 1);
 }
 
 /* Text-only tabs */
@@ -29,10 +32,18 @@
     -fx-border-color: transparent;
     -fx-text-fill: #e6edff;
     -fx-font-weight: bold;
-    -fx-padding: 4 8 4 8;
+    -fx-font-size: 14px;
+    -fx-padding: 0;
+    -fx-min-width: 140;
+    -fx-pref-width: 140;
+    -fx-max-width: 140;
+    -fx-min-height: 45;
+    -fx-pref-height: 45;
+    -fx-max-height: 45;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-effect: none;
+    -fx-alignment: center;
 }
 
 /* Inputs */
@@ -47,24 +58,44 @@
     -fx-padding: 10 12;
 }
 
-/* Modern DatePicker + ComboBox */
-.date-picker, .combo-box {
+/* Modern ComboBox */
+.combo-box {
     -fx-background-color: rgba(255,255,255,0.85);
     -fx-border-color: #a3c4f3;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
-    -fx-padding: 0 8 0 8;
+    -fx-padding: 8;
 }
-.date-picker .arrow-button, .combo-box .arrow-button {
-    -fx-background-color: linear-gradient(to bottom, #a3c4f3, #7897d4);
-    -fx-background-radius: 0 10 10 0;
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
 }
-.date-picker-popup, .combo-box-popup .list-view {
-    -fx-background-color: #1f2b3a;
-    -fx-background-insets: 0;
-    -fx-background-radius: 12;
-    -fx-border-color: #5d7fd6;
-    -fx-border-radius: 12;
+
+.combo-box .arrow {
+    -fx-background-color: #4a90e2;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: rgba(255,255,255,0.95);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);
+    -fx-background-radius: 8;
+    -fx-border-color: #a3c4f3;
+    -fx-border-radius: 8;
+}
+
+.combo-box-popup .list-cell {
+    -fx-padding: 8 12;
+    -fx-text-fill: #1f1f1f;
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: rgba(74,144,226,0.1);
+}
+
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: rgba(74,144,226,0.2);
+    -fx-text-fill: #4a90e2;
 }
 .date-picker-popup > .calendar-grid, .date-picker-popup > .month-year-pane {
     -fx-background-color: transparent;

@@ -19,7 +19,6 @@ import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.*;
 import javafx.util.Duration;
-import javafx.util.StringConverter;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -56,7 +55,7 @@ public class LoginSignupController implements Initializable {
     @FXML private TextField tfLoginKeyVisible, tfSoulKeyVisible;
     @FXML private CheckBox cbShowLoginKey, cbShowSignupKey;
     @FXML private ComboBox<String> cbCountryCode;
-    @FXML private DatePicker dpDob;
+    @FXML private TextField tfDob;
     @FXML private Label lblLoginStatus, lblSubmitStatus;
     @FXML private Button btnLoginSubmit, btnSubmit;
 
@@ -165,7 +164,8 @@ public class LoginSignupController implements Initializable {
         tfSoulKeyVisible.textProperty().bindBidirectional(pfSoulKey.textProperty());
         cbShowLoginKey.setOnAction(e -> toggleShowLoginKey(cbShowLoginKey.isSelected()));
         cbShowSignupKey.setOnAction(e -> toggleShowSignupKey(cbShowSignupKey.isSelected()));
-        configureDobAsDDMMYYYY(dpDob);
+        // Set date format hint
+        tfDob.setPromptText("DD/MM/YYYY");
         cbCountryCode.getItems().setAll("+1 (USA)", "+91 (IND)", "+880 (BAN)");
         cbCountryCode.getSelectionModel().selectFirst();
 
@@ -337,17 +337,7 @@ public class LoginSignupController implements Initializable {
     }
 
     /* ---------- Helpers ---------- */
-    private void configureDobAsDDMMYYYY(DatePicker dp) {
-        final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        dp.setPromptText("DD/MM/YYYY");
-        dp.setConverter(new StringConverter<>() {
-            @Override public String toString(LocalDate date) { return date == null ? "" : fmt.format(date); }
-            @Override public LocalDate fromString(String s) {
-                if (s == null || s.trim().isEmpty()) return null;
-                try { return LocalDate.parse(s.trim(), fmt); } catch (Exception ex) { return null; }
-            }
-        });
-    }
+
 
     private String value(TextInputControl c) { String s=c.getText(); return s==null?"":s.trim(); }
 
@@ -412,12 +402,24 @@ public class LoginSignupController implements Initializable {
     }
 
     private void onSubmitSignup() {
-        String n=value(tfSoulName), id=value(tfSoulId), key=value(pfSoulKey), mob=value(tfMobile);
+        String n=value(tfSoulName), id=value(tfSoulId), key=value(pfSoulKey), mob=value(tfMobile), dob=value(tfDob);
         if (n.isEmpty() || id.isEmpty() || key.isEmpty() || mob.isEmpty()) { setErr(lblSubmitStatus,"Fill all fields!"); return; }
         try{
             if (repo==null) throw new IllegalStateException("Repository not set");
             if (repo.idExists(id)) { setErr(lblSubmitStatus,"Duplicate ID!"); return; }
-            repo.create(new SoulRepository.Soul(id,key,n,dpDob.getValue(),mob, cbCountryCode.getSelectionModel().getSelectedItem()));
+            
+            // Parse date if provided
+            LocalDate dobDate = null;
+            if (!dob.isEmpty()) {
+                try {
+                    dobDate = LocalDate.parse(dob, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                } catch (Exception e) {
+                    setErr(lblSubmitStatus, "Invalid date format! Use DD/MM/YYYY"); 
+                    return;
+                }
+            }
+            
+            repo.create(new SoulRepository.Soul(id, key, n, dobDate, mob, cbCountryCode.getSelectionModel().getSelectedItem()));
             setOk(lblSubmitStatus,"Success! Your data is saved!");
         } catch (DuplicateIdException d){ setErr(lblSubmitStatus,"Duplicate ID!"); }
           catch (Exception ex){ setErr(lblSubmitStatus,"Server error!"); }
