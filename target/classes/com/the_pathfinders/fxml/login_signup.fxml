@@ -14,72 +14,98 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" prefHeight="720" prefWidth="1280" stylesheets="/com/the_pathfinders/css/login_signup.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.LoginSignupController">
+<AnchorPane fx:id="root" prefHeight="720" prefWidth="1280"
+    stylesheets="/com/the_pathfinders/css/login_signup.css" xmlns="http://javafx.com/javafx/25"
+    xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.LoginSignupController">
 
     <children>
 
         <!-- HEADER (logo + subtitle) — centered in the upper area -->
-        <StackPane prefHeight="142.0" prefWidth="1280.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0">
+        <StackPane prefHeight="142.0" prefWidth="1280.0" AnchorPane.leftAnchor="0"
+            AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0.0">
             <!-- Subtitle below with some bottom padding -->
-            <Label fx:id="subtitleLabel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="400.0" styleClass="subtext" text="A place for refreshing the soul" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER" />
+            <Label fx:id="subtitleLabel" alignment="CENTER" maxHeight="-Infinity"
+                maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0"
+                prefWidth="400.0" styleClass="subtext" text="A place for refreshing the soul"
+                textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER" />
             <!-- Logo on top -->
-            <ImageView fx:id="logoImage" fitHeight="115.0" fitWidth="115.0" preserveRatio="true" scaleX="1.5" scaleY="1.5" StackPane.alignment="TOP_CENTER" />
+            <ImageView fx:id="logoImage" fitHeight="115.0" fitWidth="115.0" preserveRatio="true"
+                scaleX="1.5" scaleY="1.5" StackPane.alignment="TOP_CENTER" />
         </StackPane>
 
         <!-- Theme toggle (top-right) -->
-        <ToggleButton fx:id="themeToggle" styleClass="theme-toggle" text="Dark" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="12.0" />
+        <ToggleButton fx:id="themeToggle" styleClass="theme-toggle" text="Dark"
+            AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="12.0" />
 
-           <!-- FROSTED PANEL -->
-        <VBox fx:id="rightPane" alignment="TOP_CENTER" layoutX="250.0" layoutY="140.0" prefHeight="470.0" prefWidth="780.0" spacing="0.0" styleClass="pane" AnchorPane.bottomAnchor="56.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="252.0" AnchorPane.topAnchor="140.0">
+        <!-- FROSTED PANEL -->
+        <VBox fx:id="rightPane" alignment="TOP_CENTER" layoutX="250.0" layoutY="140.0"
+            prefHeight="470.0" prefWidth="780.0" spacing="0.0" styleClass="pane"
+            AnchorPane.bottomAnchor="56.0" AnchorPane.leftAnchor="250.0"
+            AnchorPane.rightAnchor="252.0" AnchorPane.topAnchor="140.0">
             <!-- Top: login / sign up tabs (fixed at top-center of this pane) -->
-            <HBox fx:id="menuBar" alignment="TOP_CENTER" maxWidth="300" minWidth="300" prefHeight="30.0" prefWidth="300.0">
-                <Button fx:id="loginBtn" maxHeight="45.0" maxWidth="140" minHeight="45.0" minWidth="140" prefHeight="45.0" prefWidth="140" styleClass="tab-text" text="Login" />
+            <HBox fx:id="menuBar" alignment="TOP_CENTER" maxWidth="300" minWidth="300"
+                prefHeight="30.0" prefWidth="300.0">
+                <Button fx:id="loginBtn" maxHeight="45.0" maxWidth="140" minHeight="45.0"
+                    minWidth="140" prefHeight="45.0" prefWidth="140" styleClass="tab-text"
+                    text="Login" />
                 <Region maxWidth="20" minWidth="20" prefWidth="20" />
-                <Button fx:id="signUpBtn" maxHeight="45.0" maxWidth="140" minHeight="45.0" minWidth="140" prefHeight="45.0" prefWidth="140" styleClass="tab-text" text="Sign Up" />
+                <Button fx:id="signUpBtn" maxHeight="45.0" maxWidth="140" minHeight="45.0"
+                    minWidth="140" prefHeight="45.0" prefWidth="140" styleClass="tab-text"
+                    text="Sign Up" />
             </HBox>
 
-               <!-- invisible tabStack used by controller for border snapping/animation calculations -->
-            <StackPane fx:id="tabStack" alignment="CENTER" managed="false" minHeight="20.0" prefHeight="20.0" prefWidth="778.0" />
+            <!-- invisible tabStack used by controller for border snapping/animation calculations -->
+            <StackPane fx:id="tabStack" alignment="CENTER" managed="false" minHeight="20.0"
+                prefHeight="20.0" prefWidth="778.0" />
 
-               <!-- Center: forms area. Keep forms in a StackPane so active one is visible and centered -->
-            <VBox fx:id="centerWrapper" alignment="CENTER" prefHeight="360.0" spacing="0.0" VBox.vgrow="ALWAYS">
+            <!-- Center: forms area. Keep forms in a StackPane so active one is visible and centered -->
+            <VBox fx:id="centerWrapper" alignment="CENTER" prefHeight="360.0" spacing="0.0"
+                VBox.vgrow="ALWAYS">
                 <StackPane fx:id="formStack" alignment="CENTER" prefWidth="560.0">
                     <!-- LOGIN FORM -->
                     <VBox fx:id="loginForm" alignment="CENTER" maxWidth="560" spacing="12">
                         <TextField fx:id="tfLoginId" maxWidth="560" promptText="Soul ID" />
                         <PasswordField fx:id="pfLoginKey" maxWidth="560" promptText="Soul Key" />
-                        <TextField fx:id="tfLoginKeyVisible" managed="false" maxWidth="560" promptText="Soul Key" visible="false" />
+                        <TextField fx:id="tfLoginKeyVisible" managed="false" maxWidth="560"
+                            promptText="Soul Key" visible="false" />
                         <CheckBox fx:id="cbShowLoginKey" text="Show Key" />
                     </VBox>
 
-                       <!-- SIGNUP FORM -->
-                    <VBox fx:id="signupForm" alignment="CENTER" managed="false" maxWidth="560" spacing="12" visible="false">
+                    <!-- SIGNUP FORM -->
+                    <VBox fx:id="signupForm" alignment="CENTER" managed="false" maxWidth="560"
+                        spacing="12" visible="false">
                         <TextField fx:id="tfSoulName" maxWidth="560" promptText="Name" />
                         <TextField fx:id="tfDob" maxWidth="560" promptText="DD/MM/YYYY" />
                         <TextField fx:id="tfSoulId" maxWidth="560" promptText="Soul ID" />
                         <PasswordField fx:id="pfSoulKey" maxWidth="560" promptText="Soul Key" />
-                        <TextField fx:id="tfSoulKeyVisible" managed="false" maxWidth="560" promptText="Soul Key" visible="false" />
+                        <TextField fx:id="tfSoulKeyVisible" managed="false" maxWidth="560"
+                            promptText="Soul Key" visible="false" />
 
-                           <HBox alignment="CENTER" spacing="8">
+                        <HBox alignment="CENTER" spacing="8">
                             <ComboBox fx:id="cbCountryCode" prefWidth="140" />
-                            <TextField fx:id="tfMobile" promptText="Phone Number" HBox.hgrow="ALWAYS" />
+                            <TextField fx:id="tfMobile" promptText="Phone Number"
+                                HBox.hgrow="ALWAYS" />
                         </HBox>
 
-                           <CheckBox fx:id="cbShowSignupKey" text="Show Key" />
+                        <CheckBox fx:id="cbShowSignupKey" text="Show Key" />
                     </VBox>
                 </StackPane>
             </VBox>
 
-               <!-- Bottom: primary action and status. Fixed position for consistent layout -->
-            <VBox fx:id="bottomBox" alignment="BOTTOM_CENTER" prefHeight="80.0" spacing="8.0" VBox.vgrow="NEVER">
+            <!-- Bottom: primary action and status. Fixed position for consistent layout -->
+            <VBox fx:id="bottomBox" alignment="BOTTOM_CENTER" prefHeight="80.0" spacing="8.0"
+                VBox.vgrow="NEVER">
                 <!-- Primary buttons for each mode. Controller should toggle managed/visible as
                 needed -->
-                <Button fx:id="btnLoginSubmit" maxHeight="30.0" maxWidth="220" minHeight="30.0" minWidth="220" prefHeight="30.0" prefWidth="220" styleClass="primary-button" text="Login" />
-                <Button fx:id="btnSubmit" managed="false" maxHeight="30.0" maxWidth="220" minHeight="30.0" minWidth="220" prefHeight="30.0" prefWidth="220" styleClass="primary-button" text="Sign Up" visible="false" />
+                <Button fx:id="btnLoginSubmit" maxHeight="30.0" maxWidth="220" minHeight="30.0"
+                    minWidth="220" prefHeight="30.0" prefWidth="220" styleClass="primary-button"
+                    text="Login" />
+                <Button fx:id="btnSubmit" managed="false" maxHeight="30.0" maxWidth="220"
+                    minHeight="30.0" minWidth="220" prefHeight="30.0" prefWidth="220"
+                    styleClass="primary-button" text="Sign Up" visible="false" />
                 <Label fx:id="lblLoginStatus" alignment="CENTER" maxWidth="560" minHeight="18" />
                 <Label fx:id="lblSubmitStatus" alignment="CENTER" maxWidth="560" minHeight="18" />
             </VBox>
-
-           </VBox>
+        </VBox>
     </children>
 </AnchorPane>
