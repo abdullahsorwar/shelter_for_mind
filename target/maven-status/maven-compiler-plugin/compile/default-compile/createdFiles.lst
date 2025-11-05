@@ -1,10 +1,13 @@
 com\the_pathfinders\Blog.class
 com\the_pathfinders\BlogController.class
 com\the_pathfinders\db\DB.class
+com\the_pathfinders\Journal.class
+com\the_pathfinders\JournalController.class
 com\the_pathfinders\db\SoulRepository.class
 com\the_pathfinders\InitialController.class
 com\the_pathfinders\App.class
 com\the_pathfinders\db\SoulRepository$DuplicateIdException.class
+com\the_pathfinders\JournalController$JournalEntry.class
 com\the_pathfinders\LoginSignupController.class
 com\the_pathfinders\DashboardController.class
 com\the_pathfinders\db\SoulRepository$Soul.class
