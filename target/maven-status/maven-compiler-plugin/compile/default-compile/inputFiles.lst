@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\JournalController.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\LoginSignupController.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\InitialController.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\DbMigrations.java
@@ -7,17 +7,5 @@ D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\BlogC
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\App.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\Blog.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\DashboardController.java
+D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\Journal.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\DB.java
-=======
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\BlogController.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\db\DbMigrations.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\JournalController.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\LoginSignupController.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\DashboardController.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\db\DB.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\InitialController.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\App.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\db\SoulRepository.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\Blog.java
-C:\Users\Asus\Documents\Projects\shelter_of_mind\src\main\java\com\the_pathfinders\Journal.java
->>>>>>> 494a1ee397188f9a0c145316168a192dff7a3394
