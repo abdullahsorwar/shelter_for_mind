@@ -20,6 +20,7 @@ public class DashboardController {
     @FXML private AnchorPane root;
     @FXML private Label userLabel;
     @FXML private ImageView userImage;
+    @FXML private ImageView logoImage;
     @FXML private Button journalingBtn;
     @FXML private Button blogsBtn;
     @FXML private Button logoutBtn;
@@ -27,6 +28,9 @@ public class DashboardController {
     private String soulId;
 
     public void initialize() {
+        // Initialize logo
+        setLogo();
+        
         // Minimal wiring: buttons can be extended later
         journalingBtn.setOnAction(e -> {
             // placeholder: could open journaling view
@@ -56,10 +60,30 @@ public class DashboardController {
         // try to load a username.jpg from resources (fallback to nothing)
         try {
             URL u = getClass().getResource("/com/the_pathfinders/" + this.soulId + ".jpg");
-            if (u == null) u = getClass().getResource("/assets/icons/username.png");
+            if (u == null) u = getClass().getResource("/assets/icons/user.png");
             if (u != null && userImage != null) {
                 Image img = new Image(u.toExternalForm(), 38, 38, true, true);
                 userImage.setImage(img);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    public void setLogo()
+    {
+        try {
+            URL u = getClass().getResource("/assets/images/logo_new.png");
+            if (u != null && logoImage != null) {
+                // Load image at higher quality - don't force size in Image constructor
+                Image img = new Image(u.toExternalForm(), 0, 0, true, true);
+                logoImage.setImage(img);
+                // Set the fitWidth/fitHeight on the ImageView instead
+                logoImage.setFitWidth(200);
+                logoImage.setFitHeight(200);
+                logoImage.setTranslateX(-50);
+                logoImage.setTranslateY(-50);
+                // Enable better quality scaling
+                logoImage.setSmooth(true);
+                logoImage.setCache(true);
             }
         } catch (Exception ignored) {}
     }

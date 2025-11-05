@@ -27,3 +27,11 @@ Button {
 	-fx-text-fill: #ffffff;
 	-fx-padding: 6 10;
 }
+
+#logoutBtn:hover {
+	-fx-background-color: rgba(255, 0, 0, 0.5);
+	-fx-border-color: rgba(255,255,255,0.12);
+	-fx-border-radius: 8;
+	-fx-text-fill: #ffffff;
+	-fx-padding: 6 10;
+}
