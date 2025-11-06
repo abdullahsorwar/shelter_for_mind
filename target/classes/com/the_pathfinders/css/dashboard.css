@@ -58,6 +58,12 @@
 	-fx-padding: 6 10;
 }
 
+#logoutBtn:hover {
+	-fx-background-color: rgba(233, 52, 52, 0.729);
+	-fx-border-color: rgba(28, 15, 15, 0.2);
+	-fx-padding: 6 10;
+}
+
 /* Responsive: if space is tight, allow horizontal scrolling */
 #buttonRow {
 	-fx-padding: 8 12 8 12;
