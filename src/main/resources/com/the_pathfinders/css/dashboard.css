@@ -1,37 +1,79 @@
-/* Minimal dashboard styles */
+/* Minimal soothing dashboard styles inspired by blog theme */
 .root {
-	-fx-font-family: "Poppins", "Segoe UI", sans-serif;
-	-fx-background-color: linear-gradient(to bottom right, rgba(10,12,18,0.65), rgba(20,24,34,0.65));
+	-fx-background-color: linear-gradient(to bottom right, #f6f8fb, #f3f6fa);
+	-fx-font-family: "Segoe UI", "Poppins", sans-serif;
 }
 
 /* Top-right user label */
-.label {
-	-fx-text-fill: #eaf0ff;
+#userLabel {
+	-fx-text-fill: #2b2b2b;
+	-fx-font-size: 16px;
 }
 
-/* Buttons in the center */
-Button {
-	-fx-pref-width: 180;
-	-fx-pref-height: 48;
-	-fx-background-radius: 12;
-	-fx-background-color: linear-gradient(to right, #4a90e2, #657ced);
-	-fx-text-fill: white;
-	-fx-font-weight: bold;
+/* Card-like pastel buttons row */
+.card-btn {
+	-fx-pref-width: 160px;
+	-fx-pref-height: 56px;
+	-fx-background-radius: 14px;
+	-fx-border-radius: 14px;
+	-fx-font-weight: 600;
+	-fx-font-size: 14px;
+	-fx-text-fill: #1f2937; /* dark slate */
+	-fx-cursor: hand;
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);
 }
 
-/* Logout small button */
+.card-btn:hover {
+	-fx-scale-x: 1.03;
+	-fx-scale-y: 1.03;
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 10, 0, 0, 4);
+}
+
+/* Pastel colors per button id */
+#journalingBtn { -fx-background-color: linear-gradient(to bottom right, #ffefe9, #ffdbe6); }
+#moodTrackerBtn { -fx-background-color: linear-gradient(to bottom right, #e8fff6, #d1fff0); }
+#remindersBtn { -fx-background-color: linear-gradient(to bottom right, #fff9e6, #fff0c2); }
+#progressBtn { -fx-background-color: linear-gradient(to bottom right, #f3e8ff, #e7d4ff); }
+#selfDevBtn { -fx-background-color: linear-gradient(to bottom right, #e8fff0, #c7ffd9); }
+#mindWorkoutBtn { -fx-background-color: linear-gradient(to bottom right, #e8f4ff, #d3eaff); }
+#goalsBtn { -fx-background-color: linear-gradient(to bottom right, #e9fff8, #d8fff2); }
+#settingsBtn { -fx-background-color: linear-gradient(to bottom right, #f5f5f7, #ececf2); }
+#blogsBtn { -fx-background-color: linear-gradient(to bottom right, #f8eefc, #efe6fb); }
+
+/* Separator subtle line */
+.separator { -fx-background-color: rgba(0,0,0,0.06); }
+
+/* Logo & user image styling */
+#logoImage, #userImage {
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 3);
+	-fx-smooth: true;
+}
+
+/* Logout button (bottom-left) - understated */
 #logoutBtn {
 	-fx-background-color: transparent;
-	-fx-border-color: rgba(255,255,255,0.12);
-	-fx-border-radius: 8;
-	-fx-text-fill: #ffffff;
+	-fx-border-color: rgba(0,0,0,0.06);
+	-fx-border-radius: 10px;
+	-fx-text-fill: #374151;
 	-fx-padding: 6 10;
 }
 
-#logoutBtn:hover {
-	-fx-background-color: rgba(255, 0, 0, 0.5);
-	-fx-border-color: rgba(255,255,255,0.12);
-	-fx-border-radius: 8;
-	-fx-text-fill: #ffffff;
-	-fx-padding: 6 10;
+/* Responsive: if space is tight, allow horizontal scrolling */
+#buttonRow {
+	-fx-padding: 8 12 8 12;
+}
+
+/* Large horizontal card style for wide dashboard buttons */
+.card-large {
+	-fx-pref-width: 520px; /* wide horizontal card */
+	-fx-pref-height: 98px; /* taller for comfortable touch targets */
+	-fx-font-size: 16px;
+	-fx-alignment: CENTER_LEFT;
+	-fx-padding: 0 24 0 18; /* left padding for icon/text spacing */
+}
+
+/* Make button text slightly bolder and keep color contrast on pastel backgrounds */
+.card-large .text {
+	-fx-font-weight: 700;
+}
 }

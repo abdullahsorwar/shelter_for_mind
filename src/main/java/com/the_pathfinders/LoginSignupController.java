@@ -330,7 +330,8 @@ public class LoginSignupController implements Initializable {
                 root.getScene().setRoot(dashRoot);
             }
         } catch (Exception ex) {
-            setErr(lblLoginStatus, "Failed to open dashboard.");
+            ex.printStackTrace();
+            setErr(lblLoginStatus, "Failed to open dashboard: " + ex.getMessage());
         }
     }
 
