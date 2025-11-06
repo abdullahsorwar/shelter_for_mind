@@ -12,11 +12,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        final String JDBC_URL =
-            "jdbc:postgresql://ep-bold-rice-a1c5g7lk-pooler.ap-southeast-1.aws.neon.tech/neondb" +
-            "?user=neondb_owner&password=npg_Qg23VZhTbANS&sslmode=require&channelBinding=require";
-
-        DB.init(JDBC_URL);
+        DB.init();
         DbMigrations.runAll();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/initial.fxml"));

@@ -87,13 +87,36 @@ public class LoginSignupController implements Initializable {
             if (v != null && root != null) {
                 Media media = new Media(v.toExternalForm());
                 bgPlayer = new MediaPlayer(media);
-                bgPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-                bgPlayer.setAutoPlay(true);
+                
+                // Set up media player before creating the view
+                bgPlayer.setOnReady(() -> {
+                    bgPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+                    bgPlayer.play();
+                });
+                
+                bgPlayer.setOnError(() -> {
+                    System.err.println("Media error: " + bgPlayer.getError());
+                    dispose(); // Use existing dispose() method instead of cleanupVideo
+                });
+                
+                // Handle status changes
+                bgPlayer.statusProperty().addListener((obs, oldStatus, newStatus) -> {
+                    if (newStatus == MediaPlayer.Status.READY) {
+                        bgPlayer.play();
+                    } else if (newStatus == MediaPlayer.Status.HALTED || 
+                             newStatus == MediaPlayer.Status.DISPOSED ||
+                             newStatus == MediaPlayer.Status.STALLED) {
+                        System.err.println("Media loading issue: " + newStatus);
+                        dispose();
+                    }
+                });
+                
                 bgPlayer.setMute(true);
-
+                
                 bgView = new MediaView(bgPlayer);
                 bgView.setPreserveRatio(false);
                 bgView.setSmooth(true);
+                bgView.setCache(true); // Enable caching for better performance
                 bgView.setMouseTransparent(true);
                 bgView.fitWidthProperty().bind(root.widthProperty());
                 bgView.fitHeightProperty().bind(root.heightProperty());
@@ -101,19 +124,23 @@ public class LoginSignupController implements Initializable {
                 videoOverlay = new Rectangle();
                 videoOverlay.widthProperty().bind(root.widthProperty());
                 videoOverlay.heightProperty().bind(root.heightProperty());
-                // subtle darkening overlay (30% opacity)
                 videoOverlay.setFill(Color.rgb(6, 8, 12, 0.30));
                 videoOverlay.setMouseTransparent(true);
 
-                // Add behind all existing children
+                // Ensure UI updates happen on the JavaFX Application Thread
                 Platform.runLater(() -> {
-                    // insert at very back
-                    root.getChildren().add(0, bgView);
-                    root.getChildren().add(1, videoOverlay);
+                    if (root != null && root.getScene() != null) {
+                        root.getChildren().add(0, bgView);
+                        root.getChildren().add(1, videoOverlay);
+                        // Start loading the media
+                        bgPlayer.setAutoPlay(false); // We'll control playback explicitly
+                    }
                 });
             }
         } catch (Exception ex) {
-            // if video fails to load, we silently continue using static background
+            System.err.println("Video initialization error: " + ex.getMessage());
+            ex.printStackTrace();
+            dispose();
         }
 
         // Subtitle alternating
