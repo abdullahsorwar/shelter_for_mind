@@ -250,13 +250,43 @@ public class LoginSignupController implements Initializable {
     private void onSubmitLogin() {
         String id = value(tfLoginId), key = value(pfLoginKey);
         if (id.isEmpty() || key.isEmpty()) { setErr(lblLoginStatus, "Fill all fields!"); return; }
-        try {
-            if (repo == null) throw new IllegalStateException("Repository not set");
-            if (!repo.verify(id, key)) { setErr(lblLoginStatus, "Invalid ID or Key."); return; }
-            // fetch display name (if available) and open dashboard
-            String name = fetchNameForId(id);
-            openDashboard(id, name);
-        } catch (Exception ex) { setErr(lblLoginStatus, "Server error!"); }
+        
+        // Clear previous messages and disable button during operation
+        lblLoginStatus.setText("");
+        btnLoginSubmit.setDisable(true);
+        
+        // Run database operations in background thread to keep UI and video responsive
+        new Thread(() -> {
+            try {
+                if (repo == null) throw new IllegalStateException("Repository not set");
+                
+                // Database verification (blocking operation)
+                boolean isValid = repo.verify(id, key);
+                
+                if (!isValid) {
+                    Platform.runLater(() -> {
+                        setErr(lblLoginStatus, "Invalid ID or Key.");
+                        btnLoginSubmit.setDisable(false);
+                    });
+                    return;
+                }
+                
+                // Fetch display name (if available)
+                String name = fetchNameForId(id);
+                
+                // Switch to dashboard on FX thread
+                Platform.runLater(() -> {
+                    openDashboard(id, name);
+                    btnLoginSubmit.setDisable(false);
+                });
+                
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    setErr(lblLoginStatus, "Server error!");
+                    btnLoginSubmit.setDisable(false);
+                });
+            }
+        }).start();
     }
 
     // Fetch soul_name from DB (returns id if name not found)
@@ -385,13 +415,43 @@ public class LoginSignupController implements Initializable {
             return;
         }
 
-        try {
-            if (repo==null) throw new IllegalStateException("Repository not set");
-            if (repo.idExists(id)) { setErr(lblSubmitStatus,"Duplicate ID!"); return; }
-            
-            repo.create(new SoulRepository.Soul(id, key, n, dobDate, mob, cbCountryCode.getSelectionModel().getSelectedItem()));
-            setOk(lblSubmitStatus,"Success! Your data is saved!");
-        } catch (DuplicateIdException d){ setErr(lblSubmitStatus,"Duplicate ID!"); }
-          catch (Exception ex){ setErr(lblSubmitStatus,"Server error!"); }
+        // Disable button during operation
+        btnSubmit.setDisable(true);
+        
+        // Run database operations in background thread to keep UI and video responsive
+        final LocalDate finalDobDate = dobDate;
+        new Thread(() -> {
+            try {
+                if (repo==null) throw new IllegalStateException("Repository not set");
+                
+                // Check for duplicate ID (blocking operation)
+                if (repo.idExists(id)) {
+                    Platform.runLater(() -> {
+                        setErr(lblSubmitStatus,"Duplicate ID!");
+                        btnSubmit.setDisable(false);
+                    });
+                    return;
+                }
+                
+                // Create new soul record (blocking operation)
+                repo.create(new SoulRepository.Soul(id, key, n, finalDobDate, mob, cbCountryCode.getSelectionModel().getSelectedItem()));
+                
+                Platform.runLater(() -> {
+                    setOk(lblSubmitStatus,"Success! Your data is saved!");
+                    btnSubmit.setDisable(false);
+                });
+                
+            } catch (DuplicateIdException d) {
+                Platform.runLater(() -> {
+                    setErr(lblSubmitStatus,"Duplicate ID!");
+                    btnSubmit.setDisable(false);
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    setErr(lblSubmitStatus,"Server error!");
+                    btnSubmit.setDisable(false);
+                });
+            }
+        }).start();
     }
 }
