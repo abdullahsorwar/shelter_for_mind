@@ -21,6 +21,17 @@ public final class DbMigrations {
                   constraint soul_id_is_lower check (soul_id = lower(soul_id))
                 )
             """);
+            
+            // Create public journals table for journal entries
+            st.executeUpdate("""
+                create table if not exists public_journals (
+                  journal_id   char(7) primary key not null,
+                  soul_id      text,
+                  journal_text text not null,
+                  love_count   integer default 0,
+                  created_at   timestamptz default now()
+                )
+            """);
         }
     }
 }
