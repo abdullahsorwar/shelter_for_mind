@@ -37,12 +37,14 @@ public class JournalRepository {
      * Save a journal entry to the database.
      * @param soulId The ID of the user creating the journal
      * @param journalText The journal content text
+     * @param fontFamily The font family used when writing
+     * @param fontSize The font size used when writing
      * @return The generated journal ID
      */
-    public String saveJournal(String soulId, String journalText) throws SQLException {
+    public String saveJournal(String soulId, String journalText, String fontFamily, Integer fontSize) throws SQLException {
         String journalId = getNextJournalId();
         
-        String sql = "INSERT INTO public_journals (journal_id, soul_id, journal_text, love_count) VALUES (?, ?, ?, 0)";
+        String sql = "INSERT INTO public_journals (journal_id, soul_id, journal_text, love_count, font_family, font_size) VALUES (?, ?, ?, 0, ?, ?)";
         
         try (Connection conn = DB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -50,6 +52,8 @@ public class JournalRepository {
             ps.setString(1, journalId);
             ps.setString(2, soulId);
             ps.setString(3, journalText);
+            ps.setString(4, fontFamily);
+            ps.setInt(5, fontSize);
             ps.executeUpdate();
             
             return journalId;
@@ -123,7 +127,7 @@ public class JournalRepository {
      */
     public List<Journal> getAllPublicJournals() throws SQLException {
         List<Journal> journals = new ArrayList<>();
-        String sql = "SELECT journal_id, soul_id, journal_text, love_count, loved_by, created_at FROM public_journals ORDER BY created_at DESC";
+        String sql = "SELECT journal_id, soul_id, journal_text, love_count, loved_by, font_family, font_size, created_at FROM public_journals ORDER BY created_at DESC";
         
         try (Connection conn = DB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -134,6 +138,8 @@ public class JournalRepository {
                 journal.setId(rs.getString("journal_id"));
                 journal.setSoulId(rs.getString("soul_id"));
                 journal.setText(rs.getString("journal_text"));
+                journal.setFontFamily(rs.getString("font_family"));
+                journal.setFontSize(rs.getInt("font_size"));
                 
                 Timestamp ts = rs.getTimestamp("created_at");
                 if (ts != null) {

@@ -11,9 +11,13 @@ public class Journal {
     private String text;
     private LocalDate entryDate;
     private LocalDateTime createdAt;
+    private String fontFamily;
+    private Integer fontSize;
 
     public Journal() {
         this.createdAt = LocalDateTime.now();
+        this.fontFamily = "System";
+        this.fontSize = 14;
     }
 
     public Journal(String id, String soulId, String text, LocalDate entryDate, LocalDateTime createdAt) {
@@ -22,6 +26,8 @@ public class Journal {
         this.text = text;
         this.entryDate = entryDate;
         this.createdAt = createdAt == null ? LocalDateTime.now() : createdAt;
+        this.fontFamily = "System";
+        this.fontSize = 14;
     }
 
     public String getId() { return id; }
@@ -38,6 +44,12 @@ public class Journal {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public String getFontFamily() { return fontFamily; }
+    public void setFontFamily(String fontFamily) { this.fontFamily = fontFamily; }
+
+    public Integer getFontSize() { return fontSize; }
+    public void setFontSize(Integer fontSize) { this.fontSize = fontSize; }
 
     @Override
     public String toString() {

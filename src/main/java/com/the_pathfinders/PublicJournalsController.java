@@ -1,7 +1,10 @@
 package com.the_pathfinders;
 
 import com.the_pathfinders.db.JournalRepository;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +36,7 @@ public class PublicJournalsController {
 
     private String currentSoulId = "";
     private JournalRepository journalRepo;
+    private Timeline timestampUpdateTimeline;
 
     public void setSoulId(String id) {
         this.currentSoulId = id == null ? "" : id;
@@ -48,6 +52,9 @@ public class PublicJournalsController {
 
         // Load journals in background
         loadJournals();
+        
+        // Start timeline for real-time timestamp updates (every second)
+        startTimestampUpdateTimeline();
     }
 
     private void loadJournals() {
@@ -131,6 +138,7 @@ public class PublicJournalsController {
         
         Label timeLabel = new Label(getRelativeTime(journal.getCreatedAt()));
         timeLabel.getStyleClass().add("journal-time");
+        timeLabel.setUserData(journal.getCreatedAt()); // Store timestamp for updates
 
         userTextBox.getChildren().addAll(usernameLabel, timeLabel);
         userInfoBox.getChildren().addAll(userIcon, userTextBox);
@@ -141,10 +149,15 @@ public class PublicJournalsController {
         separator.setPrefHeight(1);
         separator.setMaxHeight(1);
 
-        // Journal text
+        // Journal text - apply saved font
         Label journalText = new Label(journal.getText());
         journalText.setWrapText(true);
         journalText.getStyleClass().add("journal-text");
+        
+        // Apply saved font family and size
+        String fontFamily = journal.getFontFamily() != null ? journal.getFontFamily() : "System";
+        Integer fontSize = journal.getFontSize() != null ? journal.getFontSize() : 14;
+        journalText.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %dpx;", fontFamily, fontSize));
 
         // Love section
         HBox loveBox = new HBox(8);
@@ -270,8 +283,51 @@ public class PublicJournalsController {
         long years = ChronoUnit.YEARS.between(timestamp, now);
         return years + " year" + (years == 1 ? "" : "s") + " ago";
     }
+    
+    private void startTimestampUpdateTimeline() {
+        // Create a timeline that updates all timestamps every second
+        timestampUpdateTimeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            updateAllTimestamps();
+        }));
+        timestampUpdateTimeline.setCycleCount(Animation.INDEFINITE);
+        timestampUpdateTimeline.play();
+    }
+    
+    private void updateAllTimestamps() {
+        // Iterate through all journal boxes and update time labels
+        for (javafx.scene.Node outerNode : journalsContainer.getChildren()) {
+            if (outerNode instanceof VBox outerBox) {
+                for (javafx.scene.Node innerNode : outerBox.getChildren()) {
+                    if (innerNode instanceof VBox innerBox) {
+                        for (javafx.scene.Node child : innerBox.getChildren()) {
+                            if (child instanceof HBox hbox) {
+                                for (javafx.scene.Node hboxChild : hbox.getChildren()) {
+                                    if (hboxChild instanceof VBox userTextBox) {
+                                        for (javafx.scene.Node textChild : userTextBox.getChildren()) {
+                                            if (textChild instanceof Label label && label.getStyleClass().contains("journal-time")) {
+                                                // Get the journal object from user data
+                                                LocalDateTime timestamp = (LocalDateTime) label.getUserData();
+                                                if (timestamp != null) {
+                                                    label.setText(getRelativeTime(timestamp));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private void goBackToJournal() {
+        // Stop the timeline when leaving the view
+        if (timestampUpdateTimeline != null) {
+            timestampUpdateTimeline.stop();
+        }
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/Journal.fxml"));
             Parent journalRoot = loader.load();

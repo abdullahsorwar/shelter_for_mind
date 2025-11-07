@@ -89,6 +89,14 @@ public class JournalController {
     private void onSave() {
         final LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
         String content = textArea.getText() == null ? "" : textArea.getText().trim();
+        
+        // Capture font selections
+        String fontFamily = fontCombo.getSelectionModel().getSelectedItem();
+        Integer fontSize = sizeCombo.getSelectionModel().getSelectedItem();
+        
+        // Default values if nothing selected
+        if (fontFamily == null) fontFamily = "System";
+        if (fontSize == null) fontSize = 14;
 
         if (content.isEmpty()) {
             showAlert("Empty Journal", "Please write something before saving!", Alert.AlertType.WARNING);
@@ -103,16 +111,21 @@ public class JournalController {
         // Disable button during save operation
         saveBtn.setDisable(true);
 
+        // Capture final values for use in thread
+        final String finalFontFamily = fontFamily;
+        final Integer finalFontSize = fontSize;
+
         // Run database operations in background thread to keep UI responsive
         new Thread(() -> {
             try {
-                String journalId = journalRepo.saveJournal(soulId, content);
+                String journalId = journalRepo.saveJournal(soulId, content, finalFontFamily, finalFontSize);
                 
                 Platform.runLater(() -> {
                     System.out.println("Journal saved successfully!");
                     System.out.println("Journal ID: " + journalId);
                     System.out.println("Soul ID: " + soulId);
                     System.out.println("Date: " + date);
+                    System.out.println("Font: " + finalFontFamily + " " + finalFontSize + "px");
                     System.out.println("Text: " + content);
                     
                     showAlert("Success", "Journal saved successfully!\nJournal ID: " + journalId, Alert.AlertType.INFORMATION);
