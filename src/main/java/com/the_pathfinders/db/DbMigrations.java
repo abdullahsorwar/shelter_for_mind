@@ -67,6 +67,11 @@ public final class DbMigrations {
                   end if;
                 end $$
             """);
+            
+            // Create GIN index on loved_by array for fast searches (binary search-like performance)
+            st.executeUpdate("""
+                create index if not exists idx_loved_by_gin on public_journals using gin (loved_by)
+            """);
         }
     }
 }

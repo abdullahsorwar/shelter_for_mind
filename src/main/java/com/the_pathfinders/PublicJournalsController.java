@@ -37,6 +37,9 @@ public class PublicJournalsController {
     private String currentSoulId = "";
     private JournalRepository journalRepo;
     private Timeline timestampUpdateTimeline;
+    private Timeline loveCountUpdateTimeline;
+    private Timeline newJournalCheckTimeline;
+    private String latestJournalId = null; // Track the most recent journal ID
 
     public void setSoulId(String id) {
         this.currentSoulId = id == null ? "" : id;
@@ -55,6 +58,12 @@ public class PublicJournalsController {
         
         // Start timeline for real-time timestamp updates (every second)
         startTimestampUpdateTimeline();
+        
+        // Start timeline for real-time love count updates (every 2 seconds)
+        startLoveCountUpdateTimeline();
+        
+        // Start timeline for checking new journals (every 3 seconds)
+        startNewJournalCheckTimeline();
     }
 
     private void loadJournals() {
@@ -64,6 +73,11 @@ public class PublicJournalsController {
 
                 Platform.runLater(() -> {
                     journalsContainer.getChildren().clear();
+                    
+                    // Track the latest journal ID (first in list since ordered DESC)
+                    if (!journals.isEmpty()) {
+                        latestJournalId = journals.get(0).getId();
+                    }
                     
                     for (Journal journal : journals) {
                         VBox journalBox = createJournalBox(journal);
@@ -175,6 +189,7 @@ public class PublicJournalsController {
         
         Label loveCountLabel = new Label("0");
         loveCountLabel.getStyleClass().add("love-count");
+        loveCountLabel.setUserData(journal.getId()); // Store journal ID for real-time updates
 
         // Check if current user has loved this journal
         new Thread(() -> {
@@ -321,11 +336,134 @@ public class PublicJournalsController {
             }
         }
     }
+    
+    private void startLoveCountUpdateTimeline() {
+        // Create a timeline that syncs love counts from database every 2 seconds
+        loveCountUpdateTimeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+            updateAllLoveCounts();
+        }));
+        loveCountUpdateTimeline.setCycleCount(Animation.INDEFINITE);
+        loveCountUpdateTimeline.play();
+    }
+    
+    private void updateAllLoveCounts() {
+        // Run database queries in background thread
+        new Thread(() -> {
+            try {
+                // Iterate through all journal boxes and update love counts
+                for (javafx.scene.Node outerNode : journalsContainer.getChildren()) {
+                    if (outerNode instanceof VBox outerBox) {
+                        for (javafx.scene.Node innerNode : outerBox.getChildren()) {
+                            if (innerNode instanceof VBox innerBox) {
+                                for (javafx.scene.Node child : innerBox.getChildren()) {
+                                    if (child instanceof HBox loveBox && !loveBox.getChildren().isEmpty()) {
+                                        // Check if this is the love box (has button and label)
+                                        for (javafx.scene.Node loveChild : loveBox.getChildren()) {
+                                            if (loveChild instanceof Label loveCountLabel && 
+                                                loveCountLabel.getStyleClass().contains("love-count")) {
+                                                
+                                                String journalId = (String) loveCountLabel.getUserData();
+                                                if (journalId != null) {
+                                                    try {
+                                                        // Fetch latest count from database
+                                                        int latestCount = journalRepo.getLoveCount(journalId);
+                                                        
+                                                        // Update UI on JavaFX thread
+                                                        Platform.runLater(() -> {
+                                                            String currentText = loveCountLabel.getText();
+                                                            int currentCount = 0;
+                                                            try {
+                                                                currentCount = Integer.parseInt(currentText);
+                                                            } catch (NumberFormatException ignored) {}
+                                                            
+                                                            // Only update if count changed (avoid unnecessary UI updates)
+                                                            if (currentCount != latestCount) {
+                                                                loveCountLabel.setText(String.valueOf(latestCount));
+                                                            }
+                                                        });
+                                                    } catch (Exception ignored) {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                // Silently handle errors to avoid disrupting the timeline
+        }
+    }).start();
+}
+
+private void startNewJournalCheckTimeline() {
+    // Create a timeline that checks for new journals every 3 seconds
+    newJournalCheckTimeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+        checkForNewJournals();
+    }));
+    newJournalCheckTimeline.setCycleCount(Animation.INDEFINITE);
+    newJournalCheckTimeline.play();
+}
+
+private void checkForNewJournals() {
+    // Skip check if we don't have a reference point yet
+    if (latestJournalId == null) {
+        return;
+    }
+    
+    // Run database query in background thread
+    new Thread(() -> {
+        try {
+            // Get journals newer than the current latest
+            List<Journal> newJournals = journalRepo.getNewJournalsSince(latestJournalId);
+            
+            if (!newJournals.isEmpty()) {
+                Platform.runLater(() -> {
+                    // Add new journals to the top of the list (reverse order since we got DESC from DB)
+                    for (int i = newJournals.size() - 1; i >= 0; i--) {
+                        Journal journal = newJournals.get(i);
+                        VBox journalBox = createJournalBox(journal);
+                        
+                        // Add to the beginning of the container
+                        journalsContainer.getChildren().add(0, journalBox);
+                        
+                        // Smooth bump animation for new journals
+                        journalBox.setScaleX(0);
+                        journalBox.setScaleY(0);
+                        ScaleTransition bump = new ScaleTransition(Duration.seconds(0.5), journalBox);
+                        bump.setFromX(0);
+                        bump.setFromY(0);
+                        bump.setToX(1);
+                        bump.setToY(1);
+                        bump.play();
+                        
+                        // Update latest journal ID to the newest one
+                        if (i == 0) {
+                            latestJournalId = journal.getId();
+                        }
+                    }
+                    
+                    System.out.println("Added " + newJournals.size() + " new journal(s) in real-time!");
+                });
+            }
+        } catch (Exception ex) {
+            // Silently handle errors to avoid disrupting the timeline
+            System.err.println("Error checking for new journals: " + ex.getMessage());
+        }
+    }).start();
+}
 
     private void goBackToJournal() {
-        // Stop the timeline when leaving the view
+        // Stop all timelines when leaving the view
         if (timestampUpdateTimeline != null) {
             timestampUpdateTimeline.stop();
+        }
+        if (loveCountUpdateTimeline != null) {
+            loveCountUpdateTimeline.stop();
+        }
+        if (newJournalCheckTimeline != null) {
+            newJournalCheckTimeline.stop();
         }
         
         try {

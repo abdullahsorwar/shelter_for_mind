@@ -154,6 +154,42 @@ public class JournalRepository {
     }
     
     /**
+     * Get journals newer than a specific journal ID (for real-time updates).
+     * @param sinceJournalId The journal ID to get newer journals after
+     * @return List of journals created after the specified ID
+     */
+    public List<Journal> getNewJournalsSince(String sinceJournalId) throws SQLException {
+        List<Journal> journals = new ArrayList<>();
+        String sql = "SELECT journal_id, soul_id, journal_text, love_count, loved_by, font_family, font_size, created_at FROM public_journals WHERE journal_id > ? ORDER BY created_at DESC";
+        
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, sinceJournalId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Journal journal = new Journal();
+                    journal.setId(rs.getString("journal_id"));
+                    journal.setSoulId(rs.getString("soul_id"));
+                    journal.setText(rs.getString("journal_text"));
+                    journal.setFontFamily(rs.getString("font_family"));
+                    journal.setFontSize(rs.getInt("font_size"));
+                    
+                    Timestamp ts = rs.getTimestamp("created_at");
+                    if (ts != null) {
+                        journal.setCreatedAt(ts.toLocalDateTime());
+                        journal.setEntryDate(ts.toLocalDateTime().toLocalDate());
+                    }
+                    
+                    journals.add(journal);
+                }
+            }
+        }
+        return journals;
+    }
+    
+    /**
      * Toggle love for a journal. Adds or removes the user from the loved_by array.
      * @param journalId The journal to love/unlove
      * @param soulId The user performing the action
