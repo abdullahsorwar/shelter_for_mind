@@ -3,6 +3,7 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
@@ -75,6 +76,15 @@
                   <Text fx:id="keeperText" layoutX="454.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Soul Keeper">
                      <font><Font name="Exo 2 Regular" size="30.0" /></font>
                   </Text>
+                  
+                  <!-- Please wait text (centered and moved lower) -->
+                  <StackPane layoutX="0.0" layoutY="122.0" prefHeight="28.0" prefWidth="707.0" pickOnBounds="false">
+                     <children>
+                        <Text fx:id="pleaseWaitText" fill="WHITE" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please wait..." textAlignment="CENTER">
+                           <font><Font name="Agency FB" size="24.0" /></font>
+                        </Text>
+                     </children>
+                  </StackPane>
                </children>
             </Pane>
 

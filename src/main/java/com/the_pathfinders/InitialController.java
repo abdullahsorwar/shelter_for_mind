@@ -31,6 +31,9 @@ public class InitialController implements Initializable {
 
     @FXML private Rectangle soulRect, keeperRect;
     @FXML private javafx.scene.text.Text soulText, keeperText;
+    @FXML private javafx.scene.text.Text pleaseWaitText;
+    
+    private boolean videoReady = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -57,7 +60,8 @@ public class InitialController implements Initializable {
             centerContent();
             root.widthProperty().addListener((o, ov, nv) -> centerContent());
             root.heightProperty().addListener((o, ov, nv) -> centerContent());
-            contentPane.boundsInParentProperty().addListener((o, ov, nv) -> centerContent());
+            // Recenter when content's layout size changes (avoid boundsInParent to prevent feedback loop)
+            contentPane.layoutBoundsProperty().addListener((o, ov, nv) -> centerContent());
         });
 
         trySetImage(bgImage, "/assets/images/green_bg.jpg", "/green_bg.jpg");
@@ -65,20 +69,87 @@ public class InitialController implements Initializable {
 
         playIntroSequence();
 
-        // Click wiring
-        soulRect.setOnMouseClicked(e -> goToLoginSignup());
-        soulText.setOnMouseClicked(e -> goToLoginSignup());
+        // Click wiring - start video initialization on Soul button click
+        soulRect.setOnMouseClicked(e -> onSoulClick());
+        soulText.setOnMouseClicked(e -> onSoulClick());
         keeperRect.setOnMouseClicked(e -> {});
         keeperText.setOnMouseClicked(e -> {});
     }
+    
+    private void onSoulClick() {
+        // Start video initialization on first click
+        if (!videoReady) {
+            initializeBackgroundVideo();
+        } else {
+            goToLoginSignup();
+        }
+    }
+    
+    private void initializeBackgroundVideo() {
+        VideoManager videoManager = VideoManager.getInstance();
+        
+        // If already initialized, proceed immediately
+        if (videoManager.isInitialized()) {
+            videoReady = true;
+            goToLoginSignup();
+            return;
+        }
+        
+        // Show "Please wait..." message
+        showPleaseWait();
+        
+        // Initialize with 5 retry attempts
+        videoManager.initializeWithRetry(
+            5, // max retries
+            (successMsg) -> {
+                // On success
+                System.out.println("Video initialization succeeded: " + successMsg);
+                videoReady = true;
+                hidePleaseWait();
+                goToLoginSignup();
+            },
+            (failureMsg) -> {
+                // On failure - still navigate but without video
+                System.err.println("Video initialization failed: " + failureMsg);
+                videoReady = true; // Allow navigation anyway
+                hidePleaseWait();
+                goToLoginSignup();
+            }
+        );
+    }
+    
+    private void showPleaseWait() {
+        if (pleaseWaitText != null) {
+            FadeTransition fade = new FadeTransition(Duration.millis(300), pleaseWaitText);
+            fade.setToValue(1.0);
+            fade.play();
+        }
+    }
+    
+    private void hidePleaseWait() {
+        if (pleaseWaitText != null) {
+            FadeTransition fade = new FadeTransition(Duration.millis(300), pleaseWaitText);
+            fade.setToValue(0.0);
+            fade.play();
+        }
+    }
 
     private void centerContent() {
-        double w = contentPane.getBoundsInParent().getWidth();
-        double h = contentPane.getBoundsInParent().getHeight();
+        // Use layoutBounds to avoid triggering boundsInParent updates when moving the node
+        double w = contentPane.getLayoutBounds().getWidth();
+        double h = contentPane.getLayoutBounds().getHeight();
         double rw = root.getWidth();
         double rh = root.getHeight();
-        contentPane.setLayoutX((rw - w) / 2.0);
-        contentPane.setLayoutY((rh - h) / 2.0);
+        double newX = (rw - w) / 2.0;
+        double newY = (rh - h) / 2.0;
+
+        // Only update when value meaningfully changes to avoid redundant layout passes
+        if (Math.abs(contentPane.getLayoutX() - newX) > 0.5) {
+            contentPane.setLayoutX(newX);
+        }
+        if (Math.abs(contentPane.getLayoutY() - newY) > 0.5) {
+            contentPane.setLayoutY(newY);
+        }
     }
 
     private void playIntroSequence() {

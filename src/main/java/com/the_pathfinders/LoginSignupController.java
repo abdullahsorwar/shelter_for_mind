@@ -10,11 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -33,10 +28,6 @@ public class LoginSignupController implements Initializable {
     @FXML private Label subtitleLabel;
     @FXML private AnchorPane root;
     @FXML private ToggleButton themeToggle;
-    // Background video player & overlay
-    private MediaPlayer bgPlayer;
-    private MediaView bgView;
-    private Rectangle videoOverlay;
 
     /* Tabs + border */
     @FXML private StackPane tabStack;
@@ -81,67 +72,8 @@ public class LoginSignupController implements Initializable {
             }
         } catch (Exception ignored) {}
 
-        // Background video (if provided) — play behind the UI and add a subtle dark overlay
-        try {
-            URL v = getClass().getResource("/assets/videos/background.mp4");
-            if (v != null && root != null) {
-                Media media = new Media(v.toExternalForm());
-                bgPlayer = new MediaPlayer(media);
-                
-                // Set up media player before creating the view
-                bgPlayer.setOnReady(() -> {
-                    bgPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-                    bgPlayer.play();
-                });
-                
-                bgPlayer.setOnError(() -> {
-                    System.err.println("Media error: " + bgPlayer.getError());
-                    dispose(); // Use existing dispose() method instead of cleanupVideo
-                });
-                
-                // Handle status changes
-                bgPlayer.statusProperty().addListener((obs, oldStatus, newStatus) -> {
-                    if (newStatus == MediaPlayer.Status.READY) {
-                        bgPlayer.play();
-                    } else if (newStatus == MediaPlayer.Status.HALTED || 
-                             newStatus == MediaPlayer.Status.DISPOSED ||
-                             newStatus == MediaPlayer.Status.STALLED) {
-                        System.err.println("Media loading issue: " + newStatus);
-                        dispose();
-                    }
-                });
-                
-                bgPlayer.setMute(true);
-                
-                bgView = new MediaView(bgPlayer);
-                bgView.setPreserveRatio(false);
-                bgView.setSmooth(true);
-                bgView.setCache(true); // Enable caching for better performance
-                bgView.setMouseTransparent(true);
-                bgView.fitWidthProperty().bind(root.widthProperty());
-                bgView.fitHeightProperty().bind(root.heightProperty());
-
-                videoOverlay = new Rectangle();
-                videoOverlay.widthProperty().bind(root.widthProperty());
-                videoOverlay.heightProperty().bind(root.heightProperty());
-                videoOverlay.setFill(Color.rgb(6, 8, 12, 0.30));
-                videoOverlay.setMouseTransparent(true);
-
-                // Ensure UI updates happen on the JavaFX Application Thread
-                Platform.runLater(() -> {
-                    if (root != null && root.getScene() != null) {
-                        root.getChildren().add(0, bgView);
-                        root.getChildren().add(1, videoOverlay);
-                        // Start loading the media
-                        bgPlayer.setAutoPlay(false); // We'll control playback explicitly
-                    }
-                });
-            }
-        } catch (Exception ex) {
-            System.err.println("Video initialization error: " + ex.getMessage());
-            ex.printStackTrace();
-            dispose();
-        }
+        // Attach background video from VideoManager (reuses existing instance)
+        attachBackgroundVideo();
 
         // Subtitle alternating
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(3), e -> switchSubtitle()));
@@ -362,16 +294,32 @@ public class LoginSignupController implements Initializable {
         }
     }
 
-    /** Clean up MediaPlayer and bindings when this controller is no longer needed */
+    /** Clean up - detach video from this pane (but keep it alive for reuse) */
     private void dispose() {
-        if (bgPlayer != null) {
-            bgPlayer.stop();
-            bgPlayer.dispose();
-            bgPlayer = null;
+        try {
+            VideoManager.getInstance().detachFromPane(root);
+        } catch (Exception ex) {
+            System.err.println("Error during video detach: " + ex.getMessage());
         }
-        if (bgView != null) {
-            bgView.setMediaPlayer(null);
-            bgView = null;
+    }
+
+    /* ---------- Background Video ---------- */
+    
+    /**
+     * Attach the background video from VideoManager (reuses existing instance).
+     */
+    private void attachBackgroundVideo() {
+        if (root == null) return;
+        
+        // Wait for scene to be attached
+        if (root.getScene() != null) {
+            VideoManager.getInstance().attachToPane(root);
+        } else {
+            root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    Platform.runLater(() -> VideoManager.getInstance().attachToPane(root));
+                }
+            });
         }
     }
 
