@@ -29,8 +29,22 @@ public final class DbMigrations {
                   soul_id      text,
                   journal_text text not null,
                   love_count   integer default 0,
+                  loved_by     text[] default '{}',
                   created_at   timestamptz default now()
                 )
+            """);
+            
+            // Add loved_by column if it doesn't exist (for existing tables)
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (
+                    select 1 from information_schema.columns
+                    where table_name = 'public_journals' and column_name = 'loved_by'
+                  ) then
+                    alter table public_journals add column loved_by text[] default '{}';
+                  end if;
+                end $$
             """);
         }
     }

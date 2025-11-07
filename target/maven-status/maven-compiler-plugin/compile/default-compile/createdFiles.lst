@@ -1,6 +1,7 @@
 com\the_pathfinders\Blog.class
 com\the_pathfinders\BlogController.class
 com\the_pathfinders\db\DB.class
+com\the_pathfinders\PublicJournalsController.class
 com\the_pathfinders\Journal.class
 com\the_pathfinders\JournalController.class
 com\the_pathfinders\VideoManager.class

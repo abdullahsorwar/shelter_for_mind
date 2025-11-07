@@ -1,6 +1,7 @@
 package com.the_pathfinders;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -101,9 +102,19 @@ public class BlogController {
             box.getStyleClass().add("category-box");
             box.setStyle("-fx-background-color: " + color + ";");
 
-            // Smooth hover
-            box.setOnMouseEntered(e -> box.setScaleX(1.03));
-            box.setOnMouseExited(e -> box.setScaleX(1.0));
+            // Smooth hover with ScaleTransition
+            box.setOnMouseEntered(e -> {
+                ScaleTransition st = new ScaleTransition(Duration.millis(200), box);
+                st.setToX(1.03);
+                st.setToY(1.03);
+                st.play();
+            });
+            box.setOnMouseExited(e -> {
+                ScaleTransition st = new ScaleTransition(Duration.millis(200), box);
+                st.setToX(1.0);
+                st.setToY(1.0);
+                st.play();
+            });
 
             // ✅ on click: filter + popup
             box.setOnAction(e -> {

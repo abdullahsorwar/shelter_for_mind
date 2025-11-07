@@ -3,6 +3,8 @@ package com.the_pathfinders.db;
 import com.the_pathfinders.Journal;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JournalRepository {
 
@@ -114,5 +116,116 @@ public class JournalRepository {
             }
         }
         return null;
+    }
+    
+    /**
+     * Get all public journals ordered by creation time (newest first).
+     */
+    public List<Journal> getAllPublicJournals() throws SQLException {
+        List<Journal> journals = new ArrayList<>();
+        String sql = "SELECT journal_id, soul_id, journal_text, love_count, loved_by, created_at FROM public_journals ORDER BY created_at DESC";
+        
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                Journal journal = new Journal();
+                journal.setId(rs.getString("journal_id"));
+                journal.setSoulId(rs.getString("soul_id"));
+                journal.setText(rs.getString("journal_text"));
+                
+                Timestamp ts = rs.getTimestamp("created_at");
+                if (ts != null) {
+                    journal.setCreatedAt(ts.toLocalDateTime());
+                    journal.setEntryDate(ts.toLocalDateTime().toLocalDate());
+                }
+                
+                journals.add(journal);
+            }
+        }
+        return journals;
+    }
+    
+    /**
+     * Toggle love for a journal. Adds or removes the user from the loved_by array.
+     * @param journalId The journal to love/unlove
+     * @param soulId The user performing the action
+     * @return true if loved, false if unloved
+     */
+    public boolean toggleLove(String journalId, String soulId) throws SQLException {
+        // Check if user already loved this journal
+        boolean isLoved = hasUserLoved(journalId, soulId);
+        
+        if (isLoved) {
+            // Remove from loved_by array and decrement count
+            String sql = "UPDATE public_journals SET loved_by = array_remove(loved_by, ?), love_count = love_count - 1 WHERE journal_id = ?";
+            try (Connection conn = DB.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, soulId);
+                ps.setString(2, journalId);
+                ps.executeUpdate();
+            }
+            return false;
+        } else {
+            // Add to loved_by array (keeping it sorted) and increment count
+            String sql = "UPDATE public_journals SET loved_by = array_append(loved_by, ?), love_count = love_count + 1 WHERE journal_id = ?";
+            try (Connection conn = DB.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, soulId);
+                ps.setString(2, journalId);
+                ps.executeUpdate();
+            }
+            
+            // Sort the array after adding
+            String sortSql = "UPDATE public_journals SET loved_by = (SELECT array_agg(elem ORDER BY elem) FROM unnest(loved_by) elem) WHERE journal_id = ?";
+            try (Connection conn = DB.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sortSql)) {
+                ps.setString(1, journalId);
+                ps.executeUpdate();
+            }
+            return true;
+        }
+    }
+    
+    /**
+     * Check if a user has loved a specific journal.
+     */
+    public boolean hasUserLoved(String journalId, String soulId) throws SQLException {
+        String sql = "SELECT ? = ANY(loved_by) as has_loved FROM public_journals WHERE journal_id = ?";
+        
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, soulId);
+            ps.setString(2, journalId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("has_loved");
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Get love count for a journal.
+     */
+    public int getLoveCount(String journalId) throws SQLException {
+        String sql = "SELECT love_count FROM public_journals WHERE journal_id = ?";
+        
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, journalId);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("love_count");
+                }
+            }
+        }
+        return 0;
     }
 }

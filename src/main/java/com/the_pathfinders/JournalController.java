@@ -136,38 +136,23 @@ public class JournalController {
             return;
         }
 
-        // Disable button during load operation
-        loadBtn.setDisable(true);
-
-        // Run database operations in background thread
-        new Thread(() -> {
-            try {
-                Journal latest = journalRepo.getLatestJournalForUser(soulId);
-                
-                Platform.runLater(() -> {
-                    if (latest != null) {
-                        datePicker.setValue(latest.getEntryDate());
-                        textArea.setText(latest.getText());
-                        System.out.println("Loaded latest journal:");
-                        System.out.println("Journal ID: " + latest.getId());
-                        System.out.println("Date: " + latest.getEntryDate());
-                        System.out.println("Text: " + latest.getText());
-                    } else {
-                        showAlert("No Journals", "No journal entries found for this user.", Alert.AlertType.INFORMATION);
-                        System.out.println("No journal entries found for user: " + soulId);
-                    }
-                    loadBtn.setDisable(false);
-                });
-                
-            } catch (Exception ex) {
-                Platform.runLater(() -> {
-                    System.err.println("Failed to load journal: " + ex.getMessage());
-                    ex.printStackTrace();
-                    showAlert("Error", "Failed to load journal: " + ex.getMessage(), Alert.AlertType.ERROR);
-                    loadBtn.setDisable(false);
-                });
+        // Navigate to public journals view
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/public_journals_view.fxml"));
+            Parent publicJournalsRoot = loader.load();
+            
+            Object controller = loader.getController();
+            if (controller instanceof PublicJournalsController pjc) {
+                pjc.setSoulId(this.soulId);
             }
-        }).start();
+            
+            if (root != null && root.getScene() != null) {
+                root.getScene().setRoot(publicJournalsRoot);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert("Error", "Failed to load public journals: " + ex.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {
