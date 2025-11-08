@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -21,6 +22,15 @@ public class App extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Shelter of Mind");
+        
+        // Set app icon
+        try {
+            Image icon = new Image(getClass().getResourceAsStream("/assets/images/logo.png"));
+            stage.getIcons().add(icon);
+        } catch (Exception e) {
+            System.err.println("Could not load app icon: " + e.getMessage());
+        }
+        
         stage.setMinWidth(1280);
         stage.setMinHeight(720);
         stage.show();

@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch App with JavaFX",
+            "request": "launch",
+            "mainClass": "com.the_pathfinders.App",
+            "projectName": "shelter_of_mind",
+            "vmArgs": "--enable-native-access=javafx.graphics,javafx.media --module-path \"C:\\Program Files\\Java\\javafx-sdk-25\\lib\" --add-modules javafx.controls,javafx.fxml,javafx.media"
+        }
+    ]
+}
