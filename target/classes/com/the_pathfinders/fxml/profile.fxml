@@ -36,7 +36,7 @@
                         <Button fx:id="backBtn" text="⟵ Back" AnchorPane.topAnchor="18" AnchorPane.rightAnchor="24" styleClass="back-btn" />
                         <Separator AnchorPane.topAnchor="110" AnchorPane.leftAnchor="24" AnchorPane.rightAnchor="24" />
                         <!-- Pages Container -->
-                        <StackPane fx:id="pagesContainer" AnchorPane.topAnchor="120" AnchorPane.leftAnchor="24" AnchorPane.rightAnchor="24" AnchorPane.bottomAnchor="24" styleClass="pages-container">
+                        <StackPane fx:id="pagesContainer" AnchorPane.topAnchor="120" AnchorPane.leftAnchor="24" AnchorPane.rightAnchor="24" AnchorPane.bottomAnchor="80" styleClass="pages-container">
                             <children>
                                 <!-- Basic Info Page -->
                                 <ScrollPane fx:id="basicInfoScroll" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" visible="true" managed="true" styleClass="basic-info-scroll">

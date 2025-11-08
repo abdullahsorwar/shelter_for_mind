@@ -183,6 +183,7 @@ public class PublicJournalsController {
         loveBtn.setBackground(javafx.scene.layout.Background.EMPTY);
         loveBtn.setBorder(javafx.scene.layout.Border.EMPTY);
         loveBtn.setPadding(javafx.geometry.Insets.EMPTY);
+        loveBtn.setFocusTraversable(false); // Prevent scroll jumping
         
         // Create ImageViews for heart icons
         ImageView heartOutline = JournalUtils.createHeartIcon("/assets/icons/heart_outline.png",24);

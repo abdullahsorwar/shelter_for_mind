@@ -38,6 +38,7 @@ public class JournalUtils {
         if (days > 0) return days + (days == 1 ? " day ago" : " days ago");
         if (hours > 0) return hours + (hours == 1 ? " hour ago" : " hours ago");
         if (minutes > 0) return minutes + (minutes == 1 ? " minute ago" : " minutes ago");
+        if (seconds > 0) return seconds + (seconds == 1 ? " second ago" : " seconds ago");
         return "just now";
     }
     
@@ -51,13 +52,19 @@ public class JournalUtils {
             Map<String, Label> journals, 
             Map<String, Journal> journalData) {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            for (Map.Entry<String, Label> entry : journals.entrySet()) {
-                String journalId = entry.getKey();
-                Label timestampLabel = entry.getValue();
-                Journal journal = journalData.get(journalId);
-                if (journal != null && journal.getCreatedAt() != null) {
-                    timestampLabel.setText(getRelativeTime(journal.getCreatedAt()));
+            try {
+                // Create a snapshot to avoid ConcurrentModificationException
+                java.util.Set<Map.Entry<String, Label>> entries = new java.util.HashSet<>(journals.entrySet());
+                for (Map.Entry<String, Label> entry : entries) {
+                    String journalId = entry.getKey();
+                    Label timestampLabel = entry.getValue();
+                    Journal journal = journalData.get(journalId);
+                    if (journal != null && journal.getCreatedAt() != null) {
+                        timestampLabel.setText(getRelativeTime(journal.getCreatedAt()));
+                    }
                 }
+            } catch (Exception ex) {
+                // Silently handle any concurrent modification issues
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -76,7 +83,9 @@ public class JournalUtils {
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
             new Thread(() -> {
                 try {
-                    for (Map.Entry<String, Label> entry : journals.entrySet()) {
+                    // Create a snapshot to avoid ConcurrentModificationException
+                    java.util.Set<Map.Entry<String, Label>> entries = new java.util.HashSet<>(journals.entrySet());
+                    for (Map.Entry<String, Label> entry : entries) {
                         String journalId = entry.getKey();
                         Label countLabel = entry.getValue();
                         Journal journal = journalData.get(journalId);
@@ -89,7 +98,7 @@ public class JournalUtils {
                         }
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    // Silently handle any concurrent modification issues
                 }
             }).start();
         }));
@@ -138,13 +147,14 @@ public class JournalUtils {
             ImageView heartOutline,
             ImageView heartFilled) {
         loveBtn.setDisable(true);
+        loveBtn.setFocusTraversable(false); // Prevent focus changes
         new Thread(() -> {
             try {
                 boolean nowLoved = journalRepo.toggleLove(journalId, userId);
                 int newCount = journalRepo.getLoveCount(journalId);
                 journal.setLoveCount(newCount);
 
-                // Update UI
+                // Update UI without affecting scroll position
                 Platform.runLater(() -> {
                     loveBtn.setGraphic(nowLoved ? heartFilled : heartOutline);
                     if (nowLoved) loveBtn.getStyleClass().add("loved"); else loveBtn.getStyleClass().remove("loved");

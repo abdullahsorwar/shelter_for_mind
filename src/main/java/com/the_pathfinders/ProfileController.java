@@ -74,16 +74,32 @@ public class ProfileController {
     private Timeline loveCountTimeline;
 
     private static class InfoRow {
-        Label attrLabel; TextField valueField; Separator sep; String key;
+        Label attrLabel;
+        Label valueLabel;     // View mode
+        TextField valueField; // Edit mode (for text fields)
+        ComboBox<String> valueCombo; // Edit mode (for dropdowns)
+        String key;
+        boolean isComboBox;
     }
 
     public void setSoulId(String id) { this.soulId = id == null ? "" : id; }
 
     @FXML
     public void initialize() {
-        if (backBtn != null) backBtn.setOnAction(e -> goBack());
-        if (editInfoBtn != null) editInfoBtn.setOnAction(e -> toggleEdit());
-        if (saveInfoBtn != null) saveInfoBtn.setOnAction(e -> saveInfo());
+        if (backBtn != null) {
+            backBtn.setOnAction(e -> goBack());
+            backBtn.getStyleClass().add("back-btn");
+        }
+        if (editInfoBtn != null) {
+            editInfoBtn.setOnAction(e -> toggleEdit());
+            editInfoBtn.getStyleClass().add("edit-btn");
+        }
+        if (saveInfoBtn != null) {
+            saveInfoBtn.setOnAction(e -> saveInfo());
+            saveInfoBtn.getStyleClass().add("save-btn");
+            saveInfoBtn.setDisable(true);
+            saveInfoBtn.setOpacity(0.4);
+        }
         if (overlayYesBtn != null) overlayYesBtn.setOnAction(e -> onFirstTimeYes());
         if (overlayNoBtn != null) overlayNoBtn.setOnAction(e -> onFirstTimeNo());
         if (menuBtn != null) menuBtn.setOnAction(e -> toggleSidePanel());
@@ -132,11 +148,15 @@ public class ProfileController {
     }
 
     private void showFirstTimeOverlayAnimated() {
-    firstTimeOverlay.setVisible(true);
-    firstTimeOverlay.setManaged(true);
-    // Background blur only on content wrapper (keeps overlay sharp)
-    javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(0);
-    if (contentWrapper != null) contentWrapper.setEffect(blur);
+        firstTimeOverlay.setVisible(true);
+        firstTimeOverlay.setManaged(true);
+        
+        // Set the warning icon
+        setWarningIcon();
+        
+        // Background blur only on content wrapper (keeps overlay sharp)
+        javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(0);
+        if (contentWrapper != null) contentWrapper.setEffect(blur);
         javafx.animation.Timeline blurTl = new javafx.animation.Timeline(
                 new javafx.animation.KeyFrame(javafx.util.Duration.millis(0), new javafx.animation.KeyValue(blur.radiusProperty(), 0)),
                 new javafx.animation.KeyFrame(javafx.util.Duration.millis(280), new javafx.animation.KeyValue(blur.radiusProperty(), 18))
@@ -165,7 +185,7 @@ public class ProfileController {
     }
 
     private void onFirstTimeYes() {
-        // Fetch auth record for defaults
+        // Fetch auth record for defaults and enable edit mode
         new Thread(() -> {
             try {
                 var auth = soulInfoRepo.getAuthRecord(soulId);
@@ -174,8 +194,7 @@ public class ProfileController {
                 Platform.runLater(() -> {
                     hideFirstTimeOverlayAnimated();
                     renderInfoRows();
-                    toggleEdit(); // allow user to fill remaining fields
-                    setWarningIcon();
+                    toggleEdit(); // Auto-enable edit mode
                 });
             } catch (Exception ex) { ex.printStackTrace(); }
         }).start();
@@ -190,7 +209,7 @@ public class ProfileController {
                 Platform.runLater(() -> {
                     hideFirstTimeOverlayAnimated();
                     renderInfoRows();
-                    setWarningIcon();
+                    // Don't enable edit mode
                 });
             } catch (Exception ex) { ex.printStackTrace(); }
         }).start();
@@ -225,40 +244,101 @@ public class ProfileController {
     private void renderInfoRows() {
         basicInfoFields.getChildren().clear();
         rows.clear();
-        makeRow("Name", currentInfo == null ? "" : safe(currentInfo.name), "name");
-        makeRow("Date of Birth", currentInfo == null || currentInfo.dob == null ? "" : currentInfo.dob.toString(), "dob");
-        makeRow("Email", currentInfo == null ? "" : safe(currentInfo.email), "email");
-        makeRow("Phone Number", currentInfo == null ? "" : safe(currentInfo.phone), "phone");
-        makeRow("Home Address", currentInfo == null ? "" : safe(currentInfo.address), "address");
-        makeRow("Country Code", currentInfo == null ? "" : safe(currentInfo.countryCode), "country_code");
+        makeRow("Name", currentInfo == null ? "" : safe(currentInfo.name), "name", false);
+        makeRow("Date of Birth", currentInfo == null || currentInfo.dob == null ? "" : currentInfo.dob.toString(), "dob", false);
+        makeRow("Email", currentInfo == null ? "" : safe(currentInfo.email), "email", false);
+        makeRow("Phone Number", currentInfo == null ? "" : safe(currentInfo.phone), "phone", false);
+        makeRow("Home Address", currentInfo == null ? "" : safe(currentInfo.address), "address", false);
+        makeRow("Country Code", currentInfo == null ? "" : safe(currentInfo.countryCode), "country_code", true);
     }
 
-    private void makeRow(String attr, String value, String key) {
+    private void makeRow(String attr, String value, String key, boolean isComboBox) {
         InfoRow r = new InfoRow();
-        r.attrLabel = new Label(attr + ":"); r.attrLabel.getStyleClass().add("info-attr");
-        r.valueField = new TextField(value); r.valueField.getStyleClass().add("info-value"); r.valueField.setEditable(false);
+        r.attrLabel = new Label(attr + ":");
+        r.attrLabel.getStyleClass().add("info-attr");
+        r.isComboBox = isComboBox;
+        
+        // View mode label - make it full width
+        r.valueLabel = new Label(value);
+        r.valueLabel.getStyleClass().add("info-value-label");
+        r.valueLabel.setWrapText(true);
+        r.valueLabel.setMaxWidth(Double.MAX_VALUE);
+        r.valueLabel.setVisible(!editMode);
+        r.valueLabel.setManaged(!editMode);
+        
+        if (isComboBox) {
+            // Edit mode ComboBox for country code
+            r.valueCombo = new ComboBox<>();
+            r.valueCombo.getItems().setAll("+1 (USA)", "+91 (IND)", "+880 (BAN)");
+            r.valueCombo.getStyleClass().add("combo-box");
+            r.valueCombo.setMaxWidth(Double.MAX_VALUE);
+            r.valueCombo.setVisible(editMode);
+            r.valueCombo.setManaged(editMode);
+            
+            // Set initial value
+            if (value != null && !value.isEmpty()) {
+                r.valueCombo.setValue(value);
+            } else {
+                r.valueCombo.getSelectionModel().selectFirst();
+            }
+            
+            VBox box = new VBox(6, r.attrLabel, r.valueLabel, r.valueCombo);
+            box.getStyleClass().add("info-item");
+            basicInfoFields.getChildren().add(box);
+        } else {
+            // Edit mode TextField for regular fields
+            r.valueField = new TextField(value);
+            r.valueField.getStyleClass().add("info-value-field");
+            r.valueField.setVisible(editMode);
+            r.valueField.setManaged(editMode);
+            
+            VBox box = new VBox(6, r.attrLabel, r.valueLabel, r.valueField);
+            box.getStyleClass().add("info-item");
+            basicInfoFields.getChildren().add(box);
+        }
+        
         r.key = key;
-        r.sep = new Separator(); r.sep.getStyleClass().add("info-sep");
-        VBox box = new VBox(4, r.attrLabel, r.valueField, r.sep); box.getStyleClass().add("info-item");
-        basicInfoFields.getChildren().add(box);
         rows.add(r);
     }
 
     private void toggleEdit() {
         editMode = !editMode;
         for (InfoRow r : rows) {
-            // Allow editing except perhaps name if we wanted; allow all for now
-            r.valueField.setEditable(editMode);
+            // Toggle visibility between label and field/combo
+            r.valueLabel.setVisible(!editMode);
+            r.valueLabel.setManaged(!editMode);
+            
+            if (r.isComboBox && r.valueCombo != null) {
+                r.valueCombo.setVisible(editMode);
+                r.valueCombo.setManaged(editMode);
+                
+                // Sync combo with label value when entering edit mode
+                if (editMode) {
+                    String labelText = r.valueLabel.getText();
+                    if (labelText != null && !labelText.isEmpty()) {
+                        r.valueCombo.setValue(labelText);
+                    }
+                }
+            } else if (r.valueField != null) {
+                r.valueField.setVisible(editMode);
+                r.valueField.setManaged(editMode);
+                
+                // Sync field with label value when entering edit mode
+                if (editMode) {
+                    r.valueField.setText(r.valueLabel.getText());
+                }
+            }
         }
         saveInfoBtn.setDisable(!editMode);
+        saveInfoBtn.setOpacity(editMode ? 1.0 : 0.4);
         editInfoBtn.setText(editMode ? "Cancel" : "Edit");
     }
 
     private void saveInfo() {
         // Collect values
         String name = getValue("name");
-    final LocalDate dob; LocalDate tmpDob = null; try { tmpDob = getValue("dob").isEmpty() ? null : LocalDate.parse(getValue("dob")); } catch (Exception ignored) {}
-    dob = tmpDob;
+        final LocalDate dob; LocalDate tmpDob = null; try { tmpDob = getValue("dob").isEmpty() ? null : LocalDate.parse(getValue("dob")); } catch (Exception ignored) {}
+        dob = tmpDob;
         String email = getValue("email");
         String phone = getValue("phone");
         String address = getValue("address");
@@ -270,20 +350,39 @@ public class ProfileController {
                 soulInfoRepo.upsert(soulId, name, dob, email, phone, address, countryCode);
                 currentInfo = soulInfoRepo.getBySoulId(soulId);
                 Platform.runLater(() -> {
-                    toggleEdit();
+                    // Update view labels with new values
+                    for (InfoRow r : rows) {
+                        if (r.isComboBox && r.valueCombo != null) {
+                            r.valueLabel.setText(r.valueCombo.getValue());
+                        } else if (r.valueField != null) {
+                            r.valueLabel.setText(r.valueField.getText());
+                        }
+                    }
+                    // Exit edit mode
+                    if (editMode) toggleEdit();
                 });
             } catch (Exception ex) {
                 ex.printStackTrace();
                 Platform.runLater(() -> {
                     Alert a = new Alert(Alert.AlertType.ERROR, "Failed to save info: " + ex.getMessage(), ButtonType.OK);
                     a.showAndWait();
+                    saveInfoBtn.setDisable(false);
                 });
             }
         }).start();
     }
 
     private String getValue(String key) {
-        for (InfoRow r : rows) if (r.key.equals(key)) return r.valueField.getText().trim();
+        for (InfoRow r : rows) {
+            if (r.key.equals(key)) {
+                if (r.isComboBox && r.valueCombo != null) {
+                    String val = r.valueCombo.getValue();
+                    return val == null ? "" : val.trim();
+                } else if (r.valueField != null) {
+                    return r.valueField.getText().trim();
+                }
+            }
+        }
         return "";
     }
 
@@ -377,9 +476,11 @@ public class ProfileController {
         Label textLabel = new Label(journal.getText());
         textLabel.setWrapText(true);
         textLabel.getStyleClass().add("journal-text");
-        if (journal.getFontFamily() != null && !journal.getFontFamily().isEmpty()) {
-            textLabel.setFont(javafx.scene.text.Font.font(journal.getFontFamily(), journal.getFontSize()));
-        }
+        
+        // Apply saved font family and size (matching PublicJournalsController)
+        String fontFamily = journal.getFontFamily() != null ? journal.getFontFamily() : "System";
+        Integer fontSize = journal.getFontSize() != null ? journal.getFontSize() : 14;
+        textLabel.setStyle(String.format("-fx-font-family: '%s'; -fx-font-size: %dpx;", fontFamily, fontSize));
 
         // Love section (button with heart icon + count)
         HBox loveBox = new HBox(8);
@@ -390,11 +491,12 @@ public class ProfileController {
         ImageView heartFilled = JournalUtils.createHeartIcon("/assets/icons/heart_filled.png", 24);
         
         // Love button
-    Button loveBtn = new Button();
+        Button loveBtn = new Button();
         loveBtn.getStyleClass().add("love-button");
-    loveBtn.setBackground(javafx.scene.layout.Background.EMPTY);
-    loveBtn.setBorder(javafx.scene.layout.Border.EMPTY);
-    loveBtn.setPadding(javafx.geometry.Insets.EMPTY);
+        loveBtn.setBackground(javafx.scene.layout.Background.EMPTY);
+        loveBtn.setBorder(javafx.scene.layout.Border.EMPTY);
+        loveBtn.setPadding(javafx.geometry.Insets.EMPTY);
+        loveBtn.setFocusTraversable(false); // Prevent scroll jumping
         loveBtn.setGraphic(heartOutline);
 
         int loveCount = journal.getLoveCount() != null ? journal.getLoveCount() : 
