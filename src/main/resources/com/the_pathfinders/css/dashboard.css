@@ -77,20 +77,30 @@
 #userImage {
 	/* -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 8, 0, 0, 3); */
 	-fx-smooth: true;
+    -fx-cursor: hand;
 }
 
 /* Logout button (bottom-left) - understated */
-#logoutBtn {
-	-fx-background-color: transparent;
-	-fx-border-color: rgba(0, 0, 0, 0.06);
-	-fx-border-radius: 10px;
-	-fx-text-fill: #374151;
-	-fx-padding: 6 10;
+/* Dropdown menu */
+.dropdown-container {
+	-fx-background-color: rgba(255,255,255,0.85);
+	-fx-background-radius: 14;
+	-fx-padding: 10 12 10 12;
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.20), 18, 0, 0, 8);
 }
-
-#logoutBtn:hover {
-	-fx-background-color: rgba(233, 52, 52, 0.729);
-	-fx-border-color: rgba(28, 15, 15, 0.2);
+.dropdown-item {
+	-fx-background-color: linear-gradient(to bottom right,#f5f7fa,#ecf1f6);
+	-fx-background-radius: 10;
+	-fx-pref-width: 160px;
+	-fx-alignment: CENTER_LEFT;
+	-fx-padding: 8 14 8 14;
+	-fx-text-fill: #1f2937;
+	-fx-font-weight: 600;
+	-fx-cursor: hand;
+}
+.dropdown-item:hover {
+	-fx-background-color: linear-gradient(to bottom right,#ffffff,#e6edf3);
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 4);
 }
 
 /* Responsive: if space is tight, allow horizontal scrolling */

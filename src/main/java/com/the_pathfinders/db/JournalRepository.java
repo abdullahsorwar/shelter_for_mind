@@ -64,11 +64,10 @@ public class JournalRepository {
      * Load a journal entry by ID.
      */
     public Journal getJournalById(String journalId) throws SQLException {
-        String sql = "SELECT journal_id, soul_id, journal_text, love_count, created_at FROM public_journals WHERE journal_id = ?";
+        String sql = "SELECT journal_id, soul_id, journal_text, love_count, loved_by, font_family, font_size, created_at FROM public_journals WHERE journal_id = ?";
         
         try (Connection conn = DB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
             ps.setString(1, journalId);
             
             try (ResultSet rs = ps.executeQuery()) {
@@ -77,13 +76,17 @@ public class JournalRepository {
                     journal.setId(rs.getString("journal_id"));
                     journal.setSoulId(rs.getString("soul_id"));
                     journal.setText(rs.getString("journal_text"));
+                    journal.setLoveCount(rs.getInt("love_count"));
+                    Array lovedArr = rs.getArray("loved_by");
+                    if (lovedArr != null) journal.setLovedBy((String[]) lovedArr.getArray());
+                    journal.setFontFamily(rs.getString("font_family"));
+                    journal.setFontSize(rs.getInt("font_size"));
                     
                     Timestamp ts = rs.getTimestamp("created_at");
                     if (ts != null) {
                         journal.setCreatedAt(ts.toLocalDateTime());
                         journal.setEntryDate(ts.toLocalDateTime().toLocalDate());
                     }
-                    
                     return journal;
                 }
             }
@@ -95,11 +98,10 @@ public class JournalRepository {
      * Load the latest journal entry for a specific user.
      */
     public Journal getLatestJournalForUser(String soulId) throws SQLException {
-        String sql = "SELECT journal_id, soul_id, journal_text, love_count, created_at FROM public_journals WHERE soul_id = ? ORDER BY journal_id DESC LIMIT 1";
+        String sql = "SELECT journal_id, soul_id, journal_text, love_count, loved_by, font_family, font_size, created_at FROM public_journals WHERE soul_id = ? ORDER BY journal_id DESC LIMIT 1";
         
         try (Connection conn = DB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
             ps.setString(1, soulId);
             
             try (ResultSet rs = ps.executeQuery()) {
@@ -108,13 +110,17 @@ public class JournalRepository {
                     journal.setId(rs.getString("journal_id"));
                     journal.setSoulId(rs.getString("soul_id"));
                     journal.setText(rs.getString("journal_text"));
+                    journal.setLoveCount(rs.getInt("love_count"));
+                    Array lovedArr = rs.getArray("loved_by");
+                    if (lovedArr != null) journal.setLovedBy((String[]) lovedArr.getArray());
+                    journal.setFontFamily(rs.getString("font_family"));
+                    journal.setFontSize(rs.getInt("font_size"));
                     
                     Timestamp ts = rs.getTimestamp("created_at");
                     if (ts != null) {
                         journal.setCreatedAt(ts.toLocalDateTime());
                         journal.setEntryDate(ts.toLocalDateTime().toLocalDate());
                     }
-                    
                     return journal;
                 }
             }
@@ -140,6 +146,9 @@ public class JournalRepository {
                 journal.setText(rs.getString("journal_text"));
                 journal.setFontFamily(rs.getString("font_family"));
                 journal.setFontSize(rs.getInt("font_size"));
+                journal.setLoveCount(rs.getInt("love_count"));
+                Array lovedArr = rs.getArray("loved_by");
+                if (lovedArr != null) journal.setLovedBy((String[]) lovedArr.getArray());
                 
                 Timestamp ts = rs.getTimestamp("created_at");
                 if (ts != null) {
@@ -164,7 +173,6 @@ public class JournalRepository {
         
         try (Connection conn = DB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
             ps.setString(1, sinceJournalId);
             
             try (ResultSet rs = ps.executeQuery()) {
@@ -175,6 +183,9 @@ public class JournalRepository {
                     journal.setText(rs.getString("journal_text"));
                     journal.setFontFamily(rs.getString("font_family"));
                     journal.setFontSize(rs.getInt("font_size"));
+                    journal.setLoveCount(rs.getInt("love_count"));
+                    Array lovedArr = rs.getArray("loved_by");
+                    if (lovedArr != null) journal.setLovedBy((String[]) lovedArr.getArray());
                     
                     Timestamp ts = rs.getTimestamp("created_at");
                     if (ts != null) {
@@ -182,6 +193,38 @@ public class JournalRepository {
                         journal.setEntryDate(ts.toLocalDateTime().toLocalDate());
                     }
                     
+                    journals.add(journal);
+                }
+            }
+        }
+        return journals;
+    }
+
+    /**
+     * Get all journals for a specific soul/user ordered by newest first.
+     */
+    public List<Journal> getJournalsBySoulId(String soulId) throws SQLException {
+        List<Journal> journals = new ArrayList<>();
+        String sql = "SELECT journal_id, soul_id, journal_text, love_count, loved_by, font_family, font_size, created_at FROM public_journals WHERE lower(soul_id) = lower(?) ORDER BY created_at DESC";
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, soulId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Journal journal = new Journal();
+                    journal.setId(rs.getString("journal_id"));
+                    journal.setSoulId(rs.getString("soul_id"));
+                    journal.setText(rs.getString("journal_text"));
+                    journal.setFontFamily(rs.getString("font_family"));
+                    journal.setFontSize(rs.getInt("font_size"));
+                    journal.setLoveCount(rs.getInt("love_count"));
+                    Array lovedArr = rs.getArray("loved_by");
+                    if (lovedArr != null) journal.setLovedBy((String[]) lovedArr.getArray());
+                    Timestamp ts = rs.getTimestamp("created_at");
+                    if (ts != null) {
+                        journal.setCreatedAt(ts.toLocalDateTime());
+                        journal.setEntryDate(ts.toLocalDateTime().toLocalDate());
+                    }
                     journals.add(journal);
                 }
             }

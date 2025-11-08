@@ -21,10 +21,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import com.the_pathfinders.util.JournalUtils;
 
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class PublicJournalsController {
@@ -150,7 +150,7 @@ public class PublicJournalsController {
         usernameLabel.getStyleClass().add("journal-username");
         usernameLabel.setStyle("-fx-font-weight: bold;"); // Bold username
         
-        Label timeLabel = new Label(getRelativeTime(journal.getCreatedAt()));
+        Label timeLabel = new Label(JournalUtils.getRelativeTime(journal.getCreatedAt()));
         timeLabel.getStyleClass().add("journal-time");
         timeLabel.setUserData(journal.getCreatedAt()); // Store timestamp for updates
 
@@ -179,60 +179,27 @@ public class PublicJournalsController {
 
         Button loveBtn = new Button();
         loveBtn.getStyleClass().add("love-button");
+        // Ensure no border/background even if CSS isn't loaded
+        loveBtn.setBackground(javafx.scene.layout.Background.EMPTY);
+        loveBtn.setBorder(javafx.scene.layout.Border.EMPTY);
+        loveBtn.setPadding(javafx.geometry.Insets.EMPTY);
         
         // Create ImageViews for heart icons
-        ImageView heartOutline = createHeartIcon("/assets/icons/heart_outline.png");
-        ImageView heartFilled = createHeartIcon("/assets/icons/heart_filled.png");
+        ImageView heartOutline = JournalUtils.createHeartIcon("/assets/icons/heart_outline.png",24);
+        ImageView heartFilled = JournalUtils.createHeartIcon("/assets/icons/heart_filled.png",24);
         
-        // Set initial icon
+        // Initial placeholder graphic
         loveBtn.setGraphic(heartOutline);
         
-        Label loveCountLabel = new Label("0");
+        Label loveCountLabel = new Label(String.valueOf(journal.getLoveCount() == null ? 0 : journal.getLoveCount()));
         loveCountLabel.getStyleClass().add("love-count");
         loveCountLabel.setUserData(journal.getId()); // Store journal ID for real-time updates
 
-        // Check if current user has loved this journal
-        new Thread(() -> {
-            try {
-                boolean isLoved = journalRepo.hasUserLoved(journal.getId(), currentSoulId);
-                int count = journalRepo.getLoveCount(journal.getId());
+        // Set initial loved state using JournalUtils
+        JournalUtils.setInitialLoveState(journal.getId(), currentSoulId, loveBtn, heartOutline, heartFilled);
 
-                Platform.runLater(() -> {
-                    loveBtn.setGraphic(isLoved ? heartFilled : heartOutline);
-                    if (isLoved) {
-                        loveBtn.getStyleClass().add("loved");
-                    }
-                    loveCountLabel.setText(String.valueOf(count));
-                });
-
-            } catch (Exception ignored) {}
-        }).start();
-
-        // Love button action
-        loveBtn.setOnAction(e -> {
-            loveBtn.setDisable(true);
-            new Thread(() -> {
-                try {
-                    boolean nowLoved = journalRepo.toggleLove(journal.getId(), currentSoulId);
-                    int newCount = journalRepo.getLoveCount(journal.getId());
-
-                    Platform.runLater(() -> {
-                        loveBtn.setGraphic(nowLoved ? heartFilled : heartOutline);
-                        if (nowLoved) {
-                            loveBtn.getStyleClass().add("loved");
-                        } else {
-                            loveBtn.getStyleClass().remove("loved");
-                        }
-                        loveCountLabel.setText(String.valueOf(newCount));
-                        loveBtn.setDisable(false);
-                    });
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Platform.runLater(() -> loveBtn.setDisable(false));
-                }
-            }).start();
-        });
+        // Love button action using shared toggle
+        loveBtn.setOnAction(e -> JournalUtils.toggleLove(journal.getId(), currentSoulId, loveBtn, loveCountLabel, journal, heartOutline, heartFilled));
 
         loveBox.getChildren().addAll(loveBtn, loveCountLabel);
 
@@ -243,61 +210,6 @@ public class PublicJournalsController {
         return outerBox;
     }
 
-    private ImageView createHeartIcon(String path) {
-        ImageView icon = new ImageView();
-        try {
-            URL iconUrl = getClass().getResource(path);
-            if (iconUrl != null) {
-                Image img = new Image(iconUrl.toExternalForm(), 24, 24, true, true);
-                icon.setImage(img);
-            }
-        } catch (Exception e) {
-            System.err.println("Failed to load heart icon: " + path + " - " + e.getMessage());
-        }
-        icon.setFitWidth(24);
-        icon.setFitHeight(24);
-        icon.setPreserveRatio(true);
-        return icon;
-    }
-
-    private String getRelativeTime(LocalDateTime timestamp) {
-        if (timestamp == null) return "just now";
-
-        LocalDateTime now = LocalDateTime.now();
-        long seconds = ChronoUnit.SECONDS.between(timestamp, now);
-
-        if (seconds < 60) {
-            return seconds + " seconds ago";
-        }
-
-        long minutes = ChronoUnit.MINUTES.between(timestamp, now);
-        if (minutes < 60) {
-            return minutes + " minute" + (minutes == 1 ? "" : "s") + " ago";
-        }
-
-        long hours = ChronoUnit.HOURS.between(timestamp, now);
-        if (hours < 24) {
-            return hours + " hour" + (hours == 1 ? "" : "s") + " ago";
-        }
-
-        long days = ChronoUnit.DAYS.between(timestamp, now);
-        if (days < 7) {
-            return days + " day" + (days == 1 ? "" : "s") + " ago";
-        }
-
-        long weeks = days / 7;
-        if (weeks < 4) {
-            return weeks + " week" + (weeks == 1 ? "" : "s") + " ago";
-        }
-
-        long months = ChronoUnit.MONTHS.between(timestamp, now);
-        if (months < 12) {
-            return months + " month" + (months == 1 ? "" : "s") + " ago";
-        }
-
-        long years = ChronoUnit.YEARS.between(timestamp, now);
-        return years + " year" + (years == 1 ? "" : "s") + " ago";
-    }
     
     private void startTimestampUpdateTimeline() {
         // Create a timeline that updates all timestamps every second
@@ -323,7 +235,7 @@ public class PublicJournalsController {
                                                 // Get the journal object from user data
                                                 LocalDateTime timestamp = (LocalDateTime) label.getUserData();
                                                 if (timestamp != null) {
-                                                    label.setText(getRelativeTime(timestamp));
+                                                        label.setText(JournalUtils.getRelativeTime(timestamp));
                                                 }
                                             }
                                         }

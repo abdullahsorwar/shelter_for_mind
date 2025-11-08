@@ -45,7 +45,7 @@
                 </content>
             </ScrollPane>
 
-        <!-- Bottom-left logout -->
-        <Button fx:id="logoutBtn" prefWidth="71.0" text="Log out" AnchorPane.bottomAnchor="12" AnchorPane.leftAnchor="12" />
+        <!-- User dropdown placeholder container (initially empty) -->
+        <VBox fx:id="userDropdown" AnchorPane.topAnchor="60" AnchorPane.rightAnchor="12" spacing="6" visible="false" managed="false" />
     </children>
 </AnchorPane>

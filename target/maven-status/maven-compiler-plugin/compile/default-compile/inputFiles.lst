@@ -1,5 +1,6 @@
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\VideoManager.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\InitialController.java
+D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\ProfileController.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\JournalRepository.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\SoulRepository.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\BlogController.java
@@ -9,6 +10,8 @@ D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\Journ
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\LoginSignupController.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\PublicJournalsController.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\DbMigrations.java
+D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\util\JournalUtils.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\Blog.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\DashboardController.java
 D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\Journal.java
+D:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\SoulInfoRepository.java

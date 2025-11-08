@@ -25,7 +25,7 @@ public class DashboardController {
     @FXML private ImageView logoImage;
     @FXML private Button journalingBtn;
     @FXML private Button blogsBtn;
-    @FXML private Button logoutBtn;
+    @FXML private javafx.scene.layout.VBox userDropdown;
 
     private String soulId;
 
@@ -81,7 +81,10 @@ public class DashboardController {
             }
         });
 
-        logoutBtn.setOnAction(e -> onLogout());
+        // Remove old logout button usage; now handled in dropdown
+        if (userImage != null) {
+            userImage.setOnMouseClicked(e -> toggleUserMenu());
+        }
     }
 
     public void setUser(String id, String name) {
@@ -143,5 +146,69 @@ public class DashboardController {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private void toggleUserMenu() {
+        if (userDropdown == null) return;
+        if (userDropdown.isVisible()) {
+            userDropdown.setVisible(false);
+            userDropdown.setManaged(false);
+            userDropdown.getChildren().clear();
+            return;
+        }
+        userDropdown.setVisible(true);
+        userDropdown.setManaged(true);
+        userDropdown.getChildren().clear();
+        String[] items = {"My Profile", "Starred Journals", "Log Out"};
+        for (int i = 0; i < items.length; i++) {
+            Button b = new Button(items[i]);
+            b.getStyleClass().add("dropdown-item");
+            b.setOpacity(0);
+            b.setScaleX(0.9);
+            b.setScaleY(0.9);
+            userDropdown.getChildren().add(b);
+            final int idx = i;
+            javafx.animation.Timeline tl = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.millis(50 + idx*120), ev -> {
+                    javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(javafx.util.Duration.millis(250), b);
+                    ft.setFromValue(0); ft.setToValue(1);
+                    javafx.animation.ScaleTransition st = new javafx.animation.ScaleTransition(javafx.util.Duration.millis(250), b);
+                    st.setFromX(0.9); st.setFromY(0.9); st.setToX(1); st.setToY(1);
+                    ft.play(); st.play();
+                })
+            );
+            tl.play();
+            b.setOnAction(e -> handleDropdownSelection(items[idx]));
+        }
+        userDropdown.getStyleClass().add("dropdown-container");
+    }
+
+    private void handleDropdownSelection(String which) {
+        switch (which) {
+            case "My Profile" -> openProfile();
+            case "Starred Journals" -> showStarredPlaceholder();
+            case "Log Out" -> onLogout();
+        }
+    }
+
+    private void openProfile() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/profile.fxml"));
+            Parent profileRoot = loader.load();
+            Object controller = loader.getController();
+            if (controller instanceof ProfileController pc) {
+                pc.setSoulId(this.soulId);
+                pc.onShown();
+            }
+            if (root != null && root.getScene() != null) {
+                root.getScene().setRoot(profileRoot);
+            }
+        } catch (Exception ex) { ex.printStackTrace(); }
+    }
+
+    private void showStarredPlaceholder() {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, "Starred journals feature coming soon.", ButtonType.OK);
+        a.setHeaderText("Coming Soon");
+        a.showAndWait();
     }
 }
