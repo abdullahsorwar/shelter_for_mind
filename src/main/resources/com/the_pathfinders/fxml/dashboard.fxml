@@ -2,16 +2,25 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="root" prefHeight="600" prefWidth="900" stylesheets="/com/the_pathfinders/css/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.DashboardController">
     <children>
+        <!-- Background animated rectangle (fills window) -->
+        <Rectangle fx:id="bgRect" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" />
+
+        <!-- Top-left: logo -->
+        <VBox AnchorPane.leftAnchor="12" AnchorPane.topAnchor="12" spacing="8" alignment="TOP_LEFT">
+            <children>
+                <ImageView fx:id="logoImage" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" smooth="true" />
+            </children>
+        </VBox>
+
         <!-- Top-right user info -->
         <HBox alignment="CENTER" spacing="8" AnchorPane.rightAnchor="12" AnchorPane.topAnchor="12">
             <Label fx:id="userLabel" alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="149.0" text="Logged">
@@ -22,30 +31,27 @@
             <ImageView fx:id="userImage" fitHeight="50.0" fitWidth="50.0" preserveRatio="true" />
         </HBox>
 
-        <!-- Logo and separator -->
-        <ImageView fx:id="logoImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" smooth="true" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0" />
-        <Separator layoutX="14.0" layoutY="119.0" prefHeight="0.0" prefWidth="874.0" />
+        <!-- Center content: greeting moved upward + draggable button cards -->
+        <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="80" AnchorPane.bottomAnchor="0" alignment="TOP_CENTER" spacing="30">
+            <children>
+                <!-- Greeting label (moved upward) -->
+                <Label fx:id="greetingLabel" text="Good Morning 🌞" styleClass="greeting" />
 
-            <!-- Center menu (horizontal row of large pastel button-cards). Wrapped in a horizontal ScrollPane to allow wide buttons -->
-            <ScrollPane fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" pannable="true" AnchorPane.topAnchor="120" AnchorPane.bottomAnchor="120" AnchorPane.leftAnchor="40" AnchorPane.rightAnchor="40" style="-fx-background-color: transparent; -fx-padding: 8 12 8 12;">
-                <content>
-                    <HBox fx:id="buttonRow" alignment="CENTER_LEFT" spacing="18">
-                        <children>
-                            <Button fx:id="journalingBtn" text="📝 Journaling" styleClass="card-btn card-large" />
-                            <Button fx:id="moodTrackerBtn" text="💭 Mood Tracker" styleClass="card-btn card-large" />
-                            <Button fx:id="remindersBtn" text="⏰ Reminders" styleClass="card-btn card-large" />
-                            <Button fx:id="progressBtn" text="📊 My Progress" styleClass="card-btn card-large" />
-                            <Button fx:id="selfDevBtn" text="🌱 Self Development" styleClass="card-btn card-large" />
-                            <Button fx:id="mindWorkoutBtn" text="🧠 Mind Workout" styleClass="card-btn card-large" />
-                            <Button fx:id="goalsBtn" text="🎯 Goals for Today" styleClass="card-btn card-large" />
-                            <Button fx:id="settingsBtn" text="⚙️ Settings" styleClass="card-btn card-large" />
-                            <Button fx:id="blogsBtn" text="📚 Blogs" styleClass="card-btn card-large" />
-                        </children>
-                    </HBox>
-                </content>
-            </ScrollPane>
+                <!-- Draggable/swappable button cards in horizontal layout -->
+                <HBox fx:id="buttonCardsBox" spacing="16" alignment="CENTER" prefHeight="200" style="-fx-padding: 20;">
+                    <children>
+                        <Button fx:id="journalBtn" text="📔 Journal" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
+                        <Button fx:id="blogBtn" text="🧘 Blogs" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
+                        <Button fx:id="moodBtn" text="🌦️ Mood Tracker" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
+                        <Button fx:id="insightsBtn" text="📊 Insights" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
+                        <Button fx:id="settingsBtn" text="⚙️ Settings" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
+                        <Button fx:id="logoutBtn" text="🚪 Log out" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
 
-        <!-- Bottom-left logout -->
-        <Button fx:id="logoutBtn" prefWidth="71.0" text="Log out" AnchorPane.bottomAnchor="12" AnchorPane.leftAnchor="12" />
+        <!-- User dropdown placeholder container (initially empty) -->
+        <VBox fx:id="userDropdown" AnchorPane.topAnchor="60" AnchorPane.rightAnchor="12" spacing="6" visible="false" managed="false" />
     </children>
 </AnchorPane>

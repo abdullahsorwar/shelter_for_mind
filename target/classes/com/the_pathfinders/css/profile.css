@@ -1,0 +1,198 @@
+/* Color palette: #adb2d4, #c7d9dd, #d5e5d5, #eef1d1 */
+
+.root {
+  -fx-background-color: linear-gradient(to bottom right, #f6f8fb, #f1f5fb);
+  -fx-font-family: 'Segoe UI', 'Poppins', sans-serif;
+}
+
+.title { -fx-font-size: 28px; -fx-font-weight: 800; -fx-text-fill: #1f2937; }
+.subtitle { -fx-text-fill: #6b7280; }
+
+.outer-box {
+  -fx-background-color: rgba(255,255,255,0.6);
+  -fx-background-radius: 16;
+  -fx-padding: 16;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 6);
+}
+
+.inner-box {
+  -fx-background-color: linear-gradient(to bottom right, #c7d9dd, #eef1d1);
+  -fx-background-radius: 12;
+  -fx-padding: 16;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 10, 0, 0, 4);
+}
+
+.section-header { -fx-font-weight: 700; -fx-text-fill: #334155; }
+
+.info-scroll, .journals-scroll { -fx-background-color: transparent; -fx-padding: 8 0 0 0; }
+.info-scroll { -fx-pref-height: 420; -fx-max-height: 450; }
+
+.info-item {
+  -fx-background-color: linear-gradient(to bottom right, #adb2d4, #c7d9dd);
+  -fx-background-radius: 10;
+  -fx-padding: 12;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 3);
+}
+.info-attr { -fx-font-weight: 700; -fx-text-fill: #111827; -fx-font-size: 14px; }
+
+/* View mode label */
+.info-value-label {
+  -fx-text-fill: #374151;
+  -fx-font-size: 14px;
+  -fx-padding: 8 10 8 10;
+  -fx-background-color: rgba(255,255,255,0.5);
+  -fx-background-radius: 6;
+}
+
+/* Edit mode field */
+.info-value-field {
+  -fx-text-fill: #1f2937;
+  -fx-font-size: 14px;
+  -fx-padding: 8 10 8 10;
+  -fx-background-color: white;
+  -fx-background-radius: 8;
+  -fx-border-color: #c7d9dd;
+  -fx-border-width: 2;
+  -fx-border-radius: 8;
+}
+.info-value-field:focused {
+  -fx-border-color: #adb2d4;
+  -fx-background-color: #ffffff;
+  -fx-effect: dropshadow(gaussian, rgba(173,178,212,0.3), 8, 0, 0, 0);
+}
+
+/* ComboBox styling (matching login_signup.css) */
+.combo-box {
+  -fx-background-color: white;
+  -fx-border-color: #c7d9dd;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-padding: 8;
+  -fx-font-size: 14px;
+}
+
+.combo-box .arrow-button {
+  -fx-background-color: transparent;
+}
+
+.combo-box .arrow {
+  -fx-background-color: #adb2d4;
+}
+
+.combo-box:focused {
+  -fx-border-color: #adb2d4;
+  -fx-effect: dropshadow(gaussian, rgba(173,178,212,0.3), 8, 0, 0, 0);
+}
+
+.combo-box-popup .list-view {
+  -fx-background-color: rgba(255,255,255,0.95);
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);
+  -fx-background-radius: 8;
+  -fx-border-color: #c7d9dd;
+  -fx-border-radius: 8;
+}
+
+.combo-box-popup .list-cell {
+  -fx-padding: 8 12;
+  -fx-text-fill: #1f1f1f;
+  -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-cell:hover {
+  -fx-background-color: rgba(173,178,212,0.15);
+}
+
+.combo-box-popup .list-cell:selected {
+  -fx-background-color: rgba(173,178,212,0.25);
+  -fx-text-fill: #1f2937;
+}
+
+/* Back button with hover */
+.back-btn {
+  -fx-background-color: rgba(255,255,255,0.6);
+  -fx-background-radius: 12;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 10, 0, 0, 4);
+  -fx-cursor: hand;
+}
+.back-btn:hover {
+  -fx-background-color: rgba(255,255,255,0.9);
+  -fx-scale-x: 1.02;
+  -fx-scale-y: 1.02;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0, 0, 5);
+}
+
+/* Edit and Save buttons - styled */
+.edit-btn, .save-btn {
+  -fx-background-color: linear-gradient(to bottom, #adb2d4, #c7d9dd);
+  -fx-text-fill: #1f2937;
+  -fx-font-weight: 600;
+  -fx-font-size: 13px;
+  -fx-padding: 8 18 8 18;
+  -fx-background-radius: 18;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 6, 0, 0, 2);
+}
+.edit-btn:hover, .save-btn:hover {
+  -fx-background-color: linear-gradient(to bottom, #c7d9dd, #adb2d4);
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+}
+.edit-btn:pressed, .save-btn:pressed {
+  -fx-scale-x: 0.95;
+  -fx-scale-y: 0.95;
+}
+
+.coming-soon { -fx-text-fill: #6b7280; -fx-font-size: 16px; }
+
+/* First-time overlay */
+.overlay-root { -fx-background-color: rgba(0,0,0,0.25); }
+.overlay-box {
+  -fx-background-color: white;
+  -fx-background-radius: 18;
+  -fx-padding: 24;
+  -fx-min-width: 420;
+  -fx-max-width: 520;
+  -fx-pref-height: 240;
+  -fx-alignment: center;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0, 0, 8);
+}
+.overlay-title { -fx-font-size: 20px; -fx-font-weight: 800; }
+.overlay-text { -fx-text-fill: #374151; -fx-alignment: center; -fx-max-width: 380; }
+.overlay-yes { -fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 10; }
+.overlay-no  { -fx-background-color: #ef4444; -fx-text-fill: white; -fx-background-radius: 10; }
+
+/* New layout styles */
+.side-panel { -fx-background-color: linear-gradient(to bottom, #adb2d4, #c7d9dd, #d5e5d5, #eef1d1); -fx-padding: 16 10 16 10; }
+.menu-btn { -fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 10; -fx-cursor: hand; }
+.menu-btn:hover { -fx-background-color: rgba(255,255,255,0.8); }
+.menu-items { -fx-padding: 10 0 0 0; }
+.menu-item { -fx-background-color: transparent; -fx-text-fill: #1f2937; -fx-alignment: CENTER_LEFT; }
+.menu-item:hover { -fx-background-color: rgba(255,255,255,0.5); }
+
+.main-area { -fx-background-color: white; }
+.header-title { -fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #111827; }
+.header-subtitle { -fx-text-fill: #6b7280; }
+.pages-container, .basic-info-scroll, .journals-scroll { -fx-background-color: transparent; }
+
+/* Journal box styles */
+.journal-outer-box { -fx-background-color: #d0d0d0; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3); }
+.journal-inner-box {
+  -fx-background-color: rgba(255,255,255,0.85);
+  -fx-background-radius: 12;
+  -fx-border-color: rgba(255,255,255,0.4);
+  -fx-border-width: 1;
+  -fx-border-radius: 12;
+  -fx-effect: innershadow(gaussian, rgba(255,255,255,0.6), 10, 0, 0, 1);
+}
+.journal-username { -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
+.journal-time { -fx-font-size: 12px; -fx-text-fill: #666666; }
+.journal-separator { -fx-background-color: #cccccc; }
+.journal-text { -fx-font-size: 14px; -fx-text-fill: #333333; -fx-wrap-text: true; -fx-padding: 5 0 5 0; }
+
+/* Love button & count */
+.love-button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0; -fx-cursor: hand; -fx-background-radius: 0; -fx-border-radius: 0; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-effect: none; }
+.love-button:hover { -fx-background-color: transparent; -fx-scale-x: 1.08; -fx-scale-y: 1.08; }
+.love-button:pressed { -fx-scale-x: 0.92; -fx-scale-y: 0.92; }
+.love-button.loved { -fx-background-color: transparent; }
+.love-button.loved:hover { -fx-scale-x: 1.08; -fx-scale-y: 1.08; }
+.love-count { -fx-font-size: 14px; -fx-text-fill: #666666; -fx-font-weight: bold; }

@@ -10,11 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -33,10 +28,6 @@ public class LoginSignupController implements Initializable {
     @FXML private Label subtitleLabel;
     @FXML private AnchorPane root;
     @FXML private ToggleButton themeToggle;
-    // Background video player & overlay
-    private MediaPlayer bgPlayer;
-    private MediaView bgView;
-    private Rectangle videoOverlay;
 
     /* Tabs + border */
     @FXML private StackPane tabStack;
@@ -81,40 +72,8 @@ public class LoginSignupController implements Initializable {
             }
         } catch (Exception ignored) {}
 
-        // Background video (if provided) — play behind the UI and add a subtle dark overlay
-        try {
-            URL v = getClass().getResource("/assets/videos/background.mp4");
-            if (v != null && root != null) {
-                Media media = new Media(v.toExternalForm());
-                bgPlayer = new MediaPlayer(media);
-                bgPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-                bgPlayer.setAutoPlay(true);
-                bgPlayer.setMute(true);
-
-                bgView = new MediaView(bgPlayer);
-                bgView.setPreserveRatio(false);
-                bgView.setSmooth(true);
-                bgView.setMouseTransparent(true);
-                bgView.fitWidthProperty().bind(root.widthProperty());
-                bgView.fitHeightProperty().bind(root.heightProperty());
-
-                videoOverlay = new Rectangle();
-                videoOverlay.widthProperty().bind(root.widthProperty());
-                videoOverlay.heightProperty().bind(root.heightProperty());
-                // subtle darkening overlay (30% opacity)
-                videoOverlay.setFill(Color.rgb(6, 8, 12, 0.30));
-                videoOverlay.setMouseTransparent(true);
-
-                // Add behind all existing children
-                Platform.runLater(() -> {
-                    // insert at very back
-                    root.getChildren().add(0, bgView);
-                    root.getChildren().add(1, videoOverlay);
-                });
-            }
-        } catch (Exception ex) {
-            // if video fails to load, we silently continue using static background
-        }
+        // Attach background video from VideoManager (reuses existing instance)
+        attachBackgroundVideo();
 
         // Subtitle alternating
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(3), e -> switchSubtitle()));
@@ -291,13 +250,43 @@ public class LoginSignupController implements Initializable {
     private void onSubmitLogin() {
         String id = value(tfLoginId), key = value(pfLoginKey);
         if (id.isEmpty() || key.isEmpty()) { setErr(lblLoginStatus, "Fill all fields!"); return; }
-        try {
-            if (repo == null) throw new IllegalStateException("Repository not set");
-            if (!repo.verify(id, key)) { setErr(lblLoginStatus, "Invalid ID or Key."); return; }
-            // fetch display name (if available) and open dashboard
-            String name = fetchNameForId(id);
-            openDashboard(id, name);
-        } catch (Exception ex) { setErr(lblLoginStatus, "Server error!"); }
+        
+        // Clear previous messages and disable button during operation
+        lblLoginStatus.setText("");
+        btnLoginSubmit.setDisable(true);
+        
+        // Run database operations in background thread to keep UI and video responsive
+        new Thread(() -> {
+            try {
+                if (repo == null) throw new IllegalStateException("Repository not set");
+                
+                // Database verification (blocking operation)
+                boolean isValid = repo.verify(id, key);
+                
+                if (!isValid) {
+                    Platform.runLater(() -> {
+                        setErr(lblLoginStatus, "Invalid ID or Key.");
+                        btnLoginSubmit.setDisable(false);
+                    });
+                    return;
+                }
+                
+                // Fetch display name (if available)
+                String name = fetchNameForId(id);
+                
+                // Switch to dashboard on FX thread
+                Platform.runLater(() -> {
+                    openDashboard(id, name);
+                    btnLoginSubmit.setDisable(false);
+                });
+                
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    setErr(lblLoginStatus, "Server error!");
+                    btnLoginSubmit.setDisable(false);
+                });
+            }
+        }).start();
     }
 
     // Fetch soul_name from DB (returns id if name not found)
@@ -335,16 +324,32 @@ public class LoginSignupController implements Initializable {
         }
     }
 
-    /** Clean up MediaPlayer and bindings when this controller is no longer needed */
+    /** Clean up - detach video from this pane (but keep it alive for reuse) */
     private void dispose() {
-        if (bgPlayer != null) {
-            bgPlayer.stop();
-            bgPlayer.dispose();
-            bgPlayer = null;
+        try {
+            VideoManager.getInstance().detachFromPane(root);
+        } catch (Exception ex) {
+            System.err.println("Error during video detach: " + ex.getMessage());
         }
-        if (bgView != null) {
-            bgView.setMediaPlayer(null);
-            bgView = null;
+    }
+
+    /* ---------- Background Video ---------- */
+    
+    /**
+     * Attach the background video from VideoManager (reuses existing instance).
+     */
+    private void attachBackgroundVideo() {
+        if (root == null) return;
+        
+        // Wait for scene to be attached
+        if (root.getScene() != null) {
+            VideoManager.getInstance().attachToPane(root);
+        } else {
+            root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    Platform.runLater(() -> VideoManager.getInstance().attachToPane(root));
+                }
+            });
         }
     }
 
@@ -410,13 +415,43 @@ public class LoginSignupController implements Initializable {
             return;
         }
 
-        try {
-            if (repo==null) throw new IllegalStateException("Repository not set");
-            if (repo.idExists(id)) { setErr(lblSubmitStatus,"Duplicate ID!"); return; }
-            
-            repo.create(new SoulRepository.Soul(id, key, n, dobDate, mob, cbCountryCode.getSelectionModel().getSelectedItem()));
-            setOk(lblSubmitStatus,"Success! Your data is saved!");
-        } catch (DuplicateIdException d){ setErr(lblSubmitStatus,"Duplicate ID!"); }
-          catch (Exception ex){ setErr(lblSubmitStatus,"Server error!"); }
+        // Disable button during operation
+        btnSubmit.setDisable(true);
+        
+        // Run database operations in background thread to keep UI and video responsive
+        final LocalDate finalDobDate = dobDate;
+        new Thread(() -> {
+            try {
+                if (repo==null) throw new IllegalStateException("Repository not set");
+                
+                // Check for duplicate ID (blocking operation)
+                if (repo.idExists(id)) {
+                    Platform.runLater(() -> {
+                        setErr(lblSubmitStatus,"Duplicate ID!");
+                        btnSubmit.setDisable(false);
+                    });
+                    return;
+                }
+                
+                // Create new soul record (blocking operation)
+                repo.create(new SoulRepository.Soul(id, key, n, finalDobDate, mob, cbCountryCode.getSelectionModel().getSelectedItem()));
+                
+                Platform.runLater(() -> {
+                    setOk(lblSubmitStatus,"Success! Your data is saved!");
+                    btnSubmit.setDisable(false);
+                });
+                
+            } catch (DuplicateIdException d) {
+                Platform.runLater(() -> {
+                    setErr(lblSubmitStatus,"Duplicate ID!");
+                    btnSubmit.setDisable(false);
+                });
+            } catch (Exception ex) {
+                Platform.runLater(() -> {
+                    setErr(lblSubmitStatus,"Server error!");
+                    btnSubmit.setDisable(false);
+                });
+            }
+        }).start();
     }
 }

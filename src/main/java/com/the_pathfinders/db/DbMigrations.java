@@ -21,6 +21,113 @@ public final class DbMigrations {
                   constraint soul_id_is_lower check (soul_id = lower(soul_id))
                 )
             """);
+            
+            // Create public journals table for journal entries
+            st.executeUpdate("""
+                create table if not exists public_journals (
+                  journal_id   char(7) primary key not null,
+                  soul_id      text,
+                  journal_text text not null,
+                  love_count   integer default 0,
+                  loved_by     text[] default '{}',
+                  font_family  text default 'System',
+                  font_size    integer default 14,
+                  created_at   timestamptz default now()
+                )
+            """);
+            
+            // Create soul_info table to store user profile information
+            st.executeUpdate("""
+                create table if not exists soul_info (
+                  soul_id     text primary key,
+                  name        text,
+                  dob         date,
+                  email       text,
+                  phone       text,
+                  address     text,
+                  country_code text,
+                  created_at  timestamptz default now(),
+                  updated_at  timestamptz default now()
+                )
+            """);
+            
+            // Add loved_by column if it doesn't exist (for existing tables)
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (
+                    select 1 from information_schema.columns
+                    where table_name = 'public_journals' and column_name = 'loved_by'
+                  ) then
+                    alter table public_journals add column loved_by text[] default '{}';
+                  end if;
+                end $$
+            """);
+            
+            // Add font columns if they don't exist (for existing tables)
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (
+                    select 1 from information_schema.columns
+                    where table_name = 'public_journals' and column_name = 'font_family'
+                  ) then
+                    alter table public_journals add column font_family text default 'System';
+                  end if;
+                  if not exists (
+                    select 1 from information_schema.columns
+                    where table_name = 'public_journals' and column_name = 'font_size'
+                  ) then
+                    alter table public_journals add column font_size integer default 14;
+                  end if;
+                end $$
+            """);
+            
+            // Add missing columns for soul_info if needed (for existing installations)
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (
+                    select 1 from information_schema.tables where table_name = 'soul_info'
+                  ) then
+                    create table soul_info (
+                      soul_id     text primary key,
+                      name        text,
+                      dob         date,
+                      email       text,
+                      phone       text,
+                      address     text,
+                      country_code text,
+                      created_at  timestamptz default now(),
+                      updated_at  timestamptz default now()
+                    );
+                  else
+                    if not exists (select 1 from information_schema.columns where table_name='soul_info' and column_name='email') then
+                      alter table soul_info add column email text;
+                    end if;
+                    if not exists (select 1 from information_schema.columns where table_name='soul_info' and column_name='phone') then
+                      alter table soul_info add column phone text;
+                    end if;
+                    if not exists (select 1 from information_schema.columns where table_name='soul_info' and column_name='address') then
+                      alter table soul_info add column address text;
+                    end if;
+                    if not exists (select 1 from information_schema.columns where table_name='soul_info' and column_name='country_code') then
+                      alter table soul_info add column country_code text;
+                    end if;
+                    if not exists (select 1 from information_schema.columns where table_name='soul_info' and column_name='created_at') then
+                      alter table soul_info add column created_at timestamptz default now();
+                    end if;
+                    if not exists (select 1 from information_schema.columns where table_name='soul_info' and column_name='updated_at') then
+                      alter table soul_info add column updated_at timestamptz default now();
+                    end if;
+                  end if;
+                end $$
+            """);
+            
+            // Create GIN index on loved_by array for fast searches (binary search-like performance)
+            st.executeUpdate("""
+                create index if not exists idx_loved_by_gin on public_journals using gin (loved_by)
+            """);
         }
     }
 }

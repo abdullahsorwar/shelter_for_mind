@@ -1,5 +1,7 @@
 package com.the_pathfinders;
 
+import com.the_pathfinders.db.JournalRepository;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -7,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
-import java.sql.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -22,20 +23,20 @@ public class JournalController {
     @FXML private ComboBox<String> fontCombo;
     @FXML private ComboBox<Integer> sizeCombo;
     @FXML private ColorPicker colorPicker;
-    @FXML private Button backBtn; // make sure your FXML has this button too
+    @FXML private Button backBtn;
 
-
-    // Use environment variables for production; replace defaults if needed
-    private final String DB_URL = System.getenv().getOrDefault("JOURNAL_DB_URL", "jdbc:postgresql://host:5432/dbname");
-    private final String DB_USER = System.getenv().getOrDefault("JOURNAL_DB_USER", "dbuser");
-    private final String DB_PASS = System.getenv().getOrDefault("JOURNAL_DB_PASS", "dbpass");
     private String soulId = "";
+    private JournalRepository journalRepo;
+    private String currentJournalId = null;
 
     public void setSoulId(String id) {
         this.soulId = id == null ? "" : id;
     }
     @FXML
     public void initialize() {
+        // Initialize repository
+        journalRepo = new JournalRepository();
+        
         // Populate font and size options
         List<String> fonts = Arrays.asList("System", "Segoe UI", "Arial", "Georgia", "Courier New");
         fontCombo.getItems().setAll(fonts);
@@ -63,6 +64,28 @@ public class JournalController {
         }
     }
 
+    /**
+     * Load an existing journal by id into the editor for editing/resuming.
+     */
+    public void loadJournal(String journalId) {
+        if (journalId == null || journalId.isBlank()) return;
+        try {
+            JournalRepository repo = new JournalRepository();
+            Journal j = repo.getJournalById(journalId);
+            if (j != null) {
+                this.currentJournalId = j.getId();
+                // populate fields
+                this.textArea.setText(j.getText() == null ? "" : j.getText());
+                if (j.getEntryDate() != null) this.datePicker.setValue(j.getEntryDate());
+                if (j.getFontFamily() != null) fontCombo.getSelectionModel().select(j.getFontFamily());
+                if (j.getFontSize() != null) sizeCombo.getSelectionModel().select(j.getFontSize());
+                if (j.getFontFamily() != null || j.getFontSize() != null) applyTextStyle();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     private void applyTextStyle() {
         String font = fontCombo.getSelectionModel().getSelectedItem();
@@ -87,81 +110,103 @@ public class JournalController {
     }
 
     private void onSave() {
-        LocalDate date = datePicker.getValue();
-        if (date == null) date = LocalDate.now();
+        final LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
         String content = textArea.getText() == null ? "" : textArea.getText().trim();
+        
+        // Capture font selections
+        String fontFamily = fontCombo.getSelectionModel().getSelectedItem();
+        Integer fontSize = sizeCombo.getSelectionModel().getSelectedItem();
+        
+        // Default values if nothing selected
+        if (fontFamily == null) fontFamily = "System";
+        if (fontSize == null) fontSize = 14;
 
-        // Print to console as required
-        System.out.println("Saving journal entry:");
-        System.out.println("Date: " + date);
-        System.out.println("Text: " + content);
-
-        // Save to DB (in a background thread recommended for real apps)
-        try {
-            saveToDatabase(date, content);
-            System.out.println("Saved to database successfully.");
-        } catch (Exception ex) {
-            System.err.println("Failed to save to database: " + ex.getMessage());
-            ex.printStackTrace();
+        if (content.isEmpty()) {
+            showAlert("Empty Journal", "Please write something before saving!", Alert.AlertType.WARNING);
+            return;
         }
+
+        if (soulId == null || soulId.isEmpty()) {
+            showAlert("Error", "User not logged in!", Alert.AlertType.ERROR);
+            return;
+        }
+
+        // Disable button during save operation
+        saveBtn.setDisable(true);
+
+        // Capture final values for use in thread
+        final String finalFontFamily = fontFamily;
+        final Integer finalFontSize = fontSize;
+
+            // Run database operations in background thread to keep UI responsive
+            new Thread(() -> {
+                try {
+                    String journalId;
+                    if (currentJournalId != null) {
+                        // update existing
+                        boolean ok = journalRepo.updateJournal(currentJournalId, content, finalFontFamily, finalFontSize);
+                        journalId = currentJournalId;
+                        if (!ok) throw new RuntimeException("Failed to update journal");
+                    } else {
+                        journalId = journalRepo.saveJournal(soulId, content, finalFontFamily, finalFontSize);
+                        currentJournalId = journalId;
+                    }
+
+                    final String finalJournalId = journalId;
+                    Platform.runLater(() -> {
+                        System.out.println("Journal saved successfully!");
+                        System.out.println("Journal ID: " + finalJournalId);
+                        System.out.println("Soul ID: " + soulId);
+                        System.out.println("Date: " + date);
+                        System.out.println("Font: " + finalFontFamily + " " + finalFontSize + "px");
+                        System.out.println("Text: " + content);
+
+                        showAlert("Success", "Journal saved successfully!\nJournal ID: " + finalJournalId, Alert.AlertType.INFORMATION);
+                        saveBtn.setDisable(false);
+                    });
+
+                } catch (Exception ex) {
+                    Platform.runLater(() -> {
+                        System.err.println("Failed to save journal: " + ex.getMessage());
+                        ex.printStackTrace();
+                        showAlert("Error", "Failed to save journal: " + ex.getMessage(), Alert.AlertType.ERROR);
+                        saveBtn.setDisable(false);
+                    });
+                }
+            }).start();
     }
 
     private void onLoad() {
+        if (soulId == null || soulId.isEmpty()) {
+            showAlert("Error", "User not logged in!", Alert.AlertType.ERROR);
+            return;
+        }
+
+        // Navigate to public journals view
         try {
-            JournalEntry latest = loadLatestEntry();
-            if (latest != null) {
-                datePicker.setValue(latest.entryDate);
-                textArea.setText(latest.entryText);
-                System.out.println("Loaded latest entry:");
-                System.out.println("Date: " + latest.entryDate);
-                System.out.println("Text: " + latest.entryText);
-            } else {
-                System.out.println("No journal entries found in database.");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/public_journals_view.fxml"));
+            Parent publicJournalsRoot = loader.load();
+            
+            Object controller = loader.getController();
+            if (controller instanceof PublicJournalsController pjc) {
+                pjc.setSoulId(this.soulId);
+            }
+            
+            if (root != null && root.getScene() != null) {
+                root.getScene().setRoot(publicJournalsRoot);
             }
         } catch (Exception ex) {
-            System.err.println("Failed to load from database: " + ex.getMessage());
             ex.printStackTrace();
+            showAlert("Error", "Failed to load public journals: " + ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-    private void saveToDatabase(LocalDate date, String text) throws SQLException {
-        // Ensure JDBC driver is on classpath (add dependency in pom.xml)
-        String sql = "INSERT INTO journal_entries (entry_text, entry_date) VALUES (?, ?)";
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, text);
-            ps.setDate(2, Date.valueOf(date));
-            ps.executeUpdate();
-        }
-    }
-
-    private JournalEntry loadLatestEntry() throws SQLException {
-        // Try to fetch latest by created_at, fallback to id if necessary
-        String sql = "SELECT entry_text, entry_date FROM journal_entries ORDER BY created_at DESC LIMIT 1";
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                String text = rs.getString("entry_text");
-                Date d = rs.getDate("entry_date");
-                LocalDate ld = d != null ? d.toLocalDate() : LocalDate.now();
-                return new JournalEntry(ld, text);
-            }
-        } catch (SQLException e) {
-            // If created_at doesn't exist, try ordering by id
-            String alt = "SELECT entry_text, entry_date FROM journal_entries ORDER BY id DESC LIMIT 1";
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                 PreparedStatement ps2 = conn.prepareStatement(alt);
-                 ResultSet rs2 = ps2.executeQuery()) {
-                if (rs2.next()) {
-                    String text = rs2.getString("entry_text");
-                    Date d = rs2.getDate("entry_date");
-                    LocalDate ld = d != null ? d.toLocalDate() : LocalDate.now();
-                    return new JournalEntry(ld, text);
-                }
-            }
-        }
-        return null;
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     private void goBackToDashboard() {
@@ -177,16 +222,6 @@ public class JournalController {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-    }
-
-
-    private static class JournalEntry {
-        final LocalDate entryDate;
-        final String entryText;
-        JournalEntry(LocalDate d, String t) {
-            this.entryDate = d;
-            this.entryText = t;
         }
     }
 }
