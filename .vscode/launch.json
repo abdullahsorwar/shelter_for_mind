@@ -7,7 +7,7 @@
             "request": "launch",
             "mainClass": "com.the_pathfinders.App",
             "projectName": "shelter_of_mind",
-            "vmArgs": "--enable-native-access=javafx.graphics,javafx.media --module-path \"C:\\Program Files\\Java\\javafx-sdk-25\\lib\" --add-modules javafx.controls,javafx.fxml,javafx.media"
+            "vmArgs": "--module-path ${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-controls\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-fxml\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-media\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-graphics\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-base\\21 --add-modules javafx.controls,javafx.fxml,javafx.media"
         }
     ]
 }

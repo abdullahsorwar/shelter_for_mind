@@ -122,13 +122,28 @@ public class DashboardController {
                 bgRect.widthProperty().bind(root.widthProperty());
                 bgRect.heightProperty().bind(root.heightProperty());
                 Color[] colors = new Color[] { Color.web("#E9D5FF"), Color.web("#D1FAE5"), Color.web("#FFE7D9") };
-                for (int i = 0; i < colors.length; i++) {
-                    Color from = colors[i];
-                    Color to = colors[(i+1) % colors.length];
-                    FillTransition ft = new FillTransition(Duration.seconds(6), bgRect, from, to);
-                    ft.setDelay(Duration.seconds(i*6));
-                    ft.play();
-                }
+                
+                // Start with first color
+                bgRect.setFill(colors[0]);
+                
+                // Create smooth infinite loop through all colors
+                final int[] currentIndex = {0};
+                FillTransition[] ft = {null};
+                
+                ft[0] = new FillTransition(Duration.seconds(6), bgRect);
+                ft[0].setFromValue(colors[0]);
+                ft[0].setToValue(colors[1]);
+                
+                ft[0].setOnFinished(e -> {
+                    currentIndex[0] = (currentIndex[0] + 1) % colors.length;
+                    int nextIndex = (currentIndex[0] + 1) % colors.length;
+                    
+                    ft[0].setFromValue(colors[currentIndex[0]]);
+                    ft[0].setToValue(colors[nextIndex]);
+                    ft[0].playFromStart();
+                });
+                
+                ft[0].play();
             }
         } catch (Exception ignored) {}
 
@@ -178,12 +193,15 @@ public class DashboardController {
         int h = LocalTime.now().getHour();
         String g;
         if (h < 12) {
-            g = "Good Morning 🌞";
+            g = "Good Morning 🌞 Have a good day!";
         } else if (h < 18) {
-            g = "Good Afternoon ☀️";
-        } else {
+            g = "Good Afternoon ☀️ Did you eat?";
+        } else if (h < 22) {
             g = "Good Evening — ready to unwind? 🌙";
+        } else {
+            g = "Good Night 🌌 Time to sleep..";
         }
+
         greetingLabel.setText(g);
     }
 
