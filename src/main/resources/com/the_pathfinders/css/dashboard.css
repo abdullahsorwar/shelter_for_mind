@@ -198,3 +198,56 @@
 #bgRect {
 	-fx-fill: linear-gradient(to bottom right, #e9d5ff, #d1fae5);
 }
+
+/* ========== Journaling Popup Overlay Styles ========== */
+.journaling-overlay-root {
+	-fx-background-color: rgba(0, 0, 0, 0.45);
+}
+
+.journaling-popup-box {
+	-fx-background-color: linear-gradient(to bottom right, #ffffff, #fafbfc);
+	-fx-background-radius: 24px;
+	-fx-border-radius: 24px;
+	-fx-padding: 38px 48px;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.24), 28, 0, 0, 12);
+	-fx-min-width: 380px;
+	-fx-max-width: 480px;
+}
+
+.journaling-title {
+	-fx-font-size: 28px;
+	-fx-font-weight: 700;
+	-fx-text-fill: #1f2937;
+	-fx-alignment: CENTER;
+}
+
+.journaling-subtitle {
+	-fx-font-size: 16px;
+	-fx-font-weight: 500;
+	-fx-text-fill: #6b7280;
+	-fx-alignment: CENTER;
+}
+
+.journaling-btn {
+	-fx-background-color: linear-gradient(to bottom right, #f0f9ff, #e0f2fe);
+	-fx-background-radius: 18px;
+	-fx-border-radius: 18px;
+	-fx-text-fill: #0c4a6e;
+	-fx-font-size: 16px;
+	-fx-font-weight: 600;
+	-fx-cursor: hand;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 10, 0, 0, 3);
+}
+
+.journaling-btn:hover {
+	-fx-background-color: linear-gradient(to bottom right, #dbeafe, #bfdbfe);
+	-fx-scale-x: 1.05;
+	-fx-scale-y: 1.05;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 14, 0, 0, 5);
+}
+
+.journaling-btn:pressed {
+	-fx-scale-x: 0.95;
+	-fx-scale-y: 0.95;
+	-fx-background-color: linear-gradient(to bottom right, #bfdbfe, #93c5fd);
+}

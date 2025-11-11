@@ -5,6 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -53,5 +54,24 @@
 
         <!-- User dropdown placeholder container (initially empty) -->
         <VBox fx:id="userDropdown" AnchorPane.topAnchor="60" AnchorPane.rightAnchor="12" spacing="6" visible="false" managed="false" />
+
+        <!-- Journaling overlay popup (similar to profile's firstTimeOverlay) -->
+        <StackPane fx:id="journalingOverlay" visible="false" managed="false" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" styleClass="journaling-overlay-root">
+            <children>
+                <VBox fx:id="journalingContentBox" spacing="22" alignment="CENTER" styleClass="journaling-popup-box">
+                    <children>
+                        <ImageView fx:id="journalingIcon" fitWidth="54" fitHeight="54" preserveRatio="true" />
+                        <Label fx:id="journalingTitle" text="Journaling" styleClass="journaling-title" />
+                        <Label fx:id="journalingSubtitle" text="Choose Option" styleClass="journaling-subtitle" />
+                        <VBox fx:id="journalingButtonsBox" spacing="14" alignment="CENTER">
+                            <children>
+                                <Button fx:id="createJournalBtn" text="Create Journal" styleClass="journaling-btn" prefWidth="220" prefHeight="48" />
+                                <Button fx:id="viewJournalsBtn" text="View Journals" styleClass="journaling-btn" prefWidth="220" prefHeight="48" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
     </children>
 </AnchorPane>

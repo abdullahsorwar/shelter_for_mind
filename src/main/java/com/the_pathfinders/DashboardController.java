@@ -12,9 +12,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.animation.TranslateTransition;
 import javafx.animation.FillTransition;
+import javafx.animation.FadeTransition;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
 
@@ -43,8 +45,22 @@ public class DashboardController {
     @FXML private Button logoutBtn;
     @FXML private HBox buttonCardsBox;
 
+    // Journaling popup overlay elements
+    @FXML private StackPane journalingOverlay;
+    @FXML private VBox journalingContentBox;
+    @FXML private ImageView journalingIcon;
+    @FXML private Label journalingTitle;
+    @FXML private Label journalingSubtitle;
+    @FXML private VBox journalingButtonsBox;
+    @FXML private Button createJournalBtn;
+    @FXML private Button viewJournalsBtn;
+
     private String soulId;
     private double dragStartX = 0;
+    
+    // Popup state tracking
+    private enum JournalingPopupState { INITIAL, VIEW_CHOICE }
+    private JournalingPopupState currentPopupState = JournalingPopupState.INITIAL;
 
     public void initialize() {
         setLogo();
@@ -56,15 +72,31 @@ public class DashboardController {
             }
         } catch (Exception ignored) {}
 
+        // Initialize journaling popup
+        if (journalingIcon != null) {
+            try {
+                URL iconUrl = getClass().getResource("/assets/icons/ques.png");
+                if (iconUrl != null) {
+                    journalingIcon.setImage(new Image(iconUrl.toExternalForm()));
+                }
+            } catch (Exception ignored) {}
+        }
+        
+        // Replace context menu with popup overlay
         if (journalBtn != null) {
-            journalBtn.setOnAction(e -> {
-                javafx.scene.control.ContextMenu menu = new javafx.scene.control.ContextMenu();
-                javafx.scene.control.MenuItem privateItem = new javafx.scene.control.MenuItem("Private Journaling");
-                javafx.scene.control.MenuItem publicItem = new javafx.scene.control.MenuItem("Public Journaling");
-                privateItem.setOnAction(ev -> openPrivateJournals());
-                publicItem.setOnAction(ev -> openPublicJournals());
-                menu.getItems().addAll(privateItem, publicItem);
-                menu.show(journalBtn, javafx.geometry.Side.RIGHT, 0, 4);
+            journalBtn.setOnAction(e -> showJournalingPopup());
+        }
+        
+        // Setup popup button handlers
+        if (createJournalBtn != null) createJournalBtn.setOnAction(e -> onCreateJournal());
+        if (viewJournalsBtn != null) viewJournalsBtn.setOnAction(e -> onViewJournals());
+        
+        // Click outside popup to close
+        if (journalingOverlay != null) {
+            journalingOverlay.setOnMouseClicked(e -> {
+                if (e.getTarget() == journalingOverlay) {
+                    hideJournalingPopup();
+                }
             });
         }
         if (blogBtn != null) blogBtn.setOnAction(e -> openBlogs());
@@ -294,5 +326,111 @@ public class DashboardController {
         Alert a = new Alert(Alert.AlertType.INFORMATION, "Settings feature coming soon.", ButtonType.OK);
         a.setHeaderText("Coming Soon");
         a.showAndWait();
+    }
+
+    // ========== Journaling Popup Methods ==========
+    
+    private void showJournalingPopup() {
+        if (journalingOverlay == null) return;
+        
+        // Reset to initial state
+        currentPopupState = JournalingPopupState.INITIAL;
+        if (journalingTitle != null) journalingTitle.setText("Journaling");
+        if (journalingSubtitle != null) journalingSubtitle.setText("Choose Option");
+        
+        // Clear and add initial buttons
+        if (journalingButtonsBox != null) {
+            journalingButtonsBox.getChildren().clear();
+            if (createJournalBtn != null) journalingButtonsBox.getChildren().add(createJournalBtn);
+            if (viewJournalsBtn != null) journalingButtonsBox.getChildren().add(viewJournalsBtn);
+        }
+        
+        // Show overlay with fade animation
+        journalingOverlay.setVisible(true);
+        journalingOverlay.setManaged(true);
+        journalingOverlay.setOpacity(0);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), journalingOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+    }
+    
+    private void hideJournalingPopup() {
+        if (journalingOverlay == null) return;
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), journalingOverlay);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            journalingOverlay.setVisible(false);
+            journalingOverlay.setManaged(false);
+        });
+        fadeOut.play();
+    }
+    
+    private void onCreateJournal() {
+        hideJournalingPopup();
+        // Navigate to journal creation page
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/Journal.fxml"));
+            Parent journRoot = loader.load();
+            Object controller = loader.getController();
+            if (controller instanceof JournalController jc) {
+                jc.setSoulId(this.soulId);
+            }
+            if (root != null && root.getScene() != null) {
+                root.getScene().setRoot(journRoot);
+            }
+        } catch (Exception ex) { ex.printStackTrace(); }
+    }
+    
+    private void onViewJournals() {
+        // Transition to second state with fade
+        if (journalingContentBox == null) return;
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), journalingContentBox);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            // Change content to "View Journal" options
+            currentPopupState = JournalingPopupState.VIEW_CHOICE;
+            if (journalingTitle != null) journalingTitle.setText("View Journal");
+            if (journalingSubtitle != null) journalingSubtitle.setText("Choose Option");
+            
+            // Replace buttons with new options
+            if (journalingButtonsBox != null) {
+                journalingButtonsBox.getChildren().clear();
+                
+                Button myJournalsBtn = new Button("My Journals");
+                myJournalsBtn.getStyleClass().add("journaling-btn");
+                myJournalsBtn.setPrefWidth(220);
+                myJournalsBtn.setPrefHeight(48);
+                myJournalsBtn.setOnAction(ev -> onMyJournals());
+                
+                Button publicJournalsBtn = new Button("Public Journals");
+                publicJournalsBtn.getStyleClass().add("journaling-btn");
+                publicJournalsBtn.setPrefWidth(220);
+                publicJournalsBtn.setPrefHeight(48);
+                publicJournalsBtn.setOnAction(ev -> {
+                    hideJournalingPopup();
+                    openPublicJournals();
+                });
+                
+                journalingButtonsBox.getChildren().addAll(myJournalsBtn, publicJournalsBtn);
+            }
+            
+            // Fade in new content
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), journalingContentBox);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+        });
+        fadeOut.play();
+    }
+    
+    private void onMyJournals() {
+        hideJournalingPopup();
+        openPrivateJournals();
     }
 }
