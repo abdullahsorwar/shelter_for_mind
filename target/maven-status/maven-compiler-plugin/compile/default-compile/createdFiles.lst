@@ -19,5 +19,6 @@ com\the_pathfinders\ProfileController$InfoRow.class
 com\the_pathfinders\App.class
 com\the_pathfinders\PrivateJournalsController.class
 com\the_pathfinders\db\JournalRepository.class
+com\the_pathfinders\DashboardController$JournalingPopupState.class
 com\the_pathfinders\DashboardController.class
 com\the_pathfinders\db\DbMigrations.class

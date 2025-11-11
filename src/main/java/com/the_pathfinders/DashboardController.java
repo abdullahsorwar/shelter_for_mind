@@ -66,9 +66,7 @@ public class DashboardController {
         setLogo();
         try {
             if (greetingLabel != null) {
-                int h = LocalTime.now().getHour();
-                String g = (h < 12) ? "Good Morning " : (h < 18) ? "Good Afternoon " : "Good Evening , ready to unwind?";
-                greetingLabel.setText(g);
+                updateGreeting();
             }
         } catch (Exception ignored) {}
 
@@ -169,6 +167,8 @@ public class DashboardController {
     public void setUser(String id, String name) {
         this.soulId = id == null ? "" : id;
         if (userLabel != null) userLabel.setText(this.soulId);
+        // Ensure greeting reflects current time when user is set (scene may be swapped after initialize)
+        try { if (greetingLabel != null) updateGreeting(); } catch (Exception ignored) {}
         try {
             URL u = getClass().getResource("/com/the_pathfinders/" + this.soulId + ".jpg");
             if (u == null) u = getClass().getResource("/assets/icons/user.png");
@@ -177,6 +177,19 @@ public class DashboardController {
                 userImage.setImage(img);
             }
         } catch (Exception ignored) {}
+    }
+
+    private void updateGreeting() {
+        int h = LocalTime.now().getHour();
+        String g;
+        if (h < 12) {
+            g = "Good Morning 🌞";
+        } else if (h < 18) {
+            g = "Good Afternoon ☀️";
+        } else {
+            g = "Good Evening — ready to unwind? 🌙";
+        }
+        greetingLabel.setText(g);
     }
 
     public void setLogo() {
