@@ -13,7 +13,7 @@ public class MusicManager {
             Media sound = new Media(musicFile);
             mediaPlayer = new MediaPlayer(sound);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // infinite loop
-            mediaPlayer.setVolume(0.3); // adjust volume as needed (0.0 - 1.0)
+            mediaPlayer.setVolume(0.9); // adjust volume as needed (0.0 - 1.0)
             mediaPlayer.play();
         } else if (mediaPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
             mediaPlayer.play();
