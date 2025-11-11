@@ -12,19 +12,20 @@
 
 /* Card-like pastel buttons - larger floating cards */
 .card-btn {
-	-fx-pref-width: 140px;
-	-fx-pref-height: 140px;
-	-fx-min-width: 140px;
-	-fx-min-height: 140px;
-	-fx-background-radius: 20px;
-	-fx-border-radius: 20px;
-	-fx-font-weight: 600;
-	-fx-font-size: 16px;
-	-fx-text-fill: #1f2937;
-	-fx-cursor: hand;
-	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 3);
-	-fx-padding: 12px;
+    -fx-pref-width: 250px;  /* new width */
+    -fx-pref-height: 160px; /* new height */
+    -fx-min-width: 250px;   /* match pref-width */
+    -fx-min-height: 160px;  /* match pref-height */
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-font-weight: 600;
+    -fx-font-size: 16px;
+    -fx-text-fill: #1f2937;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 3);
+    -fx-padding: 12px;
 }
+
 
 .card-btn:hover {
 	-fx-scale-x: 1.08;

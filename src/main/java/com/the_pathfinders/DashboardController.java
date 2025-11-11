@@ -43,7 +43,7 @@ public class DashboardController {
     @FXML private Button insightsBtn;
     @FXML private Button settingsBtn;
     @FXML private Button logoutBtn;
-    @FXML private HBox buttonCardsBox;
+    @FXML private VBox buttonCardsBox;
 
     // Journaling popup overlay elements
     @FXML private StackPane journalingOverlay;

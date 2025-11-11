@@ -33,24 +33,46 @@
         </HBox>
 
         <!-- Center content: greeting moved upward + draggable button cards -->
-        <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="80" AnchorPane.bottomAnchor="0" alignment="TOP_CENTER" spacing="30">
+        <!-- Button cards: 3 rows × 2 columns, middle row slightly indented -->
+<!-- Button cards: 3 rows × 2 columns, right-aligned and slightly lower -->
+<VBox fx:id="buttonCardsBox"
+      spacing="20"
+      alignment="CENTER_RIGHT"
+      AnchorPane.rightAnchor="100"
+      AnchorPane.topAnchor="120">
+ <!-- top right bottom left -->
+    <children>
+        <!-- Row 1 -->
+        <HBox alignment="CENTER_RIGHT" spacing="16">
             <children>
-                <!-- Greeting label (moved upward) -->
-                <Label fx:id="greetingLabel" text="Good Morning 🌞" styleClass="greeting" />
-
-                <!-- Draggable/swappable button cards in horizontal layout -->
-                <HBox fx:id="buttonCardsBox" spacing="16" alignment="CENTER" prefHeight="200" style="-fx-padding: 20;">
-                    <children>
-                        <Button fx:id="journalBtn" text="📔 Journal" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
-                        <Button fx:id="blogBtn" text="🧘 Blogs" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
-                        <Button fx:id="moodBtn" text="🌦️ Mood Tracker" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
-                        <Button fx:id="insightsBtn" text="📊 Insights" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
-                        <Button fx:id="settingsBtn" text="⚙️ Settings" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
-                        <Button fx:id="logoutBtn" text="🚪 Log out" styleClass="card-btn" prefWidth="140" prefHeight="140" wrapText="true" />
-                    </children>
-                </HBox>
+                <Button fx:id="journalBtn" text="STRAY THOUGHTS" styleClass="card-btn"
+                        prefWidth="250" prefHeight="160" wrapText="true" />
+                <Button fx:id="blogBtn" text="MIND DRIFT" styleClass="card-btn"
+                        prefWidth="250" prefHeight="160" wrapText="true" />
             </children>
-        </VBox>
+        </HBox>
+
+        <!-- Row 2 (shifted right for staggered look) -->
+        <HBox alignment="CENTER_RIGHT" spacing="16" style="-fx-translate-x: 80;">
+            <children>
+                <Button fx:id="moodBtn" text="SIDEQUESTS" styleClass="card-btn"
+                        prefWidth="250" prefHeight="160" wrapText="true" />
+                <Button fx:id="insightsBtn" text="SEEK HELP" styleClass="card-btn"
+                        prefWidth="250" prefHeight="160" wrapText="true" />
+            </children>
+        </HBox>
+
+        <!-- Row 3 -->
+        <HBox alignment="CENTER_RIGHT" spacing="16">
+            <children>
+                <Button fx:id="settingsBtn" text="HOPE SEED" styleClass="card-btn"
+                        prefWidth="250" prefHeight="160" wrapText="true" />
+                <Button fx:id="logoutBtn" text="TRANQUIL CORNER" styleClass="card-btn"
+                        prefWidth="250" prefHeight="160" wrapText="true" />
+            </children>
+        </HBox>
+    </children>
+</VBox>
 
         <!-- User dropdown placeholder container (initially empty) -->
         <VBox fx:id="userDropdown" AnchorPane.topAnchor="60" AnchorPane.rightAnchor="12" spacing="6" visible="false" managed="false" />
