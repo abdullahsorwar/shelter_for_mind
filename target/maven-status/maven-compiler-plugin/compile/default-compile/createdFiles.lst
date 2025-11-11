@@ -1,5 +1,6 @@
 com\the_pathfinders\BlogController.class
 com\the_pathfinders\JournalController.class
+com\the_pathfinders\MusicManager.class
 com\the_pathfinders\ProfileController.class
 com\the_pathfinders\db\SoulInfoRepository$SoulInfo.class
 com\the_pathfinders\InitialController.class

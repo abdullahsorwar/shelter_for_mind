@@ -30,12 +30,21 @@ public class App extends Application {
         } catch (Exception e) {
             System.err.println("Could not load app icon: " + e.getMessage());
         }
+         // ✅ Play background music once app starts
+        try {
+            MusicManager.playBackgroundMusic();
+        } catch (Exception e) {
+            System.err.println("Could not play background music: " + e.getMessage());
+        }
         
         stage.setMinWidth(1280);
         stage.setMinHeight(720);
         stage.show();
 
-        stage.setOnCloseRequest(e -> DB.shutdown());
+        stage.setOnCloseRequest(e -> {
+            DB.shutdown();
+            MusicManager.stopBackgroundMusic(); // ✅ optional: stop music when closing
+        });
     }
 
     public static void main(String[] args) {
