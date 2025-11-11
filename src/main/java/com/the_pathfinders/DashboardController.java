@@ -194,7 +194,8 @@ public class DashboardController {
 
     public void setLogo() {
         try {
-            URL u = getClass().getResource("/assets/images/logo_new.png");
+            URL u = getClass().getResource("/assets/images/shelter_of_mind.svg");
+            u = getClass().getResource("/assets/images/logo_new.png");
             if (u != null && logoImage != null) {
                 Image img = new Image(u.toExternalForm(), 0, 0, true, true);
                 logoImage.setImage(img);
