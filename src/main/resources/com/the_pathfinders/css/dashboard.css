@@ -8,6 +8,7 @@
 #userLabel {
 	-fx-text-fill: #2b2b2b;
 	-fx-font-size: 16px;
+	-fx-font-family: "Agency FB Bold";
 }
 
 /* Card-like pastel buttons - larger floating cards */
@@ -21,6 +22,7 @@
     -fx-font-weight: 600;
     -fx-font-size: 16px;
     -fx-text-fill: #1f2937;
+	-fx-font-family: "Comic Sans MS";
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 3);
     -fx-padding: 12px;
@@ -68,6 +70,7 @@
 .greeting {
 	-fx-font-size: 32px;
 	-fx-font-weight: 600;
+	-fx-font-family: "Exo 2";
 	-fx-text-fill: #2b2b2b;
 	-fx-alignment: CENTER;
 	-fx-text-alignment: CENTER;
@@ -172,12 +175,7 @@
 	-fx-background-radius: 8;
 }
 
-/* Greeting / prompt / quote styles */
-.greeting {
-	-fx-font-size: 34px;
-	-fx-font-weight: 700;
-	-fx-text-fill: #0f172a;
-}
+/* Greeting / prompt / quote styles - duplicate removed, using the one above */
 .prompt {
 	-fx-font-size: 16px;
 	-fx-text-fill: #334155;

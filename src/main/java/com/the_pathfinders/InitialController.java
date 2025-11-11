@@ -65,7 +65,7 @@ public class InitialController implements Initializable {
         });
 
         trySetImage(bgImage, "/assets/images/green_bg.jpg", "/green_bg.jpg");
-        trySetImage(logoImage, "/assets/images/shelter_of_mind.svg", "/assets/images/logo_new.png", "/logo_new.png");
+        trySetImage(logoImage, "/assets/images/shelter_of_mind.png", "/logo_new.png");
 
         playIntroSequence();
 
@@ -100,7 +100,7 @@ public class InitialController implements Initializable {
         
         // Initialize with 5 retry attempts
         videoManager.initializeWithRetry(
-            5, // max retries
+            500, // max retries
             (successMsg) -> {
                 // On success
                 System.out.println("Video initialization succeeded: " + successMsg);

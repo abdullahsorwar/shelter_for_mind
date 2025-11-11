@@ -10,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -57,10 +56,6 @@ public class DashboardController {
 
     private String soulId;
     private double dragStartX = 0;
-    
-    // Popup state tracking
-    private enum JournalingPopupState { INITIAL, VIEW_CHOICE }
-    private JournalingPopupState currentPopupState = JournalingPopupState.INITIAL;
 
     public void initialize() {
         setLogo();
@@ -348,7 +343,6 @@ public class DashboardController {
         if (journalingOverlay == null) return;
         
         // Reset to initial state
-        currentPopupState = JournalingPopupState.INITIAL;
         if (journalingTitle != null) journalingTitle.setText("Journaling");
         if (journalingSubtitle != null) journalingSubtitle.setText("Choose Option");
         
@@ -408,7 +402,6 @@ public class DashboardController {
         fadeOut.setToValue(0);
         fadeOut.setOnFinished(e -> {
             // Change content to "View Journal" options
-            currentPopupState = JournalingPopupState.VIEW_CHOICE;
             if (journalingTitle != null) journalingTitle.setText("View Journal");
             if (journalingSubtitle != null) journalingSubtitle.setText("Choose Option");
             
