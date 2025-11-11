@@ -51,6 +51,7 @@ public class ProfileController {
     // Edit/save controls
     @FXML private Button editInfoBtn;
     @FXML private Button saveInfoBtn;
+    @FXML private Button verifyEmailBtn;
 
     // First-time overlay
     @FXML private StackPane firstTimeOverlay;
@@ -99,6 +100,12 @@ public class ProfileController {
             saveInfoBtn.getStyleClass().add("save-btn");
             saveInfoBtn.setDisable(true);
             saveInfoBtn.setOpacity(0.4);
+        }
+        if (verifyEmailBtn != null) {
+            verifyEmailBtn.setOnAction(e -> onVerifyEmail());
+            verifyEmailBtn.getStyleClass().add("verify-btn");
+            verifyEmailBtn.setVisible(false);
+            verifyEmailBtn.setManaged(false);
         }
         if (overlayYesBtn != null) overlayYesBtn.setOnAction(e -> onFirstTimeYes());
         if (overlayNoBtn != null) overlayNoBtn.setOnAction(e -> onFirstTimeNo());
@@ -250,6 +257,14 @@ public class ProfileController {
         makeRow("Phone Number", currentInfo == null ? "" : safe(currentInfo.phone), "phone", false);
         makeRow("Home Address", currentInfo == null ? "" : safe(currentInfo.address), "address", false);
         makeRow("Country Code", currentInfo == null ? "" : safe(currentInfo.countryCode), "country_code", true);
+        
+        // Show verify button if email exists, is valid, but NOT verified
+        String email = currentInfo == null ? "" : safe(currentInfo.email);
+        boolean emailVerified = currentInfo != null && currentInfo.emailVerified != null && currentInfo.emailVerified;
+        
+        if (email != null && !email.isEmpty() && isValidEmail(email) && !emailVerified) {
+            updateVerifyButtonVisibility(email);
+        }
     }
 
     private void makeRow(String attr, String value, String key, boolean isComboBox) {
@@ -302,7 +317,9 @@ public class ProfileController {
     }
 
     private void toggleEdit() {
+        boolean previousEditMode = editMode;
         editMode = !editMode;
+        
         for (InfoRow r : rows) {
             // Toggle visibility between label and field/combo
             r.valueLabel.setVisible(!editMode);
@@ -323,8 +340,13 @@ public class ProfileController {
                 r.valueField.setVisible(editMode);
                 r.valueField.setManaged(editMode);
                 
-                // Sync field with label value when entering edit mode
+                // When entering edit mode, sync field with saved database value (from label)
+                // When exiting edit mode (cancel), revert field to saved value
                 if (editMode) {
+                    // Entering edit mode: load saved value from database (label)
+                    r.valueField.setText(r.valueLabel.getText());
+                } else if (previousEditMode) {
+                    // Exiting edit mode (cancel): revert to saved value
                     r.valueField.setText(r.valueLabel.getText());
                 }
             }
@@ -332,6 +354,12 @@ public class ProfileController {
         saveInfoBtn.setDisable(!editMode);
         saveInfoBtn.setOpacity(editMode ? 1.0 : 0.4);
         editInfoBtn.setText(editMode ? "Cancel" : "Edit");
+        
+        // Hide verify button when entering edit mode
+        if (editMode && verifyEmailBtn != null) {
+            verifyEmailBtn.setVisible(false);
+            verifyEmailBtn.setManaged(false);
+        }
     }
 
     private void saveInfo() {
@@ -343,6 +371,11 @@ public class ProfileController {
         String phone = getValue("phone");
         String address = getValue("address");
         String countryCode = getValue("country_code");
+
+        // Validate all fields - if validation fails, stay in edit mode
+        if (!validateAllFields(name, email, phone)) {
+            return; // Validation failed, stay in edit mode, don't save anything
+        }
 
         saveInfoBtn.setDisable(true);
         new Thread(() -> {
@@ -358,6 +391,15 @@ public class ProfileController {
                             r.valueLabel.setText(r.valueField.getText());
                         }
                     }
+                    // Show verify button if email is valid and not verified after save
+                    String savedEmail = getValue("email");
+                    boolean emailVerified = currentInfo != null && currentInfo.emailVerified != null && currentInfo.emailVerified;
+                    
+                    // Only show verify button if email changed or not verified
+                    if (savedEmail != null && !savedEmail.isEmpty() && isValidEmail(savedEmail) && !emailVerified) {
+                        updateVerifyButtonVisibility(savedEmail);
+                    }
+                    
                     // Exit edit mode
                     if (editMode) toggleEdit();
                 });
@@ -590,6 +632,200 @@ public class ProfileController {
     }
 
     private String safe(String s) { return s == null ? "" : s; }
+
+    /* ========== Validation Methods ========== */
+    
+    private boolean isValidEmail(String email) {
+        if (email == null || email.trim().isEmpty()) return true; // Optional field (empty is valid)
+        
+        // Comprehensive email validation rules
+        
+        // 1. Basic format check: local@domain.extension
+        if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+            return false;
+        }
+        
+        // 2. Check length limits (total max 254 chars, local part max 64 chars)
+        if (email.length() > 254) return false;
+        String[] parts = email.split("@");
+        if (parts.length != 2) return false;
+        if (parts[0].length() > 64) return false;
+        
+        // 3. Local part (before @) validations
+        String localPart = parts[0];
+        // Cannot start or end with a dot
+        if (localPart.startsWith(".") || localPart.endsWith(".")) return false;
+        // Cannot have consecutive dots
+        if (localPart.contains("..")) return false;
+        
+        // 4. Domain part (after @) validations
+        String domainPart = parts[1];
+        // Domain cannot start or end with a hyphen or dot
+        if (domainPart.startsWith("-") || domainPart.endsWith("-")) return false;
+        if (domainPart.startsWith(".") || domainPart.endsWith(".")) return false;
+        // Domain must have at least one dot
+        if (!domainPart.contains(".")) return false;
+        // Domain cannot have consecutive dots
+        if (domainPart.contains("..")) return false;
+        
+        // 5. TLD (top-level domain) validations
+        String[] domainParts = domainPart.split("\\.");
+        String tld = domainParts[domainParts.length - 1];
+        // TLD must be 2-24 characters and only letters (real-world TLD limits)
+        if (tld.length() < 2 || tld.length() > 24 || !tld.matches("^[a-zA-Z]+$")) return false;
+        // TLD maximum 24 characters (practical limit for real-world TLDs)
+        if (tld.length() > 24) return false;
+        
+        // 6. Each domain label validation
+        for (String label : domainParts) {
+            if (label.isEmpty()) return false;
+            if (label.length() > 63) return false; // Max 63 chars per label
+        }
+        
+        return true;
+    }
+    
+    private boolean isValidName(String name) {
+        if (name == null || name.isEmpty()) return true; // Optional field
+        // Name must contain only letters, spaces, dots, and hyphens
+        return name.matches("^[a-zA-Z][a-zA-Z .\\-]*[a-zA-Z]$");
+    }
+    
+    private boolean isValidPhone(String phone) {
+        if (phone == null || phone.isEmpty()) return true; // Optional field
+        // Phone must be between 8 and 12 digits
+        return phone.matches("^[0-9]{8,12}$");
+    }
+    
+    private boolean validateAllFields(String name, String email, String phone) {
+        // Validate name
+        if (!isValidName(name)) {
+            showValidationError("Invalid Name", "Name must contain only letters, spaces, dots, and hyphens");
+            return false;
+        }
+        
+        // Validate email format with detailed error message
+        // If email has content but is invalid, prevent saving
+        if (!isValidEmail(email)) {
+            String emailError = getEmailValidationError(email);
+            showValidationError("Invalid Email", emailError + "\n\nPlease fix or clear the email field to continue.");
+            return false;
+        }
+        
+        // Validate phone number
+        if (!isValidPhone(phone)) {
+            showValidationError("Invalid Phone Number", "Phone number must be between 8 and 12 digits");
+            return false;
+        }
+        
+        // Note: verify button will be shown after successful save
+        
+        return true;
+    }
+    
+    private String getEmailValidationError(String email) {
+        if (email == null || email.isEmpty()) return "Email is required";
+        
+        if (email.length() > 254) {
+            return "Email is too long (maximum 254 characters)";
+        }
+        
+        String[] parts = email.split("@");
+        if (parts.length != 2) {
+            return "Email must contain exactly one @ symbol";
+        }
+        
+        String localPart = parts[0];
+        String domainPart = parts[1];
+        
+        if (localPart.length() > 64) {
+            return "Email local part is too long (maximum 64 characters before @)";
+        }
+        
+        if (localPart.startsWith(".") || localPart.endsWith(".")) {
+            return "Email cannot start or end with a dot (.)";
+        }
+        
+        if (localPart.contains("..")) {
+            return "Email cannot contain consecutive dots (..)";
+        }
+        
+        if (!domainPart.contains(".")) {
+            return "Email domain must include a dot (e.g., domain.com)";
+        }
+        
+        if (domainPart.startsWith(".") || domainPart.endsWith(".") || 
+            domainPart.startsWith("-") || domainPart.endsWith("-")) {
+            return "Email domain cannot start or end with dot (.) or hyphen (-)";
+        }
+        
+        if (domainPart.contains("..")) {
+            return "Email domain cannot contain consecutive dots (..)";
+        }
+        
+        String[] domainParts = domainPart.split("\\.");
+        String tld = domainParts[domainParts.length - 1];
+        
+        if (tld.length() < 2) {
+            return "Email domain extension must be at least 2 characters (e.g., .com, .org)";
+        }
+        
+        if (tld.length() > 24) {
+            return "Email domain extension is too long (maximum 24 characters)";
+        }
+        
+        if (!tld.matches("^[a-zA-Z]+$")) {
+            return "Email domain extension can only contain letters";
+        }
+        
+        if (!localPart.matches("^[a-zA-Z0-9._%+-]+$")) {
+            return "Email contains invalid characters (allowed: letters, numbers, . _ % + -)";
+        }
+        
+        if (!domainPart.matches("^[a-zA-Z0-9.-]+$")) {
+            return "Email domain contains invalid characters";
+        }
+        
+        return "Email format is invalid. Use: email@domain.com";
+    }
+    
+    private void updateVerifyButtonVisibility(String email) {
+        if (verifyEmailBtn == null) return;
+        
+        // Show verify button only if email is valid and not empty
+        boolean shouldShow = email != null && !email.isEmpty() && isValidEmail(email);
+        verifyEmailBtn.setVisible(shouldShow);
+        verifyEmailBtn.setManaged(shouldShow);
+    }
+    
+    private void showValidationError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    
+    private void onVerifyEmail() {
+        String email = getValue("email");
+        
+        if (email == null || email.isEmpty() || !isValidEmail(email)) {
+            showValidationError("Invalid Email", "Please enter a valid email address first.");
+            return;
+        }
+        
+        // TODO: Implement email verification logic
+        // For now, just show a placeholder message
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Email Verification");
+        alert.setHeaderText("Verification In Progress");
+        alert.setContentText("A verification email has been sent to: " + email + "\n\nPlease check your inbox and follow the instructions.");
+        alert.showAndWait();
+        
+        // After successful verification, hide the verify button
+        // verifyEmailBtn.setVisible(false);
+        // verifyEmailBtn.setManaged(false);
+    }
 
     private void goBack() {
         // Stop real-time updates before leaving

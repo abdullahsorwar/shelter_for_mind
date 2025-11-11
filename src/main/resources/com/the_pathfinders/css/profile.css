@@ -121,7 +121,7 @@
   -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 12, 0, 0, 5);
 }
 
-/* Edit and Save buttons - styled */
+/* Edit, Save and Verify buttons - styled */
 .edit-btn, .save-btn {
   -fx-background-color: linear-gradient(to bottom, #adb2d4, #c7d9dd);
   -fx-text-fill: #1f2937;
@@ -138,6 +138,28 @@
   -fx-scale-y: 1.05;
 }
 .edit-btn:pressed, .save-btn:pressed {
+  -fx-scale-x: 0.95;
+  -fx-scale-y: 0.95;
+}
+
+/* Verify Email button - orange/amber gradient */
+.verify-btn {
+  -fx-background-color: linear-gradient(to bottom, #f59e0b, #f97316);
+  -fx-text-fill: white;
+  -fx-font-weight: 600;
+  -fx-font-size: 13px;
+  -fx-padding: 8 18 8 18;
+  -fx-background-radius: 18;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(245,158,11,0.4), 8, 0, 0, 2);
+}
+.verify-btn:hover {
+  -fx-background-color: linear-gradient(to bottom, #f97316, #f59e0b);
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+  -fx-effect: dropshadow(gaussian, rgba(245,158,11,0.5), 10, 0, 0, 3);
+}
+.verify-btn:pressed {
   -fx-scale-x: 0.95;
   -fx-scale-y: 0.95;
 }

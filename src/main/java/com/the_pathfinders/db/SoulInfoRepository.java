@@ -13,6 +13,7 @@ public class SoulInfoRepository {
         public String phone;
         public String address;
         public String countryCode;
+        public Boolean emailVerified; // Track if email is verified
     }
 
     public boolean exists(String soulId) throws SQLException {
@@ -24,7 +25,7 @@ public class SoulInfoRepository {
     }
 
     public SoulInfo getBySoulId(String soulId) throws SQLException {
-        String sql = "select soul_id, name, dob, email, phone, address, country_code from soul_info where soul_id = ?";
+        String sql = "select soul_id, name, dob, email, phone, address, country_code, email_verified from soul_info where soul_id = ?";
         try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, soulId.toLowerCase());
             try (ResultSet rs = ps.executeQuery()) {
@@ -38,6 +39,12 @@ public class SoulInfoRepository {
                 s.phone = rs.getString("phone");
                 s.address = rs.getString("address");
                 s.countryCode = rs.getString("country_code");
+                // Try to read email_verified column, default to false if column doesn't exist yet
+                try {
+                    s.emailVerified = rs.getBoolean("email_verified");
+                } catch (SQLException e) {
+                    s.emailVerified = false; // Default to false if column doesn't exist
+                }
                 return s;
             }
         }

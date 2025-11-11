@@ -141,6 +141,19 @@ public final class DbMigrations {
                   end if;
                 end $$
             """);
+            
+            // Add email_verified column to track email verification status
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (
+                    select 1 from information_schema.columns
+                    where table_name = 'soul_info' and column_name = 'email_verified'
+                  ) then
+                    alter table soul_info add column email_verified boolean default false;
+                  end if;
+                end $$
+            """);
         }
     }
 }

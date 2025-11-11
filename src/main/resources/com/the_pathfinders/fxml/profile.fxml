@@ -27,7 +27,7 @@
                         <HBox fx:id="headerBox" spacing="14" AnchorPane.topAnchor="18" AnchorPane.leftAnchor="24" alignment="CENTER_LEFT">
                             <children>
                                 <ImageView fx:id="profileImage" fitWidth="72" fitHeight="72" preserveRatio="true" />
-                                <VBox spacing="4">
+                                <VBox spacing="4" alignment="CENTER_LEFT">
                                     <Label fx:id="titleLabel" text="My Profile" styleClass="header-title" />
                                     <Label fx:id="subtitleLabel" text="Basic Information" styleClass="header-subtitle" />
                                 </VBox>
@@ -62,11 +62,12 @@
                                 </VBox>
                             </children>
                         </StackPane>
-                        <!-- Edit/Save buttons only for Basic Info -->
+                        <!-- Edit/Save/Verify buttons only for Basic Info -->
                         <HBox fx:id="editSaveBox" spacing="10" AnchorPane.bottomAnchor="24" AnchorPane.leftAnchor="24" visible="true" managed="true">
                             <children>
                                 <Button fx:id="editInfoBtn" text="Edit" styleClass="edit-btn" />
                                 <Button fx:id="saveInfoBtn" text="Save" disable="true" styleClass="save-btn" />
+                                <Button fx:id="verifyEmailBtn" text="Verify Email" visible="false" managed="false" styleClass="verify-btn" />
                             </children>
                         </HBox>
                     </children>
