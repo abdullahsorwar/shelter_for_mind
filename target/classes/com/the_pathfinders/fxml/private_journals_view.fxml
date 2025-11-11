@@ -12,12 +12,10 @@
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
 
-   <!-- Header: back + title + add -->
+   <!-- Header: back + title (removed + New button) -->
    <HBox alignment="CENTER_LEFT" spacing="12.0">
       <Button fx:id="backBtn" styleClass="back-button" text="← Back" />
       <Label styleClass="page-title" text="My Journals" />
-      <VBox HBox.hgrow="ALWAYS" />
-      <Button fx:id="addBtn" styleClass="primary-btn" text="+ New" />
    </HBox>
 
    <!-- Scrollable journals container -->

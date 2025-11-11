@@ -9,25 +9,25 @@ import javafx.scene.paint.Color;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
 public class JournalController {
 
     @FXML private VBox root;
-    @FXML private DatePicker datePicker;
     @FXML private TextArea textArea;
     @FXML private Button saveBtn;
-    @FXML private Button loadBtn;
     @FXML private ComboBox<String> fontCombo;
     @FXML private ComboBox<Integer> sizeCombo;
     @FXML private ColorPicker colorPicker;
     @FXML private Button backBtn;
+    @FXML private Button publicBtn;
+    @FXML private Button privateBtn;
 
     private String soulId = "";
     private JournalRepository journalRepo;
     private String currentJournalId = null;
+    private boolean isPublic = true; // Default to public
 
     public void setSoulId(String id) {
         this.soulId = id == null ? "" : id;
@@ -57,10 +57,36 @@ public class JournalController {
         colorPicker.setOnAction(e -> applyTextStyle());
 
         saveBtn.setOnAction(e -> onSave());
-        loadBtn.setOnAction(e -> onLoad());
+
+        // Setup visibility toggle buttons
+        if (publicBtn != null && privateBtn != null) {
+            setToggleState(true); // Default to public
+            publicBtn.setOnAction(e -> setToggleState(true));
+            privateBtn.setOnAction(e -> setToggleState(false));
+        }
 
         if (backBtn != null) {
             backBtn.setOnAction(e -> goBackToDashboard());
+        }
+    }
+
+    private void setToggleState(boolean publicState) {
+        this.isPublic = publicState;
+        
+        if (publicBtn != null && privateBtn != null) {
+            if (publicState) {
+                // Public is active
+                publicBtn.getStyleClass().remove("toggle-inactive");
+                publicBtn.getStyleClass().add("toggle-active");
+                privateBtn.getStyleClass().remove("toggle-active");
+                privateBtn.getStyleClass().add("toggle-inactive");
+            } else {
+                // Private is active
+                privateBtn.getStyleClass().remove("toggle-inactive");
+                privateBtn.getStyleClass().add("toggle-active");
+                publicBtn.getStyleClass().remove("toggle-active");
+                publicBtn.getStyleClass().add("toggle-inactive");
+            }
         }
     }
 
@@ -76,10 +102,14 @@ public class JournalController {
                 this.currentJournalId = j.getId();
                 // populate fields
                 this.textArea.setText(j.getText() == null ? "" : j.getText());
-                if (j.getEntryDate() != null) this.datePicker.setValue(j.getEntryDate());
                 if (j.getFontFamily() != null) fontCombo.getSelectionModel().select(j.getFontFamily());
                 if (j.getFontSize() != null) sizeCombo.getSelectionModel().select(j.getFontSize());
                 if (j.getFontFamily() != null || j.getFontSize() != null) applyTextStyle();
+                
+                // Load and set visibility state
+                if (j.getIsPublic() != null) {
+                    setToggleState(j.getIsPublic());
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -110,7 +140,6 @@ public class JournalController {
     }
 
     private void onSave() {
-        final LocalDate date = datePicker.getValue() != null ? datePicker.getValue() : LocalDate.now();
         String content = textArea.getText() == null ? "" : textArea.getText().trim();
         
         // Capture font selections
@@ -144,11 +173,11 @@ public class JournalController {
                     String journalId;
                     if (currentJournalId != null) {
                         // update existing
-                        boolean ok = journalRepo.updateJournal(currentJournalId, content, finalFontFamily, finalFontSize);
+                        boolean ok = journalRepo.updateJournal(currentJournalId, content, finalFontFamily, finalFontSize, isPublic);
                         journalId = currentJournalId;
                         if (!ok) throw new RuntimeException("Failed to update journal");
                     } else {
-                        journalId = journalRepo.saveJournal(soulId, content, finalFontFamily, finalFontSize);
+                        journalId = journalRepo.saveJournal(soulId, content, finalFontFamily, finalFontSize, isPublic);
                         currentJournalId = journalId;
                     }
 
@@ -157,11 +186,11 @@ public class JournalController {
                         System.out.println("Journal saved successfully!");
                         System.out.println("Journal ID: " + finalJournalId);
                         System.out.println("Soul ID: " + soulId);
-                        System.out.println("Date: " + date);
+                        System.out.println("Visibility: " + (isPublic ? "Public" : "Private"));
                         System.out.println("Font: " + finalFontFamily + " " + finalFontSize + "px");
                         System.out.println("Text: " + content);
 
-                        showAlert("Success", "Journal saved successfully!\nJournal ID: " + finalJournalId, Alert.AlertType.INFORMATION);
+                        showAlert("Success", "Journal saved successfully as " + (isPublic ? "Public" : "Private") + "!\nJournal ID: " + finalJournalId, Alert.AlertType.INFORMATION);
                         saveBtn.setDisable(false);
                     });
 
@@ -174,31 +203,6 @@ public class JournalController {
                     });
                 }
             }).start();
-    }
-
-    private void onLoad() {
-        if (soulId == null || soulId.isEmpty()) {
-            showAlert("Error", "User not logged in!", Alert.AlertType.ERROR);
-            return;
-        }
-
-        // Navigate to public journals view
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/public_journals_view.fxml"));
-            Parent publicJournalsRoot = loader.load();
-            
-            Object controller = loader.getController();
-            if (controller instanceof PublicJournalsController pjc) {
-                pjc.setSoulId(this.soulId);
-            }
-            
-            if (root != null && root.getScene() != null) {
-                root.getScene().setRoot(publicJournalsRoot);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            showAlert("Error", "Failed to load public journals: " + ex.getMessage(), Alert.AlertType.ERROR);
-        }
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {

@@ -379,17 +379,18 @@ private void checkForNewJournals() {
             newJournalCheckTimeline.stop();
         }
         
+        // Go back to Dashboard instead of Journal
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/Journal.fxml"));
-            Parent journalRoot = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml"));
+            Parent dashRoot = loader.load();
 
             Object controller = loader.getController();
-            if (controller instanceof JournalController jc) {
-                jc.setSoulId(this.currentSoulId);
+            if (controller instanceof DashboardController dc) {
+                dc.setUser(this.currentSoulId, "");
             }
 
             if (root != null && root.getScene() != null) {
-                root.getScene().setRoot(journalRoot);
+                root.getScene().setRoot(dashRoot);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

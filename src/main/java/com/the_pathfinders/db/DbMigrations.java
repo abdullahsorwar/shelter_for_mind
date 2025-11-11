@@ -128,6 +128,19 @@ public final class DbMigrations {
             st.executeUpdate("""
                 create index if not exists idx_loved_by_gin on public_journals using gin (loved_by)
             """);
+            
+            // Add isPublic column for visibility control
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (
+                    select 1 from information_schema.columns
+                    where table_name = 'public_journals' and column_name = 'is_public'
+                  ) then
+                    alter table public_journals add column is_public boolean default true;
+                  end if;
+                end $$
+            """);
         }
     }
 }

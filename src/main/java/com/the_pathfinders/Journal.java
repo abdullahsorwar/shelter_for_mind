@@ -15,6 +15,7 @@ public class Journal {
     private Integer fontSize;
     private Integer loveCount;
     private String[] lovedBy;
+    private Boolean isPublic;
 
     public Journal() {
         this.createdAt = LocalDateTime.now();
@@ -22,6 +23,7 @@ public class Journal {
         this.fontSize = 14;
         this.loveCount = 0;
         this.lovedBy = new String[0];
+        this.isPublic = true;
     }
 
     public Journal(String id, String soulId, String text, LocalDate entryDate, LocalDateTime createdAt) {
@@ -62,6 +64,9 @@ public class Journal {
 
     public String[] getLovedBy() { return lovedBy; }
     public void setLovedBy(String[] lovedBy) { this.lovedBy = lovedBy; }
+
+    public Boolean getIsPublic() { return isPublic; }
+    public void setIsPublic(Boolean isPublic) { this.isPublic = isPublic; }
 
     @Override
     public String toString() {

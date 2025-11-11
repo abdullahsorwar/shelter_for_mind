@@ -78,5 +78,28 @@
 /* Love count label */
 .love-count { -fx-font-size: 14px; -fx-text-fill: #666666; -fx-font-weight: bold; }
 
+/* Edit journal button (for private journals) */
+.edit-journal-btn {
+    -fx-background-color: linear-gradient(to bottom right, #4caf50, #45a049);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 6 14 6 14;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 2);
+}
+.edit-journal-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #45a049, #3d8b40);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 8, 0, 0, 3);
+}
+.edit-journal-btn:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
 /* ScrollPane styling */
 .scroll-pane, .scroll-pane .viewport, .scroll-pane .content { -fx-background-color: transparent; }
