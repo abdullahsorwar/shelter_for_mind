@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="root"
+    xmlns="http://javafx.com/javafx/20"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="com.the_pathfinders.JournalController"
+    stylesheets="/com/the_pathfinders/css/Journal.css"
+    spacing="12"
+    style="-fx-padding: 16;">
+
+    <!-- Header -->
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="header">
+        <Label text="My Journal" styleClass="title" />
+
+        <Region HBox.hgrow="ALWAYS" />
+        <DatePicker fx:id="datePicker" styleClass="date-picker" />
+    </HBox>
+
+    <!-- Controls: font, size, color -->
+    <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
+        <Label text="Font:" />
+        <ComboBox fx:id="fontCombo" prefWidth="150" />
+        <Label text="Size:" />
+        <ComboBox fx:id="sizeCombo" prefWidth="80" />
+        <Label text="Color:" />
+        <ColorPicker fx:id="colorPicker" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="loadBtn" text="Load" styleClass="secondary-btn" />
+    </HBox>
+    <HBox alignment="CENTER_LEFT" spacing="8">
+        <Button fx:id="backBtn" text="← Back " styleClass="secondary-btn" />
+    </HBox>
+
+    <!-- Text area -->
+    <TextArea fx:id="textArea"
+        promptText="Write your thoughts here..."
+        wrapText="true"
+        VBox.vgrow="ALWAYS"
+        styleClass="text-area" />
+
+    <!-- Bottom actions -->
+    <HBox spacing="8" alignment="CENTER_RIGHT">
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="saveBtn" text="Save" styleClass="primary-btn" />
+    </HBox>
+
+</VBox>
