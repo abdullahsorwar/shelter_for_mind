@@ -13,9 +13,20 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        System.out.println("Initializing database...");
         DB.init();
         DbMigrations.runAll();
+        System.out.println("Database initialized successfully.");
 
+        // Start loading background music asynchronously (non-blocking)
+        System.out.println("Starting background music load (async)...");
+        try {
+            MusicManager.preloadBackgroundMusic(); // Loads in background thread, returns immediately
+        } catch (Exception e) {
+            System.err.println("Could not start music load: " + e.getMessage());
+        }
+
+        System.out.println("Loading user interface...");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/initial.fxml"));
         Parent root = loader.load();
 
@@ -30,20 +41,24 @@ public class App extends Application {
         } catch (Exception e) {
             System.err.println("Could not load app icon: " + e.getMessage());
         }
-         // ✅ Play background music once app starts
+        
+        stage.setMinWidth(1280);
+        stage.setMinHeight(720);
+        
+        System.out.println("Showing window...");
+        stage.show();
+        
+        // Request music playback (will play when ready if still loading)
+        System.out.println("Requesting background music playback...");
         try {
             MusicManager.playBackgroundMusic();
         } catch (Exception e) {
             System.err.println("Could not play background music: " + e.getMessage());
         }
-        
-        stage.setMinWidth(1280);
-        stage.setMinHeight(720);
-        stage.show();
 
         stage.setOnCloseRequest(e -> {
             DB.shutdown();
-            MusicManager.stopBackgroundMusic(); // ✅ optional: stop music when closing
+            MusicManager.stopBackgroundMusic();
         });
     }
 

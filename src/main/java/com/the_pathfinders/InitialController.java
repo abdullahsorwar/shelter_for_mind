@@ -37,6 +37,10 @@ public class InitialController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Load images first
+        trySetImage(bgImage, "/assets/images/green_bg.jpg", "/green_bg.jpg");
+        trySetImage(logoImage, "/assets/images/shelter_of_mind.png", "/logo_new.png");
+
         Platform.runLater(() -> {
             // Root grows with window
             root.prefWidthProperty().bind(root.getScene().widthProperty());
@@ -62,12 +66,16 @@ public class InitialController implements Initializable {
             root.heightProperty().addListener((o, ov, nv) -> centerContent());
             // Recenter when content's layout size changes (avoid boundsInParent to prevent feedback loop)
             contentPane.layoutBoundsProperty().addListener((o, ov, nv) -> centerContent());
+            
+            // Delay intro animation until after scene is fully rendered
+            // This prevents stuttering during initialization
+            Platform.runLater(() -> {
+                // Add a delay to ensure everything is rendered
+                PauseTransition initialDelay = new PauseTransition(Duration.millis(500));
+                initialDelay.setOnFinished(e -> playIntroSequence());
+                initialDelay.play();
+            });
         });
-
-        trySetImage(bgImage, "/assets/images/green_bg.jpg", "/green_bg.jpg");
-        trySetImage(logoImage, "/assets/images/shelter_of_mind.png", "/logo_new.png");
-
-        playIntroSequence();
 
         // Click wiring - start video initialization on Soul button click
         soulRect.setOnMouseClicked(e -> onSoulClick());
