@@ -63,6 +63,10 @@ public class SoulInfoRepository {
     }
 
     public void upsert(String soulId, String name, LocalDate dob, String email, String phone, String address, String countryCode) throws SQLException {
+        // First check if email has changed
+        SoulInfo existing = getBySoulId(soulId);
+        boolean emailChanged = existing != null && existing.email != null && !existing.email.equals(email);
+        
         String sql = "insert into soul_info (soul_id, name, dob, email, phone, address, country_code, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, now(), now()) " +
                      "on conflict (soul_id) do update set name=excluded.name, dob=excluded.dob, email=excluded.email, phone=excluded.phone, address=excluded.address, country_code=excluded.country_code, updated_at=now()";
         try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -74,6 +78,27 @@ public class SoulInfoRepository {
             ps.setString(6, address);
             ps.setString(7, countryCode);
             ps.executeUpdate();
+        }
+        
+        // If email changed, reset email_verified to false
+        if (emailChanged) {
+            System.out.println("Email changed from '" + existing.email + "' to '" + email + "', resetting verification status");
+            updateEmailVerified(soulId, false);
+        }
+    }
+
+    // Update email verification status
+    public static void updateEmailVerified(String soulId, boolean verified) throws SQLException {
+        String sql = "update soul_info set email_verified = ?, updated_at = now() where soul_id = ?";
+        try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setBoolean(1, verified);
+            ps.setString(2, soulId.toLowerCase());
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Updated email_verified to " + verified + " for soul_id: " + soulId);
+            } else {
+                System.err.println("No rows updated for soul_id: " + soulId);
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import com.the_pathfinders.db.JournalRepository;
 import com.the_pathfinders.db.SoulInfoRepository;
 import com.the_pathfinders.db.SoulInfoRepository.SoulInfo;
 import com.the_pathfinders.util.JournalUtils;
+import com.the_pathfinders.verification.VerificationManager;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,12 +17,15 @@ import javafx.scene.layout.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
+import java.net.URI;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
 public class ProfileController {
     // Root + structural containers
@@ -73,6 +77,10 @@ public class ProfileController {
     private final Map<String, Journal> journalDataMap = new HashMap<>();
     private Timeline timestampTimeline;
     private Timeline loveCountTimeline;
+    
+    // WebSocket for email verification
+    private WebSocketClient verificationWebSocket;
+    private Alert emailSentAlert; // Store reference to dismiss when verified
 
     private static class InfoRow {
         Label attrLabel;
@@ -381,7 +389,9 @@ public class ProfileController {
         new Thread(() -> {
             try {
                 soulInfoRepo.upsert(soulId, name, dob, email, phone, address, countryCode);
+                // Reload current info to get updated emailVerified status
                 currentInfo = soulInfoRepo.getBySoulId(soulId);
+                
                 Platform.runLater(() -> {
                     // Update view labels with new values
                     for (InfoRow r : rows) {
@@ -391,17 +401,24 @@ public class ProfileController {
                             r.valueLabel.setText(r.valueField.getText());
                         }
                     }
-                    // Show verify button if email is valid and not verified after save
-                    String savedEmail = getValue("email");
-                    boolean emailVerified = currentInfo != null && currentInfo.emailVerified != null && currentInfo.emailVerified;
                     
-                    // Only show verify button if email changed or not verified
-                    if (savedEmail != null && !savedEmail.isEmpty() && isValidEmail(savedEmail) && !emailVerified) {
-                        updateVerifyButtonVisibility(savedEmail);
-                    }
-                    
-                    // Exit edit mode
+                    // Exit edit mode first
                     if (editMode) toggleEdit();
+                    
+                    // Update verify button visibility based on latest verification status
+                    String savedEmail = currentInfo != null ? currentInfo.email : null;
+                    if (savedEmail != null && !savedEmail.isEmpty() && isValidEmail(savedEmail)) {
+                        boolean emailVerified = currentInfo.emailVerified != null && currentInfo.emailVerified;
+                        System.out.println("After save - Email: " + savedEmail + ", Verified: " + emailVerified);
+                        
+                        // Show button if email is not verified
+                        verifyEmailBtn.setVisible(!emailVerified);
+                        verifyEmailBtn.setManaged(!emailVerified);
+                    } else {
+                        // Hide button if no valid email
+                        verifyEmailBtn.setVisible(false);
+                        verifyEmailBtn.setManaged(false);
+                    }
                 });
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -792,8 +809,14 @@ public class ProfileController {
     private void updateVerifyButtonVisibility(String email) {
         if (verifyEmailBtn == null) return;
         
-        // Show verify button only if email is valid and not empty
-        boolean shouldShow = email != null && !email.isEmpty() && isValidEmail(email);
+        // Show verify button only if:
+        // 1. Email is valid and not empty
+        // 2. Email is NOT already verified
+        // 3. Not in edit mode
+        boolean emailValid = email != null && !email.isEmpty() && isValidEmail(email);
+        boolean emailNotVerified = currentInfo == null || currentInfo.emailVerified == null || !currentInfo.emailVerified;
+        boolean shouldShow = emailValid && emailNotVerified && !editMode;
+        
         verifyEmailBtn.setVisible(shouldShow);
         verifyEmailBtn.setManaged(shouldShow);
     }
@@ -814,22 +837,161 @@ public class ProfileController {
             return;
         }
         
-        // TODO: Implement email verification logic
-        // For now, just show a placeholder message
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Email Verification");
-        alert.setHeaderText("Verification In Progress");
-        alert.setContentText("A verification email has been sent to: " + email + "\n\nPlease check your inbox and follow the instructions.");
-        alert.showAndWait();
+        // Disable button while processing
+        verifyEmailBtn.setDisable(true);
+        verifyEmailBtn.setText("Sending...");
         
-        // After successful verification, hide the verify button
-        // verifyEmailBtn.setVisible(false);
-        // verifyEmailBtn.setManaged(false);
+        // Send verification email in background thread
+        new Thread(() -> {
+            try {
+                // Start servers and send email
+                VerificationManager.getInstance().sendVerificationEmail(soulId, email);
+                
+                // Wait a bit for servers to fully start before connecting WebSocket
+                Thread.sleep(500);
+                
+                // Now connect to WebSocket for real-time updates
+                Platform.runLater(() -> connectVerificationWebSocket());
+                
+                Platform.runLater(() -> {
+                    verifyEmailBtn.setText("Email Sent!");
+                    
+                    // Create and store alert reference
+                    emailSentAlert = new Alert(Alert.AlertType.INFORMATION);
+                    emailSentAlert.setTitle("Email Verification");
+                    emailSentAlert.setHeaderText("Verification Email Sent");
+                    emailSentAlert.setContentText("A verification email has been sent to: " + email + 
+                        "\n\nPlease check your inbox and click the verification link." +
+                        "\n\nThe verify button will disappear automatically once you verify.");
+                    emailSentAlert.show(); // Use show() instead of showAndWait() so it's non-blocking
+                    
+                    // Re-enable button in case user needs to resend
+                    verifyEmailBtn.setDisable(false);
+                    verifyEmailBtn.setText("Verify Email");
+                });
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    verifyEmailBtn.setDisable(false);
+                    verifyEmailBtn.setText("Verify Email");
+                    
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Verification Error");
+                    alert.setHeaderText("Failed to Send Email");
+                    alert.setContentText("Could not send verification email: " + e.getMessage() +
+                        "\n\nPlease check your internet connection and try again.");
+                    alert.showAndWait();
+                });
+            }
+        }).start();
+    }
+    
+    private void connectVerificationWebSocket() {
+        try {
+            if (verificationWebSocket != null && verificationWebSocket.isOpen()) {
+                return; // Already connected
+            }
+            
+            URI serverUri = new URI("ws://localhost:8081/" + soulId);
+            
+            System.out.println("Attempting to connect WebSocket to: " + serverUri);
+            
+            verificationWebSocket = new WebSocketClient(serverUri) {
+                @Override
+                public void onOpen(ServerHandshake handshake) {
+                    System.out.println("WebSocket connected for verification");
+                }
+                
+                @Override
+                public void onMessage(String message) {
+                    if ("VERIFIED".equals(message)) {
+                        System.out.println("Email verified via WebSocket!");
+                        
+                        // Reload data from database in background
+                        new Thread(() -> {
+                            try {
+                                currentInfo = soulInfoRepo.getBySoulId(soulId);
+                                System.out.println("Reloaded info - Email verified: " + 
+                                    (currentInfo != null && currentInfo.emailVerified != null && currentInfo.emailVerified));
+                                
+                                Platform.runLater(() -> {
+                                    // Close the "Email Sent" alert if it's still open
+                                    if (emailSentAlert != null) {
+                                        emailSentAlert.close();
+                                        emailSentAlert = null;
+                                    }
+                                    
+                                    // Hide verify button immediately
+                                    verifyEmailBtn.setVisible(false);
+                                    verifyEmailBtn.setManaged(false);
+                                    
+                                    // Show success message
+                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                    alert.setTitle("Email Verified");
+                                    alert.setHeaderText("Success!");
+                                    alert.setContentText("Your email has been verified successfully!");
+                                    alert.showAndWait();
+                                    
+                                    // Close WebSocket
+                                    close();
+                                });
+                            } catch (Exception e) {
+                                System.err.println("Failed to reload info: " + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }).start();
+                    }
+                }
+                
+                @Override
+                public void onClose(int code, String reason, boolean remote) {
+                    System.out.println("WebSocket closed: " + reason);
+                }
+                
+                @Override
+                public void onError(Exception ex) {
+                    System.err.println("WebSocket error: " + ex.getMessage());
+                    
+                    // Retry connection after 1 second if connection refused (server not ready)
+                    if (ex.getMessage() != null && ex.getMessage().contains("Connection refused")) {
+                        System.out.println("WebSocket server not ready, retrying in 1 second...");
+                        new Thread(() -> {
+                            try {
+                                Thread.sleep(1000);
+                                Platform.runLater(() -> {
+                                    verificationWebSocket = null;
+                                    connectVerificationWebSocket();
+                                });
+                            } catch (InterruptedException ie) {
+                                ie.printStackTrace();
+                            }
+                        }).start();
+                    }
+                }
+            };
+            
+            verificationWebSocket.connect();
+            
+        } catch (Exception e) {
+            System.err.println("Failed to connect WebSocket: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    private void closeVerificationWebSocket() {
+        if (verificationWebSocket != null && verificationWebSocket.isOpen()) {
+            verificationWebSocket.close();
+            verificationWebSocket = null;
+        }
     }
 
     private void goBack() {
         // Stop real-time updates before leaving
         stopRealTimeUpdates();
+        
+        // Close verification WebSocket
+        closeVerificationWebSocket();
         
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml"));

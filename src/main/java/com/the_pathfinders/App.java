@@ -2,6 +2,7 @@ package com.the_pathfinders;
 
 import com.the_pathfinders.db.DB;
 import com.the_pathfinders.db.DbMigrations;
+import com.the_pathfinders.verification.VerificationManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -59,6 +60,8 @@ public class App extends Application {
         stage.setOnCloseRequest(e -> {
             DB.shutdown();
             MusicManager.stopBackgroundMusic();
+            // Stop verification servers
+            VerificationManager.getInstance().stop();
         });
     }
 
