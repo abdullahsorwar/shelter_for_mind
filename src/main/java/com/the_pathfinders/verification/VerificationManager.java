@@ -1,7 +1,6 @@
 package com.the_pathfinders.verification;
 
 import com.the_pathfinders.db.SoulInfoRepository;
-import javafx.application.Platform;
 
 import java.io.IOException;
 import java.sql.SQLException;

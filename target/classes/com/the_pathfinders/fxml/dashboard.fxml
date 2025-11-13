@@ -18,6 +18,10 @@
         <Rectangle fx:id="bgRect" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
             AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" />
 
+        <!-- Vignette shadow effect from left edge -->
+        <Rectangle fx:id="vignetteRect" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+            AnchorPane.bottomAnchor="0" width="450" mouseTransparent="true" />
+
         <!-- Top-left: logo -->
         <VBox AnchorPane.leftAnchor="12" AnchorPane.topAnchor="12" spacing="8" alignment="TOP_LEFT">
             <children>

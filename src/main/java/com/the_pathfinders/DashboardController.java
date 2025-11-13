@@ -16,8 +16,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.animation.TranslateTransition;
 import javafx.animation.FillTransition;
 import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.util.Duration;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.paint.CycleMethod;
 
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -34,6 +40,7 @@ public class DashboardController {
     @FXML private ImageView logoImage;
     @FXML private VBox userDropdown;
     @FXML private Rectangle bgRect;
+    @FXML private Rectangle vignetteRect;
     @FXML private Label greetingLabel;
     
     @FXML private Button journalBtn;
@@ -98,13 +105,25 @@ public class DashboardController {
         if (settingsBtn != null) settingsBtn.setOnAction(e -> showSettingsPlaceholder());
         if (logoutBtn != null) logoutBtn.setOnAction(e -> onLogout());
 
+        // Animate buttons with staggered pop-up effect
+        animateButtonsPopup();
+
         if (buttonCardsBox != null) {
-            buttonCardsBox.getChildren().forEach(btn -> {
-                btn.setOnMousePressed(e -> dragStartX = e.getSceneX());
-                btn.setOnMouseDragged(e -> {
+            buttonCardsBox.getChildren().forEach(row -> {
+                // Add smooth hover animations to each button in the row
+                if (row instanceof javafx.scene.layout.HBox hbox) {
+                    hbox.getChildren().forEach(btn -> {
+                        if (btn instanceof Button) {
+                            setupButtonHoverAnimation((Button) btn);
+                        }
+                    });
+                }
+                
+                row.setOnMousePressed(e -> dragStartX = e.getSceneX());
+                row.setOnMouseDragged(e -> {
                     double dragDelta = e.getSceneX() - dragStartX;
                     if (Math.abs(dragDelta) > 20) {
-                        int currentIdx = buttonCardsBox.getChildren().indexOf(btn);
+                        int currentIdx = buttonCardsBox.getChildren().indexOf(row);
                         if (dragDelta > 20 && currentIdx < buttonCardsBox.getChildren().size() - 1) {
                             swapButtons(currentIdx, currentIdx + 1);
                             dragStartX = e.getSceneX();
@@ -115,6 +134,27 @@ public class DashboardController {
                     }
                 });
             });
+        }
+
+        // Setup vignette gradient effect
+        if (vignetteRect != null) {
+            vignetteRect.heightProperty().bind(root.heightProperty());
+            
+            // Create linear gradient from left (40% opacity) to right (0% opacity)
+            Stop[] stops = new Stop[] {
+                new Stop(0.0, Color.rgb(0, 0, 0, 0.4)),
+                new Stop(0.5, Color.rgb(0, 0, 0, 0.2)),
+                new Stop(1.0, Color.rgb(0, 0, 0, 0.0))
+            };
+            
+            LinearGradient gradient = new LinearGradient(
+                0, 0, 1, 0, // startX, startY, endX, endY (0,0 to 1,0 = left to right)
+                true, // proportional
+                CycleMethod.NO_CYCLE,
+                stops
+            );
+            
+            vignetteRect.setFill(gradient);
         }
 
         try {
@@ -172,6 +212,63 @@ public class DashboardController {
             btn1.setTranslateX(0);
             btn2.setTranslateX(0);
         });
+    }
+
+    private void setupButtonHoverAnimation(Button button) {
+        button.setOnMouseEntered(e -> {
+            Timeline hoverIn = new Timeline(
+                new KeyFrame(Duration.millis(300),
+                    new KeyValue(button.scaleXProperty(), 1.05),
+                    new KeyValue(button.scaleYProperty(), 1.05)
+                )
+            );
+            hoverIn.play();
+        });
+        
+        button.setOnMouseExited(e -> {
+            Timeline hoverOut = new Timeline(
+                new KeyFrame(Duration.millis(300),
+                    new KeyValue(button.scaleXProperty(), 1.0),
+                    new KeyValue(button.scaleYProperty(), 1.0)
+                )
+            );
+            hoverOut.play();
+        });
+    }
+
+    private void animateButtonsPopup() {
+        if (buttonCardsBox == null) return;
+        
+        // Get all button rows
+        var rows = buttonCardsBox.getChildren();
+        
+        // Animate each row with staggered delay
+        for (int i = 0; i < rows.size(); i++) {
+            var row = rows.get(i);
+            
+            // Set initial state: scaled down and transparent
+            row.setScaleX(0.3);
+            row.setScaleY(0.3);
+            row.setOpacity(0.0);
+            
+            // Create timeline for smooth pop-up animation
+            Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                    new KeyValue(row.scaleXProperty(), 0.3),
+                    new KeyValue(row.scaleYProperty(), 0.3),
+                    new KeyValue(row.opacityProperty(), 0.0)
+                ),
+                new KeyFrame(Duration.millis(500),
+                    new KeyValue(row.scaleXProperty(), 1.0),
+                    new KeyValue(row.scaleYProperty(), 1.0),
+                    new KeyValue(row.opacityProperty(), 1.0)
+                )
+            );
+            
+            // Stagger delay: 150ms between each row
+            timeline.setDelay(Duration.millis(i * 150));
+            timeline.play();
+        }
     }
 
     public void setUser(String id, String name) {
