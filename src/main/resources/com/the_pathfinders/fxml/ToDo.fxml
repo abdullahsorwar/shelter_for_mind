@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.the_pathfinders.ToDoController"
+            prefWidth="860" prefHeight="520"
+            styleClass="root-pane"
+            stylesheets="/com/the_pathfinders/css/ToDo.css">
+
+    <children>
+        <HBox spacing="40"
+              AnchorPane.topAnchor="15"
+              AnchorPane.leftAnchor="15"
+              AnchorPane.rightAnchor="15"
+              AnchorPane.bottomAnchor="15"
+              alignment="TOP_CENTER">
+
+            <children>
+
+                <!-- LEFT PANEL -->
+                <VBox fx:id="rootBox"
+                      spacing="16"
+                      prefWidth="280"
+                      alignment="TOP_LEFT">
+
+                    <children>
+                        <Label text="Quick Add" styleClass="section-title"/>
+
+                        <MenuButton fx:id="taskMenu"
+                                    text="Choose Task..."
+                                    maxWidth="Infinity"
+                                    styleClass="menu-button"/>
+
+                        <HBox spacing="8">
+                            <children>
+                                <TextField fx:id="customTaskField"
+                                           promptText="Custom task..."
+                                           HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="addCustomBtn"
+                                        text="Add"
+                                        styleClass="button"/>
+                            </children>
+                        </HBox>
+
+                        <Label text="Tip: double-click a row to remove it."
+                               styleClass="hint"/>
+                    </children>
+                </VBox>
+
+                <!-- small spacer -->
+                <Region prefWidth="20" />
+
+                <!-- NOTEBOOK AREA -->
+                <VBox alignment="TOP_CENTER" spacing="12" HBox.hgrow="ALWAYS">
+                    <children>
+
+                        <Label text="To-Do List"
+                               styleClass="notebook-title"
+                        />
+
+                        <!-- Notebook Paper -->
+                        <VBox styleClass="notebook-page"
+                              prefWidth="540
+"
+                              prefHeight="470">
+
+                            <padding>
+                                <Insets top="24" right="28" bottom="20" left="60"/>
+                            </padding>
+
+                            <children>
+                                <TableView fx:id="todoTable"
+                                           prefWidth="500"
+                                           prefHeight="420"
+                                           styleClass="notebook-table">
+
+                                    <columns>
+                                        <TableColumn fx:id="doneCol" text="Done" prefWidth="80"/>
+                                        <TableColumn fx:id="taskCol" text="Task" prefWidth="420"/>
+                                    </columns>
+
+                                </TableView>
+                            </children>
+
+                        </VBox>
+
+                    </children>
+                </VBox>
+
+            </children>
+
+            <padding>
+                <Insets top="12" right="12" bottom="12" left="12"/>
+            </padding>
+        </HBox>
+    </children>
+</AnchorPane>

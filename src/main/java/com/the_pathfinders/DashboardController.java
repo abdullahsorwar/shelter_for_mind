@@ -47,7 +47,7 @@ public class DashboardController {
     @FXML private Button blogBtn;
     @FXML private Button moodBtn;
     @FXML private Button insightsBtn;
-    @FXML private Button settingsBtn;
+    @FXML private Button SocialWorkBtn;
     @FXML private Button logoutBtn;
     @FXML private VBox buttonCardsBox;
 
@@ -101,8 +101,10 @@ public class DashboardController {
         }
         if (blogBtn != null) blogBtn.setOnAction(e -> openBlogs());
         if (moodBtn != null) moodBtn.setOnAction(e -> showMoodPlaceholder());
-        if (insightsBtn != null) insightsBtn.setOnAction(e -> showInsightsPlaceholder());
-        if (settingsBtn != null) settingsBtn.setOnAction(e -> showSettingsPlaceholder());
+       // if (insightsBtn != null) insightsBtn.setOnAction(e -> showInsightsPlaceholder());
+        if (insightsBtn != null) insightsBtn.setOnAction(e -> openToDo());
+
+        if (SocialWorkBtn != null) SocialWorkBtn.setOnAction(e -> openSocialWork());
         if (logoutBtn != null) logoutBtn.setOnAction(e -> onLogout());
 
         // Animate buttons with staggered pop-up effect
@@ -235,6 +237,49 @@ public class DashboardController {
             hoverOut.play();
         });
     }
+    private void openSocialWork() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SocialWork.fxml"));
+            Parent p = loader.load();
+
+            SocialWorkController controller = loader.getController();
+            if (controller != null) {
+                controller.setSoulId(this.soulId == null ? "" : this.soulId);
+            }
+
+            root.getScene().setRoot(p);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    private void openToDo() {
+        try {
+            System.out.println("=== Opening ToDo page ===");
+            URL fxmlUrl = getClass().getResource("/com/the_pathfinders/fxml/ToDo.fxml");
+            System.out.println("FXML URL: " + fxmlUrl);
+
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Parent p = loader.load();
+            System.out.println("FXML loaded successfully");
+
+            ToDoController controller = loader.getController();
+            System.out.println("Controller: " + controller);
+
+            // The FXML already has the stylesheet reference, just set the root
+            if (root != null && root.getScene() != null) {
+                System.out.println("Setting scene root...");
+                root.getScene().setRoot(p);
+                System.out.println("Scene root set successfully");
+            } else {
+                System.err.println("ERROR: root or scene is null!");
+            }
+        } catch (Exception ex) {
+            System.err.println("ERROR in openToDo:");
+            ex.printStackTrace();
+        }
+    }
+
+
 
     private void animateButtonsPopup() {
         if (buttonCardsBox == null) return;

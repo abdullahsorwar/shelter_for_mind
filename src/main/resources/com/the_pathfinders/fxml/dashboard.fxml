@@ -75,7 +75,7 @@
                 <!-- Row 3 -->
                 <HBox alignment="CENTER_RIGHT" spacing="16">
                     <children>
-                        <Button fx:id="settingsBtn" text="HOPE SEED" styleClass="card-btn"
+                        <Button fx:id="SocialWorkBtn" text="HOPE SEED" styleClass="card-btn"
                             prefWidth="250" prefHeight="160" wrapText="true" />
                         <Button fx:id="logoutBtn" text="TRANQUIL CORNER" styleClass="card-btn"
                             prefWidth="250" prefHeight="160" wrapText="true" />
