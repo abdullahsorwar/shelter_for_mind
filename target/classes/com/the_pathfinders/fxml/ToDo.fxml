@@ -5,14 +5,21 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="rootPane"
             fx:controller="com.the_pathfinders.ToDoController"
             prefWidth="860" prefHeight="520"
             styleClass="root-pane"
             stylesheets="/com/the_pathfinders/css/ToDo.css">
 
     <children>
+        <Button fx:id="backBtn"
+                text="Back"
+                styleClass="back-btn"
+                AnchorPane.topAnchor="14"
+                AnchorPane.leftAnchor="14"/>
+
         <HBox spacing="40"
-              AnchorPane.topAnchor="15"
+              AnchorPane.topAnchor="60"
               AnchorPane.leftAnchor="15"
               AnchorPane.rightAnchor="15"
               AnchorPane.bottomAnchor="15"

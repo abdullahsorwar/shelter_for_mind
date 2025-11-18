@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.the_pathfinders.controllers.TodoController"
+            prefWidth="1000" prefHeight="650"
+            stylesheets="@../css/todo.css">
+
+    <center>
+        <HBox spacing="0" prefHeight="650" prefWidth="1000">
+
+            <!-- Left: Goal Plan -->
+            <VBox fx:id="goalPane" alignment="TOP_CENTER" spacing="20" prefWidth="600"
+                  style="-fx-background-color:linear-gradient(to bottom right,#e3f2fd,#e8eaf6);">
+                <Label text="Create Your Goal Plan" styleClass="title-label"/>
+                <Button text="Start Planning" fx:id="startPlanBtn" styleClass="primary-btn"/>
+                <VBox fx:id="selectedTasksBox" spacing="10" alignment="TOP_LEFT"
+                      prefWidth="550" padding="20"/>
+                <Button text="Back to Home" fx:id="backHomeBtn" styleClass="secondary-btn"/>
+            </VBox>
+
+            <!-- Vertical divider -->
+            <Pane prefWidth="2" style="-fx-background-color:black;"/>
+
+            <!-- Right: Task list -->
+            <ScrollPane fitToWidth="true" prefWidth="400">
+                <VBox fx:id="taskList" spacing="10" padding="20"
+                      style="-fx-background-color:linear-gradient(to bottom right,#f3e5f5,#ede7f6);"/>
+            </ScrollPane>
+        </HBox>
+    </center>
+</BorderPane>

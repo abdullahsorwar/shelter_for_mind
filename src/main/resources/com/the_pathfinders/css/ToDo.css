@@ -56,6 +56,23 @@
     -fx-opacity: 0.8;
 }
 
+.back-btn {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #6f4aa8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+    -fx-border-color: #c9b4e8;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(80,0,140,0.15), 8, 0.2, 0, 2);
+}
+
+.back-btn:hover {
+    -fx-background-color: #f3eaff;
+}
+
 /* =========================================================
    MENU BUTTON
    ========================================================= */

@@ -1,5 +1,18 @@
 package com.the_pathfinders;
 
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.time.LocalTime;
+import java.util.Optional;
+
+import com.the_pathfinders.db.SoulRepository;
+
+import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,27 +23,14 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
-import javafx.animation.TranslateTransition;
-import javafx.animation.FillTransition;
-import javafx.animation.FadeTransition;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.util.Duration;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.paint.CycleMethod;
-
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Optional;
-import java.time.LocalTime;
-
-import com.the_pathfinders.db.SoulRepository;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class DashboardController {
 
@@ -263,6 +263,9 @@ public class DashboardController {
             System.out.println("FXML loaded successfully");
 
             ToDoController controller = loader.getController();
+            if (controller != null) {
+                controller.setSoulId(this.soulId == null ? "" : this.soulId);
+            }
             System.out.println("Controller: " + controller);
 
             // The FXML already has the stylesheet reference, just set the root

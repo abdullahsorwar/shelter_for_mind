@@ -1,0 +1,288 @@
+version 2
+JvmtiExport can_access_local_variables 0
+JvmtiExport can_hotswap_or_post_breakpoint 1
+JvmtiExport can_post_on_exceptions 0
+# 663 ciObject found
+instanceKlass org/eclipse/osgi/internal/loader/classpath/ClasspathManager
+ciInstanceKlass java/lang/Cloneable 1 0 7 100 1 100 1 1 1
+instanceKlass com/google/gson/internal/GsonTypes$GenericArrayTypeImpl
+instanceKlass com/microsoft/jdtls/intellicode/core/pythia/PythiaModel
+instanceKlass sun/security/util/ArrayUtil
+instanceKlass com/sun/crypto/provider/PKCS5Padding
+instanceKlass com/sun/crypto/provider/Padding
+instanceKlass com/sun/crypto/provider/FeedbackCipher
+instanceKlass com/sun/crypto/provider/SymmetricCipher
+instanceKlass com/sun/crypto/provider/AESConstants
+instanceKlass com/sun/crypto/provider/CipherCore
+instanceKlass javax/crypto/CipherSpi
+instanceKlass javax/crypto/ProviderVerifier
+instanceKlass javax/crypto/JceSecurity$3
+instanceKlass javax/crypto/JceSecurity$2
+instanceKlass java/util/Vector$Itr
+instanceKlass javax/crypto/CryptoPolicyParser$CryptoPermissionEntry
+instanceKlass javax/crypto/CryptoPolicyParser$GrantEntry
+instanceKlass java/io/StreamTokenizer
+instanceKlass javax/crypto/CryptoPolicyParser
+instanceKlass java/nio/file/Files$1
+instanceKlass javax/crypto/JceSecurity$1
+instanceKlass javax/crypto/JceSecurity
+instanceKlass  @bci sun/security/ssl/SunJSSE registerAlgorithms ()V 1 <appendix> member <vmtarget> ; # sun/security/ssl/SunJSSE$$Lambda+0x000001f544560b30
+instanceKlass sun/security/ec/SunEC$1
+instanceKlass  @bci sun/security/pkcs11/SunPKCS11 register (Lsun/security/pkcs11/SunPKCS11$Descriptor;)V 27 <appendix> argL0 ; # sun/security/pkcs11/SunPKCS11$$Lambda+0x000001f54455e718
+instanceKlass sun/security/pkcs11/SunPKCS11$Descriptor
+instanceKlass javax/security/auth/callback/CallbackHandler
+instanceKlass javax/security/auth/Subject
+instanceKlass sun/security/mscapi/SunMSCAPI$2
+instanceKlass sun/security/mscapi/SunMSCAPI$1
+instanceKlass sun/security/smartcardio/SunPCSC$1
+instanceKlass  @bci sun/security/jgss/SunProvider <init> ()V 15 <appendix> member <vmtarget> ; # sun/security/jgss/SunProvider$$Lambda+0x000001f54455c6f0
+instanceKlass com/sun/security/sasl/gsskerb/JdkSASL$1
+instanceKlass org/jcp/xml/dsig/internal/dom/XMLDSigRI$2
+instanceKlass org/jcp/xml/dsig/internal/dom/XMLDSigRI$1
+instanceKlass sun/security/jca/ProviderConfig$ProviderLoader
+instanceKlass sun/security/jca/ProviderConfig$3
+instanceKlass javax/crypto/Cipher$Transform
+instanceKlass javax/crypto/Cipher
+instanceKlass  @bci javax/crypto/spec/SecretKeySpec <clinit> ()V 0 <appendix> argL0 ; # javax/crypto/spec/SecretKeySpec$$Lambda+0x000001f54437e958
+instanceKlass jdk/internal/access/JavaxCryptoSpecAccess
+instanceKlass javax/crypto/spec/SecretKeySpec
+instanceKlass javax/crypto/spec/IvParameterSpec
+instanceKlass org/eclipse/jdt/ls/core/internal/handlers/CompletionContributionService
+instanceKlass com/microsoft/jdtls/intellicode/core/ModelBasedRankingProvider
+instanceKlass com/microsoft/jdtls/intellicode/core/pythia/PythiaModelLoader
+instanceKlass org/eclipse/core/resources/IResourceVisitor
+instanceKlass com/microsoft/jdtls/intellicode/core/utils/StringUtils
+instanceKlass org/eclipse/jdt/ls/core/contentassist/ICompletionRankingProvider
+instanceKlass com/microsoft/jdtls/ext/core/ProjectCommand
+instanceKlass com/microsoft/jdtls/intellicode/core/IntelliCodeActivator
+instanceKlass com/microsoft/jdtls/ext/core/JdtlsExtActivator
+instanceKlass com/microsoft/jdtls/intellicode/core/CommandHandler
+instanceKlass com/microsoft/jdtls/ext/core/CommandHandler
+instanceKlass  @bci com/microsoft/java/test/plugin/util/ProjectTestUtils parseProjects (Ljava/lang/String;)Ljava/util/Set; 20 <appendix> member <vmtarget> ; # com/microsoft/java/test/plugin/util/ProjectTestUtils$$Lambda+0x000001f5445588a0
+instanceKlass com/microsoft/java/test/plugin/util/ProjectTestUtils
+instanceKlass com/microsoft/java/test/plugin/handler/ClasspathUpdateHandler
+instanceKlass com/microsoft/java/test/plugin/util/JUnitPlugin
+instanceKlass com/microsoft/java/test/plugin/handler/TestDelegateCommandHandler
+instanceKlass  @bci org/eclipse/lsp4j/jsonrpc/json/adapters/CollectionTypeAdapter$Factory getConstructor (Ljava/lang/Class;)Ljava/util/function/Supplier; 10 <appendix> member <vmtarget> ; # org/eclipse/lsp4j/jsonrpc/json/adapters/CollectionTypeAdapter$Factory$$Lambda+0x000001f544422538
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/commands/ProjectCommand getAllJavaProjects ()Ljava/util/List; 16 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/commands/ProjectCommand$$Lambda+0x000001f544555240
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/commands/ProjectCommand getAllJavaProjects ()Ljava/util/List; 6 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/commands/ProjectCommand$$Lambda+0x000001f544555000
+instanceKlass org/eclipse/jdt/ls/core/internal/commands/ProjectCommand
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/handlers/WorkspaceExecuteCommandHandler$1 run ()V 38 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/handlers/WorkspaceExecuteCommandHandler$1$$Lambda+0x000001f54454bb90
+instanceKlass org/eclipse/jdt/ls/core/internal/JDTDelegateCommandHandler
+instanceKlass org/eclipse/jdt/ls/core/internal/IDelegateCommandHandler
+instanceKlass org/eclipse/jdt/ls/core/internal/handlers/WorkspaceExecuteCommandHandler$1
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/handlers/WorkspaceExecuteCommandHandler executeCommand (Lorg/eclipse/lsp4j/ExecuteCommandParams;Lorg/eclipse/core/runtime/IProgressMonitor;)Ljava/lang/Object; 50 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/handlers/WorkspaceExecuteCommandHandler$$Lambda+0x000001f54454b2d0
+instanceKlass java/util/concurrent/ForkJoinPool$DefaultForkJoinWorkerThreadFactory$1
+instanceKlass org/eclipse/lsp4j/jsonrpc/CompletableFutures$FutureCancelChecker
+instanceKlass org/eclipse/lsp4j/jsonrpc/CompletableFutures
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/BaseJDTLanguageServer computeAsync (Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture; 2 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/BaseJDTLanguageServer$$Lambda+0x000001f54454b088
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/handlers/JDTLanguageServer executeCommand (Lorg/eclipse/lsp4j/ExecuteCommandParams;)Ljava/util/concurrent/CompletableFuture; 85 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/handlers/JDTLanguageServer$$Lambda+0x000001f54454ae40
+instanceKlass org/eclipse/lsp4j/FileSystemWatcher
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager registerWatchers ()Ljava/util/List; 817 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$$Lambda+0x000001f54454ac00
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager registerWatchers ()Ljava/util/List; 583 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$$Lambda+0x000001f54454a9c0
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager lambda$9 (Ljava/util/Set;Lorg/eclipse/jdt/ls/core/internal/managers/IBuildSupport;)V 7 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$$Lambda+0x000001f54454a788
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager registerWatchers ()Ljava/util/List; 35 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$$Lambda+0x000001f54454a550
+instanceKlass org/eclipse/jdt/ls/core/internal/JobHelpers$BuildJobMatcher
+instanceKlass org/eclipse/jdt/ls/core/internal/handlers/IndexUtils
+instanceKlass org/eclipse/jdt/ls/core/internal/framework/android/AndroidSupport
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/ProjectUtils getGradleProjects ()Ljava/util/List; 6 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/ProjectUtils$$Lambda+0x000001f544549ca8
+instanceKlass org/eclipse/jdt/ls/core/internal/framework/protobuf/ProtobufSupport
+instanceKlass org/eclipse/jdt/internal/core/builder/BuildNotifier
+instanceKlass java/util/concurrent/ForkJoinTask$Aux
+instanceKlass org/eclipse/core/internal/resources/Workspace$ProjectBuildConfigOrder
+instanceKlass org/eclipse/core/internal/resources/ComputeProjectOrder$VertexOrder
+instanceKlass org/eclipse/core/internal/resources/ComputeProjectOrder$Digraph
+instanceKlass org/eclipse/core/internal/resources/ComputeProjectOrder
+instanceKlass org/eclipse/core/internal/resources/Workspace$BuildConfigurationComparator
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/preferences/ClientPreferences isSupportedCodeActionKind (Ljava/lang/String;)Z 102 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/preferences/ClientPreferences$$Lambda+0x000001f544549828
+instanceKlass org/eclipse/jdt/ls/core/internal/handlers/ResponseStore
+instanceKlass org/eclipse/jdt/core/manipulation/ChangeCorrectionProposalCore
+instanceKlass org/eclipse/ltk/core/refactoring/Change
+instanceKlass org/eclipse/jdt/ui/text/java/IInvocationContext
+instanceKlass com/google/gson/JsonParser
+instanceKlass org/eclipse/ltk/internal/core/refactoring/history/RefactoringHistorySerializer
+instanceKlass  @bci org/eclipse/ltk/internal/core/refactoring/history/RefactoringHistoryService connect ()V 42 <appendix> member <vmtarget> ; # org/eclipse/ltk/internal/core/refactoring/history/RefactoringHistoryService$$Lambda+0x000001f5445532f8
+instanceKlass org/eclipse/core/commands/operations/IUndoableOperation
+instanceKlass org/eclipse/jdt/launching/environments/CompatibleEnvironment
+instanceKlass org/eclipse/core/commands/operations/DefaultOperationHistory
+instanceKlass org/eclipse/core/commands/operations/IOperationHistory
+instanceKlass org/eclipse/core/commands/operations/OperationHistoryFactory
+instanceKlass org/eclipse/jdt/internal/launching/environments/ExecutionEnvironmentAnalyzer
+instanceKlass  @bci org/eclipse/ltk/internal/core/refactoring/history/RefactoringHistoryService connect ()V 20 <appendix> member <vmtarget> ; # org/eclipse/ltk/internal/core/refactoring/history/RefactoringHistoryService$$Lambda+0x000001f5445530d0
+instanceKlass org/eclipse/core/commands/operations/OperationHistoryEvent
+instanceKlass org/eclipse/core/commands/operations/IOperationHistoryListener
+instanceKlass org/eclipse/ltk/internal/core/refactoring/history/RefactoringHistoryService
+instanceKlass org/eclipse/ltk/core/refactoring/history/IRefactoringHistoryService
+instanceKlass org/eclipse/ltk/core/refactoring/RefactoringDescriptor
+instanceKlass org/eclipse/ltk/internal/core/refactoring/history/RefactoringContributionManager
+instanceKlass org/eclipse/core/commands/operations/IUndoContext
+instanceKlass org/eclipse/ltk/core/refactoring/IUndoManager
+instanceKlass org/eclipse/ltk/core/refactoring/history/IRefactoringHistoryListener
+instanceKlass org/eclipse/jdt/internal/launching/environments/Analyzer
+instanceKlass org/eclipse/jdt/launching/environments/IExecutionEnvironmentAnalyzerDelegate
+instanceKlass org/eclipse/jdt/internal/launching/environments/AccessRuleParticipant
+instanceKlass org/eclipse/jdt/internal/launching/environments/ExecutionEnvironment$1
+instanceKlass org/eclipse/jdt/launching/environments/IAccessRuleParticipant
+instanceKlass org/eclipse/jdt/internal/launching/environments/ExecutionEnvironment
+instanceKlass  @bci org/eclipse/jdt/internal/launching/environments/EnvironmentsManager initializeExtensions ()V 14 <appendix> argL0 ; # org/eclipse/jdt/internal/launching/environments/EnvironmentsManager$$Lambda+0x000001f54454c000
+instanceKlass  @bci org/eclipse/jdt/internal/launching/environments/EnvironmentsManager initializeExtensions ()V 9 <appendix> member <vmtarget> ; # org/eclipse/jdt/internal/launching/environments/EnvironmentsManager$$Lambda+0x000001f544513d38
+instanceKlass org/eclipse/jdt/launching/environments/IExecutionEnvironment
+instanceKlass org/eclipse/jdt/ls/core/internal/handlers/CompletionHandler$2
+instanceKlass org/eclipse/jdt/ls/core/internal/handlers/CompletionHandler$1
+instanceKlass org/eclipse/jdt/internal/launching/environments/EnvironmentsManager
+instanceKlass org/eclipse/jdt/ls/core/internal/handlers/CompletionHandler
+instanceKlass  @bci org/eclipse/jdt/launching/VMStandin init (Lorg/eclipse/jdt/launching/IVMInstall;)V 107 <appendix> member <vmtarget> ; # org/eclipse/jdt/launching/VMStandin$$Lambda+0x000001f544513620
+instanceKlass org/eclipse/jdt/ls/core/internal/preferences/PreferenceManager$1
+instanceKlass org/eclipse/lsp4j/Registration
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/ProjectUtils getJavaProjects ()[Lorg/eclipse/jdt/core/IJavaProject; 36 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/ProjectUtils$$Lambda+0x000001f54452f8c0
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/ProjectUtils getJavaProjects ()[Lorg/eclipse/jdt/core/IJavaProject; 26 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/ProjectUtils$$Lambda+0x000001f54452f670
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/ProjectUtils getJavaProjects ()[Lorg/eclipse/jdt/core/IJavaProject; 16 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/ProjectUtils$$Lambda+0x000001f54452f430
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/ProjectUtils getJavaProjects ()[Lorg/eclipse/jdt/core/IJavaProject; 6 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/ProjectUtils$$Lambda+0x000001f54452f1e0
+instanceKlass org/eclipse/lsp4j/WorkDoneProgressEnd
+instanceKlass org/eclipse/core/resources/IResourceStatus
+instanceKlass org/eclipse/buildship/core/internal/workspace/SynchronizingBuildScriptUpdateListener$1
+instanceKlass org/eclipse/debug/internal/core/LaunchDelegate
+instanceKlass org/eclipse/debug/core/ILaunchConfigurationWorkingCopy
+instanceKlass org/eclipse/debug/core/ILaunchConfigurationType
+instanceKlass org/eclipse/buildship/core/internal/configuration/GradleProjectNatureDeconfiguredEvent
+instanceKlass org/eclipse/buildship/core/internal/configuration/GradleProjectNatureConfiguredEvent
+instanceKlass org/eclipse/buildship/core/internal/workspace/WorkbenchShutdownEvent
+instanceKlass org/eclipse/buildship/core/internal/workspace/BaseProjectChangedEvent
+instanceKlass org/eclipse/buildship/core/internal/workspace/ProjectChangeListener$1
+instanceKlass org/eclipse/debug/internal/core/IInternalDebugCoreConstants
+instanceKlass org/eclipse/debug/internal/core/Preferences
+instanceKlass org/eclipse/debug/core/commands/IDebugCommandRequest
+instanceKlass org/eclipse/debug/core/IRequest
+instanceKlass org/eclipse/debug/internal/core/StepFilterManager
+instanceKlass org/eclipse/debug/core/ILaunchListener
+instanceKlass org/eclipse/debug/internal/core/LaunchManager$LaunchManagerVisitor
+instanceKlass org/eclipse/jdt/internal/core/SimpleDelta
+instanceKlass org/eclipse/jdt/core/eval/IEvaluationContext
+instanceKlass org/eclipse/jdt/internal/compiler/env/IModulePathEntry
+instanceKlass org/eclipse/jdt/internal/core/JavaModelManager$PerProjectInfo
+instanceKlass org/eclipse/jdt/internal/core/DeltaProcessor$2
+instanceKlass  @bci org/eclipse/core/internal/resources/CheckMissingNaturesListener resourceChanged (Lorg/eclipse/core/resources/IResourceChangeEvent;)V 25 <appendix> member <vmtarget> ; # org/eclipse/core/internal/resources/CheckMissingNaturesListener$$Lambda+0x000001f5442778e8
+instanceKlass org/eclipse/core/internal/events/NotificationManager$1
+instanceKlass  @bci org/eclipse/core/internal/events/ResourceChangeListenerList getListeners ()[Lorg/eclipse/core/internal/events/ResourceChangeListenerList$ListenerEntry; 4 <appendix> argL0 ; # org/eclipse/core/internal/events/ResourceChangeListenerList$$Lambda+0x000001f544277488
+instanceKlass org/eclipse/jdt/ls/core/internal/handlers/InlayHintsPreferenceChangeListener
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager registerListeners ()V 46 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$$Lambda+0x000001f54452ed80
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$3
+instanceKlass com/sun/jna/ToNativeContext
+instanceKlass com/sun/jna/Structure
+instanceKlass com/sun/jna/Pointer
+instanceKlass org/eclipse/core/internal/filesystem/local/NativeHandler
+instanceKlass org/eclipse/core/internal/filesystem/local/LocalFileNativesManager
+instanceKlass org/eclipse/core/internal/filesystem/local/InfiniteProgress
+instanceKlass org/eclipse/core/internal/utils/BitMask
+instanceKlass org/eclipse/core/internal/events/LifecycleEvent
+instanceKlass java/util/AbstractMap$2$1
+instanceKlass  @bci org/eclipse/core/internal/resources/ProjectVariableProviderManager <clinit> ()V 14 <appendix> argL0 ; # org/eclipse/core/internal/resources/ProjectVariableProviderManager$$Lambda+0x000001f544276c58
+instanceKlass  @cpi org/eclipse/core/internal/resources/ProjectVariableProviderManager 171 form vmentry <vmtarget> ; # java/lang/invoke/LambdaForm$DMH+0x000001f544533000
+instanceKlass org/eclipse/core/resources/variableresolvers/PathVariableResolver
+instanceKlass org/eclipse/core/internal/resources/ProjectVariableProviderManager$Descriptor
+instanceKlass org/eclipse/core/internal/resources/ProjectVariableProviderManager
+instanceKlass org/eclipse/core/internal/resources/ProjectPathVariableManager
+instanceKlass  @bci org/eclipse/core/internal/filesystem/local/LocalFile createExecutor (I)Ljava/util/concurrent/ForkJoinPool; 15 <appendix> argL0 ; # org/eclipse/core/internal/filesystem/local/LocalFile$$Lambda+0x000001f544530f68
+instanceKlass  @bci org/eclipse/core/internal/filesystem/local/LocalFile createExecutor (I)Ljava/util/concurrent/ForkJoinPool; 5 <appendix> argL0 ; # org/eclipse/core/internal/filesystem/local/LocalFile$$Lambda+0x000001f544530d48
+instanceKlass org/eclipse/jdt/ls/core/internal/filesystem/JLSFsUtils
+instanceKlass org/eclipse/jdt/ls/core/internal/filesystem/JDTLSFilesystemActivator$1
+instanceKlass org/eclipse/jdt/ls/core/internal/filesystem/JDTLSFilesystemActivator
+instanceKlass org/eclipse/core/filesystem/IFileSystem
+instanceKlass org/eclipse/core/internal/filesystem/InternalFileSystemCore
+instanceKlass org/eclipse/core/filesystem/IFileInfo
+instanceKlass org/eclipse/core/filesystem/EFS
+instanceKlass org/eclipse/core/internal/resources/OS
+instanceKlass org/eclipse/core/filesystem/URIUtil
+instanceKlass  @bci org/eclipse/m2e/core/internal/project/ProjectConfigurationManager importProjects (Ljava/util/Collection;Lorg/eclipse/m2e/core/project/ProjectImportConfiguration;Lorg/eclipse/m2e/core/project/IProjectCreationListener;Lorg/eclipse/core/runtime/IProgressMonitor;)Ljava/util/List; 27 <appendix> member <vmtarget> ; # org/eclipse/m2e/core/internal/project/ProjectConfigurationManager$$Lambda+0x000001f5445193e0
+instanceKlass  @bci org/eclipse/m2e/core/internal/project/ProjectConfigurationManager importProjects (Ljava/util/Collection;Lorg/eclipse/m2e/core/project/ProjectImportConfiguration;Lorg/eclipse/m2e/core/project/IProjectCreationListener;Lorg/eclipse/core/runtime/IProgressMonitor;)Ljava/util/List; 12 <appendix> member <vmtarget> ; # org/eclipse/m2e/core/internal/project/ProjectConfigurationManager$$Lambda+0x000001f5445191b8
+instanceKlass sun/nio/ch/SelChImpl
+instanceKlass sun/nio/ch/Streams
+instanceKlass java/nio/channels/Channels
+instanceKlass org/apache/maven/model/io/xpp3/MavenXpp3Reader$1
+instanceKlass org/apache/maven/model/io/xpp3/MavenXpp3Reader$ContentTransformer
+instanceKlass org/apache/maven/model/io/xpp3/MavenXpp3Reader
+instanceKlass org/apache/maven/building/FileSource
+instanceKlass org/apache/maven/model/building/ModelSource2
+instanceKlass org/eclipse/m2e/core/internal/IMavenToolbox$2
+instanceKlass  @bci org/eclipse/m2e/core/internal/IMavenToolbox <clinit> ()V 8 <appendix> argL0 ; # org/eclipse/m2e/core/internal/IMavenToolbox$$Lambda+0x000001f544518cd8
+instanceKlass  @bci org/eclipse/m2e/core/internal/IMavenToolbox <clinit> ()V 0 <appendix> argL0 ; # org/eclipse/m2e/core/internal/IMavenToolbox$$Lambda+0x000001f544518ab8
+instanceKlass org/eclipse/m2e/core/internal/IMavenToolbox
+instanceKlass org/eclipse/m2e/core/internal/embedder/PlexusContainerManager$PlexusComponentLookup
+instanceKlass org/eclipse/m2e/core/project/AbstractProjectScanner
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/MavenProjectImporter getMavenProjects (Ljava/io/File;Lorg/eclipse/m2e/core/embedder/MavenModelManager;Lorg/eclipse/core/runtime/IProgressMonitor;)Ljava/util/Set; 46 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/MavenProjectImporter$$Lambda+0x000001f54452e378
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/MavenProjectImporter getMavenProjects (Ljava/io/File;Lorg/eclipse/m2e/core/embedder/MavenModelManager;Lorg/eclipse/core/runtime/IProgressMonitor;)Ljava/util/Set; 36 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/MavenProjectImporter$$Lambda+0x000001f54452e138
+instanceKlass sun/nio/fs/WindowsFileSystem$2
+instanceKlass java/nio/file/PathMatcher
+instanceKlass sun/nio/fs/Globs
+instanceKlass java/nio/file/Files$3
+instanceKlass java/nio/file/FileTreeWalker$Event
+instanceKlass java/nio/file/FileTreeWalker$DirectoryNode
+instanceKlass java/nio/file/FileTreeWalker$1
+instanceKlass java/util/RegularEnumSet$EnumSetIterator
+instanceKlass java/nio/file/FileTreeWalker
+instanceKlass java/nio/file/SimpleFileVisitor
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/BasicFileDetector scanDir (Ljava/nio/file/Path;Lorg/eclipse/core/runtime/IProgressMonitor;)V 9 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/BasicFileDetector$$Lambda+0x000001f54452dc78
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/BasicFileDetector
+instanceKlass com/microsoft/gradle/bs/importer/Utils
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/GradleUtils
+instanceKlass  @bci java/util/regex/CharPredicates ctype (I)Ljava/util/regex/Pattern$CharPredicate; 1 <appendix> member <vmtarget> ; # java/util/regex/CharPredicates$$Lambda+0x000001f544377420
+instanceKlass org/eclipse/buildship/core/internal/util/gradle/GradleVersion
+instanceKlass org/eclipse/jdt/ls/core/internal/AbstractProjectImporter
+instanceKlass org/eclipse/jdt/ls/core/internal/IProjectImporter
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/GradleBuildSupport deleteInvalidProjects (Ljava/util/Collection;Ljava/util/ArrayList;Lorg/eclipse/core/runtime/IProgressMonitor;)V 108 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/managers/GradleBuildSupport$$Lambda+0x000001f54452c000
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/GradleBuildSupport findUnrelatedGradleProjects (Ljava/util/List;Ljava/util/List;)Ljava/util/List; 1 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/GradleBuildSupport$$Lambda+0x000001f544521d58
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager deleteInvalidProjects (Ljava/util/Collection;Lorg/eclipse/core/runtime/IProgressMonitor;)V 263 <appendix> member <vmtarget> ; # org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$$Lambda+0x000001f544521b20
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager deleteInvalidProjects (Ljava/util/Collection;Lorg/eclipse/core/runtime/IProgressMonitor;)V 249 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$$Lambda+0x000001f5445218d0
+instanceKlass  @cpi org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager 1325 form vmentry <vmtarget> ; # java/lang/invoke/LambdaForm$DMH+0x000001f544529000
+instanceKlass  @bci java/util/stream/Collectors toUnmodifiableList ()Ljava/util/stream/Collector; 19 <appendix> argL0 ; # java/util/stream/Collectors$$Lambda+0x000001f5443771e0
+instanceKlass  @bci java/util/stream/Collectors toUnmodifiableList ()Ljava/util/stream/Collector; 14 <appendix> argL0 ; # java/util/stream/Collectors$$Lambda+0x000001f544376f98
+instanceKlass  @bci java/util/stream/Collectors toUnmodifiableList ()Ljava/util/stream/Collector; 9 <appendix> argL0 ; # java/util/stream/Collectors$$Lambda+0x000001f544376d68
+instanceKlass  @bci java/util/stream/Collectors toUnmodifiableList ()Ljava/util/stream/Collector; 4 <appendix> argL0 ; # java/util/stream/Collectors$$Lambda+0x000001f544376b48
+instanceKlass java/util/TreeMap$TreeMapSpliterator
+instanceKlass org/eclipse/jdt/internal/core/ClasspathAttribute
+instanceKlass com/microsoft/java/builder/BuildStateManager
+instanceKlass ch/epfl/scala/bsp4j/BuildServer
+instanceKlass org/eclipse/jdt/ls/core/internal/JobHelpers$InitializeJobMatcher
+instanceKlass com/microsoft/gradle/bs/importer/GradleBuildServerBuildSupport
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/InvisibleProjectPreferenceChangeListener
+instanceKlass  @bci org/eclipse/lsp4j/jsonrpc/RemoteEndpoint handleRequest (Lorg/eclipse/lsp4j/jsonrpc/messages/RequestMessage;)V 142 <appendix> member <vmtarget> ; # org/eclipse/lsp4j/jsonrpc/RemoteEndpoint$$Lambda+0x000001f544421c60
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/EclipseBuildSupport
+instanceKlass  @bci org/eclipse/lsp4j/jsonrpc/RemoteEndpoint handleRequest (Lorg/eclipse/lsp4j/jsonrpc/messages/RequestMessage;)V 132 <appendix> member <vmtarget> ; # org/eclipse/lsp4j/jsonrpc/RemoteEndpoint$$Lambda+0x000001f544421a18
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/MavenBuildSupport
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/GradlePreferenceChangeListener
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/GradleBuildSupport
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/IBuildSupport
+# instanceKlass java/lang/invoke/LambdaForm$MH+0x000001f544520400
+instanceKlass org/eclipse/jdt/ls/core/internal/ExtensionsExtractor
+instanceKlass org/eclipse/jdt/ls/core/internal/managers/BuildSupportManager
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager deleteInvalidProjects (Ljava/util/Collection;Lorg/eclipse/core/runtime/IProgressMonitor;)V 6 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/StandardProjectsManager$$Lambda+0x000001f544522aa8
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/managers/ProjectsManager interruptAutoBuild ()Ljava/lang/Runnable; 23 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/managers/ProjectsManager$$Lambda+0x000001f544522888
+instanceKlass org/eclipse/lsp4j/FileOperationPatternOptions
+instanceKlass org/eclipse/lsp4j/FileOperationPattern
+instanceKlass org/eclipse/lsp4j/FileOperationFilter
+instanceKlass org/eclipse/jdt/ls/core/internal/JobHelpers$RepositoryRegistryUpdateJobMatcher
+instanceKlass org/eclipse/lsp4j/FileOperationOptions
+instanceKlass  @bci org/eclipse/jdt/ls/core/internal/handlers/InitHandler$1 runInWorkspace (Lorg/eclipse/core/runtime/IProgressMonitor;)Lorg/eclipse/core/runtime/IStatus; 55 <appendix> argL0 ; # org/eclipse/jdt/ls/core/internal/handlers/InitHandler$1$$Lambda+0x000001f544522440
+instanceKlass org/eclipse/lsp4j/FileOperationsServerCapabilities
+instanceKlass org/eclipse/jdt/ls/internal/gradle/checksums/WrapperValidator
+instanceKlass org/eclipse/lsp4j/WorkDoneProgressReport
+instanceKlass org/eclipse/lsp4j/adapters/WorkDoneProgressNotificationAdapter$1
+instanceKlass  @bci org/eclipse/lsp4j/adapters/ProgressNotificationAdapter create (Lcom/google/gson/Gson;Lcom/google/gson/reflect/TypeToken;)Lcom/google/gson/TypeAdapter; 63 <appendix> argL0 ; # org/eclipse/lsp4j/adapters/ProgressNotificationAdapter$$Lambda+0x000001f54451efc0
+instanceKlass  @bci java/util/function/Predicate or (Ljava/util/function/Predicate;)Ljava/util/function/Predicate; 7 <appendix> member <vmtarget> ; # java/util/function/Predicate$$Lambda+0x000001f544376468
+instanceKlass  @cpi java/util/function/Predicate 78 form vmentry <vmtarget> ; # java/lang/invoke/LambdaForm$DMH+0x000001f544520000
+instanceKlass org/eclipse/lsp4j/jsonrpc/json/adapters/EitherTypeAdapter$PropertyChecker
+instanceKlass com/google/gson/JsonDeserializer
+instanceKlass com/google/gson/JsonSerializer
+instanceKlass org/eclipse/lsp4j/adapters/ProgressNotificationAdapter
+instanceKlass org/eclipse/lsp4j/WorkDoneProgressBegin
+instanceKlass org/eclipse/lsp4j/CompletionItemOptions
+instanceKlass org/eclipse/lsp4j/jsonrpc/RemoteEndpoint$PendingRequestInfo
+instanceKlass org/eclipse/lsp4j/NotebookSelectorCell
+instanceKlass org/eclipse/lsp4j/NotebookDocumentFilter
+instanceKlass jdk/internal/math/DoubleToDecimal
+instanceKlass org/eclipse/lsp4j/NotebookSelector
+instanceKlass jdk/internal/math/FormattedFPDecimal
+instanceKlass org/eclipse/lsp4j/DocumentOnTypeFormattingOptions
+instanceKlass com/google/gson/annotations/Expose
+instanceKlass org/eclipse/lsp4j/AbstractWorkDoneProgressOptions
+instanj 7 6 0 java/lang/Object <init> ()V 1 613 0 java/util/Collections$UnmodifiableCollection$1 hasNext ()Z 2 4 0 java/util/HashMap$HashIterator hasNext ()Z 1 588 0 java/util/Collections$UnmodifiableCollection$1 next ()Ljava/lang/Object; 2 4 0 java/util/HashMap$KeyIterator next ()Ljava/lang/Object; 3 1 0 java/util/HashMap$HashIterator nextNode ()Ljava/util/HashMap$Node;
