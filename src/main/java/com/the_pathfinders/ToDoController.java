@@ -1,5 +1,7 @@
 package com.the_pathfinders;
 
+import com.the_pathfinders.db.ToDoItem;
+import com.the_pathfinders.db.ToDoRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,7 +26,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
@@ -34,12 +35,15 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ToDoController {
 
     @FXML private AnchorPane rootPane;
-    @FXML private VBox rootBox;
     @FXML private MenuButton taskMenu;
     @FXML private TextField customTaskField;
     @FXML private Button addCustomBtn;
@@ -49,6 +53,8 @@ public class ToDoController {
     @FXML private TableColumn<ToDo, String> taskCol;
 
     private final ObservableList<ToDo> items = FXCollections.observableArrayList();
+    private final Map<ToDo, Long> todoToIdMap = new HashMap<>();
+    private ToDoRepository repo = new ToDoRepository();
     private String soulId = "";
     private Stage completionPopup;
 
@@ -81,16 +87,6 @@ public class ToDoController {
 
         todoTable.setItems(items);
         todoTable.setEditable(true);
-        attachCompletionListenerToExistingItems();
-        items.addListener((javafx.collections.ListChangeListener<ToDo>) change -> {
-            while (change.next()) {
-                if (change.wasAdded()) {
-                    for (ToDo t : change.getAddedSubList()) {
-                        attachCompletionListener(t);
-                    }
-                }
-            }
-        });
 
         // Add custom via button or Enter
         addCustomBtn.setOnAction(e -> addCustom());
@@ -98,13 +94,21 @@ public class ToDoController {
             if (e.getCode() == KeyCode.ENTER) addCustom();
         });
 
-        // Optional: double-click to remove an item
+        // Double-click to remove an item
         todoTable.setRowFactory(tv -> {
             TableRow<ToDo> row = new TableRow<>();
             row.setOnMouseClicked(ev -> {
                 if (ev.getClickCount() == 2 && !row.isEmpty()) {
                     ToDo t = row.getItem();
                     items.remove(t);
+                    Long id = todoToIdMap.remove(t);
+                    if (id != null) {
+                        try {
+                            repo.delete(id);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             });
             return row;
@@ -112,6 +116,26 @@ public class ToDoController {
 
         if (backBtn != null) {
             backBtn.setOnAction(e -> goBackToDashboard());
+        }
+    }
+
+    public void setSoulId(String soulId) {
+        this.soulId = soulId == null ? "" : soulId;
+        loadTodos();
+    }
+
+    private void loadTodos() {
+        if (soulId == null || soulId.isEmpty()) return;
+        try {
+            List<ToDoItem> persisted = repo.loadForSoul(soulId);
+            for (ToDoItem ti : persisted) {
+                ToDo t = new ToDo(ti.isDone(), ti.getTask());
+                attachCompletionListener(t);
+                items.add(t);
+                todoToIdMap.put(t, ti.getId());
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -127,10 +151,14 @@ public class ToDoController {
         ToDo todo = new ToDo(false, taskText);
         attachCompletionListener(todo);
         items.add(todo);
-    }
 
-    public void setSoulId(String soulId) {
-        this.soulId = soulId == null ? "" : soulId;
+        ToDoItem ti = new ToDoItem(soulId, taskText, false);
+        try {
+            repo.insert(ti);
+            todoToIdMap.put(todo, ti.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void goBackToDashboard() {
@@ -147,16 +175,19 @@ public class ToDoController {
         }
     }
 
-    private void attachCompletionListenerToExistingItems() {
-        for (ToDo t : items) {
-            attachCompletionListener(t);
-        }
-    }
-
     private void attachCompletionListener(ToDo todo) {
         todo.doneProperty().addListener((obs, wasDone, isNowDone) -> {
             if (!Boolean.TRUE.equals(wasDone) && Boolean.TRUE.equals(isNowDone)) {
                 showCompletionPopup();
+            }
+            Long id = todoToIdMap.get(todo);
+            if (id != null) {
+                ToDoItem ti = new ToDoItem(id, soulId, todo.getTask(), todo.isDone(), null);
+                try {
+                    repo.update(ti);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

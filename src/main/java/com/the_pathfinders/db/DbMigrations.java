@@ -35,6 +35,8 @@ public final class DbMigrations {
                   created_at   timestamptz default now()
                 )
             """);
+
+
             
             // Create soul_info table to store user profile information
             st.executeUpdate("""
@@ -50,7 +52,20 @@ public final class DbMigrations {
                   updated_at  timestamptz default now()
                 )
             """);
-            
+            // Create todo_items table for storing user tasks
+            st.executeUpdate("""
+                create table if not exists todo_items (
+                  id          bigserial primary key,
+                  soul_id     text not null,
+                  task_text   text not null,
+                  done        boolean default false,
+                  created_at  timestamptz default now()
+                )
+            """);
+
+            st.executeUpdate("""
+                create index if not exists idx_todo_soul on todo_items(soul_id)
+            """);
             // Add loved_by column if it doesn't exist (for existing tables)
             st.executeUpdate("""
                 do $$

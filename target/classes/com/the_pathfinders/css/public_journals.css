@@ -1,0 +1,105 @@
+/* Public Journals Styles */
+.root-container { -fx-background-color: linear-gradient(to bottom, #e8f5e9, #c8e6c9); }
+.page-title { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2e7d32; }
+.back-button { -fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 20; -fx-cursor: hand; }
+.back-button:hover { -fx-background-color: #45a049; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2); }
+.journals-container { -fx-background-color: transparent; }
+.journal-outer-box { -fx-background-color: #d0d0d0; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 3); }
+.journal-inner-box { -fx-background-color: rgba(255, 255, 255, 0.85); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.4); -fx-border-width: 1; -fx-border-radius: 12; -fx-effect: innershadow(gaussian, rgba(255,255,255,0.6), 10, 0, 0, 1); }
+.journal-username { -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #1a1a1a; }
+.journal-time { -fx-font-size: 12px; -fx-text-fill: #666666; }
+.journal-separator { -fx-background-color: #cccccc; }
+.journal-text { -fx-font-size: 14px; -fx-text-fill: #333333; -fx-wrap-text: true; -fx-padding: 5 0 5 0; }
+.love-button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0; -fx-cursor: hand; -fx-background-radius: 0; -fx-border-radius: 0; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-effect: none; }
+.love-button:hover { -fx-background-color: transparent; -fx-scale-x: 1.08; -fx-scale-y: 1.08; }
+.love-button:pressed { -fx-scale-x: 0.92; -fx-scale-y: 0.92; }
+.love-button.loved { -fx-background-color: transparent; }
+.love-button.loved:hover { -fx-scale-x: 1.08; -fx-scale-y: 1.08; }
+.love-count { -fx-font-size: 14px; -fx-text-fill: #666666; -fx-font-weight: bold; }
+.scroll-pane, .scroll-pane .viewport, .scroll-pane .content { -fx-background-color: transparent; }
+/* Root container */
+.root-container { -fx-background-color: linear-gradient(to bottom, #e8f5e9, #c8e6c9); }
+
+/* Page title */
+.page-title { -fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2e7d32; }
+
+/* Back button */
+.back-button { -fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 20; -fx-cursor: hand; }
+.back-button:hover { -fx-background-color: #45a049; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2); }
+
+/* Journals container */
+.journals-container { -fx-background-color: transparent; }
+
+/* Outer journal box - solid gray */
+.journal-outer-box {
+    -fx-background-color: #d0d0d0;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 3);
+}
+
+/* Inner journal box - glassy finish */
+.journal-inner-box {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect: innershadow(gaussian, rgba(255, 255, 255, 0.6), 10, 0, 0, 1);
+}
+
+/* Username - bold */
+.journal-username {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a1a1a;
+}
+
+/* Relative time */
+.journal-time {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}
+
+/* Gray separator line */
+.journal-separator {
+    -fx-background-color: #cccccc;
+}
+
+/* Journal text content */
+.journal-text { -fx-font-size: 14px; -fx-text-fill: #333333; -fx-wrap-text: true; -fx-padding: 5 0 5 0; }
+
+/* Love button (icon only) */
+.love-button { -fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0; -fx-cursor: hand; -fx-background-radius: 0; -fx-border-radius: 0; -fx-focus-color: transparent; -fx-faint-focus-color: transparent; -fx-effect: none; }
+.love-button:hover { -fx-background-color: transparent; -fx-scale-x: 1.08; -fx-scale-y: 1.08; }
+.love-button:pressed { -fx-scale-x: 0.92; -fx-scale-y: 0.92; }
+.love-button.loved { -fx-background-color: transparent; }
+.love-button.loved:hover { -fx-scale-x: 1.08; -fx-scale-y: 1.08; }
+
+/* Love count label */
+.love-count { -fx-font-size: 14px; -fx-text-fill: #666666; -fx-font-weight: bold; }
+
+/* Edit journal button (for private journals) */
+.edit-journal-btn {
+    -fx-background-color: linear-gradient(to bottom right, #4caf50, #45a049);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 6 14 6 14;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 2);
+}
+.edit-journal-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #45a049, #3d8b40);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 8, 0, 0, 3);
+}
+.edit-journal-btn:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* ScrollPane styling */
+.scroll-pane, .scroll-pane .viewport, .scroll-pane .content { -fx-background-color: transparent; }

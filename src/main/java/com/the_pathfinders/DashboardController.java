@@ -100,9 +100,9 @@ public class DashboardController {
             });
         }
         if (blogBtn != null) blogBtn.setOnAction(e -> openBlogs());
-        if (moodBtn != null) moodBtn.setOnAction(e -> showMoodPlaceholder());
-       // if (insightsBtn != null) insightsBtn.setOnAction(e -> showInsightsPlaceholder());
-        if (insightsBtn != null) insightsBtn.setOnAction(e -> openToDo());
+        if (moodBtn != null) moodBtn.setOnAction(e -> openToDo());
+        if (insightsBtn != null) insightsBtn.setOnAction(e -> showInsightsPlaceholder());
+       // if (insightsBtn != null) insightsBtn.setOnAction(e -> openToDo());
 
         if (SocialWorkBtn != null) SocialWorkBtn.setOnAction(e -> openSocialWork());
         if (logoutBtn != null) logoutBtn.setOnAction(e -> onLogout());
