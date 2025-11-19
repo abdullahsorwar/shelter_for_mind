@@ -36,6 +36,24 @@
 	-fx-cursor: hand;
 }
 
+.music-toggle {
+	-fx-background-color: #e53935;
+	-fx-text-fill: #ffffff;
+	-fx-font-weight: bold;
+	-fx-background-radius: 14;
+	-fx-border-radius: 14;
+	-fx-padding: 6 12;
+	-fx-cursor: hand;
+}
+
+.music-toggle:selected {
+	-fx-background-color: #2e7d32;
+}
+
+.music-toggle:hover {
+	-fx-opacity: 0.9;
+}
+
 .card-btn:pressed {
 	-fx-scale-x: 0.96;
 	-fx-scale-y: 0.96;

@@ -33,6 +33,10 @@
                 scaleX="1.5" scaleY="1.5" StackPane.alignment="TOP_CENTER" />
         </StackPane>
 
+        <!-- Music toggle (top-left) -->
+        <ToggleButton fx:id="musicToggle" styleClass="music-toggle" text="Music: On"
+            AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="12.0" />
+
         <!-- Theme toggle (top-right) -->
         <ToggleButton fx:id="themeToggle" styleClass="theme-toggle" text="Dark"
             AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="12.0" />

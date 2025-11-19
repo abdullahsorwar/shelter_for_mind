@@ -8,6 +8,7 @@ public class MusicManager {
     private static MediaPlayer mediaPlayer;
     private static volatile boolean isLoading = false;
     private static volatile boolean shouldPlayWhenReady = false;
+    private static volatile boolean backgroundMusicEnabled = true;
 
     /**
      * Preload the background music asynchronously without blocking.
@@ -73,6 +74,11 @@ public class MusicManager {
     }
 
     public static void playBackgroundMusic() {
+        if (!backgroundMusicEnabled) {
+            shouldPlayWhenReady = false;
+            return;
+        }
+
         // If not preloaded, preload first
         if (mediaPlayer == null) {
             if (!isLoading) {
@@ -110,5 +116,19 @@ public class MusicManager {
         if (mediaPlayer != null) {
             mediaPlayer.setVolume(volume);
         }
+    }
+
+    public static void setBackgroundMusicEnabled(boolean enabled) {
+        backgroundMusicEnabled = enabled;
+        if (!enabled) {
+            shouldPlayWhenReady = false;
+            pauseBackgroundMusic();
+        } else {
+            playBackgroundMusic();
+        }
+    }
+
+    public static boolean isBackgroundMusicEnabled() {
+        return backgroundMusicEnabled;
     }
 }

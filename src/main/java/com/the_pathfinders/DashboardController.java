@@ -20,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -42,6 +43,7 @@ public class DashboardController {
     @FXML private Rectangle bgRect;
     @FXML private Rectangle vignetteRect;
     @FXML private Label greetingLabel;
+    @FXML private ToggleButton musicToggle;
     
     @FXML private Button journalBtn;
     @FXML private Button blogBtn;
@@ -71,6 +73,12 @@ public class DashboardController {
                 updateGreeting();
             }
         } catch (Exception ignored) {}
+
+        if (musicToggle != null) {
+            musicToggle.setSelected(MusicManager.isBackgroundMusicEnabled());
+            updateMusicToggleText();
+            musicToggle.setOnAction(e -> handleMusicToggle());
+        }
 
         // Initialize journaling popup
         if (journalingIcon != null) {
@@ -520,6 +528,18 @@ public class DashboardController {
         Alert a = new Alert(Alert.AlertType.INFORMATION, "Settings feature coming soon.", ButtonType.OK);
         a.setHeaderText("Coming Soon");
         a.showAndWait();
+    }
+
+    private void handleMusicToggle() {
+        boolean enableMusic = musicToggle != null && musicToggle.isSelected();
+        MusicManager.setBackgroundMusicEnabled(enableMusic);
+        updateMusicToggleText();
+    }
+
+    private void updateMusicToggleText() {
+        if (musicToggle != null) {
+            musicToggle.setText(musicToggle.isSelected() ? "Music: On" : "Music: Off");
+        }
     }
 
     // ========== Journaling Popup Methods ==========

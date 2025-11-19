@@ -27,6 +27,7 @@ public class LoginSignupController implements Initializable {
     @FXML private ImageView logoImage;
     @FXML private Label subtitleLabel;
     @FXML private AnchorPane root;
+    @FXML private ToggleButton musicToggle;
     @FXML private ToggleButton themeToggle;
 
     /* Tabs + border */
@@ -88,6 +89,13 @@ public class LoginSignupController implements Initializable {
     // Ensure CSS 'active' class reflects current selection
     updateActiveStyles();
 
+        // Music toggle wiring
+        if (musicToggle != null) {
+            musicToggle.setSelected(MusicManager.isBackgroundMusicEnabled());
+            updateMusicToggleText();
+            musicToggle.setOnAction(e -> toggleMusicEnabled());
+        }
+
         // Theme toggle wiring (smooth cross-fade)
         if (themeToggle != null && root != null) {
             // initial state
@@ -141,6 +149,17 @@ public class LoginSignupController implements Initializable {
             if (!signUpBtn.getStyleClass().contains("active")) signUpBtn.getStyleClass().add("active");
             loginBtn.getStyleClass().remove("active");
         }
+    }
+
+    private void updateMusicToggleText() {
+        if (musicToggle == null) return;
+        musicToggle.setText(musicToggle.isSelected() ? "Music: On" : "Music: Off");
+    }
+
+    private void toggleMusicEnabled() {
+        boolean enableMusic = musicToggle != null && musicToggle.isSelected();
+        MusicManager.setBackgroundMusicEnabled(enableMusic);
+        updateMusicToggleText();
     }
 
     /* ---------- Theme toggling (smooth cross-fade) ---------- */
