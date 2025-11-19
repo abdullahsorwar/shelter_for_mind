@@ -1,0 +1,55 @@
+/* ========================================
+   SOCIAL WORK – PASTEL + BIG BUTTONS (FIXED COLOURS)
+   ======================================== */
+
+.social-work-root {
+    -fx-background-color: linear-gradient(to bottom right,
+    #fdf6f0 0%, #f9e4e8 35%, #e0f7fa 70%, #e8f5e9 100%);
+    -fx-font-family: "Comic Sans MS", "Chalkboard", "Arial", sans-serif;
+}
+
+/* Header */
+.back-btn {
+    -fx-background-color: #ffffff; -fx-text-fill: #555555;
+    -fx-font-size: 15px; -fx-font-weight: bold;
+    -fx-padding: 6 14 6 14; -fx-border-color: #cccccc;
+    -fx-border-width: 1.5; -fx-border-radius: 18;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4,0,1,1);
+}
+.back-btn:hover { -fx-background-color: #f0f0f0; }
+
+.page-title { -fx-text-fill: #333333; -fx-font-size: 28px; -fx-font-weight: bold; }
+.subtitle   { -fx-text-fill: #444444; -fx-font-size: 30px; -fx-font-style: italic; -fx-font-weight: bold; }
+
+/* Container */
+.hand-drawn-box {
+    -fx-background-color:E7F4D5CA;
+    -fx-border-color: #a8e6a1; -fx-border-width: 4; -fx-border-radius: 35;
+    -fx-padding: 50 80 50 80;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2),12,0,3,3);
+    -fx-max-width: 650;
+}
+
+/* BIG BUTTONS */
+.hand-drawn-btn {
+    -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #ffffff;
+    -fx-min-width: 260; -fx-pref-width: 260; -fx-max-width: 260;
+    -fx-padding: 18 35 18 35;
+    -fx-border-radius: 26; -fx-background-radius: 26;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25),6,0,2,2);
+}
+
+/* ---- INDIVIDUAL COLOURS (explicit classes) ---- */
+.blood-btn    { -fx-background-color: #ffb3ba; }   /* coral   */
+.tree-btn     { -fx-background-color: #a7e9af; }   /* mint    */
+.seminar-btn  { -fx-background-color: #ffd3b6; }   /* peach   */
+.donation-btn { -fx-background-color: #c7ceea; }   /* lavender*/
+
+/* Hover / Pressed */
+.hand-drawn-btn:hover {
+    -fx-scale-x: 1.06; -fx-scale-y: 1.06;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3),10,0,2,2);
+}
+.hand-drawn-btn:pressed { -fx-scale-x: .98; -fx-scale-y: .98; }

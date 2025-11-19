@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -18,7 +19,7 @@ public class SeekHelpController {
     @FXML private VBox consultancyPane;
     @FXML private VBox requestBloodPane;
 
-    @FXML private TextField requiredBloodField;
+    @FXML private ComboBox<String> requiredBloodCombo;
     @FXML private TextField locationField;
     @FXML private TextField phoneField;
 
@@ -27,11 +28,23 @@ public class SeekHelpController {
     @FXML
     public void initialize() {
         attachCss();
+        populateBloodTypes();
         showConsultancy();
 
         if (consultancyBtn != null) consultancyBtn.setOnAction(e -> showConsultancy());
         if (requestBloodBtn != null) requestBloodBtn.setOnAction(e -> showRequestBlood());
         if (backBtn != null) backBtn.setOnAction(e -> goBack());
+    }
+
+    private void populateBloodTypes() {
+        if (requiredBloodCombo != null) {
+            requiredBloodCombo.getItems().setAll(
+                    "O+ve", "O-ve",
+                    "A+ve", "A-ve",
+                    "AB+ve", "AB-ve",
+                    "B+ve", "B-ve"
+            );
+        }
     }
 
     public void setSoulId(String soulId) {

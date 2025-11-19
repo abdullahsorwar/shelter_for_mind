@@ -1,0 +1,210 @@
+/* =========================================================
+   GLOBAL LAVENDER THEME
+   ========================================================= */
+.root,
+.anchor-pane,
+.root-pane {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: linear-gradient(to bottom, #f3e7ff, #e9d8ff);
+}
+
+/* Soft shadow container spacing */
+.anchor-pane {
+    -fx-padding: 20;
+}
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+.section-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6f4aa8; /* deep lavender */
+}
+
+.hint {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8575a5;
+    -fx-font-style: italic;
+}
+
+/* =========================================================
+   LAVENDER BUTTONS (With Ripple Animation)
+   ========================================================= */
+.button {
+    -fx-background-color: linear-gradient(to bottom right, #b692ff, #a478ff);
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-padding: 10 18;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(80,0,140,0.25), 10, 0.2, 0, 3);
+    -fx-transition: all 0.25s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #c7a3ff, #b389ff);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+
+/* Fake ripple animation */
+.button:pressed {
+    -fx-background-insets: 0, 4;
+    -fx-background-radius: 10;
+    -fx-opacity: 0.8;
+}
+
+.back-btn {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #6f4aa8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 14;
+    -fx-border-color: #c9b4e8;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(80,0,140,0.15), 8, 0.2, 0, 2);
+}
+
+.back-btn:hover {
+    -fx-background-color: #f3eaff;
+}
+
+/* =========================================================
+   MENU BUTTON
+   ========================================================= */
+.menu-button {
+    -fx-background-color: linear-gradient(to bottom right, #9f84d3, #8967c9);
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: linear-gradient(to bottom right, #b69de0, #9a7ada);
+}
+
+/* =========================================================
+   TEXT FIELD
+   ========================================================= */
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: #c9b4e8;
+    -fx-border-radius: 8;
+    -fx-border-width: 2;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused {
+    -fx-border-color: #8a6ac6;
+    -fx-background-color: #fbf7ff;
+}
+
+/* =========================================================
+   REALISTIC LAVENDER NOTEBOOK PAPER
+   ========================================================= */
+.notebook-page {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 100% 0%,
+            repeat, #d7c5f3 0px, #d7c5f3 1px, transparent 1px, transparent 28px),
+            #f9f4ff;   /* base lavender paper */
+
+    /* vertical margin line */
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-background-radius: 12;
+
+    /* Inner shadow for paper depth */
+    -fx-effect: dropshadow(gaussian, rgba(70,0,120,0.25), 18, 0.2, 0, 6);
+
+    -fx-padding: 16;
+}
+
+/* =========================================================
+   TABLEVIEW (Lavender Smooth Version)
+   ========================================================= */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-background-radius: 10;
+    -fx-padding: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.2, 0, 4);
+}
+
+/* Header */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #cbb5f4, #bba2ec);
+    -fx-background-radius: 10 10 0 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #4e3b78;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Rows */
+.table-row-cell {
+    -fx-background-color: rgba(255,255,255,0.5);
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+    -fx-opacity: 0;           /* fade animation */
+    -fx-translate-y: 6;       /* small slide */
+    -fx-transition: all 0.4s ease-in-out;
+}
+
+.table-row-cell:filled {
+    -fx-opacity: 1;
+    -fx-translate-y: 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: rgba(240,230,255,0.7);
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(190,160,255,0.5);
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #8d6bc7;
+    -fx-text-fill: white;
+}
+
+/* =========================================================
+   SCROLLBAR (Lavender Glass)
+   ========================================================= */
+.scroll-bar .thumb {
+    -fx-background-color: rgba(160,130,220,0.7);
+    -fx-background-radius: 6;
+}
+
+.scroll-bar .track {
+    -fx-background-color: rgba(220,200,255,0.4);
+}
+
+/* =========================================================
+   CHECKBOXES (for DONE column)
+   ========================================================= */
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #aa92d6;
+    -fx-border-radius: 4;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #8f6dca;
+    -fx-border-color: #6a4aaa;
+}
+
+/* Checkmark */
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
