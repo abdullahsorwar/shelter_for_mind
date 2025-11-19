@@ -15,6 +15,7 @@
                             <children>
                                 <Button fx:id="basicInfoMenuBtn" text="Basic Information" styleClass="menu-item" />
                                 <Button fx:id="journalsMenuBtn" text="Published Journals" styleClass="menu-item" />
+                                <Button fx:id="savedBlogsMenuBtn" text="Starred Blogs" styleClass="menu-item" />
                                 <Button fx:id="achievementsMenuBtn" text="Achievements" styleClass="menu-item" />
                             </children>
                         </VBox>
@@ -50,6 +51,16 @@
                                         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="journals-scroll">
                                             <content>
                                                 <VBox fx:id="journalsList" spacing="10" />
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
+                                </VBox>
+                                <!-- Saved Blogs Page -->
+                                <VBox fx:id="savedBlogsPage" spacing="12" visible="false" managed="false">
+                                    <children>
+                                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="saved-blogs-scroll">
+                                            <content>
+                                                <VBox fx:id="savedBlogsList" spacing="10" />
                                             </content>
                                         </ScrollPane>
                                     </children>

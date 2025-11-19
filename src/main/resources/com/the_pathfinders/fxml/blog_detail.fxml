@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.the_pathfinders.BlogDetailController"
+      spacing="16" alignment="TOP_CENTER"
+      stylesheets="/com/the_pathfinders/css/blog.css"
+      style="-fx-padding: 20; -fx-background-color: #ffffff; -fx-border-radius: 12; -fx-background-radius: 12;">
+
+    <!-- Header with close button -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="titleLabel" text="Blog Title" 
+                style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #264653;" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="closeBtn" text="✕" 
+                style="-fx-font-size: 16px; -fx-padding: 4px 8px; -fx-background-color: transparent; -fx-cursor: hand;" />
+    </HBox>
+
+    <!-- Category label -->
+    <Label fx:id="categoryLabel" text="Category"
+            style="-fx-font-size: 12px; -fx-text-fill: #888; -fx-font-style: italic;" />
+
+    <!-- Content -->
+        <ScrollPane fitToWidth="true" prefViewportHeight="220" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <content>
+                        <VBox spacing="8">
+                                <Label fx:id="contentLabel" text="Blog content goes here..." 
+                                                wrapText="true"
+                                                style="-fx-font-size: 14px; -fx-text-fill: #333; -fx-line-spacing: 4px;" />
+                        </VBox>
+                </content>
+        </ScrollPane>
+
+    <!-- Bottom actions -->
+    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 12 0 0 0;">
+        <Region HBox.hgrow="ALWAYS" />
+        <Button fx:id="saveBtn" text="☆ Save for Later" 
+                style="-fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-cursor: hand;" />
+    </HBox>
+
+</VBox>

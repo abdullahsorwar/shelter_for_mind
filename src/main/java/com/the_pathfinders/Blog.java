@@ -4,6 +4,7 @@ public class Blog {
     private String id;
     private String title;
     private String content;
+    private String fullDescription;
     private String category;
     private boolean savedForLater;
 
@@ -12,6 +13,7 @@ public class Blog {
         this.title = title;
         this.content = content;
         this.category = category;
+        this.fullDescription = content; // Default to content if not set separately
         this.savedForLater = false;
     }
 
@@ -23,6 +25,9 @@ public class Blog {
 
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
+
+    public String getFullDescription() { return fullDescription; }
+    public void setFullDescription(String fullDescription) { this.fullDescription = fullDescription; }
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }

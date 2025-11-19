@@ -16,6 +16,7 @@ com\the_pathfinders\ToDo.class
 com\the_pathfinders\verification\VerificationWebSocketServer.class
 com\the_pathfinders\db\SoulRepository$Soul.class
 com\the_pathfinders\BlogController$1.class
+com\the_pathfinders\BlogDetailController.class
 com\the_pathfinders\Blog.class
 com\the_pathfinders\verification\EmailService.class
 com\the_pathfinders\db\DB.class
@@ -37,3 +38,4 @@ com\the_pathfinders\db\JournalRepository.class
 com\the_pathfinders\DashboardController.class
 com\the_pathfinders\verification\EmailService$1.class
 com\the_pathfinders\db\DbMigrations.class
+com\the_pathfinders\SavedBlogsManager.class

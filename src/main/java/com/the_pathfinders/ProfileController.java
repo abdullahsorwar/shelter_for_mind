@@ -50,7 +50,12 @@ public class ProfileController {
     @FXML private VBox basicInfoFields;
     @FXML private VBox journalsPage;
     @FXML private VBox journalsList;
+    @FXML private VBox savedBlogsPage;
+    @FXML private VBox savedBlogsList;
     @FXML private VBox achievementsPage;
+
+    // Menu buttons
+    @FXML private Button savedBlogsMenuBtn;
 
     // Edit/save controls
     @FXML private Button editInfoBtn;
@@ -67,6 +72,7 @@ public class ProfileController {
     private String soulId;
     private final SoulInfoRepository soulInfoRepo = new SoulInfoRepository();
     private final JournalRepository journalRepo = new JournalRepository();
+    private final SavedBlogsManager savedBlogsManager = new SavedBlogsManager();
     private SoulInfo currentInfo;
     private final List<InfoRow> rows = new ArrayList<>();
     private boolean editMode = false;
@@ -120,6 +126,7 @@ public class ProfileController {
         if (menuBtn != null) menuBtn.setOnAction(e -> toggleSidePanel());
         if (basicInfoMenuBtn != null) basicInfoMenuBtn.setOnAction(e -> showBasicInfo());
         if (journalsMenuBtn != null) journalsMenuBtn.setOnAction(e -> showJournals());
+        if (savedBlogsMenuBtn != null) savedBlogsMenuBtn.setOnAction(e -> showSavedBlogs());
         if (achievementsMenuBtn != null) achievementsMenuBtn.setOnAction(e -> showAchievements());
 
         // Keep mainArea left anchor in sync with sidePanel width (so it shrinks/expands)
@@ -471,6 +478,8 @@ public class ProfileController {
             } catch (Exception ex) { ex.printStackTrace(); }
         }).start();
     }
+
+    
     
     private void startRealTimeUpdates() {
         // Timestamp updates every 1 second
@@ -491,6 +500,102 @@ public class ProfileController {
             loveCountTimeline.stop();
             loveCountTimeline = null;
         }
+    }
+
+    private void loadSavedBlogs() {
+        if (savedBlogsList == null) return;
+        
+        savedBlogsList.getChildren().clear();
+        
+        new Thread(() -> {
+            try {
+                // Load all available blogs (predefined list from BlogController)
+                java.util.List<Blog> allBlogs = new java.util.ArrayList<>();
+                java.util.List<String> categories = java.util.Arrays.asList(
+                    "Depression", "Anxiety Disorders", "Bipolar Disorder", "Schizophrenia",
+                    "Obsessive-Compulsive Disorder", "Post-Traumatic Stress Disorder",
+                    "Eating Disorder", "Personality Disorder", "Neurodevelopmental Disorder",
+                    "ADHD", "Panic Disorder", "Social Anxiety Disorder"
+                );
+                
+                int i = 1;
+                for (String cat : categories) {
+                    Blog blog = new Blog("b" + i, cat + " — Understanding", "A short introduction to " + cat + ".", cat);
+                    blog.setFullDescription("A comprehensive guide to understanding " + cat + ". This section provides detailed information about symptoms, causes, treatments, and coping strategies.");
+                    allBlogs.add(blog);
+                    i++;
+                }
+                
+                // Get saved blog IDs for this user
+                java.util.Set<String> savedIds = savedBlogsManager.loadSavedBlogIds(soulId);
+                
+                Platform.runLater(() -> {
+                    for (Blog blog : allBlogs) {
+                        if (savedIds.contains(blog.getId())) {
+                            savedBlogsList.getChildren().add(createSavedBlogBox(blog));
+                        }
+                    }
+                    
+                    // If no saved blogs, show a message
+                    if (savedBlogsList.getChildren().isEmpty()) {
+                        Label noSavedLabel = new Label("No saved blogs yet. Start saving blogs from the Blog section!");
+                        noSavedLabel.setStyle("-fx-text-fill: #999; -fx-font-style: italic; -fx-padding: 20;");
+                        savedBlogsList.getChildren().add(noSavedLabel);
+                    }
+                });
+            } catch (Exception ex) { 
+                ex.printStackTrace(); 
+            }
+        }).start();
+    }
+
+    private VBox createSavedBlogBox(Blog blog) {
+        // Outer box
+        VBox outerBox = new VBox();
+        outerBox.getStyleClass().add("saved-blog-outer-box");
+        outerBox.setPadding(new javafx.geometry.Insets(8));
+
+        // Inner box
+        VBox innerBox = new VBox(8);
+        innerBox.getStyleClass().add("saved-blog-inner-box");
+        innerBox.setPadding(new javafx.geometry.Insets(12));
+
+        // Title
+        Label title = new Label(blog.getTitle());
+        title.getStyleClass().add("saved-blog-title");
+
+        // Category
+        Label category = new Label(blog.getCategory());
+        category.getStyleClass().add("saved-blog-category");
+
+        // Preview
+        Label preview = new Label(blog.getContent());
+        preview.getStyleClass().add("saved-blog-preview");
+        preview.setWrapText(true);
+
+        // Remove button
+        Button removeBtn = new Button("✕ Remove");
+        removeBtn.getStyleClass().add("remove-blog-btn");
+        removeBtn.setOnAction(e -> {
+            savedBlogsManager.removeSavedBlog(soulId, blog.getId());
+            savedBlogsList.getChildren().remove(outerBox);
+            
+            // Show message if no saved blogs left
+            if (savedBlogsList.getChildren().isEmpty()) {
+                Label noSavedLabel = new Label("No saved blogs yet. Start saving blogs from the Blog section!");
+                noSavedLabel.setStyle("-fx-text-fill: #999; -fx-font-style: italic; -fx-padding: 20;");
+                savedBlogsList.getChildren().add(noSavedLabel);
+            }
+        });
+
+        HBox actions = new HBox(10);
+        actions.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+        actions.getChildren().add(removeBtn);
+
+        innerBox.getChildren().addAll(title, category, preview, actions);
+        outerBox.getChildren().add(innerBox);
+
+        return outerBox;
     }
 
     private VBox createJournalBox(com.the_pathfinders.Journal journal) {
@@ -625,26 +730,34 @@ public class ProfileController {
 
     private void showBasicInfo() {
         if (subtitleLabel != null) subtitleLabel.setText("Basic Information");
-        setPageVisibility(true, false, false);
+        setPageVisibility(true, false, false, false);
         if (editInfoBtn != null) { editInfoBtn.setVisible(true); editInfoBtn.setManaged(true); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(true); saveInfoBtn.setManaged(true); }
     }
     private void showJournals() {
         if (subtitleLabel != null) subtitleLabel.setText("Journal");
-        setPageVisibility(false, true, false);
+        setPageVisibility(false, true, false, false);
         loadJournals();
+        if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
+        if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
+    }
+    private void showSavedBlogs() {
+        if (subtitleLabel != null) subtitleLabel.setText("Starred Blogs");
+        setPageVisibility(false, false, true, false);
+        loadSavedBlogs();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
     private void showAchievements() {
         if (subtitleLabel != null) subtitleLabel.setText("Achievements");
-        setPageVisibility(false, false, true);
+        setPageVisibility(false, false, false, true);
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
-    private void setPageVisibility(boolean basic, boolean journal, boolean achievement) {
+    private void setPageVisibility(boolean basic, boolean journal, boolean savedBlogs, boolean achievement) {
         if (basicInfoScroll != null) { basicInfoScroll.setVisible(basic); basicInfoScroll.setManaged(basic); }
         if (journalsPage != null) { journalsPage.setVisible(journal); journalsPage.setManaged(journal); }
+        if (savedBlogsPage != null) { savedBlogsPage.setVisible(savedBlogs); savedBlogsPage.setManaged(savedBlogs); }
         if (achievementsPage != null) { achievementsPage.setVisible(achievement); achievementsPage.setManaged(achievement); }
     }
 
