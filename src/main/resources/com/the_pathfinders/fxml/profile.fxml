@@ -27,7 +27,12 @@
                         <!-- Header -->
                         <HBox fx:id="headerBox" spacing="14" AnchorPane.topAnchor="18" AnchorPane.leftAnchor="24" alignment="CENTER_LEFT">
                             <children>
-                                <ImageView fx:id="profileImage" fitWidth="72" fitHeight="72" preserveRatio="true" />
+                                <StackPane>
+                                    <children>
+                                        <ImageView fx:id="profileImage" fitWidth="72" fitHeight="72" preserveRatio="true" />
+                                        <Label fx:id="starredBadge" text="" style="-fx-background-color:#e74c3c; -fx-text-fill: white; -fx-font-size:11px; -fx-padding:2 6 2 6; -fx-background-radius:12;" visible="false" managed="false" StackPane.alignment="TOP_RIGHT" />
+                                    </children>
+                                </StackPane>
                                 <VBox spacing="4" alignment="CENTER_LEFT">
                                     <Label fx:id="titleLabel" text="My Profile" styleClass="header-title" />
                                     <Label fx:id="subtitleLabel" text="Basic Information" styleClass="header-subtitle" />

@@ -35,6 +35,7 @@ com\the_pathfinders\verification\VerificationServer$VerificationCallback.class
 com\the_pathfinders\App.class
 com\the_pathfinders\PrivateJournalsController.class
 com\the_pathfinders\db\JournalRepository.class
+com\the_pathfinders\BlogContentLoader.class
 com\the_pathfinders\DashboardController.class
 com\the_pathfinders\verification\EmailService$1.class
 com\the_pathfinders\db\DbMigrations.class

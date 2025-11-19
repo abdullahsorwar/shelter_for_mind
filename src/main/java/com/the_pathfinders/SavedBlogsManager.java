@@ -6,6 +6,7 @@ import java.util.*;
 
 public class SavedBlogsManager {
     private static final String SAVED_BLOGS_DIR = "data/saved_blogs";
+    private static final java.util.List<Runnable> listeners = new java.util.ArrayList<>();
 
     public SavedBlogsManager() {
         // Create directory if it doesn't exist
@@ -25,6 +26,7 @@ public class SavedBlogsManager {
             Set<String> savedBlogIds = loadSavedBlogIds(soulId);
             savedBlogIds.add(blog.getId());
             writeSavedBlogIds(filePath, savedBlogIds);
+            notifyListeners();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,6 +41,7 @@ public class SavedBlogsManager {
             Set<String> savedBlogIds = loadSavedBlogIds(soulId);
             savedBlogIds.remove(blogId);
             writeSavedBlogIds(filePath, savedBlogIds);
+            notifyListeners();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -98,5 +101,23 @@ public class SavedBlogsManager {
 
     private void writeSavedBlogIds(String filePath, Set<String> blogIds) throws IOException {
         Files.write(Paths.get(filePath), String.join("\n", blogIds).getBytes());
+    }
+
+    public static void addListener(Runnable r) {
+        if (r == null) return;
+        synchronized (listeners) { listeners.add(r); }
+    }
+
+    public static void removeListener(Runnable r) {
+        if (r == null) return;
+        synchronized (listeners) { listeners.remove(r); }
+    }
+
+    private static void notifyListeners() {
+        synchronized (listeners) {
+            for (Runnable r : new java.util.ArrayList<>(listeners)) {
+                try { r.run(); } catch (Exception ignored) {}
+            }
+        }
     }
 }

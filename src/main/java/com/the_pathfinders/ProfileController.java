@@ -42,6 +42,7 @@ public class ProfileController {
     @FXML private ImageView profileImage;
     @FXML private Label titleLabel;
     @FXML private Label subtitleLabel;
+    @FXML private Label starredBadge;
     @FXML private Button backBtn;
     @FXML private StackPane pagesContainer;
 
@@ -129,6 +130,9 @@ public class ProfileController {
         if (savedBlogsMenuBtn != null) savedBlogsMenuBtn.setOnAction(e -> showSavedBlogs());
         if (achievementsMenuBtn != null) achievementsMenuBtn.setOnAction(e -> showAchievements());
 
+        // Listen for saved-blog changes so we can update badge dynamically
+        SavedBlogsManager.addListener(this::updateStarredBadge);
+
         // Keep mainArea left anchor in sync with sidePanel width (so it shrinks/expands)
         if (sidePanel != null && mainArea != null) {
             AnchorPane.setLeftAnchor(mainArea, sidePanel.getPrefWidth());
@@ -143,6 +147,30 @@ public class ProfileController {
         checkFirstTimeAndLoad();
         // Default page
         showBasicInfo();
+        updateStarredBadge();
+    }
+
+    private void updateStarredBadge() {
+        try {
+            int count = 0;
+            if (soulId != null && !soulId.isBlank()) {
+                java.util.Set<String> ids = savedBlogsManager.loadSavedBlogIds(soulId);
+                count = ids == null ? 0 : ids.size();
+            }
+            final int c = count;
+            Platform.runLater(() -> {
+                if (starredBadge != null) {
+                    if (c <= 0) {
+                        starredBadge.setVisible(false);
+                        starredBadge.setManaged(false);
+                    } else {
+                        starredBadge.setText(String.valueOf(c));
+                        starredBadge.setVisible(true);
+                        starredBadge.setManaged(true);
+                    }
+                }
+            });
+        } catch (Exception ignored) {}
     }
 
     private void loadProfileImage() {
@@ -520,8 +548,10 @@ public class ProfileController {
                 
                 int i = 1;
                 for (String cat : categories) {
-                    Blog blog = new Blog("b" + i, cat + " — Understanding", "A short introduction to " + cat + ".", cat);
-                    blog.setFullDescription("A comprehensive guide to understanding " + cat + ". This section provides detailed information about symptoms, causes, treatments, and coping strategies.");
+                    String shortIntro = "A short introduction to " + cat + ".";
+                    Blog blog = new Blog("b" + i, cat + " — Understanding", shortIntro, cat);
+                    String full = com.the_pathfinders.BlogContentLoader.loadContentForCategory(cat, "A comprehensive guide to understanding " + cat + ".");
+                    blog.setFullDescription(full);
                     allBlogs.add(blog);
                     i++;
                 }

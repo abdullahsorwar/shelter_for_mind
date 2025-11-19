@@ -27,7 +27,7 @@ public class BlogDetailController {
         this.blog = blog;
         if (titleLabel != null) titleLabel.setText(blog.getTitle());
         if (categoryLabel != null) categoryLabel.setText(blog.getCategory());
-        if (contentLabel != null) contentLabel.setText(blog.getContent());
+        if (contentLabel != null) contentLabel.setText(blog.getFullDescription() != null ? blog.getFullDescription() : blog.getContent());
         updateSaveButton();
     }
 

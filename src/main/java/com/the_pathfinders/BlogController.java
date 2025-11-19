@@ -60,9 +60,11 @@ public class BlogController {
 
         int i = 1;
         for (String cat : categories) {
-            Blog blog = new Blog("b" + i, cat + " — Understanding", "A short introduction to " + cat + ".", cat);
-            // Set full description (will be replaced with actual content later)
-            blog.setFullDescription("A comprehensive guide to understanding " + cat + ". This section provides detailed information about symptoms, causes, treatments, and coping strategies.");
+            String shortIntro = "A short introduction to " + cat + ".";
+            Blog blog = new Blog("b" + i, cat + " — Understanding", shortIntro, cat);
+            // Load full description from data/blogs/<slug>.txt if available
+            String full = BlogContentLoader.loadContentForCategory(cat, "A comprehensive guide to understanding " + cat + ".");
+            blog.setFullDescription(full);
             // Load saved status from file
             blog.setSavedForLater(savedBlogsManager.isBlogSaved(soulId, blog.getId()));
             allPosts.add(blog);
@@ -93,6 +95,13 @@ public class BlogController {
                     Tooltip.install(star, new Tooltip(item.isSavedForLater() ? "Saved" : "Save for later"));
 
                     star.setOnAction(evt -> {
+                        if (soulId == null || soulId.isBlank()) {
+                            Alert a = new Alert(Alert.AlertType.INFORMATION, "Please open your profile or login to save blogs.", ButtonType.OK);
+                            a.setHeaderText("Sign in required");
+                            a.showAndWait();
+                            return;
+                        }
+
                         item.setSavedForLater(!item.isSavedForLater());
                         star.setText(item.isSavedForLater() ? "★" : "☆");
                         if (item.isSavedForLater()) {
@@ -251,7 +260,7 @@ public class BlogController {
     }
 
     /**
-     * Show blog details in a smooth popup modal
+     * Show blog details in a smooth popup modal (large portrait rectangle)
      */
     private void showBlogDetail(Blog blog) {
         try {
@@ -269,16 +278,23 @@ public class BlogController {
             javafx.geometry.Pos pos = javafx.geometry.Pos.CENTER;
             javafx.scene.layout.StackPane.setAlignment(detail, pos);
 
-            // Limit size so large texts fit and are scrollable inside detail
+            // Size detail as large portrait rectangle (height > width) 
             if (detail instanceof javafx.scene.layout.Region && root != null) {
                 javafx.scene.layout.Region region = (javafx.scene.layout.Region) detail;
-                region.maxWidthProperty().bind(root.widthProperty().multiply(0.85));
-                region.maxHeightProperty().bind(root.heightProperty().multiply(0.8));
+                // Portrait: width 45%, height 75% of page (height > width)
+                region.setPrefWidth(root.getWidth() * 0.45);
+                region.setPrefHeight(root.getHeight() * 0.75);
+                region.setMinWidth(300);
+                region.setMinHeight(450);
             }
 
-            // Add popup to root
-            if (root != null) {
-                root.getChildren().add(popup);
+            // Add popup to the top-level scene root (so it overlays like the journaling overlay)
+            if (root != null && root.getScene() != null && root.getScene().getRoot() instanceof javafx.scene.layout.Pane) {
+                javafx.scene.layout.Pane container = (javafx.scene.layout.Pane) root.getScene().getRoot();
+                // ensure popup covers whole window
+                popup.prefWidthProperty().bind(container.widthProperty());
+                popup.prefHeightProperty().bind(container.heightProperty());
+                container.getChildren().add(popup);
 
                 // Fade in animation (apply to detail view)
                 FadeTransition fadeIn = new FadeTransition(Duration.millis(300), detail);
@@ -293,6 +309,8 @@ public class BlogController {
 
                 fadeIn.play();
                 scaleIn.play();
+            } else if (root != null) {
+                root.getChildren().add(popup);
             }
 
             // Close handler
@@ -301,7 +319,10 @@ public class BlogController {
                 fadeOut.setFromValue(1);
                 fadeOut.setToValue(0);
                 fadeOut.setOnFinished(e -> {
-                    if (root != null && root.getChildren().contains(popup)) {
+                    if (root != null && root.getScene() != null && root.getScene().getRoot() instanceof javafx.scene.layout.Pane) {
+                        javafx.scene.layout.Pane container = (javafx.scene.layout.Pane) root.getScene().getRoot();
+                        if (container.getChildren().contains(popup)) container.getChildren().remove(popup);
+                    } else if (root != null && root.getChildren().contains(popup)) {
                         root.getChildren().remove(popup);
                     }
                 });
@@ -309,10 +330,19 @@ public class BlogController {
             });
             // When save toggled inside detail popup, persist and refresh UI
             controller.setOnSave(() -> {
-                if (blog.isSavedForLater()) {
-                    savedBlogsManager.saveBlog(soulId, blog);
+                if (soulId == null || soulId.isBlank()) {
+                    Alert a = new Alert(Alert.AlertType.INFORMATION, "Please open your profile or login to save blogs.", ButtonType.OK);
+                    a.setHeaderText("Sign in required");
+                    a.showAndWait();
+                    // revert save state in UI
+                    blog.setSavedForLater(false);
+                    controller.setBlog(blog);
                 } else {
-                    savedBlogsManager.removeSavedBlog(soulId, blog.getId());
+                    if (blog.isSavedForLater()) {
+                        savedBlogsManager.saveBlog(soulId, blog);
+                    } else {
+                        savedBlogsManager.removeSavedBlog(soulId, blog.getId());
+                    }
                 }
                 if (postsListView != null) postsListView.refresh();
             });
