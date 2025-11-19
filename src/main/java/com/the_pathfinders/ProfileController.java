@@ -580,32 +580,41 @@ public class ProfileController {
     }
 
     private VBox createSavedBlogBox(Blog blog) {
-        // Outer box
+        // Outer box with spacing
         VBox outerBox = new VBox();
         outerBox.getStyleClass().add("saved-blog-outer-box");
-        outerBox.setPadding(new javafx.geometry.Insets(8));
+        outerBox.setPadding(new javafx.geometry.Insets(12));
+        outerBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-spacing: 8;");
 
-        // Inner box
-        VBox innerBox = new VBox(8);
-        innerBox.getStyleClass().add("saved-blog-inner-box");
-        innerBox.setPadding(new javafx.geometry.Insets(12));
+        // Header with title + category + expand/collapse button
+        HBox header = new HBox(10);
+        header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        header.setStyle("-fx-padding: 8; -fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
 
-        // Title
         Label title = new Label(blog.getTitle());
-        title.getStyleClass().add("saved-blog-title");
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #264653;");
 
-        // Category
         Label category = new Label(blog.getCategory());
-        category.getStyleClass().add("saved-blog-category");
+        category.setStyle("-fx-font-size: 11px; -fx-text-fill: #888;");
 
-        // Preview
-        Label preview = new Label(blog.getContent());
-        preview.getStyleClass().add("saved-blog-preview");
-        preview.setWrapText(true);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+        // Expandable content area (initially hidden)
+        VBox contentBox = new VBox(10);
+        contentBox.setPadding(new javafx.geometry.Insets(12));
+        contentBox.setStyle("-fx-background-color: #ffffff;");
+        contentBox.setVisible(false);
+        contentBox.setManaged(false);
+
+        // Full blog content
+        Label content = new Label(blog.getFullDescription() != null ? blog.getFullDescription() : blog.getContent());
+        content.setWrapText(true);
+        content.setStyle("-fx-font-size: 13px; -fx-text-fill: #333; -fx-line-spacing: 2px;");
 
         // Remove button
         Button removeBtn = new Button("✕ Remove");
-        removeBtn.getStyleClass().add("remove-blog-btn");
+        removeBtn.setStyle("-fx-font-size: 12px; -fx-padding: 6px 12px; -fx-background-color: #ffcccc; -fx-text-fill: #c0392b; -fx-cursor: hand;");
         removeBtn.setOnAction(e -> {
             savedBlogsManager.removeSavedBlog(soulId, blog.getId());
             savedBlogsList.getChildren().remove(outerBox);
@@ -622,8 +631,27 @@ public class ProfileController {
         actions.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
         actions.getChildren().add(removeBtn);
 
-        innerBox.getChildren().addAll(title, category, preview, actions);
-        outerBox.getChildren().add(innerBox);
+        contentBox.getChildren().addAll(content, actions);
+
+        // Expand/collapse button
+        Button expandBtn = new Button("▼");
+        expandBtn.setStyle("-fx-font-size: 12px; -fx-padding: 4px 8px; -fx-background-color: transparent; -fx-cursor: hand;");
+
+        expandBtn.setOnAction(e -> {
+            if (contentBox.isVisible()) {
+                contentBox.setVisible(false);
+                contentBox.setManaged(false);
+                expandBtn.setText("▶");
+            } else {
+                contentBox.setVisible(true);
+                contentBox.setManaged(true);
+                expandBtn.setText("▼");
+            }
+        });
+
+        header.getChildren().addAll(expandBtn, title, category, spacer);
+
+        outerBox.getChildren().addAll(header, contentBox);
 
         return outerBox;
     }
