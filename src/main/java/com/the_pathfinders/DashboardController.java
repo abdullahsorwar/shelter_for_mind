@@ -101,7 +101,7 @@ public class DashboardController {
         }
         if (blogBtn != null) blogBtn.setOnAction(e -> openBlogs());
         if (moodBtn != null) moodBtn.setOnAction(e -> openToDo());
-        if (insightsBtn != null) insightsBtn.setOnAction(e -> showInsightsPlaceholder());
+        if (insightsBtn != null) insightsBtn.setOnAction(e -> openSeekHelp());
        // if (insightsBtn != null) insightsBtn.setOnAction(e -> openToDo());
 
         if (SocialWorkBtn != null) SocialWorkBtn.setOnAction(e -> openSocialWork());
@@ -278,6 +278,28 @@ public class DashboardController {
             }
         } catch (Exception ex) {
             System.err.println("ERROR in openToDo:");
+            ex.printStackTrace();
+        }
+    }
+
+    private void openSeekHelp() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SeekHelp.fxml"));
+            Parent p = loader.load();
+
+            SeekHelpController controller = loader.getController();
+            if (controller != null) {
+                controller.setSoulId(this.soulId == null ? "" : this.soulId);
+            }
+
+            var scene = root != null ? root.getScene() : (insightsBtn != null ? insightsBtn.getScene() : null);
+            if (scene != null) {
+                scene.setRoot(p);
+            } else {
+                System.err.println("SeekHelp navigation failed: scene is null");
+            }
+        } catch (Exception ex) {
+            System.err.println("SeekHelp navigation error:");
             ex.printStackTrace();
         }
     }

@@ -1,0 +1,97 @@
+/* Seek Help screen - matches Sidequest pastel green theme and login form inputs */
+.seek-help-root {
+    -fx-background-color: linear-gradient(to bottom right, #e8fff6, #d1fff0); /* same as Sidequest button */
+    -fx-font-family: "Comic Sans MS", "Poppins", "Segoe UI", sans-serif;
+}
+
+.header-bar {
+    -fx-padding: 18 20 10 12;
+}
+
+.back-btn {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #4c5664;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(0,0,0,0.08);
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 2);
+}
+
+.back-btn:hover {
+    -fx-background-color: #f4f7f9;
+}
+
+.page-title {
+    -fx-text-fill: #1f2a3d;
+    -fx-font-size: 26px;
+    -fx-font-weight: 800;
+}
+
+.nav-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.86);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(0,0,0,0.05);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 14, 0, 0, 6);
+}
+
+.nav-title {
+    -fx-text-fill: #475569;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+}
+
+.nav-btn {
+    -fx-background-color: linear-gradient(to bottom right, #e8fff6, #d1fff0);
+    -fx-text-fill: #1f2937;
+    -fx-font-size: 15px;
+    -fx-font-weight: 800;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 12 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 4);
+}
+
+.nav-btn:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 16, 0.3, 0, 6);
+}
+
+.nav-btn.active {
+    -fx-border-color: #6bcfaf;
+    -fx-border-width: 2;
+    -fx-text-fill: #0f5132;
+}
+
+.content-card {
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-background-radius: 22;
+    -fx-border-radius: 22;
+    -fx-border-color: rgba(0,0,0,0.04);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.14), 22, 0, 0, 10);
+}
+
+.card-title {
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+}
+
+.muted-text {
+    -fx-text-fill: #475569;
+    -fx-font-size: 13px;
+}
+
+.form-body .field-label {
+    -fx-text-fill: #1f2937;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+}
+
+/* Keep inputs matching the login page sizing */
+.form-body .text-field {
+    -fx-max-width: 440;
+}
