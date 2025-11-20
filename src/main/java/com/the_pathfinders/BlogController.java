@@ -29,14 +29,12 @@ public class BlogController {
 
     private final ObservableList<Blog> allPosts = FXCollections.observableArrayList();
 
-        private final List<String> categories = Arrays.asList(
+    private final List<String> categories = Arrays.asList(
             "Depression", "Anxiety Disorders", "Bipolar Disorder", "Schizophrenia",
             "Obsessive-Compulsive Disorder", "Post-Traumatic Stress Disorder",
-            "Eating Disorder", "Personality Disorder", "Neurodevelopmental Disorder",
+            "Eating Disorder", "Generalized Anxiety Disorder", "Neurodevelopmental Disorder",
             "ADHD", "Panic Disorder", "Social Anxiety Disorder"
-        );
-
-    private final List<String> pastelColors = Arrays.asList(
+    );    private final List<String> pastelColors = Arrays.asList(
             "#FDE8E8","#EAF7F3","#F9F0EA","#F2E7FF","#F0F8FF",
             "#FFF4E6","#F7F6F8","#E8F6FF","#FFF1F6","#F8FFF4"
     );
@@ -278,14 +276,14 @@ public class BlogController {
             javafx.geometry.Pos pos = javafx.geometry.Pos.CENTER;
             javafx.scene.layout.StackPane.setAlignment(detail, pos);
 
-            // Size detail as large portrait rectangle (height > width) 
+            // Size detail as large portrait rectangle (height > width) with increased height
             if (detail instanceof javafx.scene.layout.Region && root != null) {
                 javafx.scene.layout.Region region = (javafx.scene.layout.Region) detail;
-                // Portrait: width 45%, height 75% of page (height > width)
+                // Portrait: width 45%, height 85% of page (larger for more readable content)
                 region.setPrefWidth(root.getWidth() * 0.45);
-                region.setPrefHeight(root.getHeight() * 0.75);
+                region.setPrefHeight(root.getHeight() * 0.85);
                 region.setMinWidth(300);
-                region.setMinHeight(450);
+                region.setMinHeight(550);
             }
 
             // Add popup to the top-level scene root (so it overlays like the journaling overlay)
@@ -296,29 +294,41 @@ public class BlogController {
                 popup.prefHeightProperty().bind(container.heightProperty());
                 container.getChildren().add(popup);
 
-                // Fade in animation (apply to detail view)
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), detail);
+                // Fade in and scale animation (smooth pop-up effect)
+                detail.setOpacity(0);
+                detail.setScaleX(0.85);
+                detail.setScaleY(0.85);
+
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(400), detail);
                 fadeIn.setFromValue(0);
                 fadeIn.setToValue(1);
 
-                ScaleTransition scaleIn = new ScaleTransition(Duration.millis(300), detail);
-                scaleIn.setFromX(0.95);
-                scaleIn.setFromY(0.95);
+                ScaleTransition scaleIn = new ScaleTransition(Duration.millis(400), detail);
+                scaleIn.setFromX(0.85);
+                scaleIn.setFromY(0.85);
                 scaleIn.setToX(1.0);
                 scaleIn.setToY(1.0);
 
-                fadeIn.play();
-                scaleIn.play();
+                javafx.animation.ParallelTransition openTransition = new javafx.animation.ParallelTransition(fadeIn, scaleIn);
+                openTransition.play();
             } else if (root != null) {
                 root.getChildren().add(popup);
             }
 
-            // Close handler
+            // Close handler with smooth animation
             controller.setOnClose(() -> {
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), detail);
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(400), detail);
                 fadeOut.setFromValue(1);
                 fadeOut.setToValue(0);
-                fadeOut.setOnFinished(e -> {
+
+                ScaleTransition scaleOut = new ScaleTransition(Duration.millis(400), detail);
+                scaleOut.setFromX(1.0);
+                scaleOut.setFromY(1.0);
+                scaleOut.setToX(0.85);
+                scaleOut.setToY(0.85);
+
+                javafx.animation.ParallelTransition closeTransition = new javafx.animation.ParallelTransition(fadeOut, scaleOut);
+                closeTransition.setOnFinished(e -> {
                     if (root != null && root.getScene() != null && root.getScene().getRoot() instanceof javafx.scene.layout.Pane) {
                         javafx.scene.layout.Pane container = (javafx.scene.layout.Pane) root.getScene().getRoot();
                         if (container.getChildren().contains(popup)) container.getChildren().remove(popup);
@@ -326,9 +336,8 @@ public class BlogController {
                         root.getChildren().remove(popup);
                     }
                 });
-                fadeOut.play();
+                closeTransition.play();
             });
-            // When save toggled inside detail popup, persist and refresh UI
             controller.setOnSave(() -> {
                 if (soulId == null || soulId.isBlank()) {
                     Alert a = new Alert(Alert.AlertType.INFORMATION, "Please open your profile or login to save blogs.", ButtonType.OK);

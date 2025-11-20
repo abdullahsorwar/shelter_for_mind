@@ -542,7 +542,7 @@ public class ProfileController {
                 java.util.List<String> categories = java.util.Arrays.asList(
                     "Depression", "Anxiety Disorders", "Bipolar Disorder", "Schizophrenia",
                     "Obsessive-Compulsive Disorder", "Post-Traumatic Stress Disorder",
-                    "Eating Disorder", "Personality Disorder", "Neurodevelopmental Disorder",
+                    "Eating Disorder", "Generalized Anxiety Disorder", "Neurodevelopmental Disorder",
                     "ADHD", "Panic Disorder", "Social Anxiety Disorder"
                 );
                 

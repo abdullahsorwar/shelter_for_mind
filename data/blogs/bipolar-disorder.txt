@@ -1,12 +1,111 @@
-Bipolar Disorder
+Overview
+Bipolar disorder is a chronic mood disorder characterized by recurrent episodes of mania or hypomania and depression. These shifts in mood are typically more intense, prolonged, and disruptive than ordinary fluctuations in emotional state. The condition affects energy levels, activity, sleep patterns, behavior, cognition, and the ability to function in daily life. Bipolar disorder often begins in late adolescence or early adulthood, though it can emerge at any age. It is considered a lifelong condition marked by cyclical changes, with periods of stability between episodes.
 
-Overview:
-Bipolar disorder is characterized by alternating mood episodes of mania/hypomania and depression. Mood swings can impact energy, activity levels, judgment, and sleep.
+Types of Bipolar Disorder
+Major diagnostic frameworks identify several forms of bipolar disorder:
 
-Common signs:
-- Elevated or irritable mood, increased activity during manic phases
-- Depressive episodes with low mood and reduced motivation
-- Changes in sleep, appetite, and decision-making
+Bipolar I Disorder: Defined by at least one manic episode, which may be preceded or followed by hypomanic or depressive episodes.
 
-Support & treatment:
-Mood stabilizers, psychotherapy, psychoeducation, and lifestyle routines help many people manage symptoms. Regular follow-up with a clinician is important.
+Bipolar II Disorder: Characterized by at least one hypomanic episode and one major depressive episode, without any full manic episodes.
+
+Cyclothymic Disorder: Involves chronic, fluctuating periods of hypomanic and depressive symptoms that do not meet full criteria for hypomania or major depression, persisting for at least two years (one year in children/adolescents).
+
+Other Specified Bipolar and Related Disorders: Includes presentations that do not precisely fit the above categories but involve clinically significant mood instability.
+
+Signs and Symptoms
+Bipolar disorder presents through distinct mood episodes, each with characteristic symptoms.
+
+Manic Episodes:
+
+Elevated, expansive, or irritable mood
+
+Increased energy or goal-directed activity
+
+Decreased need for sleep
+
+Inflated self-esteem or grandiosity
+
+Rapid or pressured speech
+
+Racing thoughts or distractibility
+
+Impulsive or risky behaviors (e.g., overspending, risky sexual behavior)
+
+Hypomanic Episodes:
+Similar to mania but less severe, without marked functional impairment or psychotic features.
+
+Depressive Episodes:
+
+Persistent low mood or sadness
+
+Loss of interest or pleasure (anhedonia)
+
+Fatigue or reduced motivation
+
+Sleep disturbances (insomnia or hypersomnia)
+
+Appetite or weight changes
+
+Feelings of worthlessness or guilt
+
+Difficulty concentrating or indecision
+
+Recurrent thoughts of death or suicidal ideation
+
+Changes in sleep patterns, appetite, judgment, and overall behavior frequently accompany these episodes.
+
+Causes and Risk Factors
+Bipolar disorder involves a complex interplay of biological, genetic, and environmental factors:
+
+Genetic predisposition: Family history significantly increases risk; heritability is high.
+
+Neurobiological factors: Differences have been observed in brain regions related to emotion regulation, reward, and executive function.
+
+Chemical factors: Neurotransmitter systems, including dopamine, serotonin, and glutamate, may be involved.
+
+Environmental triggers: Stressful life events, sleep disruption, substance use, and trauma may precipitate episodes in vulnerable individuals.
+
+Diagnosis
+Diagnosis is made through clinical evaluation by a qualified mental health professional. It involves assessment of mood episode patterns, symptom duration, functional impact, and medical history. Tools such as structured interviews or mood charts may support diagnosis. Because symptoms can overlap with other conditions (e.g., unipolar depression, ADHD, borderline personality disorder), careful differential diagnosis is essential.
+
+Management and Treatment
+Treatment aims to reduce the frequency and intensity of mood episodes, stabilize daily functioning, and improve long-term outcomes. Approaches often include:
+
+Medication:
+
+Mood stabilizers (e.g., lithium, valproate)
+
+Atypical antipsychotics
+
+Antidepressants may be used cautiously and typically alongside a mood stabilizer to avoid triggering mania
+
+Psychotherapy:
+
+Cognitive Behavioral Therapy (CBT)
+
+Interpersonal and Social Rhythm Therapy (IPSRT), which emphasizes routine and sleep regulation
+
+Family-focused therapy
+
+Psychoeducation:
+Increases understanding of triggers, early warning signs, and strategies for maintaining stability.
+
+Lifestyle and self-management:
+
+Consistent sleep schedules
+
+Structured routines
+
+Stress reduction techniques
+
+Avoidance of substance use
+
+Regular physical activity
+
+Ongoing follow-up with a clinician is essential, as long-term management typically involves continuous monitoring and periodic adjustments to treatment.
+
+Prognosis
+Bipolar disorder is a lifelong condition, but many individuals achieve substantial symptom control and maintain fulfilling lives with appropriate treatment and support. Early intervention, adherence to treatment, and strong social support networks improve long-term outcomes. Without treatment, episodes may become more frequent or severe over time.
+
+Social and Cultural Considerations
+Public understanding of bipolar disorder has increased, yet misconceptions and stigma persist. Cultural beliefs influence how mood symptoms are interpreted, expressed, and treated. Advocacy, improved access to care, and education continue to support better recognition and management of the condition.

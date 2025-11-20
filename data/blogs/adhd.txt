@@ -1,11 +1,81 @@
-ADHD (Attention‑Deficit/Hyperactivity Disorder)
+Overview
+Attention-Deficit/Hyperactivity Disorder (ADHD) is a neurodevelopmental condition characterized by persistent patterns of inattention, hyperactivity, and impulsivity that interfere with daily functioning, academic or occupational performance, and overall development. Symptoms typically begin in childhood and may continue into adolescence and adulthood, although the presentation can change over time. ADHD is recognized as a heterogeneous condition, meaning its symptoms and impacts vary widely across individuals.
 
-Overview:
-ADHD is a neurodevelopmental condition marked by patterns of inattention, hyperactivity, and impulsivity that interfere with functioning or development.
+Signs and Symptoms
+ADHD symptoms are generally categorized into two major domains—inattention and hyperactivity/impulsivity. Individuals may exhibit symptoms predominantly from one category or a combination of both.
 
-Common signs:
-- Difficulty sustaining attention, disorganization
-- Excessive activity or fidgeting, impulsive actions
+Inattention:
 
-Support & treatment:
-Behavioral strategies, organizational supports, psychoeducation, and medication when appropriate can reduce symptoms and improve daily functioning.
+Difficulty sustaining attention on tasks or play activities
+
+Frequent careless mistakes or difficulty maintaining focus
+
+Appearing not to listen even when spoken to directly
+
+Disorganization and problems managing materials or deadlines
+
+Avoidance of tasks requiring sustained mental effort
+
+Losing items necessary for tasks (e.g., books, tools, devices)
+
+Forgetfulness and distractibility
+
+Hyperactivity and Impulsivity:
+
+Excessive fidgeting, restlessness, or difficulty remaining seated
+
+Excessive talking or inability to engage quietly in leisure activities
+
+Running or climbing in inappropriate situations (more common in children)
+
+Acting without thinking, interrupting others, or difficulty waiting turn
+
+Impulsive decision-making that may lead to safety risks
+
+The intensity of symptoms must significantly exceed what is developmentally typical and persist across multiple settings—for example, at school, work, home, or in social situations.
+
+Classification
+According to widely used diagnostic frameworks (such as the DSM-5), ADHD is classified into three presentations:
+
+Predominantly Inattentive Presentation
+
+Predominantly Hyperactive/Impulsive Presentation
+
+Combined Presentation
+
+Presentations may change throughout life depending on age, environment, and coping strategies.
+
+Causes and Risk Factors
+ADHD has a multifactorial origin, involving interactions between genetic, neurobiological, and environmental factors.
+
+Genetic influences: ADHD tends to run in families, and heritability estimates are high.
+
+Brain structure and function: Differences in networks related to executive function, reward processing, and impulse control have been observed in research studies.
+
+Prenatal and perinatal factors: Premature birth, prenatal exposure to alcohol or tobacco, and low birth weight may increase risk.
+
+Environmental contributors: Early adversity, chronic stress, or exposure to environmental toxins may play a role, though these factors are generally considered secondary to biological influences.
+
+Diagnosis
+Diagnosis is typically made by a qualified healthcare professional using clinical interviews, developmental history, observations, and standardized behavior rating scales. Symptoms must be present before age 12, persist for at least six months, and cause impairment in multiple settings. Conditions such as anxiety, depression, learning disorders, and sleep disorders can co-occur and are often evaluated during assessment.
+
+Management and Treatment
+Treatment for ADHD is usually individualized and may involve a combination of interventions:
+
+Behavioral and educational strategies:
+Structured routines, classroom accommodations, behavior therapy, and skills training (e.g., time management, organizational strategies) can help reduce functional impairments.
+
+Psychoeducation:
+Teaching individuals and families about ADHD, its symptoms, and coping strategies promotes understanding and supports long-term management.
+
+Medication:
+Stimulants (such as methylphenidate- or amphetamine-based treatments) and certain non-stimulant medications may be prescribed to improve attention, reduce hyperactivity/impulsivity, and enhance overall functioning when appropriate.
+
+Environmental modifications:
+Adjustments at home, school, or work—such as minimizing distractions, using planners, and breaking tasks into smaller steps—can significantly improve performance.
+
+Prognosis
+ADHD is a long-term condition, but many individuals develop effective coping skills and strategies over time. Symptoms may lessen with age, though difficulties with attention, executive functioning, or impulsivity can persist into adulthood. Early identification, supportive environments, and consistent treatment are associated with improved outcomes.
+
+Social and Cultural Considerations
+Awareness and recognition of ADHD vary across cultures and educational systems. Public understanding has grown, but misconceptions persist, including the belief that ADHD results from poor parenting or lack of discipline. Advocacy, research, and improved diagnostic practices continue to shape how ADHD is perceived and managed worldwide.

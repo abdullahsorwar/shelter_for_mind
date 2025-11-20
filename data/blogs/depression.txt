@@ -1,13 +1,72 @@
-Depression
+Overview
+Depression, formally known as major depressive disorder (MDD), is a common and serious mood disorder characterized by a persistent feeling of sadness, emptiness, or irritability, accompanied by a range of cognitive and physical symptoms. It affects how a person thinks, feels, and behaves, and can significantly impair daily functioning, relationships, and overall quality of life. Depression varies in severity, duration, and presentation, and may occur as a single episode or as a recurrent condition over a lifetime.
 
-Overview:
-Depression is a common mood disorder characterized by persistent sadness, loss of interest in activities, and reduced energy. It can affect thinking, sleep, appetite, and daily functioning.
+Signs and Symptoms
+Symptoms of depression can differ from person to person, but they typically include a combination of emotional, cognitive, and physical changes. Common symptoms include:
 
-Common symptoms:
-- Low mood, tearfulness, hopelessness
-- Loss of interest or pleasure in activities
-- Changes in appetite and sleep
-- Difficulty concentrating and low energy
+Low mood or sadness: Persistent feelings of sadness, tearfulness, hopelessness, or emotional numbness.
 
-Support & treatment:
-Treatment can include therapy (CBT, interpersonal), medication, lifestyle changes, and social support. If you are in crisis, seek immediate help.
+Anhedonia: Loss of interest or pleasure in activities that were previously enjoyable.
+
+Changes in sleep patterns: Insomnia, restless sleep, difficulty falling or staying asleep, or hypersomnia.
+
+Appetite and weight changes: Increased or decreased appetite leading to weight gain or loss.
+
+Fatigue and low energy: Persistent tiredness, reduced motivation, and decreased physical or mental stamina.
+
+Cognitive difficulties: Trouble concentrating, making decisions, or remembering information.
+
+Psychomotor changes: Noticeable agitation (restlessness) or slowing of movement and speech.
+
+Feelings of guilt or worthlessness: Excessive self-criticism or inappropriate guilt.
+
+Thoughts of death or suicide: Recurrent thoughts of self-harm or suicidal ideation.
+
+A diagnosis typically requires symptoms to be present for at least two weeks and to represent a change from previous functioning.
+
+Causes and Risk Factors
+Depression arises from a complex interaction of biological, psychological, and social factors. Common contributors include:
+
+Genetics: Family history of depression increases vulnerability.
+
+Brain chemistry: Imbalances in neurotransmitters (e.g., serotonin, norepinephrine, dopamine) may play a role.
+
+Hormonal changes: Thyroid disorders, postpartum changes, and other hormonal shifts can trigger symptoms.
+
+Trauma and stress: Adverse childhood experiences, chronic stress, and major life events can increase risk.
+
+Medical conditions: Chronic illnesses, pain disorders, and certain medications may contribute.
+
+Personality and coping styles: Low self-esteem, high neuroticism, or poor stress-management skills.
+
+Diagnosis
+Depression is typically diagnosed by a mental health professional using clinical interviews, symptom checklists (such as the DSM-5 criteria), and standardized assessment tools. Medical evaluations may be performed to rule out physical conditions that mimic depressive symptoms.
+
+Treatment and Management
+Effective treatment often involves a combination of therapeutic approaches tailored to the individual. Common treatments include:
+
+Psychotherapy:
+
+Cognitive behavioral therapy (CBT): Focuses on identifying and changing negative thought patterns.
+
+Interpersonal therapy (IPT): Addresses relationship issues and social functioning.
+
+Psychodynamic therapy: Explores unconscious emotional conflicts and past experiences.
+
+Medication:
+Antidepressants such as SSRIs, SNRIs, or atypical antidepressants may be prescribed, depending on symptom profile and individual response.
+
+Lifestyle interventions:
+Regular physical activity, adequate sleep, balanced nutrition, mindfulness practices, and structured routines can support recovery.
+
+Social support:
+Connection with family, friends, and support groups can improve resilience and reduce isolation.
+
+Other treatments:
+For treatment-resistant cases, options may include electroconvulsive therapy (ECT), transcranial magnetic stimulation (TMS), or ketamine-based therapies, under professional supervision.
+
+Prognosis
+Depression is highly treatable, though the course of illness varies. Many individuals recover fully with proper treatment, while others experience recurrent episodes. Early intervention, adherence to treatment, and supportive environments improve long-term outcomes.
+
+Safety and Crisis Support
+Individuals experiencing suicidal thoughts or severe distress should seek immediate help from emergency services, crisis hotlines, or nearby medical facilities. Early and open communication with healthcare providers is critical for ensuring safety and receiving appropriate care.
