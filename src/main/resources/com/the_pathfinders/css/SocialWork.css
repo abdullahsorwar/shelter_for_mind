@@ -53,3 +53,132 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3),10,0,2,2);
 }
 .hand-drawn-btn:pressed { -fx-scale-x: .98; -fx-scale-y: .98; }
+
+/* ========================================
+   BLOOD DONATION POPUP OVERLAY
+   ======================================== */
+
+.overlay-root {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+}
+
+.blood-overlay-box {
+    -fx-background-color: linear-gradient(to bottom right, #ffffff, #fef9f5);
+    -fx-background-radius: 28;
+    -fx-border-color: #ffb3ba;
+    -fx-border-width: 3;
+    -fx-border-radius: 28;
+    -fx-padding: 40 50 40 50;
+    -fx-max-width: 540;
+    -fx-min-width: 480;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 20, 0, 4, 4);
+}
+
+.blood-overlay-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-font-family: "Comic Sans MS", "Chalkboard", "Arial", sans-serif;
+}
+
+.blood-overlay-text {
+    -fx-font-size: 15px;
+    -fx-text-fill: #555555;
+    -fx-text-alignment: center;
+    -fx-font-family: "Comic Sans MS", "Arial", sans-serif;
+}
+
+/* Blood Option Buttons (similar to journaling popup style) */
+.blood-option-btn {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-min-width: 320;
+    -fx-pref-width: 320;
+    -fx-max-width: 320;
+    -fx-padding: 16 32 16 32;
+    -fx-background-color: linear-gradient(to right, #ffb3ba, #ffcccc);
+    -fx-border-radius: 22;
+    -fx-background-radius: 22;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 2, 3);
+}
+
+.blood-option-btn:hover {
+    -fx-background-color: linear-gradient(to right, #ff9aa1, #ffb3ba);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 12, 0, 3, 4);
+}
+
+.blood-option-btn:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Close Button */
+.blood-overlay-close {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #666666;
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 24 8 24;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 1, 1);
+}
+
+.blood-overlay-close:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+}
+
+/* ========================================
+   BROWSER OVERLAY
+   ======================================== */
+
+.browser-overlay-root {
+    -fx-background-color: rgba(0, 0, 0, 0.95);
+}
+
+.browser-container {
+    -fx-background-color: #ffffff;
+    -fx-spacing: 0;
+}
+
+.browser-header {
+    -fx-background-color: linear-gradient(to right, #fef9f5, #ffe6e9);
+    -fx-padding: 12 20 12 20;
+    -fx-border-color: #ffcccc;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}
+
+.browser-back-btn {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #555555;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 1, 1);
+}
+
+.browser-back-btn:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+}
+
+.browser-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-font-family: "Comic Sans MS", "Arial", sans-serif;
+}

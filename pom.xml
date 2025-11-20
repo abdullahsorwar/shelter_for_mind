@@ -35,6 +35,12 @@
       <artifactId>javafx-media</artifactId>
       <version>${javafx.version}</version>
     </dependency>
+    <!-- JavaFX WebKit (for WebView browser) -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-web</artifactId>
+      <version>${javafx.version}</version>
+    </dependency>
 
     <!-- PostgreSQL JDBC -->
     <dependency>
@@ -105,7 +111,7 @@
           <noManPages>true</noManPages>
           <options>
             <option>--add-modules</option>
-            <option>javafx.controls,javafx.fxml,javafx.media</option>
+            <option>javafx.controls,javafx.fxml,javafx.media,javafx.web</option>
           </options>
         </configuration>
       </plugin>

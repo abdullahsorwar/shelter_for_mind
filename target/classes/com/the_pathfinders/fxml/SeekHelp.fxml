@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="root"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.the_pathfinders.SeekHelpController"
+            prefWidth="900" prefHeight="600"
+            styleClass="seek-help-root">
+
+    <!-- Header with back button -->
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="12"
+              styleClass="header-bar"
+              BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="backBtn" text="Back" styleClass="back-btn"/>
+                <Label text="Seek Help" styleClass="page-title"/>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- Left navigation -->
+    <left>
+        <VBox styleClass="nav-panel"
+              prefWidth="200"
+              spacing="14"
+              alignment="CENTER">
+            <padding>
+                <Insets top="24" right="18" bottom="24" left="18"/>
+            </padding>
+            <children>
+                <Label text="Options" styleClass="nav-title"/>
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="consultancyBtn"
+                        text="Consultancy"
+                        maxWidth="Infinity"
+                        styleClass="nav-btn"/>
+                <Button fx:id="requestBloodBtn"
+                        text="Request Blood"
+                        maxWidth="Infinity"
+                        styleClass="nav-btn"/>
+                <Region VBox.vgrow="ALWAYS"/>
+            </children>
+        </VBox>
+    </left>
+
+    <!-- Main content -->
+    <center>
+        <StackPane fx:id="contentStack" alignment="TOP_CENTER">
+            <padding>
+                <Insets top="10" right="24" bottom="20" left="24"/>
+            </padding>
+            <children>
+                <!-- Consultancy placeholder -->
+                <VBox fx:id="consultancyPane"
+                      styleClass="content-card"
+                      spacing="10"
+                      maxWidth="520"
+                      alignment="TOP_LEFT">
+                    <padding>
+                        <Insets top="18" right="18" bottom="18" left="18"/>
+                    </padding>
+                    <children>
+                        <Label text="Consultancy" styleClass="card-title"/>
+                        <Label text="Content coming soon." styleClass="muted-text"/>
+                    </children>
+                </VBox>
+
+                <!-- Request blood form -->
+                <VBox fx:id="requestBloodPane"
+                      styleClass="content-card"
+                      spacing="12"
+                      maxWidth="520"
+                      alignment="TOP_LEFT"
+                      visible="false"
+                      managed="false">
+                    <padding>
+                        <Insets top="18" right="18" bottom="18" left="18"/>
+                    </padding>
+                    <children>
+                        <Label text="Request Blood" styleClass="card-title"/>
+                        <Label text="Share quick details and we'll help connect you." styleClass="muted-text"/>
+
+                        <VBox spacing="10" styleClass="form-body">
+                        <Label text="Required Blood Type" styleClass="field-label"/>
+                        <ComboBox fx:id="requiredBloodCombo"
+                                  promptText="Select blood type"
+                                  maxWidth="Infinity"/>
+
+                            <Label text="Location of that Blood Type" styleClass="field-label"/>
+                            <TextField fx:id="locationField"
+                                       promptText="City / Hospital"
+                                       maxWidth="Infinity"/>
+
+                            <Label text="Phone Number" styleClass="field-label"/>
+                            <TextField fx:id="phoneField"
+                                       promptText="e.g., +8801..."
+                                       maxWidth="Infinity"/>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>

@@ -5,59 +5,99 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.web.WebView?>
 
-<VBox fx:id="root"
-      xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.the_pathfinders.SocialWorkController"
-      styleClass="social-work-root"
-      stylesheets="@../css/SocialWork.css"
-      alignment="CENTER"
-      spacing="30">
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.SocialWorkController"
+           stylesheets="@../css/SocialWork.css">
 
-    <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
-    </padding>
+    <!-- Main Content Wrapper (blurred when popup shows) -->
+    <VBox fx:id="contentWrapper"
+          styleClass="social-work-root"
+          alignment="CENTER"
+          spacing="30">
 
-    <!-- Header -->
-    <HBox alignment="CENTER_LEFT" spacing="15">
-        <Button fx:id="backBtn" text="Back" styleClass="back-btn"/>
-        <Label text="Social Work" styleClass="page-title"/>
-    </HBox>
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
 
-    <!-- Title -->
-    <Label text="Choose Your Impact" styleClass="subtitle"/>
-
-    <!-- Hand-drawn style container -->
-    <VBox styleClass="hand-drawn-box" alignment="CENTER" spacing="30">
-
-        <!-- Blood Donation (top-left) -->
-        <HBox alignment="CENTER_LEFT">
-            <Button fx:id="bloodDonationBtn"
-                    text="Blood Donation"
-                    styleClass="hand-drawn-btn"/>
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Button fx:id="backBtn" text="Back" styleClass="back-btn"/>
+            <Label text="Social Work" styleClass="page-title"/>
         </HBox>
 
-        <!-- Tree Plantation (top-right) -->
-        <HBox alignment="CENTER_RIGHT">
-            <Button fx:id="treePlantationBtn"
-                    text="Tree Plantation"
-                    styleClass="hand-drawn-btn"/>
-        </HBox>
+        <!-- Title -->
+        <Label text="Choose Your Impact" styleClass="subtitle"/>
 
-        <!-- Seminar (bottom-left) -->
-        <HBox alignment="CENTER_LEFT">
-            <Button fx:id="seminarBtn"
-                    text="Seminar"
-                    styleClass="hand-drawn-btn"/>
-        </HBox>
+        <!-- Hand-drawn style container -->
+        <VBox styleClass="hand-drawn-box" alignment="CENTER" spacing="30">
 
-        <!-- Donation (bottom-right) -->
-        <HBox alignment="CENTER_RIGHT">
-            <Button fx:id="donationBtn"
-                    text="Donation"
-                    styleClass="hand-drawn-btn"/>
-        </HBox>
+            <!-- Blood Donation (top-left) -->
+            <HBox alignment="CENTER_LEFT">
+                <Button fx:id="bloodDonationBtn"
+                        text="Blood Donation"
+                        styleClass="hand-drawn-btn"/>
+            </HBox>
 
+            <!-- Tree Plantation (top-right) -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button fx:id="treePlantationBtn"
+                        text="Tree Plantation"
+                        styleClass="hand-drawn-btn"/>
+            </HBox>
+
+            <!-- Seminar (bottom-left) -->
+            <HBox alignment="CENTER_LEFT">
+                <Button fx:id="seminarBtn"
+                        text="Seminar"
+                        styleClass="hand-drawn-btn"/>
+            </HBox>
+
+            <!-- Donation (bottom-right) -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button fx:id="donationBtn"
+                        text="Donation"
+                        styleClass="hand-drawn-btn"/>
+            </HBox>
+
+        </VBox>
     </VBox>
-</VBox>
+
+    <!-- Blood Donation Popup Overlay -->
+    <StackPane fx:id="bloodDonationOverlay" visible="false" managed="false" styleClass="overlay-root">
+        <VBox fx:id="overlayContentBox" spacing="24" alignment="CENTER" styleClass="blood-overlay-box">
+            <ImageView fx:id="questionIcon" fitWidth="56" fitHeight="56" preserveRatio="true" />
+            <Label text="Choose Blood Donation Platform" styleClass="blood-overlay-title" />
+            <Label text="Select a platform to donate blood and help save lives." wrapText="true" styleClass="blood-overlay-text" />
+            
+            <!-- Three Buttons -->
+            <VBox spacing="16" alignment="CENTER">
+                <Button fx:id="redCrescentBtn" text="Red Crescent" styleClass="blood-option-btn" />
+                <Button fx:id="roktoBtn" text="Rokto" styleClass="blood-option-btn" />
+                <Button fx:id="donateBloodBDBtn" text="DonateBloodBD" styleClass="blood-option-btn" />
+            </VBox>
+            
+            <!-- Close Button -->
+            <Button fx:id="closeOverlayBtn" text="Close" styleClass="blood-overlay-close" />
+        </VBox>
+    </StackPane>
+
+    <!-- Web Browser Overlay -->
+    <StackPane fx:id="browserOverlay" visible="false" managed="false" styleClass="browser-overlay-root">
+        <VBox spacing="0" alignment="TOP_CENTER" styleClass="browser-container">
+            <!-- Browser Header with Back Button -->
+            <HBox spacing="12" alignment="CENTER_LEFT" styleClass="browser-header">
+                <Button fx:id="browserBackBtn" text="⟵ Back" styleClass="browser-back-btn" />
+                <Label fx:id="browserTitleLabel" text="" styleClass="browser-title" />
+            </HBox>
+            <!-- WebView for browsing -->
+            <WebView fx:id="webView" />
+        </VBox>
+    </StackPane>
+
+</StackPane>
