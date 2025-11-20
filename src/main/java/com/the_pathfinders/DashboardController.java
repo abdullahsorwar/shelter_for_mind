@@ -512,24 +512,6 @@ public class DashboardController {
         } catch (Exception ex) { ex.printStackTrace(); }
     }
 
-    private void showMoodPlaceholder() {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "Mood Tracker feature coming soon.", ButtonType.OK);
-        a.setHeaderText("Coming Soon");
-        a.showAndWait();
-    }
-
-    private void showInsightsPlaceholder() {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "Insights feature coming soon.", ButtonType.OK);
-        a.setHeaderText("Coming Soon");
-        a.showAndWait();
-    }
-
-    private void showSettingsPlaceholder() {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "Settings feature coming soon.", ButtonType.OK);
-        a.setHeaderText("Coming Soon");
-        a.showAndWait();
-    }
-
     private void handleMusicToggle() {
         boolean enableMusic = musicToggle != null && musicToggle.isSelected();
         MusicManager.setBackgroundMusicEnabled(enableMusic);

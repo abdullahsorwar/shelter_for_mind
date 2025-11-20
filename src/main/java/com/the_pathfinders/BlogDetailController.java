@@ -1,7 +1,6 @@
 package com.the_pathfinders;
 
 import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
