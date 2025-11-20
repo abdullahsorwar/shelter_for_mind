@@ -147,6 +147,10 @@
 .browser-container {
     -fx-background-color: #ffffff;
     -fx-spacing: 0;
+    -fx-pref-width: Infinity;
+    -fx-pref-height: Infinity;
+    -fx-max-width: Infinity;
+    -fx-max-height: Infinity;
 }
 
 .browser-header {
