@@ -51,6 +51,7 @@ public class DashboardController {
     @FXML private Button insightsBtn;
     @FXML private Button SocialWorkBtn;
     @FXML private Button logoutBtn;
+    @FXML private Button tranquilCornerBtn;
     @FXML private VBox buttonCardsBox;
 
     // Journaling popup overlay elements
@@ -62,6 +63,15 @@ public class DashboardController {
     @FXML private VBox journalingButtonsBox;
     @FXML private Button createJournalBtn;
     @FXML private Button viewJournalsBtn;
+    @FXML private StackPane tranquilOverlay;
+    @FXML private VBox tranquilContentBox;
+    @FXML private Button meditationBtn;
+    @FXML private Button breathingBtn;
+    @FXML private Button minigamesBtn;
+    @FXML private Button pomodoroBtn;
+    @FXML private Button tranquilBackBtn;
+
+
 
     private String soulId;
     private double dragStartX = 0;
@@ -109,6 +119,30 @@ public class DashboardController {
         }
         if (blogBtn != null) blogBtn.setOnAction(e -> openBlogs());
         if (moodBtn != null) moodBtn.setOnAction(e -> openToDo());
+        // ─── Tranquil Corner Popup Setup ───────────────────
+if (tranquilCornerBtn != null) {
+    tranquilCornerBtn.setOnAction(e -> showTranquilPopup());
+}
+
+if (tranquilBackBtn != null) {
+    tranquilBackBtn.setOnAction(e -> hideTranquilPopup());
+}
+
+if (meditationBtn != null) {
+    meditationBtn.setOnAction(e -> loadPage("/com/the_pathfinders/fxml/Meditation.fxml"));
+}
+if (breathingBtn != null) {
+    breathingBtn.setOnAction(e -> loadPage("/com/the_pathfinders/fxml/TranquilCorner.fxml"));
+}
+if (minigamesBtn != null) {
+    minigamesBtn.setOnAction(e -> loadPage("/com/the_pathfinders/fxml/MiniGame.fxml"));
+}
+if (pomodoroBtn != null) {
+    pomodoroBtn.setOnAction(e -> loadPage("/com/the_pathfinders/fxml/MiniPomodoro.fxml"));
+}
+
+
+
         if (insightsBtn != null) insightsBtn.setOnAction(e -> openSeekHelp());
        // if (insightsBtn != null) insightsBtn.setOnAction(e -> openToDo());
 
@@ -260,6 +294,45 @@ public class DashboardController {
             ex.printStackTrace();
         }
     }
+    private void showTranquilPopup() {
+    if (tranquilOverlay == null) return;
+
+    tranquilOverlay.setVisible(true);
+    tranquilOverlay.setManaged(true);
+    tranquilOverlay.setOpacity(0);
+
+    FadeTransition fadeIn = new FadeTransition(Duration.millis(300), tranquilOverlay);
+    fadeIn.setFromValue(0);
+    fadeIn.setToValue(1);
+    fadeIn.play();
+}
+
+private void hideTranquilPopup() {
+    if (tranquilOverlay == null) return;
+
+    FadeTransition fadeOut = new FadeTransition(Duration.millis(300), tranquilOverlay);
+    fadeOut.setFromValue(1);
+    fadeOut.setToValue(0);
+    fadeOut.setOnFinished(e -> {
+        tranquilOverlay.setVisible(false);
+        tranquilOverlay.setManaged(false);
+    });
+    fadeOut.play();
+}
+private void loadPage(String path) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+        Parent p = loader.load();
+        root.getScene().setRoot(p);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+} 
+
+
+
+
+
     private void openToDo() {
         try {
             System.out.println("=== Opening ToDo page ===");

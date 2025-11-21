@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.the_pathfinders.TranquilCornerController"
+            prefWidth="900" prefHeight="600"
+            stylesheets="@../css/tranquilCorner.css">
+
+    <children>
+
+        <!-- Back Button -->
+        <Button fx:id="backBtn"
+                text="←"
+                style="-fx-background-color: transparent; -fx-font-size: 26; -fx-cursor: hand;"
+                AnchorPane.topAnchor="20"
+                AnchorPane.leftAnchor="20"/>
+
+        <AnchorPane fx:id="backgroundPane" styleClass="bg-pane"
+                    AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"/>
+
+        <!-- Breathing Circle -->
+        <StackPane alignment="CENTER"
+                   AnchorPane.topAnchor="80"
+                   AnchorPane.leftAnchor="0"
+                   AnchorPane.rightAnchor="0">
+            <Circle fx:id="breathingCircle"
+                    radius="70"
+                    styleClass="breathing-circle"/>
+        </StackPane>
+
+        <!-- Breathing Label -->
+        <Label fx:id="breathLabel"
+               text="Inhale…"
+               styleClass="breath-label"
+               AnchorPane.topAnchor="300"
+               AnchorPane.leftAnchor="0"
+               AnchorPane.rightAnchor="0"
+               alignment="CENTER"/>
+
+        <!-- Meditation Text -->
+        <Label fx:id="meditationText"
+               text="Let your body relax..."
+               wrapText="true"
+               styleClass="meditation-text"
+               AnchorPane.topAnchor="350"
+               AnchorPane.leftAnchor="200"
+               AnchorPane.rightAnchor="200"
+               alignment="CENTER"/>
+
+        <!-- Sound Toggles -->
+        <HBox spacing="20" alignment="CENTER"
+              AnchorPane.bottomAnchor="120"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0">
+            <children>
+                <ToggleButton fx:id="rainToggle" text="Rain" styleClass="sound-btn"/>
+                <ToggleButton fx:id="oceanToggle" text="Ocean" styleClass="sound-btn"/>
+                <ToggleButton fx:id="stormToggle" text="Storm" styleClass="sound-btn"/>
+                <ToggleButton fx:id="waterfallToggle" text="Waterfall" styleClass="sound-btn"/>
+            </children>
+        </HBox>
+
+        <!-- Controls -->
+        <HBox spacing="20" alignment="CENTER"
+              AnchorPane.bottomAnchor="40"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0">
+            <children>
+                <Button fx:id="startBtn" text="Start Session" styleClass="action-btn"/>
+                <Button fx:id="pauseBtn" text="Pause" styleClass="action-btn"/>
+                <Button fx:id="endBtn" text="End" styleClass="action-btn"/>
+            </children>
+        </HBox>
+
+    </children>
+</AnchorPane>

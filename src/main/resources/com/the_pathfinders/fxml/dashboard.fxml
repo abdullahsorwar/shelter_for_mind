@@ -8,11 +8,18 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import java.net.URL?>
+<?import javafx.scene.image.Image?>
+
+
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="root" prefHeight="600" prefWidth="900"
-    stylesheets="/com/the_pathfinders/css/dashboard.css" xmlns="http://javafx.com/javafx/25"
+    stylesheets="/com/the_pathfinders/css/dashboard.css, /com/the_pathfinders/css/tranquil_popup.css" xmlns="http://javafx.com/javafx/25"
     xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.DashboardController">
     <children>
         <!-- Background animated rectangle (fills window) -->
@@ -79,7 +86,7 @@
                     <children>
                         <Button fx:id="SocialWorkBtn" text="HOPE SEED" styleClass="card-btn"
                             prefWidth="250" prefHeight="160" wrapText="true" />
-                        <Button fx:id="logoutBtn" text="TRANQUIL CORNER" styleClass="card-btn"
+                        <Button fx:id="tranquilCornerBtn" text="TRANQUIL CORNER" styleClass="card-btn"
                             prefWidth="250" prefHeight="160" wrapText="true" />
                     </children>
                 </HBox>
@@ -116,5 +123,80 @@
                 </VBox>
             </children>
         </StackPane>
+<!-- TRANQUIL CORNER POPUP (same as journaling, smaller height) -->
+<StackPane fx:id="tranquilOverlay"
+           visible="false" managed="false"
+           AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+           AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
+           styleClass="journaling-overlay-root">
+
+    <children>
+        <VBox fx:id="tranquilContentBox"
+              spacing="22"
+              alignment="CENTER"
+              styleClass="journaling-popup-box"
+              prefWidth="420" prefHeight="480">  
+              <!-- shortened from original 650px -->
+
+            <!-- ICON -->
+            <ImageView fx:id="tranquilIcon" fitWidth="54" fitHeight="54" preserveRatio="true">
+                <image>
+                    <Image url="@/assets/icons/ques.png"/>
+                </image>
+            </ImageView>
+
+            <!-- TITLE & SUBTITLE -->
+            <Label text="Tranquil Corner" styleClass="journaling-title"/>
+            <Label text="Choose Option" styleClass="journaling-subtitle"/>
+
+            <!-- 2×2 GRID -->
+            <GridPane alignment="CENTER" hgap="12" vgap="12">
+
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="170"/>
+                    <ColumnConstraints prefWidth="170"/>
+                </columnConstraints>
+
+                <rowConstraints>
+                    <RowConstraints prefHeight="90"/>
+                    <RowConstraints prefHeight="90"/>
+                </rowConstraints>
+
+                <children>
+                    <Button fx:id="meditationBtn"
+                            text="Meditation"
+                            styleClass="journaling-btn"
+                            prefWidth="170" prefHeight="90"
+                            GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+
+                    <Button fx:id="breathingBtn"
+                            text="Breathing Companion"
+                            styleClass="journaling-btn"
+                            prefWidth="170" prefHeight="90"
+                            GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <Button fx:id="minigamesBtn"
+                            text="Calm activity"
+                            styleClass="journaling-btn"
+                            prefWidth="170" prefHeight="90"
+                            GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                    <Button fx:id="pomodoroBtn"
+                            text="Pomodoro"
+                            styleClass="journaling-btn"
+                            prefWidth="170" prefHeight="90"
+                            GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                </children>
+            </GridPane>
+
+            <!-- BACK BUTTON -->
+            <Button fx:id="tranquilBackBtn"
+                    text="Back"
+                    styleClass="journaling-btn"
+                    prefWidth="200" prefHeight="45"/>
+        </VBox>
+    </children>
+</StackPane>
+
     </children>
 </AnchorPane>
