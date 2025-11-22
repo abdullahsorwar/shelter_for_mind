@@ -1,9 +1,11 @@
-
 package com.the_pathfinders;
 
+import com.the_pathfinders.db.BloodDonor;
+import com.the_pathfinders.db.BloodSupportRepository;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -11,7 +13,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,6 +25,7 @@ import javafx.scene.web.WebView;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.sql.SQLException;
 
 public class SocialWorkController {
     @FXML private VBox contentWrapper;
@@ -29,6 +34,7 @@ public class SocialWorkController {
     @FXML private Button treePlantationBtn;
     @FXML private Button seminarBtn;
     @FXML private Button donationBtn;
+    @FXML private Button donateInAppBtn;
     
     // Blood Donation Popup
     @FXML private StackPane bloodDonationOverlay;
@@ -45,7 +51,22 @@ public class SocialWorkController {
     @FXML private Button browserBackBtn;
     @FXML private Label browserTitleLabel;
 
+    // In-app donation overlay
+    @FXML private StackPane inAppDonationOverlay;
+    @FXML private VBox inAppFormBox;
+    @FXML private TextField donorContactField;
+    @FXML private ComboBox<String> donorBloodGroupCombo;
+    @FXML private TextField donorLastDonationField;
+    @FXML private TextField donorAreaField;
+    @FXML private Button donorSubmitBtn;
+    @FXML private Button donorCancelBtn;
+    @FXML private Label donorFormFeedbackLabel;
+
     private String soulId;
+    private final BloodSupportRepository bloodRepository = new BloodSupportRepository();
+    private static final String[] BLOOD_GROUPS = {
+        "O+ve", "O-ve", "A+ve", "A-ve", "B+ve", "B-ve", "AB+ve", "AB-ve"
+    };
     
     // Blood donation URLs
     private static final String RED_CRESCENT_URL = "https://bdrcs.org/donate-blood/";
@@ -73,6 +94,9 @@ public class SocialWorkController {
         if (donationBtn != null) {
             donationBtn.setOnAction(e -> onDonation());
         }
+        if (donateInAppBtn != null) {
+            donateInAppBtn.setOnAction(e -> openInAppDonationFlow());
+        }
         
         // Blood donation popup buttons
         if (redCrescentBtn != null) {
@@ -91,6 +115,12 @@ public class SocialWorkController {
         // Browser back button
         if (browserBackBtn != null) {
             browserBackBtn.setOnAction(e -> closeBrowser());
+        }
+
+        if (donorSubmitBtn != null) donorSubmitBtn.setOnAction(e -> submitDonorDetails());
+        if (donorCancelBtn != null) donorCancelBtn.setOnAction(e -> hideInAppDonationForm());
+        if (donorBloodGroupCombo != null) {
+            donorBloodGroupCombo.getItems().setAll(BLOOD_GROUPS);
         }
         
         // Set question icon
@@ -257,5 +287,129 @@ public class SocialWorkController {
             }
         });
         fadeOut.play();
+    }
+
+    private void openInAppDonationFlow() {
+        hideBloodDonationOverlay();
+        PauseTransition delay = new PauseTransition(Duration.millis(260));
+        delay.setOnFinished(e -> showInAppDonationForm());
+        delay.play();
+    }
+
+    private void showInAppDonationForm() {
+        if (inAppDonationOverlay == null || contentWrapper == null) return;
+        resetDonorForm();
+
+        inAppDonationOverlay.setVisible(true);
+        inAppDonationOverlay.setManaged(true);
+
+        GaussianBlur blur = new GaussianBlur(0);
+        contentWrapper.setEffect(blur);
+        Timeline blurTimeline = new Timeline(
+            new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 0)),
+            new KeyFrame(Duration.millis(280), new KeyValue(blur.radiusProperty(), 18))
+        );
+        blurTimeline.play();
+
+        inAppDonationOverlay.setOpacity(0);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(240), inAppDonationOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        if (inAppFormBox != null) {
+            inAppFormBox.setScaleX(0.96);
+            inAppFormBox.setScaleY(0.96);
+            ScaleTransition scaleIn = new ScaleTransition(Duration.millis(260), inAppFormBox);
+            scaleIn.setFromX(0.96);
+            scaleIn.setFromY(0.96);
+            scaleIn.setToX(1);
+            scaleIn.setToY(1);
+            scaleIn.play();
+        }
+    }
+
+    private void hideInAppDonationForm() {
+        if (inAppDonationOverlay == null || contentWrapper == null) return;
+
+        if (contentWrapper.getEffect() instanceof GaussianBlur blur) {
+            Timeline blurTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), blur.getRadius())),
+                new KeyFrame(Duration.millis(220), new KeyValue(blur.radiusProperty(), 0))
+            );
+            blurTimeline.setOnFinished(e -> contentWrapper.setEffect(null));
+            blurTimeline.play();
+        }
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), inAppDonationOverlay);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            inAppDonationOverlay.setVisible(false);
+            inAppDonationOverlay.setManaged(false);
+        });
+        fadeOut.play();
+    }
+
+    private void resetDonorForm() {
+        if (donorContactField != null) donorContactField.clear();
+        if (donorLastDonationField != null) donorLastDonationField.clear();
+        if (donorAreaField != null) donorAreaField.clear();
+        if (donorBloodGroupCombo != null) donorBloodGroupCombo.getSelectionModel().clearSelection();
+        setDonorFeedback(null, true);
+    }
+
+    private void submitDonorDetails() {
+        String contact = donorContactField != null ? donorContactField.getText() : "";
+        String bloodGroup = donorBloodGroupCombo != null ? donorBloodGroupCombo.getValue() : null;
+        String lastDonation = donorLastDonationField != null ? donorLastDonationField.getText() : "";
+        String area = donorAreaField != null ? donorAreaField.getText() : "";
+
+        if (contact == null || contact.isBlank()) {
+            setDonorFeedback("Please enter a contact number.", false);
+            return;
+        }
+        if (bloodGroup == null || bloodGroup.isBlank()) {
+            setDonorFeedback("Select a blood group.", false);
+            return;
+        }
+        if (area == null || area.isBlank()) {
+            setDonorFeedback("Area of residence helps seekers reach you.", false);
+            return;
+        }
+
+        BloodDonor donor = new BloodDonor(
+            this.soulId,
+            bloodGroup,
+            contact.trim(),
+            lastDonation == null ? null : lastDonation.trim(),
+            area.trim()
+        );
+
+        try {
+            bloodRepository.saveDonor(donor);
+            setDonorFeedback("Thank you! You're now visible to matching requests.", true);
+            if (donorBloodGroupCombo != null) donorBloodGroupCombo.getSelectionModel().clearSelection();
+            if (donorLastDonationField != null) donorLastDonationField.clear();
+            if (donorAreaField != null) donorAreaField.clear();
+            if (donorContactField != null) donorContactField.clear();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            setDonorFeedback("Could not save right now. Please try again.", false);
+        }
+    }
+
+    private void setDonorFeedback(String message, boolean success) {
+        if (donorFormFeedbackLabel == null) return;
+        if (message == null || message.isBlank()) {
+            donorFormFeedbackLabel.setVisible(false);
+            donorFormFeedbackLabel.setManaged(false);
+            donorFormFeedbackLabel.setText("");
+            return;
+        }
+        donorFormFeedbackLabel.setText(message);
+        donorFormFeedbackLabel.setStyle(success ? "-fx-text-fill: #065f46;" : "-fx-text-fill: #b91c1c;");
+        donorFormFeedbackLabel.setVisible(true);
+        donorFormFeedbackLabel.setManaged(true);
     }
 }

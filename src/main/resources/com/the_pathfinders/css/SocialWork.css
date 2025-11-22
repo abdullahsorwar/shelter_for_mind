@@ -186,3 +186,82 @@
     -fx-text-fill: #333333;
     -fx-font-family: "Comic Sans MS", "Arial", sans-serif;
 }
+
+/* In-app donation overlay */
+.in-app-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.65);
+}
+
+.in-app-form {
+    -fx-background-color: linear-gradient(to bottom right, #fee2e2, #fecdd3);
+    -fx-background-radius: 26;
+    -fx-border-radius: 26;
+    -fx-border-color: rgba(185, 28, 28, 0.4);
+    -fx-padding: 28 32 28 32;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 22, 0, 0, 8);
+    -fx-font-family: "Comic Sans MS", "Poppins", sans-serif;
+}
+
+.in-app-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #0f172a;
+}
+
+.in-app-subtitle {
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+}
+
+.in-app-form-body {
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: rgba(248, 113, 113, 0.35);
+    -fx-padding: 16 18 18 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 18, 0, 0, 6);
+}
+
+.in-app-label {
+    -fx-text-fill: #1f2937;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+}
+
+.in-app-field {
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-padding: 10 14 10 14;
+    -fx-border-color: rgba(248, 113, 113, 0.45);
+    -fx-background-color: rgba(255, 255, 255, 0.96);
+    -fx-font-size: 14px;
+}
+
+.form-feedback {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+}
+
+.form-cancel-btn {
+    -fx-background-color: rgba(148, 163, 184, 0.15);
+    -fx-border-color: rgba(148, 163, 184, 0.35);
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 10 20 10 20;
+    -fx-font-weight: bold;
+    -fx-text-fill: #475569;
+}
+
+.form-submit-btn {
+    -fx-background-color: linear-gradient(to bottom right, #f87171, #ef4444);
+    -fx-text-fill: #fff5f5;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+    -fx-padding: 10 22 10 22;
+    -fx-font-weight: 800;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3);
+}
+
+.form-submit-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #dc2626, #b91c1c);
+}

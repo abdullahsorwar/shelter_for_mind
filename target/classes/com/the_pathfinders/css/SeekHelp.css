@@ -95,3 +95,58 @@
 .form-body .text-field {
     -fx-max-width: 440;
 }
+
+.seek-action-btn {
+    -fx-background-color: linear-gradient(to bottom right, #a7f3d0, #6ee7b7);
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 15px;
+    -fx-font-weight: 800;
+    -fx-padding: 12 16;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+}
+
+.seek-action-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #6ee7b7, #34d399);
+}
+
+.feedback-label {
+    -fx-text-fill: #065f46;
+    -fx-font-weight: 700;
+    -fx-padding: 4 0 0 0;
+}
+
+.donor-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 4 0 0 0;
+}
+
+.donor-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.donor-list {
+    -fx-padding: 6 4 12 4;
+}
+
+.donor-card {
+    -fx-background-color: rgba(248, 250, 252, 0.94);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(14, 165, 233, 0.18);
+    -fx-padding: 12 16 12 16;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 10, 0, 0, 4);
+}
+
+.donor-card .donor-title {
+    -fx-font-weight: 800;
+    -fx-text-fill: #0f172a;
+    -fx-font-size: 14px;
+}
+
+.donor-card .donor-meta {
+    -fx-text-fill: #475569;
+    -fx-font-size: 13px;
+}

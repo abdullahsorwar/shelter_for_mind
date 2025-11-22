@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -109,7 +110,37 @@
                             <TextField fx:id="phoneField"
                                        promptText="e.g., +8801..."
                                        maxWidth="Infinity"/>
+
+                            <Button fx:id="submitRequestBtn"
+                                    text="Enter"
+                                    maxWidth="Infinity"
+                                    styleClass="seek-action-btn"/>
+
+                            <Label fx:id="requestFeedbackLabel"
+                                   text=""
+                                   visible="false"
+                                   managed="false"
+                                   styleClass="feedback-label"/>
                         </VBox>
+
+                        <Label fx:id="donorResultsHeader"
+                               text="Matching Donors"
+                               visible="false"
+                               managed="false"
+                               styleClass="card-title"/>
+
+                        <Label text="We'll show in-app donors with the exact blood group you asked for."
+                               styleClass="muted-text"/>
+
+                        <ScrollPane fitToWidth="true"
+                                    prefHeight="220"
+                                    styleClass="donor-scroll">
+                            <content>
+                                <VBox fx:id="donorResultsBox"
+                                      spacing="10"
+                                      styleClass="donor-list"/>
+                            </content>
+                        </ScrollPane>
                     </children>
                 </VBox>
             </children>

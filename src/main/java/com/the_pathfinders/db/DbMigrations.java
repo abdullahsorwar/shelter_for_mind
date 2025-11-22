@@ -189,7 +189,6 @@ public final class DbMigrations {
                   end if;
                 end $$
             """);
-            
             // Create keeper_signups table for admin registration requests
             st.executeUpdate("""
                 create table if not exists keeper_signups (
@@ -318,6 +317,35 @@ public final class DbMigrations {
             st.executeUpdate("""
                 create index if not exists idx_moderation_messages_read on moderation_messages(soul_id, is_read)
             """);
+            
+            // Blood support tables
+            st.executeUpdate("""
+                create table if not exists blood_requests (
+                  id          bigserial primary key,
+                  soul_id     text,
+                  blood_group text not null,
+                  location    text not null,
+                  phone       text not null,
+                  created_at  timestamptz default now()
+                )
+            """);
+
+            st.executeUpdate("""
+                create table if not exists blood_donors (
+                  id                 bigserial primary key,
+                  soul_id            text,
+                  blood_group        text not null,
+                  contact_number     text not null,
+                  last_donation_info text,
+                  area               text not null,
+                  created_at         timestamptz default now()
+                )
+            """);
+
+            st.executeUpdate("create index if not exists idx_blood_requests_soul on blood_requests(soul_id)");
+            st.executeUpdate("create index if not exists idx_blood_requests_group on blood_requests(blood_group)");
+            st.executeUpdate("create index if not exists idx_blood_donors_group on blood_donors(blood_group)");
+            st.executeUpdate("create index if not exists idx_blood_donors_area on blood_donors(area)");
         }
     }
 }

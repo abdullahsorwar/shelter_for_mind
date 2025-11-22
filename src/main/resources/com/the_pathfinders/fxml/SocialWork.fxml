@@ -2,7 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -80,6 +82,7 @@
                 <Button fx:id="redCrescentBtn" text="Red Crescent" styleClass="blood-option-btn" />
                 <Button fx:id="roktoBtn" text="Rokto" styleClass="blood-option-btn" />
                 <Button fx:id="donateBloodBDBtn" text="DonateBloodBD" styleClass="blood-option-btn" />
+                <Button fx:id="donateInAppBtn" text="Donate Blood In-App" styleClass="blood-option-btn" />
             </VBox>
             
             <!-- Close Button -->
@@ -97,6 +100,52 @@
             </HBox>
             <!-- WebView for browsing -->
             <WebView fx:id="webView" VBox.vgrow="ALWAYS" />
+        </VBox>
+    </StackPane>
+
+    <!-- In-App Donation Overlay -->
+    <StackPane fx:id="inAppDonationOverlay" visible="false" managed="false" styleClass="in-app-overlay">
+        <VBox fx:id="inAppFormBox"
+              spacing="18"
+              alignment="TOP_LEFT"
+              styleClass="in-app-form">
+            <Label text="Donate Blood In-App" styleClass="in-app-title"/>
+            <Label text="Fill these quick details so Hope Seed can match you with urgent requests."
+                   wrapText="true"
+                   styleClass="in-app-subtitle"/>
+
+            <VBox spacing="12" styleClass="in-app-form-body">
+                <Label text="Contact Number" styleClass="in-app-label"/>
+                <TextField fx:id="donorContactField"
+                           promptText="+8801..."
+                           styleClass="in-app-field"/>
+
+                <Label text="Blood Group" styleClass="in-app-label"/>
+                <ComboBox fx:id="donorBloodGroupCombo"
+                          promptText="Select blood group"
+                          styleClass="in-app-field"/>
+
+                <Label text="Time Since Last Donation" styleClass="in-app-label"/>
+                <TextField fx:id="donorLastDonationField"
+                           promptText="e.g., 3 months ago"
+                           styleClass="in-app-field"/>
+
+                <Label text="Area of Residence" styleClass="in-app-label"/>
+                <TextField fx:id="donorAreaField"
+                           promptText="City / district"
+                           styleClass="in-app-field"/>
+            </VBox>
+
+            <Label fx:id="donorFormFeedbackLabel"
+                   text=""
+                   visible="false"
+                   managed="false"
+                   styleClass="form-feedback"/>
+
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <Button fx:id="donorCancelBtn" text="Cancel" styleClass="form-cancel-btn"/>
+                <Button fx:id="donorSubmitBtn" text="Save Details" styleClass="form-submit-btn"/>
+            </HBox>
         </VBox>
     </StackPane>
 
