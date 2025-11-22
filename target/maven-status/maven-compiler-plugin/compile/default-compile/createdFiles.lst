@@ -3,9 +3,11 @@ com\the_pathfinders\BlogController.class
 com\the_pathfinders\ToDoController$1.class
 com\the_pathfinders\ProfileController.class
 com\the_pathfinders\db\SoulInfoRepository$SoulInfo.class
+com\the_pathfinders\db\KeeperRepository$KeeperStatus.class
 com\the_pathfinders\db\ToDoRepository.class
 com\the_pathfinders\db\SoulInfoRepository.class
 com\the_pathfinders\LoginSignupController.class
+com\the_pathfinders\verification\EmailService$3.class
 com\the_pathfinders\verification\VerificationWebSocketServer.class
 com\the_pathfinders\db\SoulRepository$Soul.class
 com\the_pathfinders\BlogDetailController.class
@@ -14,11 +16,14 @@ com\the_pathfinders\Journal.class
 com\the_pathfinders\verification\VerificationServer.class
 com\the_pathfinders\db\SoulRepository.class
 com\the_pathfinders\AdminLoginController.class
+com\the_pathfinders\verification\VerificationServer$KeeperVerificationHandler.class
 com\the_pathfinders\SeekHelpController.class
 com\the_pathfinders\App.class
 com\the_pathfinders\BlogContentLoader.class
 com\the_pathfinders\DashboardController.class
 com\the_pathfinders\db\DbMigrations.class
+com\the_pathfinders\db\KeeperRepository.class
+com\the_pathfinders\verification\EmailService$2.class
 com\the_pathfinders\JournalController.class
 com\the_pathfinders\MusicManager.class
 com\the_pathfinders\SocialWork.class
@@ -28,6 +33,7 @@ com\the_pathfinders\db\ToDoItem.class
 com\the_pathfinders\db\SoulRepository$DuplicateIdException.class
 com\the_pathfinders\ToDoController.class
 com\the_pathfinders\ToDo.class
+com\the_pathfinders\db\KeeperRepository$BCrypt.class
 com\the_pathfinders\BlogController$1.class
 com\the_pathfinders\Blog.class
 com\the_pathfinders\verification\EmailService.class
@@ -43,4 +49,5 @@ com\the_pathfinders\verification\VerificationServer$VerificationCallback.class
 com\the_pathfinders\PrivateJournalsController.class
 com\the_pathfinders\db\JournalRepository.class
 com\the_pathfinders\verification\EmailService$1.class
+com\the_pathfinders\db\KeeperRepository$KeeperSignupRequest.class
 com\the_pathfinders\SavedBlogsManager.class

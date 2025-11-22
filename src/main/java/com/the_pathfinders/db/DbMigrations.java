@@ -169,6 +169,43 @@ public final class DbMigrations {
                   end if;
                 end $$
             """);
+            
+            // Create keeper_signups table for admin registration requests
+            st.executeUpdate("""
+                create table if not exists keeper_signups (
+                  keeper_id       text primary key,
+                  email           text not null unique,
+                  password_hash   text not null,
+                  email_verified  boolean default false,
+                  status          text default 'PENDING' check (status in ('PENDING', 'APPROVED', 'REJECTED')),
+                  created_at      timestamptz default now(),
+                  approved_at     timestamptz,
+                  approved_by     text,
+                  constraint keeper_id_is_lower check (keeper_id = lower(keeper_id))
+                )
+            """);
+            
+            // Create keepers table for approved admins
+            st.executeUpdate("""
+                create table if not exists keepers (
+                  keeper_id       text primary key,
+                  email           text not null unique,
+                  password_hash   text not null,
+                  approved_at     timestamptz default now(),
+                  approved_by     text,
+                  created_at      timestamptz default now(),
+                  last_login      timestamptz,
+                  constraint keeper_id_is_lower check (keeper_id = lower(keeper_id))
+                )
+            """);
+            
+            // Create index on email for fast lookups
+            st.executeUpdate("""
+                create index if not exists idx_keeper_signups_email on keeper_signups(email)
+            """);
+            st.executeUpdate("""
+                create index if not exists idx_keepers_email on keepers(email)
+            """);
         }
     }
 }

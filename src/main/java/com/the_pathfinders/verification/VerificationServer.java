@@ -35,6 +35,7 @@ public class VerificationServer {
 
         server = HttpServer.create(new InetSocketAddress(PORT), 0);
         server.createContext("/verify", new VerificationHandler());
+        server.createContext("/verify-keeper", new KeeperVerificationHandler());
         server.setExecutor(null); // Use default executor
         server.start();
         System.out.println("Verification server started on port " + PORT);
@@ -149,6 +150,134 @@ public class VerificationServer {
         }
 
         private String buildErrorPage(String errorMessage) {
+            return "<!DOCTYPE html>" +
+                "<html><head><meta charset='UTF-8'><title>Verification Failed</title>" +
+                "<style>" +
+                "body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); " +
+                "margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }" +
+                ".container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); " +
+                "text-align: center; max-width: 500px; }" +
+                "h1 { color: #f5576c; margin-bottom: 20px; }" +
+                "p { color: #555; font-size: 18px; line-height: 1.6; }" +
+                ".error-icon { font-size: 80px; color: #f5576c; margin-bottom: 20px; }" +
+                "</style></head><body>" +
+                "<div class='container'>" +
+                "<div class='error-icon'>✗</div>" +
+                "<h1>Verification Failed</h1>" +
+                "<p>" + errorMessage + "</p>" +
+                "<p>Please try again or contact support.</p>" +
+                "</div></body></html>";
+        }
+    }
+    
+    private class KeeperVerificationHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            String query = exchange.getRequestURI().getQuery();
+            Map<String, String> params = parseQuery(query);
+            
+            String token = params.get("token");
+            String keeperId = params.get("keeper_id");
+
+            String responseHtml;
+            int statusCode;
+
+            if (token != null && keeperId != null && pendingVerifications.containsKey(token)) {
+                String expectedKeeperId = pendingVerifications.get(token);
+                
+                if (expectedKeeperId.equals(keeperId)) {
+                    // Check if already verified recently
+                    Long lastVerified = recentlyVerified.get(keeperId);
+                    long now = System.currentTimeMillis();
+                    
+                    if (lastVerified != null && (now - lastVerified) < 5000) {
+                        System.out.println("Duplicate keeper verification request ignored for keeper_id: " + keeperId);
+                        responseHtml = buildKeeperSuccessPage(keeperId);
+                        statusCode = 200;
+                    } else {
+                        pendingVerifications.remove(token);
+                        recentlyVerified.put(keeperId, now);
+                        
+                        // Update keeper email verification status
+                        try {
+                            com.the_pathfinders.db.KeeperRepository.updateEmailVerified(keeperId, true);
+                            System.out.println("Keeper email verified: " + keeperId);
+                            
+                            // Notify existing keepers
+                            com.the_pathfinders.verification.EmailService.notifyExistingKeepersOfNewSignup(
+                                com.the_pathfinders.db.KeeperRepository.getSignupRequest(keeperId).email,
+                                keeperId
+                            );
+                        } catch (Exception e) {
+                            System.err.println("Failed to update keeper verification status: " + e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        responseHtml = buildKeeperSuccessPage(keeperId);
+                        statusCode = 200;
+                        
+                        recentlyVerified.entrySet().removeIf(entry -> (now - entry.getValue()) > 10000);
+                    }
+                } else {
+                    responseHtml = buildKeeperErrorPage("Invalid verification link");
+                    statusCode = 400;
+                }
+            } else {
+                responseHtml = buildKeeperErrorPage("Invalid or expired verification link");
+                statusCode = 400;
+            }
+
+            byte[] response = responseHtml.getBytes(StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
+            exchange.sendResponseHeaders(statusCode, response.length);
+            
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response);
+            }
+        }
+
+        private Map<String, String> parseQuery(String query) {
+            Map<String, String> params = new HashMap<>();
+            if (query != null) {
+                String[] pairs = query.split("&");
+                for (String pair : pairs) {
+                    String[] keyValue = pair.split("=");
+                    if (keyValue.length == 2) {
+                        params.put(keyValue[0], keyValue[1]);
+                    }
+                }
+            }
+            return params;
+        }
+
+        private String buildKeeperSuccessPage(String keeperId) {
+            return "<!DOCTYPE html>" +
+                "<html><head><meta charset='UTF-8'><title>Keeper Email Verified</title>" +
+                "<style>" +
+                "body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #FF9A8B 0%, #7CDFD9 100%); " +
+                "margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }" +
+                ".container { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); " +
+                "text-align: center; max-width: 500px; }" +
+                "h1 { color: #FF7B7B; margin-bottom: 20px; }" +
+                "p { color: #555; font-size: 18px; line-height: 1.6; }" +
+                ".checkmark { font-size: 80px; color: #4CAF50; margin-bottom: 20px; }" +
+                ".keeper-id { color: #7CDFD9; font-weight: bold; }" +
+                ".info-box { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; }" +
+                "</style></head><body>" +
+                "<div class='container'>" +
+                "<div class='checkmark'>✓</div>" +
+                "<h1>Email Verified Successfully!</h1>" +
+                "<p>Hello, aspiring keeper <span class='keeper-id'>" + keeperId + "</span>!</p>" +
+                "<p>Your email has been verified successfully.</p>" +
+                "<div class='info-box'>" +
+                "<p style='margin: 0;'><strong>Next Steps:</strong></p>" +
+                "<p style='margin-top: 10px;'>Existing keepers will review your request and you will receive a follow-up email once your account is approved.</p>" +
+                "</div>" +
+                "<p style='margin-top: 30px; color: #888; font-size: 14px;'>— The keepers of souls, shelter_of_mind</p>" +
+                "</div></body></html>";
+        }
+        
+        private String buildKeeperErrorPage(String errorMessage) {
             return "<!DOCTYPE html>" +
                 "<html><head><meta charset='UTF-8'><title>Verification Failed</title>" +
                 "<style>" +
