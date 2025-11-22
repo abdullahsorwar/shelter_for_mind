@@ -261,6 +261,20 @@ public class KeeperRepository {
     }
     
     /**
+     * Update last login timestamp for a keeper
+     */
+    public static void updateLastLogin(String keeperId) throws SQLException {
+        String sql = "UPDATE keepers SET last_login = NOW() WHERE keeper_id = ?";
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, keeperId.toLowerCase());
+            ps.executeUpdate();
+            System.out.println("Updated last login for keeper: " + keeperId);
+        }
+    }
+    
+    /**
      * Check if keeper exists and is approved
      */
     public static boolean isKeeperApproved(String keeperId) throws SQLException {

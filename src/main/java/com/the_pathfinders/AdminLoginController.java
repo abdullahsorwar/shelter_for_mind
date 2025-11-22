@@ -197,8 +197,29 @@ public class AdminLoginController implements Initializable {
                 javafx.application.Platform.runLater(() -> {
                     loginButton.setDisable(false);
                     if (authenticated) {
-                        showAlert("Login Successful", "Welcome, keeper " + keeperId + "!\n\nKeeper dashboard to be implemented.");
-                        // TODO: Navigate to keeper dashboard
+                        // Update last login timestamp
+                        try {
+                            com.the_pathfinders.db.KeeperRepository.updateLastLogin(keeperId);
+                        } catch (Exception e) {
+                            System.err.println("Failed to update last login: " + e.getMessage());
+                        }
+                        
+                        // Navigate to keeper dashboard
+                        try {
+                            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                                getClass().getResource("/com/the_pathfinders/fxml/keeper_dashboard.fxml"));
+                            javafx.scene.Parent dashboardRoot = loader.load();
+                            
+                            // Pass keeper ID to dashboard controller
+                            com.the_pathfinders.KeeperDashboardController controller = loader.getController();
+                            controller.setKeeperInfo(keeperId);
+                            
+                            root.getScene().setRoot(dashboardRoot);
+                        } catch (Exception ex) {
+                            System.err.println("Failed to load keeper dashboard: " + ex.getMessage());
+                            ex.printStackTrace();
+                            showAlert("Error", "Failed to load keeper dashboard.");
+                        }
                     } else {
                         showAlert("Login Failed", "Invalid keeper ID or password.");
                     }

@@ -1,0 +1,384 @@
+/* Keeper Dashboard Styles */
+
+/* Root and Background */
+#root {
+    -fx-background-color: #1a1a2e;
+}
+
+#gradientRect {
+    -fx-fill: linear-gradient(to bottom right, #0f3460, #16213e, #1a1a2e);
+}
+
+.light-mode #gradientRect {
+    -fx-fill: linear-gradient(to bottom right, #ffeaa7, #fab1a0, #fd79a8);
+}
+
+/* App Title */
+.app-title {
+    -fx-text-fill: white;
+}
+
+.light-mode .app-title {
+    -fx-text-fill: #2c3e50;
+}
+
+/* Sidebar Panel */
+.sidebar-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 20;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0.3, 0, 0);
+}
+
+.light-mode .sidebar-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+}
+
+.dashboard-title {
+    -fx-text-fill: #FF7B7B;
+    -fx-padding: 0 0 20 10;
+}
+
+.light-mode .dashboard-title {
+    -fx-text-fill: #E74C3C;
+}
+
+/* Navigation Menu */
+.nav-menu {
+    -fx-padding: 10 0 0 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-padding: 10 20 10 20;
+    -fx-border-width: 0;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.2);
+    -fx-text-fill: white;
+}
+
+.nav-button.active {
+    -fx-background-color: linear-gradient(to right, #FF9A8B, #FF7B7B);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255, 123, 123, 0.4), 10, 0.5, 0, 0);
+}
+
+.light-mode .nav-button {
+    -fx-text-fill: #2c3e50;
+}
+
+.light-mode .nav-button:hover {
+    -fx-background-color: rgba(231, 76, 60, 0.15);
+    -fx-text-fill: #E74C3C;
+}
+
+.light-mode .nav-button.active {
+    -fx-background-color: linear-gradient(to right, #E74C3C, #C0392B);
+    -fx-text-fill: white;
+}
+
+/* Keeper Profile Section */
+.keeper-profile-section {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+    -fx-border-color: rgba(255, 123, 123, 0.3);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+.light-mode .keeper-profile-section {
+    -fx-background-color: rgba(231, 76, 60, 0.1);
+    -fx-border-color: rgba(231, 76, 60, 0.3);
+}
+
+.profile-clickable {
+    -fx-cursor: hand;
+    -fx-padding: 5;
+    -fx-background-radius: 10;
+}
+
+.profile-clickable:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.1);
+}
+
+.keeper-name {
+    -fx-text-fill: white;
+}
+
+.keeper-id {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+}
+
+.light-mode .keeper-name {
+    -fx-text-fill: #2c3e50;
+}
+
+.light-mode .keeper-id {
+    -fx-text-fill: #7f8c8d;
+}
+
+.logout-button {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #c0392b);
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.logout-button:hover {
+    -fx-background-color: linear-gradient(to right, #c0392b, #a93226);
+    -fx-effect: dropshadow(gaussian, rgba(231, 76, 60, 0.5), 10, 0.5, 0, 0);
+}
+
+/* Content Panel */
+.content-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-background-radius: 20;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0.3, 0, 0);
+}
+
+.light-mode .content-panel {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Content Header */
+.content-header {
+    -fx-background-color: transparent;
+    -fx-padding: 15 20 15 20;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+}
+
+.light-mode .content-header {
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+}
+
+.content-title {
+    -fx-text-fill: #FF7B7B;
+}
+
+.light-mode .content-title {
+    -fx-text-fill: #E74C3C;
+}
+
+.theme-toggle-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+.theme-toggle-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Content Body */
+.content-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+}
+
+.content-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.content-scroll .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.content-scroll .scroll-bar .thumb {
+    -fx-background-color: rgba(255, 123, 123, 0.5);
+    -fx-background-radius: 5;
+}
+
+.content-scroll .scroll-bar .track {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Verification Content */
+.verification-content {
+    -fx-padding: 10;
+}
+
+.section-header {
+    -fx-text-fill: white;
+}
+
+.light-mode .section-header {
+    -fx-text-fill: #2c3e50;
+}
+
+.refresh-button {
+    -fx-background-color: rgba(255, 123, 123, 0.2);
+    -fx-text-fill: #FF7B7B;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-padding: 5 15 5 15;
+    -fx-border-width: 0;
+}
+
+.refresh-button:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.3);
+    -fx-text-fill: white;
+}
+
+.light-mode .refresh-button {
+    -fx-background-color: rgba(231, 76, 60, 0.15);
+    -fx-text-fill: #E74C3C;
+}
+
+.light-mode .refresh-button:hover {
+    -fx-background-color: rgba(231, 76, 60, 0.25);
+    -fx-text-fill: #C0392B;
+}
+
+/* Refresh Loading Icon */
+.refresh-loading {
+    -fx-text-fill: #FF7B7B;
+}
+
+.light-mode .refresh-loading {
+    -fx-text-fill: #E74C3C;
+}
+
+/* Signups Container */
+.signups-container {
+    -fx-padding: 10 0 10 0;
+}
+
+/* Signup Card */
+.signup-card {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 15;
+    -fx-padding: 20;
+    -fx-border-color: rgba(255, 123, 123, 0.2);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.3, 0, 2);
+}
+
+.light-mode .signup-card {
+    -fx-background-color: white;
+    -fx-border-color: rgba(231, 76, 60, 0.2);
+}
+
+.card-keeper-id {
+    -fx-text-fill: #FF7B7B;
+}
+
+.card-email {
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+}
+
+.card-date {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+}
+
+.card-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+}
+
+.light-mode .card-keeper-id {
+    -fx-text-fill: #E74C3C;
+}
+
+.light-mode .card-email {
+    -fx-text-fill: #2c3e50;
+}
+
+.light-mode .card-date {
+    -fx-text-fill: #7f8c8d;
+}
+
+.light-mode .card-label {
+    -fx-text-fill: #95a5a6;
+}
+
+/* Action Buttons */
+.approve-button {
+    -fx-background-color: linear-gradient(to right, #27ae60, #2ecc71);
+    -fx-text-fill: white;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.approve-button:hover {
+    -fx-background-color: linear-gradient(to right, #229954, #27ae60);
+    -fx-effect: dropshadow(gaussian, rgba(46, 204, 113, 0.5), 10, 0.5, 0, 0);
+}
+
+.reject-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e74c3c;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-border-color: #e74c3c;
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+}
+
+.reject-button:hover {
+    -fx-background-color: rgba(231, 76, 60, 0.1);
+    -fx-text-fill: #c0392b;
+    -fx-border-color: #c0392b;
+}
+
+/* Empty State */
+.empty-state {
+    -fx-padding: 40;
+}
+
+.empty-icon {
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+}
+
+.empty-text {
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+}
+
+.empty-subtext {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+}
+
+.light-mode .empty-icon {
+    -fx-text-fill: rgba(0, 0, 0, 0.2);
+}
+
+.light-mode .empty-text {
+    -fx-text-fill: #2c3e50;
+}
+
+.light-mode .empty-subtext {
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Placeholder Content */
+.placeholder-content {
+    -fx-padding: 60;
+}
+
+.placeholder-text {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+}
+
+.placeholder-subtext {
+    -fx-text-fill: rgba(255, 255, 255, 0.4);
+}
+
+.light-mode .placeholder-text {
+    -fx-text-fill: #2c3e50;
+}
+
+.light-mode .placeholder-subtext {
+    -fx-text-fill: #7f8c8d;
+}

@@ -22,6 +22,7 @@ com\the_pathfinders\App.class
 com\the_pathfinders\BlogContentLoader.class
 com\the_pathfinders\DashboardController.class
 com\the_pathfinders\db\DbMigrations.class
+com\the_pathfinders\KeeperDashboardController.class
 com\the_pathfinders\db\KeeperRepository.class
 com\the_pathfinders\verification\EmailService$2.class
 com\the_pathfinders\JournalController.class

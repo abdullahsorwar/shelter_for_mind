@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<Pane fx:id="root" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.KeeperDashboardController">
+   <children>
+      <!-- Background with gradient -->
+      <Pane fx:id="backgroundPane" prefHeight="700.0" prefWidth="1200.0" mouseTransparent="true">
+         <children>
+            <Rectangle fx:id="gradientRect" arcHeight="0.0" arcWidth="0.0" height="700.0" width="1200.0" />
+         </children>
+      </Pane>
+
+      <!-- Top Left Logo -->
+      <HBox layoutX="20.0" layoutY="20.0" alignment="CENTER_LEFT" spacing="10.0">
+         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+            <image><Image url="@../../../assets/images/logo.png" /></image>
+         </ImageView>
+         <Label text="Shelter of Mind" styleClass="app-title">
+            <font><Font name="System Bold" size="18.0" /></font>
+         </Label>
+      </HBox>
+
+      <!-- Main Container -->
+      <HBox fx:id="mainContainer" layoutX="20.0" layoutY="90.0" prefHeight="590.0" prefWidth="1160.0" spacing="20.0">
+         <!-- Left Panel (Sidebar) -->
+         <VBox fx:id="leftPanel" prefHeight="590.0" prefWidth="260.0" minWidth="240.0" maxWidth="300.0" styleClass="sidebar-panel" spacing="0">
+            <children>
+               <!-- Navigation Title -->
+               <Label text="Keeper Dashboard" styleClass="dashboard-title">
+                  <font><Font name="System Bold" size="20.0" /></font>
+               </Label>
+               
+               <!-- Navigation Menu -->
+               <VBox fx:id="navigationMenu" prefHeight="420.0" prefWidth="280.0" spacing="5.0" styleClass="nav-menu">
+                  <children>
+                     <!-- Keeper Verification -->
+                     <Button fx:id="keeperVerificationBtn" mnemonicParsing="false" onAction="#showKeeperVerification" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="👥 Keeper Verification" alignment="CENTER_LEFT">
+                        <font><Font size="14.0" /></font>
+                     </Button>
+                     
+                     <!-- Active Souls -->
+                     <Button fx:id="activeSoulsBtn" mnemonicParsing="false" onAction="#showActiveSouls" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="🌟 Active Souls" alignment="CENTER_LEFT">
+                        <font><Font size="14.0" /></font>
+                     </Button>
+                     
+                     <!-- Journal Moderation -->
+                     <Button fx:id="journalModerationBtn" mnemonicParsing="false" onAction="#showJournalModeration" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="📝 Journal Moderation" alignment="CENTER_LEFT">
+                        <font><Font size="14.0" /></font>
+                     </Button>
+                     
+                     <!-- Appointment -->
+                     <Button fx:id="appointmentBtn" mnemonicParsing="false" onAction="#showAppointment" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="📅 Appointment" alignment="CENTER_LEFT">
+                        <font><Font size="14.0" /></font>
+                     </Button>
+                     
+                     <!-- Achievement -->
+                     <Button fx:id="achievementBtn" mnemonicParsing="false" onAction="#showAchievement" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="🏆 Achievement" alignment="CENTER_LEFT">
+                        <font><Font size="14.0" /></font>
+                     </Button>
+                  </children>
+               </VBox>
+               
+               <!-- Spacer -->
+               <Region VBox.vgrow="ALWAYS" />
+               
+               <!-- Keeper Profile Section -->
+               <VBox prefHeight="120.0" prefWidth="280.0" styleClass="keeper-profile-section" spacing="10.0" alignment="CENTER">
+                  <children>
+                     <!-- Profile Image and Name -->
+                     <HBox alignment="CENTER_LEFT" spacing="15.0" onMouseClicked="#goToKeeperProfile" styleClass="profile-clickable">
+                        <children>
+                           <StackPane prefHeight="50.0" prefWidth="50.0">
+                              <ImageView fx:id="keeperProfileImage" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                 <image><Image url="@../../../assets/icons/username.png" /></image>
+                              </ImageView>
+                              <Circle radius="25.0" fill="transparent" stroke="#FF7B7B" strokeWidth="2.0" />
+                           </StackPane>
+                           <VBox spacing="2.0">
+                              <Label fx:id="keeperNameLabel" text="Keeper Name" styleClass="keeper-name">
+                                 <font><Font name="System Bold" size="14.0" /></font>
+                              </Label>
+                              <Label fx:id="keeperIdLabel" text="keeper_id" styleClass="keeper-id">
+                                 <font><Font size="11.0" /></font>
+                              </Label>
+                           </VBox>
+                        </children>
+                     </HBox>
+                     
+                     <!-- Logout Button -->
+                     <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#handleLogout" prefHeight="35.0" prefWidth="250.0" styleClass="logout-button" text="Logout">
+                        <font><Font name="System Bold" size="12.0" /></font>
+                     </Button>
+                  </children>
+               </VBox>
+            </children>
+         </VBox>
+
+         <!-- Right Panel (Content Area) -->
+         <VBox fx:id="rightPanel" prefHeight="590.0" prefWidth="880.0" styleClass="content-panel" spacing="0" HBox.hgrow="ALWAYS">
+            <children>
+               <!-- Content Header with Theme Toggle -->
+               <HBox prefHeight="60.0" alignment="CENTER_LEFT" styleClass="content-header" spacing="15.0">
+                  <children>
+                     <Label fx:id="contentTitle" text="Keeper Verification" styleClass="content-title">
+                        <font><Font name="System Bold" size="24.0" /></font>
+                     </Label>
+                     
+                     <!-- Spacer -->
+                     <Region HBox.hgrow="ALWAYS" />
+                     
+                     <!-- Theme Toggle Button -->
+                     <Button fx:id="themeToggleButton" mnemonicParsing="false" onAction="#handleThemeToggle" prefHeight="40.0" prefWidth="60.0" styleClass="theme-toggle-btn" text="☀" textFill="WHITE">
+                        <font><Font size="20.0" /></font>
+                     </Button>
+                  </children>
+               </HBox>
+               
+               <!-- Content Body (StackPane for switching views) -->
+               <StackPane fx:id="contentBody" VBox.vgrow="ALWAYS">
+                  <children>
+                     <!-- Keeper Verification Content -->
+                     <ScrollPane fx:id="keeperVerificationPane" fitToWidth="true" styleClass="content-scroll" visible="true" managed="true">
+                        <content>
+                           <VBox spacing="15.0" styleClass="verification-content">
+                              <children>
+                                 <!-- Section Header -->
+                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                    <Label text="Pending Keeper Signups" styleClass="section-header">
+                                       <font><Font name="System Bold" size="18.0" /></font>
+                                    </Label>
+                                    <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refreshPendingSignups" text="Refresh" styleClass="refresh-button">
+                                       <font><Font size="12.0" /></font>
+                                    </Button>
+                                    <Label fx:id="refreshLoadingIcon" text="🔄" styleClass="refresh-loading" visible="false" managed="false">
+                                       <font><Font size="18.0" /></font>
+                                    </Label>
+                                 </HBox>
+                                 
+                                 <!-- Pending Signups List -->
+                                 <VBox fx:id="pendingSignupsContainer" spacing="10.0" styleClass="signups-container">
+                                    <!-- Signup cards will be added dynamically here -->
+                                 </VBox>
+                                 
+                                 <!-- Empty State -->
+                                 <VBox fx:id="emptyState" alignment="CENTER" spacing="15.0" prefHeight="300.0" styleClass="empty-state" visible="false" managed="false">
+                                    <Label text="✅" styleClass="empty-icon">
+                                       <font><Font size="60.0" /></font>
+                                    </Label>
+                                    <Label text="No Pending Signups" styleClass="empty-text">
+                                       <font><Font name="System Bold" size="18.0" /></font>
+                                    </Label>
+                                    <Label text="All keeper signup requests have been processed." styleClass="empty-subtext">
+                                       <font><Font size="13.0" /></font>
+                                    </Label>
+                                 </VBox>
+                              </children>
+                           </VBox>
+                        </content>
+                     </ScrollPane>
+                     
+                     <!-- Placeholder for other sections -->
+                     <VBox fx:id="otherSectionPane" alignment="CENTER" spacing="20.0" styleClass="placeholder-content" visible="false" managed="false">
+                        <Label fx:id="placeholderText" text="Section Coming Soon" styleClass="placeholder-text">
+                           <font><Font name="System Bold" size="24.0" /></font>
+                        </Label>
+                        <Label text="This section is under development." styleClass="placeholder-subtext">
+                           <font><Font size="14.0" /></font>
+                        </Label>
+                     </VBox>
+                  </children>
+               </StackPane>
+            </children>
+         </VBox>
+      </HBox>
+   </children>
+</Pane>

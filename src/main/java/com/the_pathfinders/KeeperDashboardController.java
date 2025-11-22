@@ -1,0 +1,491 @@
+package com.the_pathfinders;
+
+import javafx.animation.*;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
+import com.the_pathfinders.db.KeeperRepository;
+import com.the_pathfinders.verification.EmailService;
+
+import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class KeeperDashboardController implements Initializable {
+
+    @FXML private Pane root;
+    @FXML private Pane backgroundPane;
+    @FXML private Rectangle gradientRect;
+    @FXML private HBox mainContainer;
+    @FXML private VBox leftPanel;
+    @FXML private VBox rightPanel;
+    
+    // Left Panel
+    @FXML private VBox navigationMenu;
+    @FXML private Button keeperVerificationBtn;
+    @FXML private Button activeSoulsBtn;
+    @FXML private Button journalModerationBtn;
+    @FXML private Button appointmentBtn;
+    @FXML private Button achievementBtn;
+    @FXML private ImageView keeperProfileImage;
+    @FXML private Label keeperNameLabel;
+    @FXML private Label keeperIdLabel;
+    @FXML private Button logoutBtn;
+    
+    // Right Panel
+    @FXML private Label contentTitle;
+    @FXML private Button themeToggleButton;
+    @FXML private StackPane contentBody;
+    @FXML private ScrollPane keeperVerificationPane;
+    @FXML private VBox pendingSignupsContainer;
+    @FXML private VBox emptyState;
+    @FXML private Button refreshBtn;
+    @FXML private Label refreshLoadingIcon;
+    @FXML private VBox otherSectionPane;
+    @FXML private Label placeholderText;
+    
+    private boolean isLightMode = false;
+    private String currentKeeperId = "the_pathfinders"; // Will be set from login
+    private Button activeNavButton = null;
+    
+    public void setKeeperInfo(String keeperId) {
+        this.currentKeeperId = keeperId;
+        keeperIdLabel.setText(keeperId);
+        keeperNameLabel.setText("Keeper " + keeperId);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Apply CSS
+        root.getStylesheets().add(getClass().getResource("/com/the_pathfinders/css/keeper_dashboard.css").toExternalForm());
+        
+        // Bind to window size
+        root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                root.prefWidthProperty().bind(newScene.widthProperty());
+                root.prefHeightProperty().bind(newScene.heightProperty());
+                backgroundPane.prefWidthProperty().bind(newScene.widthProperty());
+                backgroundPane.prefHeightProperty().bind(newScene.heightProperty());
+                gradientRect.widthProperty().bind(newScene.widthProperty());
+                gradientRect.heightProperty().bind(newScene.heightProperty());
+                
+                // Make main container responsive
+                newScene.widthProperty().addListener((o, ov, nv) -> updateResponsiveLayout(nv.doubleValue()));
+                newScene.heightProperty().addListener((o, ov, nv) -> updateContainerHeight(nv.doubleValue()));
+                
+                // Initial layout update
+                updateResponsiveLayout(newScene.getWidth());
+                updateContainerHeight(newScene.getHeight());
+            }
+        });
+        
+        // Set initial active button
+        setActiveNavButton(keeperVerificationBtn);
+        
+        // Load pending signups
+        loadPendingSignups();
+        
+        // Add entrance animation
+        playEntranceAnimation();
+    }
+    
+    private void playEntranceAnimation() {
+        // Start with content scaled down and invisible
+        contentBody.setOpacity(0);
+        contentBody.setScaleX(0.95);
+        contentBody.setScaleY(0.95);
+        
+        FadeTransition fade = new FadeTransition(Duration.millis(400), contentBody);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+        
+        ScaleTransition scale = new ScaleTransition(Duration.millis(400), contentBody);
+        scale.setFromX(0.95);
+        scale.setFromY(0.95);
+        scale.setToX(1.0);
+        scale.setToY(1.0);
+        scale.setInterpolator(Interpolator.EASE_OUT);
+        
+        ParallelTransition entrance = new ParallelTransition(fade, scale);
+        entrance.setDelay(Duration.millis(150));
+        entrance.play();
+    }
+    
+    private void updateResponsiveLayout(double windowWidth) {
+        if (mainContainer != null) {
+            double containerWidth = windowWidth - 40; // 20px margin on each side
+            mainContainer.setPrefWidth(containerWidth);
+            
+            // Adjust panel sizes based on window width
+            if (windowWidth < 1000) {
+                leftPanel.setPrefWidth(200);
+            } else if (windowWidth < 1200) {
+                leftPanel.setPrefWidth(240);
+            } else {
+                leftPanel.setPrefWidth(260);
+            }
+            
+            // Right panel takes remaining space
+            double rightPanelWidth = containerWidth - leftPanel.getPrefWidth() - 20; // 20px spacing
+            rightPanel.setPrefWidth(rightPanelWidth);
+        }
+    }
+    
+    private void updateContainerHeight(double windowHeight) {
+        if (mainContainer != null) {
+            double containerHeight = windowHeight - 110; // 90px from top + 20px margin
+            mainContainer.setPrefHeight(containerHeight);
+            leftPanel.setPrefHeight(containerHeight);
+            rightPanel.setPrefHeight(containerHeight);
+        }
+    }
+    
+    private void setActiveNavButton(Button button) {
+        if (activeNavButton != null) {
+            activeNavButton.getStyleClass().remove("active");
+        }
+        button.getStyleClass().add("active");
+        activeNavButton = button;
+    }
+    
+    @FXML
+    private void showKeeperVerification() {
+        switchContent("Keeper Verification", true);
+        setActiveNavButton(keeperVerificationBtn);
+        loadPendingSignups();
+    }
+    
+    @FXML
+    private void showActiveSouls() {
+        switchContent("Active Souls", false);
+        setActiveNavButton(activeSoulsBtn);
+        placeholderText.setText("Active Souls - Coming Soon");
+    }
+    
+    @FXML
+    private void showJournalModeration() {
+        switchContent("Journal Moderation", false);
+        setActiveNavButton(journalModerationBtn);
+        placeholderText.setText("Journal Moderation - Coming Soon");
+    }
+    
+    @FXML
+    private void showAppointment() {
+        switchContent("Appointment", false);
+        setActiveNavButton(appointmentBtn);
+        placeholderText.setText("Appointment - Coming Soon");
+    }
+    
+    @FXML
+    private void showAchievement() {
+        switchContent("Achievement", false);
+        setActiveNavButton(achievementBtn);
+        placeholderText.setText("Achievement - Coming Soon");
+    }
+    
+    private void switchContent(String title, boolean showVerification) {
+        // Fade out
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), contentBody);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        
+        fadeOut.setOnFinished(e -> {
+            contentTitle.setText(title);
+            keeperVerificationPane.setVisible(showVerification);
+            keeperVerificationPane.setManaged(showVerification);
+            otherSectionPane.setVisible(!showVerification);
+            otherSectionPane.setManaged(!showVerification);
+            
+            // Fade in
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(200), contentBody);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        });
+        
+        fadeOut.play();
+    }
+    
+    @FXML
+    private void refreshPendingSignups() {
+        // Show and rotate loading icon
+        refreshLoadingIcon.setVisible(true);
+        refreshLoadingIcon.setManaged(true);
+        refreshBtn.setDisable(true);
+        
+        // Continuous rotation animation
+        RotateTransition rotate = new RotateTransition(Duration.millis(1000), refreshLoadingIcon);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(Animation.INDEFINITE);
+        rotate.setInterpolator(Interpolator.LINEAR);
+        rotate.play();
+        
+        // Load data in background
+        new Thread(() -> {
+            try {
+                List<KeeperRepository.KeeperSignupRequest> requests = KeeperRepository.getPendingSignups();
+                
+                Platform.runLater(() -> {
+                    // Stop rotation
+                    rotate.stop();
+                    refreshLoadingIcon.setVisible(false);
+                    refreshLoadingIcon.setManaged(false);
+                    refreshLoadingIcon.setRotate(0);
+                    refreshBtn.setDisable(false);
+                    
+                    // Update UI
+                    pendingSignupsContainer.getChildren().clear();
+                    
+                    if (requests.isEmpty()) {
+                        emptyState.setVisible(true);
+                        emptyState.setManaged(true);
+                    } else {
+                        emptyState.setVisible(false);
+                        emptyState.setManaged(false);
+                        
+                        for (KeeperRepository.KeeperSignupRequest request : requests) {
+                            pendingSignupsContainer.getChildren().add(createSignupCard(request));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("Failed to load pending signups: " + e.getMessage());
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    rotate.stop();
+                    refreshLoadingIcon.setVisible(false);
+                    refreshLoadingIcon.setManaged(false);
+                    refreshLoadingIcon.setRotate(0);
+                    refreshBtn.setDisable(false);
+                    showAlert("Error", "Failed to load pending signups: " + e.getMessage());
+                });
+            }
+        }).start();
+    }
+    
+    private void loadPendingSignups() {
+        // Show loading state
+        pendingSignupsContainer.getChildren().clear();
+        
+        // Load in background thread
+        new Thread(() -> {
+            try {
+                List<KeeperRepository.KeeperSignupRequest> requests = KeeperRepository.getPendingSignups();
+                
+                Platform.runLater(() -> {
+                    pendingSignupsContainer.getChildren().clear();
+                    
+                    if (requests.isEmpty()) {
+                        emptyState.setVisible(true);
+                        emptyState.setManaged(true);
+                    } else {
+                        emptyState.setVisible(false);
+                        emptyState.setManaged(false);
+                        
+                        for (KeeperRepository.KeeperSignupRequest request : requests) {
+                            pendingSignupsContainer.getChildren().add(createSignupCard(request));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("Failed to load pending signups: " + e.getMessage());
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    showAlert("Error", "Failed to load pending signups: " + e.getMessage());
+                });
+            }
+        }).start();
+    }
+    
+    private VBox createSignupCard(KeeperRepository.KeeperSignupRequest request) {
+        VBox card = new VBox(15);
+        card.getStyleClass().add("signup-card");
+        card.setPadding(new Insets(20));
+        
+        // Header with Keeper ID
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+        
+        Label keeperIdIcon = new Label("👤");
+        keeperIdIcon.setStyle("-fx-font-size: 24px;");
+        
+        Label keeperId = new Label(request.keeperId);
+        keeperId.getStyleClass().add("card-keeper-id");
+        keeperId.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        
+        header.getChildren().addAll(keeperIdIcon, keeperId);
+        
+        // Email
+        HBox emailBox = new HBox(8);
+        emailBox.setAlignment(Pos.CENTER_LEFT);
+        
+        Label emailLabel = new Label("Email:");
+        emailLabel.getStyleClass().add("card-label");
+        emailLabel.setStyle("-fx-font-size: 12px;");
+        
+        Label emailValue = new Label(request.email);
+        emailValue.getStyleClass().add("card-email");
+        emailValue.setStyle("-fx-font-size: 14px;");
+        
+        emailBox.getChildren().addAll(emailLabel, emailValue);
+        
+        // Created date
+        HBox dateBox = new HBox(8);
+        dateBox.setAlignment(Pos.CENTER_LEFT);
+        
+        Label dateLabel = new Label("Requested:");
+        dateLabel.getStyleClass().add("card-label");
+        dateLabel.setStyle("-fx-font-size: 12px;");
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
+        Label dateValue = new Label(request.createdAt.format(formatter));
+        dateValue.getStyleClass().add("card-date");
+        dateValue.setStyle("-fx-font-size: 12px;");
+        
+        dateBox.getChildren().addAll(dateLabel, dateValue);
+        
+        // Action buttons
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        
+        Button approveBtn = new Button("✓ Approve");
+        approveBtn.getStyleClass().add("approve-button");
+        approveBtn.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-min-width: 120px; -fx-pref-height: 35px;");
+        approveBtn.setOnAction(e -> handleApprove(request));
+        
+        Button rejectBtn = new Button("✗ Reject");
+        rejectBtn.getStyleClass().add("reject-button");
+        rejectBtn.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-min-width: 120px; -fx-pref-height: 35px;");
+        rejectBtn.setOnAction(e -> handleReject(request));
+        
+        buttonBox.getChildren().addAll(rejectBtn, approveBtn);
+        
+        // Divider
+        Region divider = new Region();
+        divider.setPrefHeight(1);
+        divider.setStyle("-fx-background-color: rgba(255, 255, 255, 0.1);");
+        
+        card.getChildren().addAll(header, emailBox, dateBox, divider, buttonBox);
+        
+        return card;
+    }
+    
+    private void handleApprove(KeeperRepository.KeeperSignupRequest request) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Approve Keeper");
+        confirm.setHeaderText("Approve " + request.keeperId + "?");
+        confirm.setContentText("This will grant keeper access to " + request.keeperId + " and send them an approval email.");
+        
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // Disable button to prevent double-clicks
+                new Thread(() -> {
+                    try {
+                        // Approve signup
+                        KeeperRepository.approveSignup(request.keeperId, currentKeeperId);
+                        
+                        // Send approval email
+                        EmailService.sendKeeperApprovalNotification(request.email, request.keeperId);
+                        
+                        Platform.runLater(() -> {
+                            showAlert("Success", "Keeper " + request.keeperId + " has been approved!\n\nApproval email sent to " + request.email);
+                            loadPendingSignups(); // Refresh list
+                        });
+                    } catch (Exception e) {
+                        System.err.println("Failed to approve keeper: " + e.getMessage());
+                        e.printStackTrace();
+                        Platform.runLater(() -> {
+                            showAlert("Error", "Failed to approve keeper: " + e.getMessage());
+                        });
+                    }
+                }).start();
+            }
+        });
+    }
+    
+    private void handleReject(KeeperRepository.KeeperSignupRequest request) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Reject Keeper");
+        confirm.setHeaderText("Reject " + request.keeperId + "?");
+        confirm.setContentText("This will reject the keeper signup request. This action cannot be undone.");
+        
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // TODO: Implement reject functionality
+                showAlert("Info", "Reject functionality to be implemented");
+            }
+        });
+    }
+    
+    @FXML
+    private void goToKeeperProfile() {
+        // TODO: Navigate to keeper profile page
+        showAlert("Profile", "Keeper profile page to be implemented");
+    }
+    
+    @FXML
+    private void handleLogout() {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Logout");
+        confirm.setHeaderText("Are you sure you want to logout?");
+        confirm.setContentText("You will be redirected to the login page.");
+        
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/admin_login.fxml"));
+                    Parent loginRoot = loader.load();
+                    root.getScene().setRoot(loginRoot);
+                } catch (Exception e) {
+                    System.err.println("Failed to load login page: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    
+    @FXML
+    private void handleThemeToggle() {
+        isLightMode = !isLightMode;
+        
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), root);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.95);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), root);
+        fadeIn.setFromValue(0.95);
+        fadeIn.setToValue(1.0);
+        
+        fadeOut.setOnFinished(e -> {
+            if (isLightMode) {
+                root.getStyleClass().add("light-mode");
+                themeToggleButton.setText("🌙");
+            } else {
+                root.getStyleClass().remove("light-mode");
+                themeToggleButton.setText("☀");
+            }
+            fadeIn.play();
+        });
+        
+        fadeOut.play();
+    }
+    
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}
