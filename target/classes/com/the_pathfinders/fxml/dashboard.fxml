@@ -2,8 +2,11 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -11,12 +14,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import java.net.URL?>
-<?import javafx.scene.image.Image?>
-
-
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
 <AnchorPane fx:id="root" prefHeight="600" prefWidth="900"
     stylesheets="/com/the_pathfinders/css/dashboard.css, /com/the_pathfinders/css/tranquil_popup.css" xmlns="http://javafx.com/javafx/25"
@@ -38,6 +39,15 @@
                     preserveRatio="true" smooth="true" />
             </children>
         </VBox>
+
+        <!-- Mood Tracker Button (Circle on left side) -->
+        <AnchorPane>
+            <Button fx:id="moodTrackerBtn" styleClass="mood-tracker-circle"
+                    prefWidth="120" prefHeight="120"
+                    AnchorPane.leftAnchor="120"
+                    AnchorPane.topAnchor="300"
+                    wrapText="true" text="MOOD&#10;TRACKER"/>
+        </AnchorPane>
 
         <!-- Top-center: greeting label -->
         <Label fx:id="greetingLabel" text="Good Morning 🌞" styleClass="greeting" 
@@ -194,6 +204,74 @@
                     text="Back"
                     styleClass="journaling-btn"
                     prefWidth="200" prefHeight="45"/>
+        </VBox>
+    </children>
+</StackPane>
+
+<!-- MOOD TRACKER POPUP -->
+<StackPane fx:id="moodTrackerOverlay"
+           visible="false" managed="false"
+           AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
+           AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
+           styleClass="journaling-overlay-root">
+    <children>
+        <VBox fx:id="moodTrackerContentBox" spacing="20" alignment="CENTER"
+              styleClass="journaling-popup-box"
+              prefWidth="500" maxWidth="500" prefHeight="600" maxHeight="600">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Button fx:id="moodBackBtn" text="←" styleClass="back-btn"/>
+                <Label text="Mood Tracker" styleClass="journaling-title"/>
+                <javafx.scene.layout.Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="moodCloseBtn" text="✕" styleClass="close-btn"/>
+            </HBox>
+
+            <!-- Progress indicator -->
+            <HBox alignment="CENTER" spacing="8">
+                <javafx.scene.shape.Circle fx:id="progress1" radius="6" styleClass="progress-circle, active"/>
+                <javafx.scene.shape.Circle fx:id="progress2" radius="6" styleClass="progress-circle"/>
+                <javafx.scene.shape.Circle fx:id="progress3" radius="6" styleClass="progress-circle"/>
+                <javafx.scene.shape.Circle fx:id="progress4" radius="6" styleClass="progress-circle"/>
+                <javafx.scene.shape.Circle fx:id="progress5" radius="6" styleClass="progress-circle"/>
+            </HBox>
+
+            <!-- Scrollable questions container -->
+            <ScrollPane fx:id="moodScrollPane" fitToWidth="true" hbarPolicy="NEVER"
+                        VBox.vgrow="ALWAYS" styleClass="questions-scroll">
+                <VBox fx:id="moodQuestionsContainer" spacing="30" style="-fx-padding: 20;"/>
+            </ScrollPane>
+
+            <!-- Navigation buttons -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="moodPrevBtn" text="Previous" styleClass="journaling-btn" disable="true"/>
+                <Button fx:id="moodNextBtn" text="Next" styleClass="journaling-btn"/>
+                <Button fx:id="moodSubmitBtn" text="Submit" styleClass="journaling-btn"
+                        visible="false" managed="false"/>
+            </HBox>
+        </VBox>
+
+        <!-- Results overlay (initially hidden) -->
+        <VBox fx:id="moodResultsBox" spacing="25" alignment="CENTER"
+              styleClass="journaling-popup-box"
+              prefWidth="550" maxWidth="550" prefHeight="650" maxHeight="650"
+              visible="false" managed="false">
+
+            <Label text="Your Mood Analysis" styleClass="journaling-title"/>
+
+            <!-- Pie chart -->
+            <javafx.scene.chart.PieChart fx:id="moodPieChart" legendVisible="true"
+                      prefWidth="400" prefHeight="350"/>
+
+            <!-- Summary text -->
+            <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f7fafc; -fx-background-radius: 12px; -fx-padding: 20px;">
+                <Label fx:id="moodSummaryLabel" wrapText="true" alignment="CENTER"
+                       maxWidth="450" style="-fx-font-size: 15px; -fx-text-fill: #4a5568;"/>
+                <Label fx:id="moodScoreLabel" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #667eea;"/>
+            </VBox>
+
+            <!-- Close button -->
+            <Button fx:id="moodDoneBtn" text="Done" styleClass="journaling-btn" prefWidth="150"/>
         </VBox>
     </children>
 </StackPane>
