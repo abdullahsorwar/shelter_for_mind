@@ -80,8 +80,8 @@ public class InitialController implements Initializable {
         // Click wiring - start video initialization on Soul button click
         soulRect.setOnMouseClicked(e -> onSoulClick());
         soulText.setOnMouseClicked(e -> onSoulClick());
-        keeperRect.setOnMouseClicked(e -> {});
-        keeperText.setOnMouseClicked(e -> {});
+        keeperRect.setOnMouseClicked(e -> goToAdminLogin());
+        keeperText.setOnMouseClicked(e -> goToAdminLogin());
     }
     
     private void onSoulClick() {
@@ -198,6 +198,16 @@ public class InitialController implements Initializable {
             LoginSignupController controller = loader.getController();
             controller.setRepository(new SoulRepository());
             root.getScene().setRoot(loginRoot);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void goToAdminLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/admin_login.fxml"));
+            Parent adminRoot = loader.load();
+            root.getScene().setRoot(adminRoot);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
