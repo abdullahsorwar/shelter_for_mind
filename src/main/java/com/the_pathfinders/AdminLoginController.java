@@ -282,11 +282,47 @@ public class AdminLoginController implements Initializable {
             try {
                 // Check if keeper_id already exists
                 if (com.the_pathfinders.db.KeeperRepository.isKeeperIdExists(keeperId)) {
-                    javafx.application.Platform.runLater(() -> {
-                        loginButton.setDisable(false);
-                        showAlert("Keeper ID Taken", "This keeper ID is already registered. Please choose a different one.");
-                    });
-                    return;
+                    // Check if it's an unverified signup
+                    com.the_pathfinders.db.KeeperRepository.KeeperSignupRequest existingRequest = 
+                        com.the_pathfinders.db.KeeperRepository.getSignupRequest(keeperId);
+                    
+                    if (existingRequest != null && !existingRequest.emailVerified) {
+                        // Offer to resend verification email
+                        javafx.application.Platform.runLater(() -> {
+                            loginButton.setDisable(false);
+                            
+                            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Unverified Signup Exists");
+                            alert.setHeaderText("Email Not Verified");
+                            alert.setContentText(
+                                "You have an existing signup request that was never verified.\n\n" +
+                                "Would you like to delete it and create a new signup request with a fresh verification email?"
+                            );
+                            
+                            javafx.scene.control.ButtonType deleteButton = new javafx.scene.control.ButtonType("Delete & Retry");
+                            javafx.scene.control.ButtonType cancelButton = new javafx.scene.control.ButtonType("Cancel", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+                            alert.getButtonTypes().setAll(deleteButton, cancelButton);
+                            
+                            alert.showAndWait().ifPresent(response -> {
+                                if (response == deleteButton) {
+                                    // Delete the unverified signup and let user retry
+                                    try {
+                                        com.the_pathfinders.db.KeeperRepository.deleteUnverifiedSignup(keeperId);
+                                        showAlert("Signup Deleted", "Previous signup deleted. Please try signing up again.");
+                                    } catch (Exception ex) {
+                                        showAlert("Error", "Failed to delete previous signup: " + ex.getMessage());
+                                    }
+                                }
+                            });
+                        });
+                        return;
+                    } else {
+                        javafx.application.Platform.runLater(() -> {
+                            loginButton.setDisable(false);
+                            showAlert("Keeper ID Taken", "This keeper ID is already registered. Please choose a different one.");
+                        });
+                        return;
+                    }
                 }
                 
                 // Check if email already exists
@@ -298,36 +334,83 @@ public class AdminLoginController implements Initializable {
                     return;
                 }
                 
+                // Check if keeper has a verified signup already pending approval
+                if (com.the_pathfinders.db.KeeperRepository.hasVerifiedPendingSignup(keeperId)) {
+                    javafx.application.Platform.runLater(() -> {
+                        loginButton.setDisable(false);
+                        showAlert("Signup Already Verified", 
+                            "Your email has already been verified and is awaiting approval from existing keepers.\n\n" +
+                            "Please wait for the approval email. You cannot submit a new signup request.");
+                    });
+                    return;
+                }
+                
                 // Hash password
                 String passwordHash = com.the_pathfinders.db.KeeperRepository.hashPassword(keeperPass);
                 
-                // Create signup request
-                com.the_pathfinders.db.KeeperRepository.createSignupRequest(keeperId, email, passwordHash);
-                System.out.println("Keeper signup request created: " + keeperId);
-                
-                // Send verification email
+                // Prepare verification email BEFORE creating DB record
                 com.the_pathfinders.verification.VerificationManager verificationManager = 
                     com.the_pathfinders.verification.VerificationManager.getInstance();
                 
-                if (!verificationManager.isRunning()) {
-                    verificationManager.start();
+                try {
+                    if (!verificationManager.isRunning()) {
+                        verificationManager.start();
+                    }
+                } catch (java.io.IOException ioEx) {
+                    System.err.println("Failed to start verification server: " + ioEx.getMessage());
+                    javafx.application.Platform.runLater(() -> {
+                        loginButton.setDisable(false);
+                        showAlert("Server Error", 
+                            "The verification server could not start.\n\n" +
+                            "This usually means another instance of the application is running.\n" +
+                            "Please close any other instances and try again.\n\n" +
+                            "Error: " + ioEx.getMessage());
+                    });
+                    return;
                 }
                 
-                // Register keeper verification with server
+                // Register keeper verification with server and send email
                 String verifyToken = com.the_pathfinders.verification.EmailService.generateVerificationToken(keeperId);
-                // Use reflection to access HTTP server and register
+                boolean emailSent = false;
+                
                 try {
-                    java.lang.reflect.Field httpServerField = verificationManager.getClass().getDeclaredField("httpServer");
-                    httpServerField.setAccessible(true);
-                    com.the_pathfinders.verification.VerificationServer httpServer = 
-                        (com.the_pathfinders.verification.VerificationServer) httpServerField.get(verificationManager);
+                    com.the_pathfinders.verification.VerificationServer httpServer = verificationManager.getHttpServer();
+                    if (httpServer == null) {
+                        throw new Exception("Verification server not initialized");
+                    }
                     httpServer.registerVerification(verifyToken, keeperId);
                     
                     // Send keeper verification email
                     com.the_pathfinders.verification.EmailService.sendKeeperVerificationEmail(email, keeperId, verifyToken);
+                    emailSent = true;
+                    System.out.println("Verification email sent to: " + email);
                 } catch (Exception e) {
                     System.err.println("Failed to send keeper verification email: " + e.getMessage());
                     e.printStackTrace();
+                    javafx.application.Platform.runLater(() -> {
+                        loginButton.setDisable(false);
+                        showAlert("Email Error", 
+                            "Failed to send verification email. Please check your email configuration and try again.\n\n" +
+                            "Error: " + e.getMessage());
+                    });
+                    return;
+                }
+                
+                // Only create DB record if email was sent successfully
+                if (emailSent) {
+                    try {
+                        com.the_pathfinders.db.KeeperRepository.createSignupRequest(keeperId, email, passwordHash);
+                        System.out.println("Keeper signup request created: " + keeperId);
+                    } catch (java.sql.SQLException dbEx) {
+                        // If DB insert fails after email sent, clean up
+                        System.err.println("DB insert failed, attempting cleanup: " + dbEx.getMessage());
+                        try {
+                            com.the_pathfinders.db.KeeperRepository.deleteUnverifiedSignup(keeperId);
+                        } catch (Exception cleanupEx) {
+                            System.err.println("Cleanup failed: " + cleanupEx.getMessage());
+                        }
+                        throw dbEx;
+                    }
                 }
                 
                 javafx.application.Platform.runLater(() -> {

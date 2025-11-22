@@ -190,7 +190,7 @@ public class EmailService {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("shelter_of_mind - Password Reset Request");
 
-            String resetLink = "http://localhost:8080/reset-password?token=" + resetToken;
+            String resetLink = "http://localhost:8081/reset-password?token=" + resetToken;
             
             String emailBody = String.format(
                 "Hello keeper \"%s\",\n\n" +

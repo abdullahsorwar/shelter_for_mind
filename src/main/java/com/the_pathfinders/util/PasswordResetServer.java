@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class PasswordResetServer {
     private static HttpServer server;
-    private static final int PORT = 8080;
+    private static final int PORT = 8081; // Changed from 8080 to avoid conflict with VerificationServer
     
     public static void start() {
         if (server != null) {

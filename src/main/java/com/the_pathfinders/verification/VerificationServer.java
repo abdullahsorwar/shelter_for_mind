@@ -33,12 +33,19 @@ public class VerificationServer {
             return;
         }
 
-        server = HttpServer.create(new InetSocketAddress(PORT), 0);
-        server.createContext("/verify", new VerificationHandler());
-        server.createContext("/verify-keeper", new KeeperVerificationHandler());
-        server.setExecutor(null); // Use default executor
-        server.start();
-        System.out.println("Verification server started on port " + PORT);
+        try {
+            server = HttpServer.create(new InetSocketAddress(PORT), 0);
+            server.createContext("/verify", new VerificationHandler());
+            server.createContext("/verify-keeper", new KeeperVerificationHandler());
+            server.setExecutor(null); // Use default executor
+            server.start();
+            System.out.println("Verification server started on port " + PORT);
+        } catch (java.net.BindException e) {
+            System.err.println("Port " + PORT + " is already in use. Server may already be running.");
+            // Port is in use, likely from a previous instance. This is acceptable.
+            // We'll treat this as if the server is already running
+            throw new IOException("Port " + PORT + " already in use", e);
+        }
     }
 
     public void stop() {

@@ -48,12 +48,6 @@ public class KeeperRepository {
         String sql = """
             INSERT INTO keeper_signups (keeper_id, email, password_hash, email_verified, status, created_at)
             VALUES (?, ?, ?, false, 'PENDING', now())
-            ON CONFLICT (keeper_id) DO UPDATE 
-            SET email = EXCLUDED.email,
-                password_hash = EXCLUDED.password_hash,
-                email_verified = false,
-                status = 'PENDING',
-                created_at = now()
         """;
         
         try (Connection c = DB.getConnection(); 
@@ -119,6 +113,35 @@ public class KeeperRepository {
             ps.setString(2, email.toLowerCase());
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next() && rs.getBoolean(1);
+            }
+        }
+    }
+    
+    /**
+     * Delete an unverified signup request (allows retry)
+     */
+    public static boolean deleteUnverifiedSignup(String keeperId) throws SQLException {
+        String sql = "DELETE FROM keeper_signups WHERE keeper_id = ? AND email_verified = false";
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, keeperId.toLowerCase());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
+    
+    /**
+     * Check if a keeper has an existing verified signup pending approval
+     */
+    public static boolean hasVerifiedPendingSignup(String keeperId) throws SQLException {
+        String sql = "SELECT email_verified FROM keeper_signups WHERE keeper_id = ? AND status = 'PENDING'";
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, keeperId.toLowerCase());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getBoolean("email_verified");
             }
         }
     }
