@@ -10,7 +10,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import com.the_pathfinders.db.KeeperRepository;
+import com.the_pathfinders.util.ThemeManager;
+import com.the_pathfinders.verification.EmailService;
+
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class AdminLoginController implements Initializable {
@@ -39,7 +44,6 @@ public class AdminLoginController implements Initializable {
     
     // Theme toggle
     @FXML private Button themeToggleButton;
-    private boolean isLightMode = false;
     private boolean isSignupMode = false;
 
     @Override
@@ -47,8 +51,14 @@ public class AdminLoginController implements Initializable {
         // Apply CSS
         root.getStylesheets().add(getClass().getResource("/com/the_pathfinders/css/admin_login.css").toExternalForm());
         
+        // Apply current theme from ThemeManager
+        com.the_pathfinders.util.ThemeManager.applyTheme(root);
+        if (themeToggleButton != null) {
+            themeToggleButton.setText(com.the_pathfinders.util.ThemeManager.isLightMode() ? "🌙" : "☀");
+        }
+        
         // Set initial prompt text colors (dark mode - grayish white)
-        setPromptTextColors(Color.rgb(255, 255, 255, 0.6));
+        setPromptTextColors(com.the_pathfinders.util.ThemeManager.isLightMode() ? Color.rgb(100, 100, 100, 0.8) : Color.rgb(255, 255, 255, 0.6));
         
         // After scene is set, bind to window size
         root.sceneProperty().addListener((obs, oldScene, newScene) -> {
@@ -361,7 +371,7 @@ public class AdminLoginController implements Initializable {
             keeperPasswordVisibleField.setVisible(true);
             
             // Apply current theme's prompt text color
-            if (isLightMode) {
+            if (com.the_pathfinders.util.ThemeManager.isLightMode()) {
                 setPromptTextColors(Color.rgb(102, 102, 102));
             } else {
                 setPromptTextColors(Color.rgb(255, 255, 255, 0.6));
@@ -378,7 +388,7 @@ public class AdminLoginController implements Initializable {
             keeperPasswordField.setVisible(true);
             
             // Reapply current theme's prompt text color
-            if (isLightMode) {
+            if (com.the_pathfinders.util.ThemeManager.isLightMode()) {
                 setPromptTextColors(Color.rgb(102, 102, 102));
             } else {
                 setPromptTextColors(Color.rgb(255, 255, 255, 0.6));
@@ -388,7 +398,52 @@ public class AdminLoginController implements Initializable {
     
     @FXML
     private void handleForgotPassword() {
-        showAlert("Forgot Password", "Password recovery functionality to be implemented");
+        // Create dialog for keeper ID input
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Password Reset");
+        dialog.setHeaderText("Reset Your Password");
+        dialog.setContentText("Enter your Keeper ID:");
+        
+        // Apply theme to dialog
+        DialogPane dialogPane = dialog.getDialogPane();
+        if (ThemeManager.isLightMode()) {
+            dialogPane.getStylesheets().clear();
+            dialogPane.setStyle("-fx-background-color: #F5F7FA;");
+        } else {
+            dialogPane.getStylesheets().clear();
+            dialogPane.setStyle("-fx-background-color: #1E1E1E;");
+        }
+        
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(keeperIdInput -> {
+            String keeperId = keeperIdInput.trim();
+            if (keeperId.isEmpty()) {
+                showAlert("Error", "Keeper ID cannot be empty");
+                return;
+            }
+            
+            try {
+                // Get keeper email
+                String email = KeeperRepository.getKeeperEmail(keeperId);
+                if (email == null) {
+                    showAlert("Error", "Keeper ID not found");
+                    return;
+                }
+                
+                // Create password reset token
+                String resetToken = KeeperRepository.createPasswordResetToken(keeperId);
+                
+                // Send reset email
+                EmailService.sendPasswordResetEmail(email, keeperId, resetToken);
+                
+                showAlert("Success", "Password reset email sent to " + email + 
+                         "\nPlease check your inbox and follow the link to reset your password.");
+                         
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to send password reset email: " + e.getMessage());
+            }
+        });
     }
     
     @FXML
@@ -410,6 +465,19 @@ public class AdminLoginController implements Initializable {
         fadeOut.setToValue(0.0);
         
         fadeOut.setOnFinished(e -> {
+            // Clear all input fields
+            keeperIdField.clear();
+            keeperPasswordField.clear();
+            keeperPasswordVisibleField.clear();
+            emailField.clear();
+            
+            // Reset checkbox
+            if (showPasswordCheckbox != null) {
+                showPasswordCheckbox.setSelected(false);
+                keeperPasswordField.setVisible(true);
+                keeperPasswordVisibleField.setVisible(false);
+            }
+            
             // Update UI elements
             loginTitle.setText("Create Account");
             loginButton.setText("SIGN UP");
@@ -430,7 +498,7 @@ public class AdminLoginController implements Initializable {
             loginModeLink.setManaged(true);
             
             // Reapply prompt text colors
-            if (isLightMode) {
+            if (com.the_pathfinders.util.ThemeManager.isLightMode()) {
                 setPromptTextColors(Color.rgb(102, 102, 102));
             } else {
                 setPromptTextColors(Color.rgb(255, 255, 255, 0.6));
@@ -455,6 +523,19 @@ public class AdminLoginController implements Initializable {
         fadeOut.setToValue(0.0);
         
         fadeOut.setOnFinished(e -> {
+            // Clear all input fields
+            keeperIdField.clear();
+            keeperPasswordField.clear();
+            keeperPasswordVisibleField.clear();
+            emailField.clear();
+            
+            // Reset checkbox
+            if (showPasswordCheckbox != null) {
+                showPasswordCheckbox.setSelected(false);
+                keeperPasswordField.setVisible(true);
+                keeperPasswordVisibleField.setVisible(false);
+            }
+            
             // Update UI elements
             loginTitle.setText("Welcome, Keeper!");
             loginButton.setText("LOGIN");
@@ -466,9 +547,6 @@ public class AdminLoginController implements Initializable {
             emailFieldPane.setVisible(false);
             emailFieldPane.setManaged(false);
             
-            // Clear email field
-            emailField.clear();
-            
             // Update links
             forgotPasswordLink.setVisible(true);
             forgotPasswordLink.setManaged(true);
@@ -478,7 +556,7 @@ public class AdminLoginController implements Initializable {
             loginModeLink.setManaged(false);
             
             // Reapply prompt text colors
-            if (isLightMode) {
+            if (com.the_pathfinders.util.ThemeManager.isLightMode()) {
                 setPromptTextColors(Color.rgb(102, 102, 102));
             } else {
                 setPromptTextColors(Color.rgb(255, 255, 255, 0.6));
@@ -496,7 +574,7 @@ public class AdminLoginController implements Initializable {
     
     @FXML
     private void handleThemeToggle() {
-        isLightMode = !isLightMode;
+        com.the_pathfinders.util.ThemeManager.toggleTheme();
         
         // Fade out, change theme, fade back in for smooth transition (400ms total)
         FadeTransition fadeOut = new FadeTransition(Duration.millis(200), root);
@@ -508,15 +586,14 @@ public class AdminLoginController implements Initializable {
         fadeIn.setToValue(1.0);
         
         fadeOut.setOnFinished(e -> {
-            if (isLightMode) {
+            com.the_pathfinders.util.ThemeManager.applyTheme(root);
+            if (com.the_pathfinders.util.ThemeManager.isLightMode()) {
                 // Switch to light mode
-                root.getStyleClass().add("light-mode");
                 themeToggleButton.setText("🌙"); // Moon icon for dark mode option
                 // Set prompt text colors to dark gray for light mode
                 setPromptTextColors(Color.rgb(102, 102, 102)); // #666666
             } else {
                 // Switch to dark mode
-                root.getStyleClass().remove("light-mode");
                 themeToggleButton.setText("☀"); // Sun icon for light mode option
                 // Set prompt text colors to light gray for dark mode
                 setPromptTextColors(Color.rgb(255, 255, 255, 0.6));

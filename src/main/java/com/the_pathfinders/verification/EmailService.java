@@ -167,4 +167,55 @@ public class EmailService {
         // Generate a secure random token
         return java.util.UUID.randomUUID().toString() + "-" + System.currentTimeMillis();
     }
+    
+    public static void sendPasswordResetEmail(String toEmail, String keeperId, String resetToken) {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", SMTP_HOST);
+        props.put("mail.smtp.port", SMTP_PORT);
+        props.put("mail.smtp.ssl.trust", SMTP_HOST);
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(FROM_EMAIL, APP_PASSWORD);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(FROM_EMAIL, APP_NAME));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("shelter_of_mind - Password Reset Request");
+
+            String resetLink = "http://localhost:8080/reset-password?token=" + resetToken;
+            
+            String emailBody = String.format(
+                "Hello keeper \"%s\",\n\n" +
+                "We received a request to reset your password for your shelter_of_mind keeper account.\n\n" +
+                "Click the link below to reset your password:\n\n" +
+                "%s\n\n" +
+                "This link will expire in 1 hour.\n\n" +
+                "If you did not request a password reset, please ignore this email. " +
+                "Your password will remain unchanged.\n\n" +
+                "Regards,\n" +
+                "The keepers of souls\n" +
+                "shelter_of_mind",
+                keeperId, resetLink
+            );
+
+            message.setText(emailBody);
+
+            System.out.println("Sending password reset email to: " + toEmail);
+            Transport.send(message);
+            System.out.println("Password reset email sent successfully!");
+
+        } catch (Exception e) {
+            System.err.println("Failed to send password reset email: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send password reset email", e);
+        }
+    }
 }

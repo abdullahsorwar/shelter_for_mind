@@ -109,6 +109,9 @@ public class KeeperProfileController implements Initializable {
         // Apply CSS
         root.getStylesheets().add(getClass().getResource("/com/the_pathfinders/css/keeper_profile.css").toExternalForm());
         
+        // Apply current theme from ThemeManager
+        com.the_pathfinders.util.ThemeManager.applyTheme(root);
+        
         // Add circular clip to profile image
         Circle clip = new Circle(75, 75, 75);
         profileImageView.setClip(clip);

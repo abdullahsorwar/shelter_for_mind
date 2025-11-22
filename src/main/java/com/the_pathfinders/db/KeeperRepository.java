@@ -389,7 +389,7 @@ public class KeeperRepository {
     /**
      * Get keeper email
      */
-    private static String getKeeperEmail(String keeperId) throws SQLException {
+    public static String getKeeperEmail(String keeperId) throws SQLException {
         String sql = "SELECT email FROM keepers WHERE keeper_id = ?";
         
         try (Connection c = DB.getConnection();
@@ -450,7 +450,7 @@ public class KeeperRepository {
                 last_activity,
                 CASE 
                     WHEN last_activity IS NOT NULL 
-                         AND last_activity >= (NOW() - INTERVAL '15 minutes')
+                         AND last_activity >= (NOW() - INTERVAL '5 minute')
                     THEN true 
                     ELSE false 
                 END as is_active
@@ -479,4 +479,118 @@ public class KeeperRepository {
         
         return souls;
     }
+    
+    /**
+     * Password reset token information
+     */
+    public static class PasswordResetToken {
+        public String token;
+        public String keeperId;
+        public LocalDateTime expiresAt;
+        public boolean used;
+        
+        public PasswordResetToken() {}
+    }
+    
+    /**
+     * Generate and store a password reset token for a keeper
+     */
+    public static String createPasswordResetToken(String keeperId) throws SQLException {
+        // Generate random token
+        String token = java.util.UUID.randomUUID().toString();
+        
+        // Token expires in 1 hour
+        String sql = """
+            INSERT INTO keeper_password_resets (token, keeper_id, expires_at, used, created_at)
+            VALUES (?, ?, NOW() + INTERVAL '1 hour', false, NOW())
+        """;
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, token);
+            ps.setString(2, keeperId.toLowerCase());
+            ps.executeUpdate();
+        }
+        
+        return token;
+    }
+    
+    /**
+     * Validate a password reset token
+     */
+    public static PasswordResetToken validateResetToken(String token) throws SQLException {
+        String sql = """
+            SELECT token, keeper_id, expires_at, used
+            FROM keeper_password_resets
+            WHERE token = ? AND used = false AND expires_at > NOW()
+        """;
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, token);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    PasswordResetToken resetToken = new PasswordResetToken();
+                    resetToken.token = rs.getString("token");
+                    resetToken.keeperId = rs.getString("keeper_id");
+                    resetToken.expiresAt = rs.getTimestamp("expires_at").toLocalDateTime();
+                    resetToken.used = rs.getBoolean("used");
+                    return resetToken;
+                }
+            }
+        }
+        
+        return null; // Token invalid or expired
+    }
+    
+    /**
+     * Reset keeper password using a valid token
+     */
+    public static boolean resetPassword(String token, String newPasswordHash) throws SQLException {
+        PasswordResetToken resetToken = validateResetToken(token);
+        if (resetToken == null) {
+            return false;
+        }
+        
+        Connection c = null;
+        try {
+            c = DB.getConnection();
+            c.setAutoCommit(false);
+            
+            // Update password in keepers table
+            String updatePasswordSql = "UPDATE keepers SET password_hash = ? WHERE keeper_id = ?";
+            try (PreparedStatement ps = c.prepareStatement(updatePasswordSql)) {
+                ps.setString(1, newPasswordHash);
+                ps.setString(2, resetToken.keeperId);
+                ps.executeUpdate();
+            }
+            
+            // Mark token as used
+            String markUsedSql = "UPDATE keeper_password_resets SET used = true WHERE token = ?";
+            try (PreparedStatement ps = c.prepareStatement(markUsedSql)) {
+                ps.setString(1, token);
+                ps.executeUpdate();
+            }
+            
+            c.commit();
+            return true;
+            
+        } catch (SQLException e) {
+            if (c != null) {
+                try {
+                    c.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            throw e;
+        } finally {
+            if (c != null) {
+                c.setAutoCommit(true);
+                c.close();
+            }
+        }
+    }
+    
 }

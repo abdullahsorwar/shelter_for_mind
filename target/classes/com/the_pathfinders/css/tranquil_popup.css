@@ -1,0 +1,67 @@
+/* Dim blur background */
+.overlay-dim {
+    -fx-fill: rgba(0, 0, 0, 0.45);
+    -fx-background-color: rgba(0, 0, 0, 0.45);
+    -fx-backdrop-filter: blur(10px);
+}
+
+/* Popup card */
+.tranquil-popup-card {
+    -fx-background-color: linear-gradient(to bottom right, #F8F4FF, #EBFAFF);
+    -fx-background-radius: 26px;
+    -fx-border-color: rgba(255,255,255,0.6);
+    -fx-border-radius: 26px;
+    -fx-border-width: 2;
+    -fx-padding: 24 30 28 30;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.20), 40, 0.18, 0, 5);
+}
+
+/* Title & subtitle */
+.popup-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5B4FA1;
+}
+
+.popup-subtitle {
+    -fx-font-size: 15px;
+    -fx-text-fill: #7F7898;
+}
+
+/* Big 2×2 grid buttons */
+.tranquil-option-btn {
+    -fx-background-color: linear-gradient(to bottom, #FFFFFF, #F3EEFF);
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: rgba(120, 100, 230, 0.25);
+    -fx-border-width: 1.2;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #4D437F;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0.1, 0, 3);
+}
+
+/* Hover animation */
+.tranquil-option-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #F7F3FF, #ECE6FF);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-cursor: hand;
+}
+
+/* Back button */
+.tranquil-back {
+    -fx-background-color: linear-gradient(to right, #E9E1FF, #D2CAFF);
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-text-fill: #4F468A;
+    -fx-font-size: 15px;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0.1, 0, 2);
+}
+
+.tranquil-back:hover {
+    -fx-background-color: linear-gradient(to right, #F3EDFF, #E0DBFF);
+    -fx-cursor: hand;
+}

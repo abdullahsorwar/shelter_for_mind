@@ -66,7 +66,6 @@ public class KeeperDashboardController implements Initializable {
     @FXML private VBox otherSectionPane;
     @FXML private Label placeholderText;
     
-    private boolean isLightMode = false;
     private String currentKeeperId = "the_pathfinders"; // Will be set from login
     private Button activeNavButton = null;
     
@@ -132,6 +131,12 @@ public class KeeperDashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Apply CSS
         root.getStylesheets().add(getClass().getResource("/com/the_pathfinders/css/keeper_dashboard.css").toExternalForm());
+        
+        // Apply current theme from ThemeManager
+        com.the_pathfinders.util.ThemeManager.applyTheme(root);
+        if (themeToggleButton != null) {
+            themeToggleButton.setText(com.the_pathfinders.util.ThemeManager.isLightMode() ? "🌙" : "☀");
+        }
         
         // Add circular clip to profile image
         Circle clip = new Circle(25, 25, 25);
@@ -600,9 +605,11 @@ public class KeeperDashboardController implements Initializable {
         // Soul ID and Name
         Label nameLabel = new Label(soul.soulName != null ? soul.soulName : "Unknown");
         nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        nameLabel.getStyleClass().add("soul-name-label");
         
         Label idLabel = new Label("ID: " + soul.soulId);
-        idLabel.setStyle("-fx-font-size: 12px; -fx-opacity: 0.7;");
+        idLabel.setStyle("-fx-font-size: 12px;");
+        idLabel.getStyleClass().add("soul-id-label");
         
         infoBox.getChildren().addAll(nameLabel, idLabel);
         
@@ -613,6 +620,7 @@ public class KeeperDashboardController implements Initializable {
         
         Label statusLabel = new Label(soul.isActive ? "🟢 Active" : "🔴 Inactive");
         statusLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        statusLabel.getStyleClass().add("soul-status-label");
         
         statusBox.getChildren().add(statusLabel);
         
@@ -622,7 +630,8 @@ public class KeeperDashboardController implements Initializable {
         activityBox.setPrefWidth(200);
         
         Label activityLabel = new Label("Last Activity");
-        activityLabel.setStyle("-fx-font-size: 11px; -fx-opacity: 0.6;");
+        activityLabel.setStyle("-fx-font-size: 11px;");
+        activityLabel.getStyleClass().add("soul-activity-label");
         
         String activityText;
         if (soul.lastActivity == null) {
@@ -634,6 +643,7 @@ public class KeeperDashboardController implements Initializable {
         
         Label activityValue = new Label(activityText);
         activityValue.setStyle("-fx-font-size: 13px;");
+        activityValue.getStyleClass().add("soul-activity-value");
         
         activityBox.getChildren().addAll(activityLabel, activityValue);
         
@@ -683,7 +693,7 @@ public class KeeperDashboardController implements Initializable {
     
     @FXML
     private void handleThemeToggle() {
-        isLightMode = !isLightMode;
+        com.the_pathfinders.util.ThemeManager.toggleTheme();
         
         FadeTransition fadeOut = new FadeTransition(Duration.millis(200), root);
         fadeOut.setFromValue(1.0);
@@ -694,11 +704,10 @@ public class KeeperDashboardController implements Initializable {
         fadeIn.setToValue(1.0);
         
         fadeOut.setOnFinished(e -> {
-            if (isLightMode) {
-                root.getStyleClass().add("light-mode");
+            com.the_pathfinders.util.ThemeManager.applyTheme(root);
+            if (com.the_pathfinders.util.ThemeManager.isLightMode()) {
                 themeToggleButton.setText("🌙");
             } else {
-                root.getStyleClass().remove("light-mode");
                 themeToggleButton.setText("☀");
             }
             fadeIn.play();

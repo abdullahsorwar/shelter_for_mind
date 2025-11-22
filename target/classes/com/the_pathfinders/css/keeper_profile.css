@@ -1,0 +1,551 @@
+/* Root Pane */
+.root {
+    -fx-background-color: transparent;
+}
+
+/* Background */
+.background {
+    -fx-background-color: transparent;
+}
+
+.gradient-background {
+    -fx-fill: linear-gradient(
+        from 0% 0% to 100% 100%,
+        #1a0b2e 0%,
+        #2d1b4e 30%,
+        #3d2463 60%,
+        #512b81 100%
+    );
+}
+
+/* Profile Container */
+.profile-container {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+    -fx-background-radius: 20px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 20px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 20, 0.3, 0, 5);
+    -fx-max-width: 900px;
+    -fx-pref-width: 900px;
+}
+
+/* Header */
+.profile-header {
+    -fx-background-color: rgba(255, 123, 123, 0.1);
+    -fx-border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 15 20 15 20;
+    -fx-background-radius: 20 20 0 0;
+}
+
+.profile-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Back Button */
+.back-button {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15 8 15;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Theme Toggle */
+.theme-toggle-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 50%;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 50%;
+    -fx-border-width: 1px;
+}
+
+.theme-toggle-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Scroll Pane */
+.profile-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.profile-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.profile-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+
+.profile-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 4px;
+}
+
+.profile-scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+.profile-scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.profile-scroll-pane .scroll-bar:vertical .increment-button,
+.profile-scroll-pane .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+}
+
+/* Content */
+.profile-content {
+    -fx-background-color: transparent;
+}
+
+/* Image Section */
+.image-section {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-background-radius: 15px;
+    -fx-padding: 25 20 25 20;
+    -fx-border-color: rgba(255, 123, 123, 0.2);
+    -fx-border-radius: 15px;
+    -fx-border-width: 1px;
+}
+
+.change-image-btn {
+    -fx-background-color: rgba(255, 123, 123, 0.2);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 123, 123, 0.4);
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.change-image-btn:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.remove-image-btn {
+    -fx-background-color: rgba(255, 50, 50, 0.2);
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 50, 50, 0.4);
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.remove-image-btn:hover {
+    -fx-background-color: rgba(255, 50, 50, 0.3);
+}
+
+.image-info {
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-font-size: 11px;
+}
+
+/* Form Grid */
+.form-grid {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-background-radius: 15px;
+    -fx-padding: 30 25 30 25;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 15px;
+    -fx-border-width: 1px;
+}
+
+.field-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* Input Fields */
+.profile-input {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.4);
+    -fx-font-size: 13px;
+    -fx-padding: 0 15 0 15;
+    -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.profile-input:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(255, 123, 123, 0.6);
+    -fx-border-width: 2px;
+}
+
+.profile-input-readonly {
+    -fx-background-color: rgba(255, 255, 255, 0.02);
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-size: 13px;
+    -fx-padding: 0 15 0 15;
+    -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-opacity: 0.7;
+}
+
+/* ComboBox Styling */
+.country-code-combo,
+.blood-group-combo {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 0 10 0 15;
+    -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+}
+
+.country-code-combo .list-cell,
+.blood-group-combo .list-cell {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: transparent;
+}
+
+.country-code-combo:focused,
+.blood-group-combo:focused {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(255, 123, 123, 0.6);
+    -fx-border-width: 2px;
+}
+
+.country-code-combo .combo-box-popup .list-view .list-cell:hover,
+.blood-group-combo .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.2);
+}
+
+.country-code-combo .combo-box-popup .list-view .list-cell:selected,
+.blood-group-combo .combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: rgba(255, 123, 123, 0.3);
+}
+
+/* ComboBox Arrow Button */
+.country-code-combo .arrow-button,
+.blood-group-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.country-code-combo .arrow,
+.blood-group-combo .arrow {
+    -fx-background-color: #FF7B7B;
+}
+
+/* ComboBox Popup */
+.country-code-combo .combo-box-popup .list-view,
+.blood-group-combo .combo-box-popup .list-view {
+    -fx-background-color: #2d1b4e;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0.4, 0, 5);
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(255, 123, 123, 0.4);
+    -fx-border-radius: 8px;
+}
+
+.country-code-combo .combo-box-popup .list-view .scroll-bar:vertical,
+.blood-group-combo .combo-box-popup .list-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.country-code-combo .combo-box-popup .list-view .scroll-bar:vertical .thumb,
+.blood-group-combo .combo-box-popup .list-view .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-background-radius: 4px;
+}
+
+.country-code-combo .combo-box-popup .list-view .list-cell,
+.blood-group-combo .combo-box-popup .list-view .list-cell {
+    -fx-padding: 8 12 8 15;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: transparent;
+}
+
+.country-code-combo .list-view .scroll-bar:vertical,
+.blood-group-combo .list-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+
+.country-code-combo .list-view .scroll-bar:vertical .thumb,
+.blood-group-combo .list-view .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-background-radius: 4px;
+}
+
+/* Error Label */
+.error-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 11px;
+    -fx-padding: 3 0 0 5;
+}
+
+/* Action Buttons */
+.action-buttons {
+    -fx-padding: 15 0 0 0;
+}
+
+.cancel-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+}
+
+.cancel-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.save-btn {
+    -fx-background-color: rgba(255, 123, 123, 0.3);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 123, 123, 0.5);
+    -fx-border-radius: 10px;
+    -fx-border-width: 1.5px;
+}
+
+.save-btn:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.4);
+    -fx-border-color: rgba(255, 123, 123, 0.7);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.save-btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+/* Light Mode */
+.root.light-mode .gradient-background {
+    -fx-fill: linear-gradient(
+        from 0% 0% to 100% 100%,
+        #f5f7fa 0%,
+        #e8eef5 30%,
+        #dce4f0 60%,
+        #c8d6e8 100%
+    );
+}
+
+.root.light-mode .profile-container {
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+}
+
+.root.light-mode .profile-header {
+    -fx-background-color: rgba(255, 123, 123, 0.08);
+    -fx-border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+}
+
+.root.light-mode .profile-title {
+    -fx-text-fill: #2d1b4e;
+}
+
+.root.light-mode .back-button {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-text-fill: #2d1b4e;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+}
+
+.root.light-mode .back-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.08);
+}
+
+.root.light-mode .theme-toggle-btn {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-text-fill: #2d1b4e;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+}
+
+.root.light-mode .theme-toggle-btn:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.08);
+}
+
+.root.light-mode .image-section {
+    -fx-background-color: rgba(0, 0, 0, 0.02);
+    -fx-border-color: rgba(255, 123, 123, 0.3);
+}
+
+.root.light-mode .change-image-btn {
+    -fx-background-color: rgba(255, 123, 123, 0.15);
+    -fx-text-fill: #d63447;
+    -fx-border-color: rgba(255, 123, 123, 0.5);
+}
+
+.root.light-mode .change-image-btn:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.25);
+}
+
+.root.light-mode .remove-image-btn {
+    -fx-background-color: rgba(255, 50, 50, 0.1);
+    -fx-text-fill: #d63447;
+    -fx-border-color: rgba(255, 50, 50, 0.4);
+}
+
+.root.light-mode .remove-image-btn:hover {
+    -fx-background-color: rgba(255, 50, 50, 0.2);
+}
+
+.root.light-mode .image-info {
+    -fx-text-fill: rgba(0, 0, 0, 0.5);
+}
+
+.root.light-mode .form-grid {
+    -fx-background-color: rgba(0, 0, 0, 0.02);
+    -fx-border-color: rgba(0, 0, 0, 0.08);
+}
+
+.root.light-mode .field-label {
+    -fx-text-fill: #2d1b4e;
+}
+
+.root.light-mode .profile-input {
+    -fx-background-color: rgba(0, 0, 0, 0.03);
+    -fx-text-fill: #2d1b4e;
+    -fx-prompt-text-fill: rgba(0, 0, 0, 0.4);
+    -fx-border-color: rgba(0, 0, 0, 0.15);
+    -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+}
+
+.root.light-mode .profile-input:focused {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-border-color: rgba(255, 123, 123, 0.7);
+}
+
+.root.light-mode .profile-input-readonly {
+    -fx-background-color: rgba(0, 0, 0, 0.02);
+    -fx-text-fill: rgba(0, 0, 0, 0.6);
+    -fx-border-color: rgba(0, 0, 0, 0.08);
+    -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+}
+
+.root.light-mode .country-code-combo,
+.root.light-mode .blood-group-combo {
+    -fx-background-color: rgba(0, 0, 0, 0.03);
+    -fx-border-color: rgba(0, 0, 0, 0.15);
+    -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+}
+
+.root.light-mode .country-code-combo .list-cell,
+.root.light-mode .blood-group-combo .list-cell {
+    -fx-text-fill: #2d1b4e;
+    -fx-background-color: transparent;
+}
+
+.root.light-mode .country-code-combo:focused,
+.root.light-mode .blood-group-combo:focused {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-border-color: rgba(255, 123, 123, 0.7);
+    -fx-border-width: 2px;
+}
+
+.root.light-mode .country-code-combo .combo-box-popup .list-view .list-cell:hover,
+.root.light-mode .blood-group-combo .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.15);
+}
+
+.root.light-mode .country-code-combo .combo-box-popup .list-view .list-cell:selected,
+.root.light-mode .blood-group-combo .combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: rgba(255, 123, 123, 0.25);
+}
+
+.root.light-mode .country-code-combo .arrow-button,
+.root.light-mode .blood-group-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.root.light-mode .country-code-combo .arrow,
+.root.light-mode .blood-group-combo .arrow {
+    -fx-background-color: #d63447;
+}
+
+.root.light-mode .country-code-combo .combo-box-popup .list-view,
+.root.light-mode .blood-group-combo .combo-box-popup .list-view {
+    -fx-background-color: rgba(255, 255, 255, 0.98);
+    -fx-border-color: rgba(255, 123, 123, 0.4);
+}
+
+.root.light-mode .country-code-combo .combo-box-popup .list-view .list-cell,
+.root.light-mode .blood-group-combo .combo-box-popup .list-view .list-cell {
+    -fx-padding: 8 12 8 15;
+    -fx-text-fill: #2d1b4e;
+    -fx-background-color: transparent;
+}
+
+.root.light-mode .cancel-btn {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-text-fill: #2d1b4e;
+    -fx-border-color: rgba(0, 0, 0, 0.15);
+}
+
+.root.light-mode .cancel-btn:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.08);
+}
+
+.root.light-mode .save-btn {
+    -fx-background-color: rgba(255, 123, 123, 0.2);
+    -fx-text-fill: #d63447;
+    -fx-border-color: rgba(255, 123, 123, 0.6);
+}
+
+.root.light-mode .save-btn:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.3);
+    -fx-border-color: rgba(255, 123, 123, 0.8);
+}

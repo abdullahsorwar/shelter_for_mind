@@ -1,0 +1,39 @@
+.bg-pane {
+    -fx-background-color: linear-gradient(to bottom, #EDE9FE, #D1F4FF);
+}
+
+.breathing-circle {
+    -fx-fill: linear-gradient(from 0% 0% to 100% 100%, #E9D5FF, #D1FAFF);
+    -fx-effect: dropshadow(gaussian, rgba(200,140,255,0.6), 40, 0.4, 0, 0);
+}
+
+.breath-label {
+    -fx-font-size: 32px;
+    -fx-text-fill: #5B4B8A;
+    -fx-font-weight: bold;
+}
+
+.meditation-text {
+    -fx-font-size: 20px;
+    -fx-text-fill: #6A5FA6;
+}
+
+.sound-btn {
+    -fx-background-color: rgba(255,255,255,0.5);
+    -fx-text-fill: #5B4B8A;
+    -fx-font-size: 16px;
+    -fx-background-radius: 12;
+}
+
+.sound-btn:selected {
+    -fx-background-color: #C4B5FD;
+    -fx-text-fill: white;
+}
+
+.action-btn {
+    -fx-background-color: #A5E8FF;
+    -fx-background-radius: 20;
+    -fx-font-size: 18px;
+    -fx-text-fill: #2F3A8F;
+    -fx-padding: 10 20;
+}

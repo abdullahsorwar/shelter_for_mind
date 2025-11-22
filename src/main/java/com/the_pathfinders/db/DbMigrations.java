@@ -264,6 +264,27 @@ public final class DbMigrations {
             st.executeUpdate("""
                 create index if not exists idx_soul_last_activity on soul_id_and_soul_key(last_activity)
             """);
+            
+            // Create password reset tokens table
+            st.executeUpdate("""
+                create table if not exists keeper_password_resets (
+                  token         text primary key,
+                  keeper_id     text not null references keepers(keeper_id) on delete cascade,
+                  expires_at    timestamptz not null,
+                  used          boolean default false,
+                  created_at    timestamptz default now()
+                )
+            """);
+            
+            // Create index on keeper_id for password reset lookups
+            st.executeUpdate("""
+                create index if not exists idx_password_resets_keeper on keeper_password_resets(keeper_id)
+            """);
+            
+            // Create index on expires_at and used for cleanup
+            st.executeUpdate("""
+                create index if not exists idx_password_resets_expiry on keeper_password_resets(expires_at, used)
+            """);
         }
     }
 }

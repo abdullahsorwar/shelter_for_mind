@@ -2,6 +2,7 @@ package com.the_pathfinders;
 
 import com.the_pathfinders.db.DB;
 import com.the_pathfinders.db.DbMigrations;
+import com.the_pathfinders.util.PasswordResetServer;
 import com.the_pathfinders.verification.VerificationManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,8 +13,11 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
+    private static Stage primaryStage;
+
     @Override
     public void start(Stage stage) throws Exception {
+        primaryStage = stage;
         System.out.println("Initializing database...");
         DB.init();
         DbMigrations.runAll();
@@ -57,12 +61,35 @@ public class App extends Application {
             System.err.println("Could not play background music: " + e.getMessage());
         }
 
+        // Start password reset server
+        System.out.println("Starting password reset server...");
+        PasswordResetServer.start();
+
         stage.setOnCloseRequest(e -> {
             DB.shutdown();
             MusicManager.stopBackgroundMusic();
             // Stop verification servers
             VerificationManager.getInstance().stop();
+            // Stop password reset server
+            PasswordResetServer.stop();
         });
+    }
+    
+    public static void showPasswordResetPage(String token) {
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/the_pathfinders/fxml/password_reset.fxml"));
+            Parent root = loader.load();
+            
+            PasswordResetController controller = loader.getController();
+            controller.setResetToken(token);
+            
+            Scene scene = primaryStage.getScene();
+            scene.setRoot(root);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to load password reset page: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
