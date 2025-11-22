@@ -189,6 +189,66 @@ public final class DbMigrations {
                   end if;
                 end $$
             """);
+            
+            // Create keeper_signups table for admin registration requests
+            st.executeUpdate("""
+                create table if not exists keeper_signups (
+                  keeper_id       text primary key,
+                  email           text not null unique,
+                  password_hash   text not null,
+                  email_verified  boolean default false,
+                  status          text default 'PENDING' check (status in ('PENDING', 'APPROVED', 'REJECTED')),
+                  created_at      timestamptz default now(),
+                  approved_at     timestamptz,
+                  approved_by     text,
+                  constraint keeper_id_is_lower check (keeper_id = lower(keeper_id))
+                )
+            """);
+            
+            // Create keepers table for approved admins
+            st.executeUpdate("""
+                create table if not exists keepers (
+                  keeper_id       text primary key,
+                  email           text not null unique,
+                  password_hash   text not null,
+                  short_name      text,
+                  phone           text,
+                  country_code    text,
+                  blood_group     text,
+                  approved_at     timestamptz default now(),
+                  approved_by     text,
+                  created_at      timestamptz default now(),
+                  last_login      timestamptz,
+                  constraint keeper_id_is_lower check (keeper_id = lower(keeper_id))
+                )
+            """);
+            
+            // Create index on email for fast lookups
+            st.executeUpdate("""
+                create index if not exists idx_keeper_signups_email on keeper_signups(email)
+            """);
+            st.executeUpdate("""
+                create index if not exists idx_keepers_email on keepers(email)
+            """);
+            
+            // Add profile columns to keepers table if they don't exist
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (select 1 from information_schema.columns where table_name='keepers' and column_name='short_name') then
+                    alter table keepers add column short_name text;
+                  end if;
+                  if not exists (select 1 from information_schema.columns where table_name='keepers' and column_name='phone') then
+                    alter table keepers add column phone text;
+                  end if;
+                  if not exists (select 1 from information_schema.columns where table_name='keepers' and column_name='country_code') then
+                    alter table keepers add column country_code text;
+                  end if;
+                  if not exists (select 1 from information_schema.columns where table_name='keepers' and column_name='blood_group') then
+                    alter table keepers add column blood_group text;
+                  end if;
+                end $$
+            """);
         }
     }
 }

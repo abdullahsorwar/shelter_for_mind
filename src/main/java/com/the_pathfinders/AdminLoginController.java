@@ -156,7 +156,7 @@ public class AdminLoginController implements Initializable {
     }
     
     private void performLogin() {
-        String keeperId = keeperIdField.getText().trim();
+        String keeperId = keeperIdField.getText().trim().toLowerCase();
         String keeperPass = keeperPasswordField.getText();
         
         if (keeperId.isEmpty() || keeperPass.isEmpty()) {
@@ -164,16 +164,81 @@ public class AdminLoginController implements Initializable {
             return;
         }
         
-        // TODO: Implement actual admin authentication logic
-        System.out.println("Keeper login attempt: " + keeperId);
+        // Disable button to prevent double-clicks
+        loginButton.setDisable(true);
         
-        // For now, just show success message
-        showAlert("Login", "Keeper authentication to be implemented");
+        // Perform authentication in background thread
+        new Thread(() -> {
+            try {
+                // First check if keeper is approved
+                if (!com.the_pathfinders.db.KeeperRepository.isKeeperApproved(keeperId)) {
+                    // Check if there's a pending signup
+                    com.the_pathfinders.db.KeeperRepository.KeeperSignupRequest request = 
+                        com.the_pathfinders.db.KeeperRepository.getSignupRequest(keeperId);
+                    
+                    javafx.application.Platform.runLater(() -> {
+                        loginButton.setDisable(false);
+                        if (request == null) {
+                            showAlert("Account Not Found", "No keeper account found with this ID.\n\nPlease sign up first.");
+                        } else if (!request.emailVerified) {
+                            showAlert("Email Not Verified", "Please verify your email address first.\n\nCheck your inbox for the verification link.");
+                        } else if (request.status == com.the_pathfinders.db.KeeperRepository.KeeperStatus.PENDING) {
+                            showAlert("Approval Pending", "Your account is pending approval by existing keepers.\n\nYou will receive an email once approved.");
+                        } else if (request.status == com.the_pathfinders.db.KeeperRepository.KeeperStatus.REJECTED) {
+                            showAlert("Account Rejected", "Your keeper account request was not approved.\n\nPlease contact support for more information.");
+                        }
+                    });
+                    return;
+                }
+                
+                // Authenticate
+                boolean authenticated = com.the_pathfinders.db.KeeperRepository.authenticateKeeper(keeperId, keeperPass);
+                
+                javafx.application.Platform.runLater(() -> {
+                    loginButton.setDisable(false);
+                    if (authenticated) {
+                        // Update last login timestamp
+                        try {
+                            com.the_pathfinders.db.KeeperRepository.updateLastLogin(keeperId);
+                        } catch (Exception e) {
+                            System.err.println("Failed to update last login: " + e.getMessage());
+                        }
+                        
+                        // Navigate to keeper dashboard
+                        try {
+                            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                                getClass().getResource("/com/the_pathfinders/fxml/keeper_dashboard.fxml"));
+                            javafx.scene.Parent dashboardRoot = loader.load();
+                            
+                            // Pass keeper ID to dashboard controller
+                            com.the_pathfinders.KeeperDashboardController controller = loader.getController();
+                            controller.setKeeperInfo(keeperId);
+                            
+                            root.getScene().setRoot(dashboardRoot);
+                        } catch (Exception ex) {
+                            System.err.println("Failed to load keeper dashboard: " + ex.getMessage());
+                            ex.printStackTrace();
+                            showAlert("Error", "Failed to load keeper dashboard.");
+                        }
+                    } else {
+                        showAlert("Login Failed", "Invalid keeper ID or password.");
+                    }
+                });
+                
+            } catch (Exception e) {
+                System.err.println("Login error: " + e.getMessage());
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() -> {
+                    loginButton.setDisable(false);
+                    showAlert("Login Error", "An error occurred during login: " + e.getMessage());
+                });
+            }
+        }).start();
     }
     
     private void handleSignup() {
-        String email = emailField.getText().trim();
-        String keeperId = keeperIdField.getText().trim();
+        String email = emailField.getText().trim().toLowerCase();
+        String keeperId = keeperIdField.getText().trim().toLowerCase();
         String keeperPass = keeperPasswordField.getText();
         
         if (email.isEmpty() || keeperId.isEmpty() || keeperPass.isEmpty()) {
@@ -181,11 +246,110 @@ public class AdminLoginController implements Initializable {
             return;
         }
         
-        // TODO: Implement actual signup logic
-        System.out.println("Keeper signup attempt: " + email + ", " + keeperId);
+        // Validate email format
+        if (!isValidEmail(email)) {
+            showAlert("Invalid Email", "Please enter a valid email address");
+            return;
+        }
         
-        // For now, just show success message
-        showAlert("Sign Up", "Account creation to be implemented");
+        // Validate keeper_id format (alphanumeric, underscore, 3-20 chars)
+        if (!keeperId.matches("^[a-z0-9_]{3,20}$")) {
+            showAlert("Invalid Keeper ID", "Keeper ID must be 3-20 characters (lowercase letters, numbers, underscore only)");
+            return;
+        }
+        
+        // Validate password strength (at least 8 characters)
+        if (keeperPass.length() < 8) {
+            showAlert("Weak Password", "Password must be at least 8 characters long");
+            return;
+        }
+        
+        // Disable button to prevent double-clicks
+        loginButton.setDisable(true);
+        
+        // Perform signup in background thread
+        new Thread(() -> {
+            try {
+                // Check if keeper_id already exists
+                if (com.the_pathfinders.db.KeeperRepository.isKeeperIdExists(keeperId)) {
+                    javafx.application.Platform.runLater(() -> {
+                        loginButton.setDisable(false);
+                        showAlert("Keeper ID Taken", "This keeper ID is already registered. Please choose a different one.");
+                    });
+                    return;
+                }
+                
+                // Check if email already exists
+                if (com.the_pathfinders.db.KeeperRepository.isEmailExists(email)) {
+                    javafx.application.Platform.runLater(() -> {
+                        loginButton.setDisable(false);
+                        showAlert("Email Already Registered", "This email is already associated with another account.");
+                    });
+                    return;
+                }
+                
+                // Hash password
+                String passwordHash = com.the_pathfinders.db.KeeperRepository.hashPassword(keeperPass);
+                
+                // Create signup request
+                com.the_pathfinders.db.KeeperRepository.createSignupRequest(keeperId, email, passwordHash);
+                System.out.println("Keeper signup request created: " + keeperId);
+                
+                // Send verification email
+                com.the_pathfinders.verification.VerificationManager verificationManager = 
+                    com.the_pathfinders.verification.VerificationManager.getInstance();
+                
+                if (!verificationManager.isRunning()) {
+                    verificationManager.start();
+                }
+                
+                // Register keeper verification with server
+                String verifyToken = com.the_pathfinders.verification.EmailService.generateVerificationToken(keeperId);
+                // Use reflection to access HTTP server and register
+                try {
+                    java.lang.reflect.Field httpServerField = verificationManager.getClass().getDeclaredField("httpServer");
+                    httpServerField.setAccessible(true);
+                    com.the_pathfinders.verification.VerificationServer httpServer = 
+                        (com.the_pathfinders.verification.VerificationServer) httpServerField.get(verificationManager);
+                    httpServer.registerVerification(verifyToken, keeperId);
+                    
+                    // Send keeper verification email
+                    com.the_pathfinders.verification.EmailService.sendKeeperVerificationEmail(email, keeperId, verifyToken);
+                } catch (Exception e) {
+                    System.err.println("Failed to send keeper verification email: " + e.getMessage());
+                    e.printStackTrace();
+                }
+                
+                javafx.application.Platform.runLater(() -> {
+                    loginButton.setDisable(false);
+                    showAlert("Verification Email Sent", 
+                        "A verification email has been sent to " + email + ".\n\n" +
+                        "Please check your inbox and click the verification link.\n\n" +
+                        "After verification, existing keepers will review your request and " +
+                        "you will receive a follow-up email once approved.");
+                    
+                    // Clear fields and switch back to login mode
+                    emailField.clear();
+                    keeperIdField.clear();
+                    keeperPasswordField.clear();
+                    keeperPasswordVisibleField.clear();
+                    switchToLoginMode();
+                });
+                
+            } catch (Exception e) {
+                System.err.println("Keeper signup error: " + e.getMessage());
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() -> {
+                    loginButton.setDisable(false);
+                    showAlert("Signup Error", "An error occurred during signup: " + e.getMessage());
+                });
+            }
+        }).start();
+    }
+    
+    private boolean isValidEmail(String email) {
+        // Simple email validation regex
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     }
     
     @FXML
