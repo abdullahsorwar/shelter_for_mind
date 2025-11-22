@@ -43,8 +43,8 @@
                         <font><Font size="14.0" /></font>
                      </Button>
                      
-                     <!-- Active Souls -->
-                     <Button fx:id="activeSoulsBtn" mnemonicParsing="false" onAction="#showActiveSouls" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="🌟 Active Souls" alignment="CENTER_LEFT">
+                     <!-- Soul Moderation -->
+                     <Button fx:id="soulModerationBtn" mnemonicParsing="false" onAction="#showSoulModeration" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="👥 Soul Moderation" alignment="CENTER_LEFT">
                         <font><Font size="14.0" /></font>
                      </Button>
                      
@@ -75,9 +75,7 @@
                      <HBox alignment="CENTER_LEFT" spacing="15.0" onMouseClicked="#goToKeeperProfile" styleClass="profile-clickable">
                         <children>
                            <StackPane prefHeight="50.0" prefWidth="50.0">
-                              <ImageView fx:id="keeperProfileImage" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                 <image><Image url="@../../../assets/icons/user.png" /></image>
-                              </ImageView>
+                              <ImageView fx:id="keeperProfileImage" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true"/>
                               <Circle radius="25.0" fill="transparent" stroke="#FF7B7B" strokeWidth="2.0" />
                            </StackPane>
                            <VBox spacing="2.0">
@@ -159,6 +157,74 @@
                                     </Label>
                                  </VBox>
                               </children>
+                           </VBox>
+                        </content>
+                     </ScrollPane>
+                     
+                     <!-- Soul Moderation Section -->
+                     <ScrollPane fx:id="soulModerationPane" fitToWidth="true" styleClass="content-scroll" visible="false" managed="false">
+                        <content>
+                           <VBox spacing="20.0" styleClass="content-padding">
+                              <!-- Header Section -->
+                              <HBox alignment="CENTER_LEFT" spacing="15.0">
+                                 <Label text="👥 Soul Moderation" styleClass="section-title">
+                                    <font><Font name="System Bold" size="28.0" /></font>
+                                 </Label>
+                                 <Region HBox.hgrow="ALWAYS"/>
+                                 <Button fx:id="refreshSoulsBtn" text="🔄 Refresh" styleClass="action-btn" onAction="#loadSoulModeration"/>
+                              </HBox>
+                              
+                              <Label text="Monitor active and inactive users" styleClass="section-subtitle">
+                                 <font><Font size="14.0" /></font>
+                              </Label>
+                              
+                              <!-- Stats Section -->
+                              <HBox spacing="15.0" alignment="CENTER_LEFT">
+                                 <VBox alignment="CENTER" spacing="5.0" styleClass="stat-card" prefWidth="200.0">
+                                    <Label fx:id="activeSoulsCount" text="0" styleClass="stat-number">
+                                       <font><Font name="System Bold" size="32.0" /></font>
+                                    </Label>
+                                    <Label text="🟢 Active Users" styleClass="stat-label">
+                                       <font><Font size="13.0" /></font>
+                                    </Label>
+                                 </VBox>
+                                 
+                                 <VBox alignment="CENTER" spacing="5.0" styleClass="stat-card" prefWidth="200.0">
+                                    <Label fx:id="inactiveSoulsCount" text="0" styleClass="stat-number">
+                                       <font><Font name="System Bold" size="32.0" /></font>
+                                    </Label>
+                                    <Label text="🔴 Inactive Users" styleClass="stat-label">
+                                       <font><Font size="13.0" /></font>
+                                    </Label>
+                                 </VBox>
+                                 
+                                 <VBox alignment="CENTER" spacing="5.0" styleClass="stat-card" prefWidth="200.0">
+                                    <Label fx:id="totalSoulsCount" text="0" styleClass="stat-number">
+                                       <font><Font name="System Bold" size="32.0" /></font>
+                                    </Label>
+                                    <Label text="📊 Total Users" styleClass="stat-label">
+                                       <font><Font size="13.0" /></font>
+                                    </Label>
+                                 </VBox>
+                              </HBox>
+                              
+                              <!-- Souls List Container -->
+                              <VBox fx:id="soulsListContainer" spacing="10.0" styleClass="souls-container">
+                                 <!-- Soul cards will be added dynamically -->
+                              </VBox>
+                              
+                              <!-- Empty State -->
+                              <VBox fx:id="soulsEmptyState" alignment="CENTER" spacing="15.0" prefHeight="300.0" styleClass="empty-state" visible="false" managed="false">
+                                 <Label text="👥" styleClass="empty-icon">
+                                    <font><Font size="60.0" /></font>
+                                 </Label>
+                                 <Label text="No Users Found" styleClass="empty-text">
+                                    <font><Font name="System Bold" size="18.0" /></font>
+                                 </Label>
+                                 <Label text="No registered users in the system yet." styleClass="empty-subtext">
+                                    <font><Font size="13.0" /></font>
+                                 </Label>
+                              </VBox>
                            </VBox>
                         </content>
                      </ScrollPane>

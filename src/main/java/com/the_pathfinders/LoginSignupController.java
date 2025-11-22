@@ -291,6 +291,9 @@ public class LoginSignupController implements Initializable {
                     return;
                 }
                 
+                // Update activity timestamp on successful login
+                com.the_pathfinders.util.ActivityTracker.updateActivitySync(id);
+                
                 // Fetch display name (if available)
                 String name = fetchNameForId(id);
                 

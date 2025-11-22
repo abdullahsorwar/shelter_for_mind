@@ -19,6 +19,7 @@ com\the_pathfinders\AdminLoginController.class
 com\the_pathfinders\verification\VerificationServer$KeeperVerificationHandler.class
 com\the_pathfinders\SeekHelpController.class
 com\the_pathfinders\App.class
+com\the_pathfinders\db\KeeperRepository$SoulInfo.class
 com\the_pathfinders\BlogContentLoader.class
 com\the_pathfinders\DashboardController.class
 com\the_pathfinders\db\DbMigrations.class
@@ -41,6 +42,7 @@ com\the_pathfinders\verification\EmailService.class
 com\the_pathfinders\PublicJournalsController.class
 com\the_pathfinders\verification\VerificationServer$VerificationHandler.class
 com\the_pathfinders\ProfileController$1.class
+com\the_pathfinders\util\ActivityTracker.class
 com\the_pathfinders\util\JournalUtils.class
 com\the_pathfinders\VideoManager.class
 com\the_pathfinders\SocialWorkController.class

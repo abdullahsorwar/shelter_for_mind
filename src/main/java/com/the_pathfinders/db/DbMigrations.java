@@ -229,6 +229,21 @@ public final class DbMigrations {
                   end if;
                 end $$
             """);
+            
+            // Add last_activity column to soul_id_and_soul_key table for tracking active users
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (select 1 from information_schema.columns where table_name='soul_id_and_soul_key' and column_name='last_activity') then
+                    alter table soul_id_and_soul_key add column last_activity timestamptz;
+                  end if;
+                end $$
+            """);
+            
+            // Create index on last_activity for fast active user queries
+            st.executeUpdate("""
+                create index if not exists idx_soul_last_activity on soul_id_and_soul_key(last_activity)
+            """);
         }
     }
 }

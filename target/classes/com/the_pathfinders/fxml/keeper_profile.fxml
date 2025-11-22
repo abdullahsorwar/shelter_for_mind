@@ -37,9 +37,7 @@
                <!-- Profile Image Section -->
                <VBox alignment="CENTER" spacing="15.0" styleClass="image-section">
                   <StackPane prefHeight="150.0" prefWidth="150.0">
-                     <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                        <image><Image url="@../../../assets/icons/user.png" /></image>
-                     </ImageView>
+                     <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true"/>
                      <Circle radius="75.0" fill="transparent" stroke="#FF7B7B" strokeWidth="3.0" />
                   </StackPane>
                   

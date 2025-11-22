@@ -35,7 +35,7 @@ public class KeeperDashboardController implements Initializable {
     // Left Panel
     @FXML private VBox navigationMenu;
     @FXML private Button keeperVerificationBtn;
-    @FXML private Button activeSoulsBtn;
+    @FXML private Button soulModerationBtn;
     @FXML private Button journalModerationBtn;
     @FXML private Button appointmentBtn;
     @FXML private Button achievementBtn;
@@ -53,6 +53,16 @@ public class KeeperDashboardController implements Initializable {
     @FXML private VBox emptyState;
     @FXML private Button refreshBtn;
     @FXML private Label refreshLoadingIcon;
+    
+    // Soul Moderation Section
+    @FXML private ScrollPane soulModerationPane;
+    @FXML private VBox soulsListContainer;
+    @FXML private VBox soulsEmptyState;
+    @FXML private Label activeSoulsCount;
+    @FXML private Label inactiveSoulsCount;
+    @FXML private Label totalSoulsCount;
+    @FXML private Button refreshSoulsBtn;
+    
     @FXML private VBox otherSectionPane;
     @FXML private Label placeholderText;
     
@@ -64,35 +74,24 @@ public class KeeperDashboardController implements Initializable {
         this.currentKeeperId = keeperId;
         keeperIdLabel.setText(keeperId);
         
-        // Load keeper profile to get short name
-        loadKeeperNameAndImage(keeperId);
-    }
-    
-    private void loadKeeperNameAndImage(String keeperId) {
-        new Thread(() -> {
-            try {
-                // Load keeper profile from database
-                KeeperRepository.KeeperProfile profile = KeeperRepository.getKeeperProfile(keeperId);
-                
-                Platform.runLater(() -> {
-                    // Set name: use short name if available, otherwise just "Keeper"
-                    if (profile.shortName != null && !profile.shortName.trim().isEmpty()) {
-                        keeperNameLabel.setText(profile.shortName);
-                    } else {
-                        keeperNameLabel.setText("Keeper");
-                    }
-                    
-                    // Load profile image
-                    loadKeeperProfileImage(keeperId);
-                });
-            } catch (Exception e) {
-                System.err.println("Failed to load keeper profile: " + e.getMessage());
-                Platform.runLater(() -> {
-                    keeperNameLabel.setText("Keeper");
-                    loadKeeperProfileImage(keeperId);
-                });
+        // Load keeper profile to get short name synchronously
+        try {
+            KeeperRepository.KeeperProfile profile = KeeperRepository.getKeeperProfile(keeperId);
+            
+            // Set name: use short name if available, otherwise just "Keeper"
+            if (profile.shortName != null && !profile.shortName.trim().isEmpty()) {
+                keeperNameLabel.setText(profile.shortName);
+            } else {
+                keeperNameLabel.setText("Keeper");
             }
-        }).start();
+            
+            // Load profile image
+            loadKeeperProfileImage(keeperId);
+        } catch (Exception e) {
+            System.err.println("Failed to load keeper profile: " + e.getMessage());
+            keeperNameLabel.setText("Keeper");
+            loadKeeperProfileImage(keeperId);
+        }
     }
     
     private void loadKeeperProfileImage(String keeperId) {
@@ -229,40 +228,40 @@ public class KeeperDashboardController implements Initializable {
     
     @FXML
     private void showKeeperVerification() {
-        switchContent("Keeper Verification", true);
+        switchContent("Keeper Verification", "verification");
         setActiveNavButton(keeperVerificationBtn);
         loadPendingSignups();
     }
     
     @FXML
-    private void showActiveSouls() {
-        switchContent("Active Souls", false);
-        setActiveNavButton(activeSoulsBtn);
-        placeholderText.setText("Active Souls - Coming Soon");
+    private void showSoulModeration() {
+        switchContent("Soul Moderation", "souls");
+        setActiveNavButton(soulModerationBtn);
+        loadSoulModeration();
     }
     
     @FXML
     private void showJournalModeration() {
-        switchContent("Journal Moderation", false);
+        switchContent("Journal Moderation", "other");
         setActiveNavButton(journalModerationBtn);
         placeholderText.setText("Journal Moderation - Coming Soon");
     }
     
     @FXML
     private void showAppointment() {
-        switchContent("Appointment", false);
+        switchContent("Appointment", "other");
         setActiveNavButton(appointmentBtn);
         placeholderText.setText("Appointment - Coming Soon");
     }
     
     @FXML
     private void showAchievement() {
-        switchContent("Achievement", false);
+        switchContent("Achievement", "other");
         setActiveNavButton(achievementBtn);
         placeholderText.setText("Achievement - Coming Soon");
     }
     
-    private void switchContent(String title, boolean showVerification) {
+    private void switchContent(String title, String paneToShow) {
         // Fade out
         FadeTransition fadeOut = new FadeTransition(Duration.millis(200), contentBody);
         fadeOut.setFromValue(1.0);
@@ -270,10 +269,30 @@ public class KeeperDashboardController implements Initializable {
         
         fadeOut.setOnFinished(e -> {
             contentTitle.setText(title);
-            keeperVerificationPane.setVisible(showVerification);
-            keeperVerificationPane.setManaged(showVerification);
-            otherSectionPane.setVisible(!showVerification);
-            otherSectionPane.setManaged(!showVerification);
+            
+            // Hide all panes
+            keeperVerificationPane.setVisible(false);
+            keeperVerificationPane.setManaged(false);
+            soulModerationPane.setVisible(false);
+            soulModerationPane.setManaged(false);
+            otherSectionPane.setVisible(false);
+            otherSectionPane.setManaged(false);
+            
+            // Show requested pane
+            switch (paneToShow) {
+                case "verification" -> {
+                    keeperVerificationPane.setVisible(true);
+                    keeperVerificationPane.setManaged(true);
+                }
+                case "souls" -> {
+                    soulModerationPane.setVisible(true);
+                    soulModerationPane.setManaged(true);
+                }
+                case "other" -> {
+                    otherSectionPane.setVisible(true);
+                    otherSectionPane.setManaged(true);
+                }
+            }
             
             // Fade in
             FadeTransition fadeIn = new FadeTransition(Duration.millis(200), contentBody);
@@ -494,6 +513,133 @@ public class KeeperDashboardController implements Initializable {
                 showAlert("Info", "Reject functionality to be implemented");
             }
         });
+    }
+    
+    @FXML
+    private void loadSoulModeration() {
+        // Show loading state
+        soulsListContainer.getChildren().clear();
+        soulsEmptyState.setVisible(false);
+        soulsEmptyState.setManaged(false);
+        
+        // Disable refresh button while loading
+        if (refreshSoulsBtn != null) {
+            refreshSoulsBtn.setDisable(true);
+        }
+        
+        // Load in background thread
+        new Thread(() -> {
+            try {
+                List<KeeperRepository.SoulInfo> souls = KeeperRepository.getAllSouls();
+                
+                Platform.runLater(() -> {
+                    soulsListContainer.getChildren().clear();
+                    
+                    if (souls.isEmpty()) {
+                        soulsEmptyState.setVisible(true);
+                        soulsEmptyState.setManaged(true);
+                        activeSoulsCount.setText("0");
+                        inactiveSoulsCount.setText("0");
+                        totalSoulsCount.setText("0");
+                    } else {
+                        soulsEmptyState.setVisible(false);
+                        soulsEmptyState.setManaged(false);
+                        
+                        // Count active and inactive souls
+                        long activeCount = souls.stream().filter(s -> s.isActive).count();
+                        long inactiveCount = souls.size() - activeCount;
+                        
+                        // Update stats
+                        activeSoulsCount.setText(String.valueOf(activeCount));
+                        inactiveSoulsCount.setText(String.valueOf(inactiveCount));
+                        totalSoulsCount.setText(String.valueOf(souls.size()));
+                        
+                        // Create soul cards
+                        for (KeeperRepository.SoulInfo soul : souls) {
+                            soulsListContainer.getChildren().add(createSoulCard(soul));
+                        }
+                    }
+                    
+                    // Re-enable refresh button
+                    if (refreshSoulsBtn != null) {
+                        refreshSoulsBtn.setDisable(false);
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("Failed to load souls: " + e.getMessage());
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    showAlert("Error", "Failed to load souls: " + e.getMessage());
+                    if (refreshSoulsBtn != null) {
+                        refreshSoulsBtn.setDisable(false);
+                    }
+                });
+            }
+        }).start();
+    }
+    
+    private HBox createSoulCard(KeeperRepository.SoulInfo soul) {
+        HBox card = new HBox(20);
+        card.getStyleClass().add("soul-card");
+        card.setPadding(new Insets(15, 20, 15, 20));
+        card.setAlignment(Pos.CENTER_LEFT);
+        
+        // Status indicator (circle)
+        Circle statusCircle = new Circle(8);
+        if (soul.isActive) {
+            statusCircle.setStyle("-fx-fill: #7bed9f;"); // Green for active
+        } else {
+            statusCircle.setStyle("-fx-fill: #ff6b6b;"); // Red for inactive
+        }
+        
+        // Soul info section
+        VBox infoBox = new VBox(5);
+        infoBox.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(infoBox, Priority.ALWAYS);
+        
+        // Soul ID and Name
+        Label nameLabel = new Label(soul.soulName != null ? soul.soulName : "Unknown");
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        
+        Label idLabel = new Label("ID: " + soul.soulId);
+        idLabel.setStyle("-fx-font-size: 12px; -fx-opacity: 0.7;");
+        
+        infoBox.getChildren().addAll(nameLabel, idLabel);
+        
+        // Status section
+        VBox statusBox = new VBox(5);
+        statusBox.setAlignment(Pos.CENTER);
+        statusBox.setPrefWidth(150);
+        
+        Label statusLabel = new Label(soul.isActive ? "🟢 Active" : "🔴 Inactive");
+        statusLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        
+        statusBox.getChildren().add(statusLabel);
+        
+        // Last activity section
+        VBox activityBox = new VBox(5);
+        activityBox.setAlignment(Pos.CENTER_RIGHT);
+        activityBox.setPrefWidth(200);
+        
+        Label activityLabel = new Label("Last Activity");
+        activityLabel.setStyle("-fx-font-size: 11px; -fx-opacity: 0.6;");
+        
+        String activityText;
+        if (soul.lastActivity == null) {
+            activityText = "Never logged in";
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
+            activityText = soul.lastActivity.format(formatter);
+        }
+        
+        Label activityValue = new Label(activityText);
+        activityValue.setStyle("-fx-font-size: 13px;");
+        
+        activityBox.getChildren().addAll(activityLabel, activityValue);
+        
+        card.getChildren().addAll(statusCircle, infoBox, statusBox, activityBox);
+        
+        return card;
     }
     
     @FXML

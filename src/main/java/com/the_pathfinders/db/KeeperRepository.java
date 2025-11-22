@@ -426,4 +426,57 @@ public class KeeperRepository {
             System.out.println("Updated keeper profile for: " + profile.keeperId + " (rows: " + rowsUpdated + ")");
         }
     }
+    
+    /**
+     * Soul information with activity status
+     */
+    public static class SoulInfo {
+        public String soulId;
+        public String soulName;
+        public LocalDateTime lastActivity;
+        public boolean isActive; // Active if last_activity is within 15 minutes
+        
+        public SoulInfo() {}
+    }
+    
+    /**
+     * Get all souls with their activity status
+     */
+    public static List<SoulInfo> getAllSouls() throws SQLException {
+        String sql = """
+            SELECT 
+                soul_id, 
+                soul_name, 
+                last_activity,
+                CASE 
+                    WHEN last_activity IS NOT NULL 
+                         AND last_activity >= (NOW() - INTERVAL '15 minutes')
+                    THEN true 
+                    ELSE false 
+                END as is_active
+            FROM soul_id_and_soul_key
+            ORDER BY last_activity DESC NULLS LAST, soul_id ASC
+        """;
+        
+        List<SoulInfo> souls = new ArrayList<>();
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                SoulInfo soul = new SoulInfo();
+                soul.soulId = rs.getString("soul_id");
+                soul.soulName = rs.getString("soul_name");
+                
+                Timestamp ts = rs.getTimestamp("last_activity");
+                soul.lastActivity = ts != null ? ts.toLocalDateTime() : null;
+                soul.isActive = rs.getBoolean("is_active");
+                
+                souls.add(soul);
+            }
+        }
+        
+        return souls;
+    }
 }

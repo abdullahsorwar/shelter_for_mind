@@ -280,6 +280,7 @@ if (pomodoroBtn != null) {
         });
     }
     private void openSocialWork() {
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SocialWork.fxml"));
             Parent p = loader.load();
@@ -320,6 +321,7 @@ private void hideTranquilPopup() {
     fadeOut.play();
 }
 private void loadPage(String path) {
+    com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
     try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         Parent p = loader.load();
@@ -334,6 +336,7 @@ private void loadPage(String path) {
 
 
     private void openToDo() {
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         try {
             System.out.println("=== Opening ToDo page ===");
             URL fxmlUrl = getClass().getResource("/com/the_pathfinders/fxml/ToDo.fxml");
@@ -364,6 +367,7 @@ private void loadPage(String path) {
     }
 
     private void openSeekHelp() {
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SeekHelp.fxml"));
             Parent p = loader.load();
@@ -425,6 +429,10 @@ private void loadPage(String path) {
     public void setUser(String id, String name) {
         this.soulId = id == null ? "" : id;
         if (userLabel != null) userLabel.setText(this.soulId);
+        
+        // Track activity when dashboard loads
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
+        
         // Ensure greeting reflects current time when user is set (scene may be swapped after initialize)
         try { if (greetingLabel != null) updateGreeting(); } catch (Exception ignored) {}
         try {
@@ -499,6 +507,7 @@ private void loadPage(String path) {
     }
 
     private void openProfile() {
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/profile.fxml"));
             Parent profileRoot = loader.load();
@@ -546,6 +555,7 @@ private void loadPage(String path) {
     }
 
     private void openPrivateJournals() {
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/private_journals_view.fxml"));
             Parent p = loader.load();
@@ -556,6 +566,7 @@ private void loadPage(String path) {
     }
 
     private void openPublicJournals() {
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/public_journals_view.fxml"));
             Parent p = loader.load();
@@ -571,6 +582,7 @@ private void loadPage(String path) {
     }
 
     private void openBlogs() {
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/blog.fxml"));
             Parent p = loader.load();

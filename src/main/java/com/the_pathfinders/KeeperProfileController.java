@@ -66,7 +66,42 @@ public class KeeperProfileController implements Initializable {
     
     public void setKeeperInfo(String keeperId) {
         this.currentKeeperId = keeperId;
-        loadKeeperProfile();
+        
+        // Load profile data synchronously before showing page
+        try {
+            KeeperRepository.KeeperProfile profile = KeeperRepository.getKeeperProfile(keeperId);
+            originalProfile = profile;
+            
+            emailField.setText(profile.email);
+            
+            if (profile.shortName != null && !profile.shortName.isEmpty()) {
+                shortNameField.setText(profile.shortName);
+            }
+            
+            if (profile.countryCode != null && !profile.countryCode.isEmpty()) {
+                // Find and select the matching country code
+                for (String item : countryCodeCombo.getItems()) {
+                    if (item.startsWith(profile.countryCode)) {
+                        countryCodeCombo.setValue(item);
+                        break;
+                    }
+                }
+            }
+            
+            if (profile.phone != null && !profile.phone.isEmpty()) {
+                phoneField.setText(profile.phone);
+            }
+            
+            if (profile.bloodGroup != null && !profile.bloodGroup.isEmpty()) {
+                bloodGroupCombo.setValue(profile.bloodGroup);
+            }
+            
+            // Load profile image
+            loadProfileImage();
+        } catch (Exception e) {
+            System.err.println("Failed to load keeper profile: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @Override
@@ -198,49 +233,7 @@ public class KeeperProfileController implements Initializable {
         errorLabel.setManaged(false);
     }
     
-    private void loadKeeperProfile() {
-        new Thread(() -> {
-            try {
-                KeeperRepository.KeeperProfile profile = KeeperRepository.getKeeperProfile(currentKeeperId);
-                originalProfile = profile;
-                
-                Platform.runLater(() -> {
-                    emailField.setText(profile.email);
-                    
-                    if (profile.shortName != null && !profile.shortName.isEmpty()) {
-                        shortNameField.setText(profile.shortName);
-                    }
-                    
-                    if (profile.countryCode != null && !profile.countryCode.isEmpty()) {
-                        // Find and select the matching country code
-                        for (String item : countryCodeCombo.getItems()) {
-                            if (item.startsWith(profile.countryCode)) {
-                                countryCodeCombo.setValue(item);
-                                break;
-                            }
-                        }
-                    }
-                    
-                    if (profile.phone != null && !profile.phone.isEmpty()) {
-                        phoneField.setText(profile.phone);
-                    }
-                    
-                    if (profile.bloodGroup != null && !profile.bloodGroup.isEmpty()) {
-                        bloodGroupCombo.setValue(profile.bloodGroup);
-                    }
-                    
-                    // Load profile image
-                    loadProfileImage();
-                });
-            } catch (Exception e) {
-                System.err.println("Failed to load keeper profile: " + e.getMessage());
-                e.printStackTrace();
-                Platform.runLater(() -> {
-                    showAlert("Error", "Failed to load profile: " + e.getMessage());
-                });
-            }
-        }).start();
-    }
+
     
     private void loadProfileImage() {
         try {
@@ -416,8 +409,8 @@ public class KeeperProfileController implements Initializable {
                     saveBtn.setDisable(false);
                     showAlert("Success", "Profile updated successfully!");
                     
-                    // Reload profile to reflect changes
-                    loadKeeperProfile();
+                    // Reload profile image after save
+                    loadProfileImage();
                 });
             } catch (Exception e) {
                 System.err.println("Failed to save profile: " + e.getMessage());
