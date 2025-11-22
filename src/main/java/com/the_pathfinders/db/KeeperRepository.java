@@ -30,6 +30,17 @@ public class KeeperRepository {
         public KeeperSignupRequest() {}
     }
     
+    public static class KeeperProfile {
+        public String keeperId;
+        public String email;
+        public String shortName;
+        public String phone;
+        public String countryCode;
+        public String bloodGroup;
+        
+        public KeeperProfile() {}
+    }
+    
     /**
      * Create a new keeper signup request
      */
@@ -338,6 +349,81 @@ public class KeeperRepository {
             return hexString.toString();
         } catch (Exception e) {
             throw new RuntimeException("Failed to hash password", e);
+        }
+    }
+    
+    /**
+     * Get keeper profile information
+     */
+    public static KeeperProfile getKeeperProfile(String keeperId) throws SQLException {
+        String sql = """
+            SELECT k.keeper_id, k.email, k.short_name, k.phone, k.country_code, k.blood_group
+            FROM keepers k
+            WHERE k.keeper_id = ?
+        """;
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, keeperId.toLowerCase());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    KeeperProfile profile = new KeeperProfile();
+                    profile.keeperId = rs.getString("keeper_id");
+                    profile.email = rs.getString("email");
+                    profile.shortName = rs.getString("short_name");
+                    profile.phone = rs.getString("phone");
+                    profile.countryCode = rs.getString("country_code");
+                    profile.bloodGroup = rs.getString("blood_group");
+                    return profile;
+                }
+            }
+        }
+        
+        // If no profile found, return basic info with email only
+        KeeperProfile profile = new KeeperProfile();
+        profile.keeperId = keeperId;
+        profile.email = getKeeperEmail(keeperId);
+        return profile;
+    }
+    
+    /**
+     * Get keeper email
+     */
+    private static String getKeeperEmail(String keeperId) throws SQLException {
+        String sql = "SELECT email FROM keepers WHERE keeper_id = ?";
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, keeperId.toLowerCase());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("email");
+                }
+            }
+        }
+        return "";
+    }
+    
+    /**
+     * Update keeper profile information
+     */
+    public static void updateKeeperProfile(KeeperProfile profile) throws SQLException {
+        String sql = """
+            UPDATE keepers
+            SET short_name = ?, phone = ?, country_code = ?, blood_group = ?
+            WHERE keeper_id = ?
+        """;
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, profile.shortName);
+            ps.setString(2, profile.phone);
+            ps.setString(3, profile.countryCode);
+            ps.setString(4, profile.bloodGroup);
+            ps.setString(5, profile.keeperId.toLowerCase());
+            
+            int rowsUpdated = ps.executeUpdate();
+            System.out.println("Updated keeper profile for: " + profile.keeperId + " (rows: " + rowsUpdated + ")");
         }
     }
 }

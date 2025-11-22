@@ -44,9 +44,11 @@ com\the_pathfinders\ProfileController$1.class
 com\the_pathfinders\util\JournalUtils.class
 com\the_pathfinders\VideoManager.class
 com\the_pathfinders\SocialWorkController.class
+com\the_pathfinders\db\KeeperRepository$KeeperProfile.class
 com\the_pathfinders\verification\VerificationManager.class
 com\the_pathfinders\ProfileController$InfoRow.class
 com\the_pathfinders\verification\VerificationServer$VerificationCallback.class
+com\the_pathfinders\KeeperProfileController.class
 com\the_pathfinders\PrivateJournalsController.class
 com\the_pathfinders\db\JournalRepository.class
 com\the_pathfinders\verification\EmailService$1.class

@@ -76,7 +76,7 @@
                         <children>
                            <StackPane prefHeight="50.0" prefWidth="50.0">
                               <ImageView fx:id="keeperProfileImage" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                 <image><Image url="@../../../assets/icons/username.png" /></image>
+                                 <image><Image url="@../../../assets/icons/user.png" /></image>
                               </ImageView>
                               <Circle radius="25.0" fill="transparent" stroke="#FF7B7B" strokeWidth="2.0" />
                            </StackPane>

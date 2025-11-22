@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -62,13 +63,80 @@ public class KeeperDashboardController implements Initializable {
     public void setKeeperInfo(String keeperId) {
         this.currentKeeperId = keeperId;
         keeperIdLabel.setText(keeperId);
-        keeperNameLabel.setText("Keeper " + keeperId);
+        
+        // Load keeper profile to get short name
+        loadKeeperNameAndImage(keeperId);
+    }
+    
+    private void loadKeeperNameAndImage(String keeperId) {
+        new Thread(() -> {
+            try {
+                // Load keeper profile from database
+                KeeperRepository.KeeperProfile profile = KeeperRepository.getKeeperProfile(keeperId);
+                
+                Platform.runLater(() -> {
+                    // Set name: use short name if available, otherwise just "Keeper"
+                    if (profile.shortName != null && !profile.shortName.trim().isEmpty()) {
+                        keeperNameLabel.setText(profile.shortName);
+                    } else {
+                        keeperNameLabel.setText("Keeper");
+                    }
+                    
+                    // Load profile image
+                    loadKeeperProfileImage(keeperId);
+                });
+            } catch (Exception e) {
+                System.err.println("Failed to load keeper profile: " + e.getMessage());
+                Platform.runLater(() -> {
+                    keeperNameLabel.setText("Keeper");
+                    loadKeeperProfileImage(keeperId);
+                });
+            }
+        }).start();
+    }
+    
+    private void loadKeeperProfileImage(String keeperId) {
+        try {
+            // Try to load from assets/keeper_img/<keeper_id>.jpg
+            String imagePath = "/assets/keeper_img/" + keeperId + ".jpg";
+            URL imageUrl = getClass().getResource(imagePath);
+            
+            if (imageUrl != null) {
+                javafx.scene.image.Image profileImage = new javafx.scene.image.Image(imageUrl.toExternalForm());
+                keeperProfileImage.setImage(profileImage);
+                System.out.println("Loaded keeper profile image: " + imagePath);
+            } else {
+                // Fallback to default username icon
+                URL defaultUrl = getClass().getResource("/assets/icons/username.png");
+                if (defaultUrl != null) {
+                    javafx.scene.image.Image defaultImage = new javafx.scene.image.Image(defaultUrl.toExternalForm());
+                    keeperProfileImage.setImage(defaultImage);
+                }
+                System.out.println("Keeper profile image not found, using default icon");
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load keeper profile image: " + e.getMessage());
+            // Use default icon on error
+            try {
+                URL defaultUrl = getClass().getResource("/assets/icons/username.png");
+                if (defaultUrl != null) {
+                    javafx.scene.image.Image defaultImage = new javafx.scene.image.Image(defaultUrl.toExternalForm());
+                    keeperProfileImage.setImage(defaultImage);
+                }
+            } catch (Exception ex) {
+                System.err.println("Failed to load default icon: " + ex.getMessage());
+            }
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Apply CSS
         root.getStylesheets().add(getClass().getResource("/com/the_pathfinders/css/keeper_dashboard.css").toExternalForm());
+        
+        // Add circular clip to profile image
+        Circle clip = new Circle(25, 25, 25);
+        keeperProfileImage.setClip(clip);
         
         // Bind to window size
         root.sceneProperty().addListener((obs, oldScene, newScene) -> {
@@ -430,8 +498,20 @@ public class KeeperDashboardController implements Initializable {
     
     @FXML
     private void goToKeeperProfile() {
-        // TODO: Navigate to keeper profile page
-        showAlert("Profile", "Keeper profile page to be implemented");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/keeper_profile.fxml"));
+            Parent profileRoot = loader.load();
+            
+            // Pass keeper info to profile controller
+            KeeperProfileController controller = loader.getController();
+            controller.setKeeperInfo(currentKeeperId);
+            
+            root.getScene().setRoot(profileRoot);
+        } catch (Exception e) {
+            System.err.println("Failed to load keeper profile: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Error", "Failed to load profile page: " + e.getMessage());
+        }
     }
     
     @FXML
