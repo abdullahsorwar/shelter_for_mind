@@ -222,6 +222,34 @@
 	-fx-background-color: rgba(0, 0, 0, 0.45);
 }
 
+/* Mood Tracker Circle Button */
+.mood-tracker-circle {
+	-fx-background-color: linear-gradient(to bottom right, #e5c7fe, #c58afd);
+	-fx-background-radius: 60px;
+	-fx-border-radius: 60px;
+	-fx-text-fill: #17144c;
+	-fx-font-size: 14px;
+	-fx-font-weight: 700;
+	-fx-cursor: hand;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 15, 0, 0, 5);
+	-fx-alignment: CENTER;
+	-fx-text-alignment: CENTER;
+	-fx-font-family: "Comic Sans MS";
+}
+
+.mood-tracker-circle:hover {
+	-fx-background-color: linear-gradient(to bottom right, #c58afd, #a84bf4);
+	-fx-scale-x: 1.1;
+	-fx-scale-y: 1.1;
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 20, 0, 0, 8);
+}
+
+.mood-tracker-circle:pressed {
+	-fx-scale-x: 0.95;
+	-fx-scale-y: 0.95;
+	-fx-background-color: linear-gradient(to bottom right, #8d4dfc, #a524fb);
+}
+
 .journaling-popup-box {
 	-fx-background-color: linear-gradient(to bottom right, #ffffff, #fafbfc);
 	-fx-background-radius: 24px;
@@ -268,4 +296,105 @@
 	-fx-scale-x: 0.95;
 	-fx-scale-y: 0.95;
 	-fx-background-color: linear-gradient(to bottom right, #bfdbfe, #93c5fd);
+}
+
+/* Progress circles for mood tracker */
+.progress-circle {
+    -fx-fill: #e2e8f0;
+    -fx-stroke: #cbd5e0;
+    -fx-stroke-width: 2;
+}
+
+.progress-circle.active {
+    -fx-fill: #667eea;
+    -fx-stroke: #5a67d8;
+}
+
+/* Back and close buttons */
+.back-btn, .close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #718096;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 5px;
+}
+
+.back-btn:hover, .close-btn:hover {
+    -fx-background-color: #f7fafc;
+}
+
+/* Questions scroll pane */
+.questions-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.questions-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.questions-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10px;
+}
+
+.questions-scroll .scroll-bar:vertical .track {
+    -fx-background-color: #f7fafc;
+    -fx-background-radius: 5px;
+}
+
+.questions-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e0;
+    -fx-background-radius: 5px;
+}
+
+.questions-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #a0aec0;
+}
+
+/* Question box styling */
+.question-box {
+    -fx-background-color: #f7fafc;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+}
+
+.question-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #2d3748;
+    -fx-wrap-text: true;
+}
+
+/* Radio button styling */
+.answer-radio {
+    -fx-font-size: 14px;
+    -fx-text-fill: #4a5568;
+}
+
+.answer-radio .radio {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e0;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-padding: 6px;
+}
+
+.answer-radio:selected .radio {
+    -fx-border-color: #667eea;
+    -fx-background-color: white;
+}
+
+.answer-radio:selected .radio .dot {
+    -fx-background-color: #667eea;
+    -fx-background-radius: 50%;
+    -fx-background-insets: 0;
+}
+
+.answer-radio:hover .radio {
+    -fx-border-color: #667eea;
 }

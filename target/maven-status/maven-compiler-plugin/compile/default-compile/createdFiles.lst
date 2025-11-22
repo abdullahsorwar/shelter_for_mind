@@ -3,13 +3,16 @@ com\the_pathfinders\BlogController.class
 com\the_pathfinders\ToDoController$1.class
 com\the_pathfinders\ProfileController.class
 com\the_pathfinders\db\SoulInfoRepository$SoulInfo.class
+com\the_pathfinders\db\MoodTrackerRepository$MoodEntry.class
 com\the_pathfinders\db\ToDoRepository.class
 com\the_pathfinders\db\SoulInfoRepository.class
 com\the_pathfinders\LoginSignupController.class
 com\the_pathfinders\verification\VerificationWebSocketServer.class
 com\the_pathfinders\db\SoulRepository$Soul.class
 com\the_pathfinders\BlogDetailController.class
+com\the_pathfinders\MoodTrackerController$QuestionData.class
 com\the_pathfinders\db\DB.class
+com\the_pathfinders\DashboardController$QuestionData.class
 com\the_pathfinders\Journal.class
 com\the_pathfinders\verification\VerificationServer.class
 com\the_pathfinders\db\SoulRepository.class
@@ -21,6 +24,7 @@ com\the_pathfinders\DashboardController.class
 com\the_pathfinders\db\DbMigrations.class
 com\the_pathfinders\JournalController.class
 com\the_pathfinders\MusicManager.class
+com\the_pathfinders\MoodTrackerController.class
 com\the_pathfinders\SocialWork.class
 com\the_pathfinders\InitialController.class
 com\the_pathfinders\TranquilOptionsPopupController.class
@@ -41,6 +45,7 @@ com\the_pathfinders\verification\VerificationManager.class
 com\the_pathfinders\ProfileController$InfoRow.class
 com\the_pathfinders\verification\VerificationServer$VerificationCallback.class
 com\the_pathfinders\PrivateJournalsController.class
+com\the_pathfinders\db\MoodTrackerRepository.class
 com\the_pathfinders\db\JournalRepository.class
 com\the_pathfinders\verification\EmailService$1.class
 com\the_pathfinders\SavedBlogsManager.class

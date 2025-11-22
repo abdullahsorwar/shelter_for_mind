@@ -66,6 +66,26 @@ public final class DbMigrations {
             st.executeUpdate("""
                 create index if not exists idx_todo_soul on todo_items(soul_id)
             """);
+
+            // Create mood_tracker table for storing mood assessments
+            st.executeUpdate("""
+                create table if not exists mood_tracker (
+                  id          bigserial primary key,
+                  soul_id     text not null,
+                  mood_score  integer not null,
+                  stress_score integer,
+                  anxiety_score integer,
+                  energy_score integer,
+                  sleep_score integer,
+                  social_score integer,
+                  answers     text,
+                  created_at  timestamptz default now()
+                )
+            """);
+
+            st.executeUpdate("""
+                create index if not exists idx_mood_soul on mood_tracker(soul_id)
+            """);
             // Add loved_by column if it doesn't exist (for existing tables)
             st.executeUpdate("""
                 do $$

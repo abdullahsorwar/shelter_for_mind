@@ -3,8 +3,9 @@ package com.the_pathfinders;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.time.LocalTime;
-import java.util.Optional;
+import java.util.*;
 
+import com.the_pathfinders.db.MoodTrackerRepository;
 import com.the_pathfinders.db.SoulRepository;
 
 import javafx.animation.FadeTransition;
@@ -15,12 +16,17 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.chart.PieChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -52,7 +58,25 @@ public class DashboardController {
     @FXML private Button SocialWorkBtn;
     @FXML private Button logoutBtn;
     @FXML private Button tranquilCornerBtn;
+    @FXML private Button moodTrackerBtn;
     @FXML private VBox buttonCardsBox;
+
+    // Mood Tracker popup elements
+    @FXML private StackPane moodTrackerOverlay;
+    @FXML private VBox moodTrackerContentBox;
+    @FXML private VBox moodResultsBox;
+    @FXML private Button moodBackBtn;
+    @FXML private Button moodCloseBtn;
+    @FXML private Button moodPrevBtn;
+    @FXML private Button moodNextBtn;
+    @FXML private Button moodSubmitBtn;
+    @FXML private Button moodDoneBtn;
+    @FXML private javafx.scene.shape.Circle progress1, progress2, progress3, progress4, progress5;
+    @FXML private ScrollPane moodScrollPane;
+    @FXML private VBox moodQuestionsContainer;
+    @FXML private javafx.scene.chart.PieChart moodPieChart;
+    @FXML private Label moodSummaryLabel;
+    @FXML private Label moodScoreLabel;
 
     // Journaling popup overlay elements
     @FXML private StackPane journalingOverlay;
@@ -75,6 +99,27 @@ public class DashboardController {
 
     private String soulId;
     private double dragStartX = 0;
+
+    // Mood tracker state
+    private int currentMoodQuestion = 0;
+    private List<javafx.scene.shape.Circle> progressCircles;
+    private List<QuestionData> moodQuestions;
+    private Map<String, String> moodAnswers;
+    private MoodTrackerRepository moodRepository;
+
+    private static class QuestionData {
+        String question;
+        String category;
+        List<String> options;
+        int[] scores;
+
+        QuestionData(String question, String category, List<String> options, int[] scores) {
+            this.question = question;
+            this.category = category;
+            this.options = options;
+            this.scores = scores;
+        }
+    }
 
     public void initialize() {
         setLogo();
@@ -119,6 +164,11 @@ public class DashboardController {
         }
         if (blogBtn != null) blogBtn.setOnAction(e -> openBlogs());
         if (moodBtn != null) moodBtn.setOnAction(e -> openToDo());
+        if (moodTrackerBtn != null) moodTrackerBtn.setOnAction(e -> showMoodTrackerPopup());
+
+        // Initialize mood tracker popup
+        initializeMoodTracker();
+
         // ─── Tranquil Corner Popup Setup ───────────────────
 if (tranquilCornerBtn != null) {
     tranquilCornerBtn.setOnAction(e -> showTranquilPopup());
@@ -700,4 +750,381 @@ private void loadPage(String path) {
         hideJournalingPopup();
         openPrivateJournals();
     }
+
+    // ========== Mood Tracker Popup Methods ==========
+
+    private void initializeMoodTracker() {
+        if (moodTrackerOverlay == null) return;
+
+        moodRepository = new MoodTrackerRepository();
+        moodAnswers = new HashMap<>();
+
+        // Initialize progress circles only if they exist
+        if (progress1 != null && progress2 != null && progress3 != null &&
+            progress4 != null && progress5 != null) {
+            progressCircles = Arrays.asList(progress1, progress2, progress3, progress4, progress5);
+        } else {
+            System.err.println("Warning: Some progress circle elements are null in dashboard.fxml");
+            progressCircles = new ArrayList<>();
+        }
+
+        // Initialize questions
+        moodQuestions = new ArrayList<>();
+        moodQuestions.add(new QuestionData(
+            "How many pending tasks do you have?",
+            "stress",
+            Arrays.asList("Too Much", "Much", "A Little", "None"),
+            new int[]{1, 2, 3, 4}
+        ));
+        moodQuestions.add(new QuestionData(
+            "How would you rate your stress level today?",
+            "stress",
+            Arrays.asList("Very High", "High", "Moderate", "Low"),
+            new int[]{1, 2, 3, 4}
+        ));
+        moodQuestions.add(new QuestionData(
+            "How anxious do you feel right now?",
+            "anxiety",
+            Arrays.asList("Very Anxious", "Anxious", "Slightly Anxious", "Calm"),
+            new int[]{1, 2, 3, 4}
+        ));
+        moodQuestions.add(new QuestionData(
+            "How is your energy level today?",
+            "energy",
+            Arrays.asList("Very Low", "Low", "Moderate", "High"),
+            new int[]{1, 2, 3, 4}
+        ));
+        moodQuestions.add(new QuestionData(
+            "How well did you sleep last night?",
+            "sleep",
+            Arrays.asList("Very Poor", "Poor", "Fair", "Good"),
+            new int[]{1, 2, 3, 4}
+        ));
+
+        // Setup button handlers
+        if (moodBackBtn != null) moodBackBtn.setOnAction(e -> hideMoodTrackerPopup());
+        if (moodCloseBtn != null) moodCloseBtn.setOnAction(e -> hideMoodTrackerPopup());
+        if (moodPrevBtn != null) moodPrevBtn.setOnAction(e -> onMoodPrevious());
+        if (moodNextBtn != null) moodNextBtn.setOnAction(e -> onMoodNext());
+        if (moodSubmitBtn != null) moodSubmitBtn.setOnAction(e -> onMoodSubmit());
+        if (moodDoneBtn != null) moodDoneBtn.setOnAction(e -> hideMoodTrackerPopup());
+
+        // Click outside to close
+        if (moodTrackerOverlay != null) {
+            moodTrackerOverlay.setOnMouseClicked(e -> {
+                if (e.getTarget() == moodTrackerOverlay) {
+                    hideMoodTrackerPopup();
+                }
+            });
+        }
+    }
+
+    private void showMoodTrackerPopup() {
+        if (moodTrackerOverlay == null) return;
+
+        // Reset state
+        currentMoodQuestion = 0;
+        moodAnswers.clear();
+
+        // Show question view, hide results
+        if (moodTrackerContentBox != null) {
+            moodTrackerContentBox.setVisible(true);
+            moodTrackerContentBox.setManaged(true);
+        }
+        if (moodResultsBox != null) {
+            moodResultsBox.setVisible(false);
+            moodResultsBox.setManaged(false);
+        }
+
+        loadMoodQuestion(0);
+        updateMoodProgress();
+        updateMoodNavButtons();
+
+        // Show overlay with fade animation
+        moodTrackerOverlay.setVisible(true);
+        moodTrackerOverlay.setManaged(true);
+        moodTrackerOverlay.setOpacity(0);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), moodTrackerOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+    }
+
+    private void hideMoodTrackerPopup() {
+        if (moodTrackerOverlay == null) return;
+
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), moodTrackerOverlay);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            moodTrackerOverlay.setVisible(false);
+            moodTrackerOverlay.setManaged(false);
+        });
+        fadeOut.play();
+    }
+
+    private void loadMoodQuestion(int index) {
+        if (moodQuestionsContainer == null || moodQuestions == null) return;
+        moodQuestionsContainer.getChildren().clear();
+
+        if (index >= 0 && index < moodQuestions.size()) {
+            QuestionData question = moodQuestions.get(index);
+
+            VBox questionBox = new VBox(15);
+            questionBox.getStyleClass().add("question-box");
+
+            Label questionLabel = new Label(question.question);
+            questionLabel.getStyleClass().add("question-label");
+            questionLabel.setWrapText(true);
+
+            ToggleGroup toggleGroup = new ToggleGroup();
+
+            for (int i = 0; i < question.options.size(); i++) {
+                RadioButton radio = new RadioButton(question.options.get(i));
+                radio.getStyleClass().add("answer-radio");
+                radio.setToggleGroup(toggleGroup);
+
+                // Pre-select if already answered
+                String savedAnswer = moodAnswers.get(String.valueOf(index));
+                if (savedAnswer != null && savedAnswer.equals(question.options.get(i))) {
+                    radio.setSelected(true);
+                }
+
+                final int score = question.scores[i];
+                final String option = question.options.get(i);
+                radio.setOnAction(e -> {
+                    moodAnswers.put(String.valueOf(currentMoodQuestion), option);
+                    moodAnswers.put(String.valueOf(currentMoodQuestion) + "_score", String.valueOf(score));
+                    moodAnswers.put(String.valueOf(currentMoodQuestion) + "_category", question.category);
+                });
+
+                questionBox.getChildren().add(radio);
+            }
+
+            questionBox.getChildren().add(0, questionLabel);
+            moodQuestionsContainer.getChildren().add(questionBox);
+        }
+    }
+
+    private void updateMoodProgress() {
+        if (progressCircles == null) return;
+        for (int i = 0; i < progressCircles.size(); i++) {
+            if (i == currentMoodQuestion) {
+                progressCircles.get(i).getStyleClass().add("active");
+            } else {
+                progressCircles.get(i).getStyleClass().remove("active");
+            }
+        }
+    }
+
+    private void updateMoodNavButtons() {
+        if (moodPrevBtn != null) {
+            moodPrevBtn.setDisable(currentMoodQuestion == 0);
+        }
+
+        if (moodQuestions != null && currentMoodQuestion == moodQuestions.size() - 1) {
+            if (moodNextBtn != null) {
+                moodNextBtn.setVisible(false);
+                moodNextBtn.setManaged(false);
+            }
+            if (moodSubmitBtn != null) {
+                moodSubmitBtn.setVisible(true);
+                moodSubmitBtn.setManaged(true);
+            }
+        } else {
+            if (moodNextBtn != null) {
+                moodNextBtn.setVisible(true);
+                moodNextBtn.setManaged(true);
+            }
+            if (moodSubmitBtn != null) {
+                moodSubmitBtn.setVisible(false);
+                moodSubmitBtn.setManaged(false);
+            }
+        }
+    }
+
+    private void onMoodPrevious() {
+        if (currentMoodQuestion > 0) {
+            currentMoodQuestion--;
+            loadMoodQuestion(currentMoodQuestion);
+            updateMoodProgress();
+            updateMoodNavButtons();
+            if (moodScrollPane != null) moodScrollPane.setVvalue(0);
+        }
+    }
+
+    private void onMoodNext() {
+        if (!isMoodQuestionAnswered()) {
+            showMoodAlert("Please answer the current question before proceeding.");
+            return;
+        }
+
+        if (moodQuestions != null && currentMoodQuestion < moodQuestions.size() - 1) {
+            currentMoodQuestion++;
+            loadMoodQuestion(currentMoodQuestion);
+            updateMoodProgress();
+            updateMoodNavButtons();
+            if (moodScrollPane != null) moodScrollPane.setVvalue(0);
+        }
+    }
+
+    private void onMoodSubmit() {
+        if (!isMoodQuestionAnswered()) {
+            showMoodAlert("Please answer all questions before submitting.");
+            return;
+        }
+
+        showMoodResults();
+    }
+
+    private boolean isMoodQuestionAnswered() {
+        return moodAnswers.containsKey(String.valueOf(currentMoodQuestion));
+    }
+
+    private void showMoodResults() {
+        // Calculate category scores
+        Map<String, Integer> categoryScores = new HashMap<>();
+        Map<String, Integer> categoryCounts = new HashMap<>();
+
+        for (String key : moodAnswers.keySet()) {
+            if (key.endsWith("_category")) {
+                String questionIdx = key.replace("_category", "");
+                String category = moodAnswers.get(key);
+                String scoreKey = questionIdx + "_score";
+
+                if (moodAnswers.containsKey(scoreKey)) {
+                    int score = Integer.parseInt(moodAnswers.get(scoreKey));
+                    categoryScores.put(category, categoryScores.getOrDefault(category, 0) + score);
+                    categoryCounts.put(category, categoryCounts.getOrDefault(category, 0) + 1);
+                }
+            }
+        }
+
+        // Calculate overall mood score
+        int totalPossibleScore = moodQuestions.size() * 4;
+        int actualScore = 0;
+        for (int i = 0; i < moodQuestions.size(); i++) {
+            String scoreKey = i + "_score";
+            if (moodAnswers.containsKey(scoreKey)) {
+                actualScore += Integer.parseInt(moodAnswers.get(scoreKey));
+            }
+        }
+
+        double moodScore = (actualScore / (double) totalPossibleScore) * 100;
+
+        // Save to database
+        try {
+            MoodTrackerRepository.MoodEntry entry = new MoodTrackerRepository.MoodEntry();
+            entry.setSoulId(soulId);
+            entry.setMoodScore((int) moodScore);
+            entry.setStressScore(categoryScores.getOrDefault("stress", 0));
+            entry.setAnxietyScore(categoryScores.getOrDefault("anxiety", 0));
+            entry.setEnergyScore(categoryScores.getOrDefault("energy", 0));
+            entry.setSleepScore(categoryScores.getOrDefault("sleep", 0));
+            entry.setSocialScore(categoryScores.getOrDefault("social", 0));
+            entry.setAnswers(moodAnswers.toString());
+
+            moodRepository.saveMoodEntry(entry);
+        } catch (Exception e) {
+            System.err.println("Error saving mood entry: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // Update pie chart
+        if (moodPieChart != null) {
+            moodPieChart.getData().clear();
+
+            double totalScore = 0;
+            for (String category : categoryScores.keySet()) {
+                totalScore += categoryScores.get(category);
+            }
+
+            for (Map.Entry<String, Integer> entry : categoryScores.entrySet()) {
+                String categoryName = capitalizeFirst(entry.getKey());
+                double percentage = (entry.getValue() / totalScore) * 100;
+                PieChart.Data slice = new PieChart.Data(
+                    categoryName + " (" + String.format("%.1f", percentage) + "%)",
+                    entry.getValue()
+                );
+                moodPieChart.getData().add(slice);
+            }
+        }
+
+        // Update score label
+        if (moodScoreLabel != null) {
+            moodScoreLabel.setText(String.format("Overall Mood Score: %.0f/100", moodScore));
+        }
+
+        // Generate summary
+        if (moodSummaryLabel != null) {
+            String summary = generateMoodSummary(moodScore, categoryScores, categoryCounts);
+            moodSummaryLabel.setText(summary);
+        }
+
+        // Fade transition from questions to results
+        if (moodTrackerContentBox != null && moodResultsBox != null) {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), moodTrackerContentBox);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setOnFinished(e -> {
+                moodTrackerContentBox.setVisible(false);
+                moodTrackerContentBox.setManaged(false);
+                moodResultsBox.setVisible(true);
+                moodResultsBox.setManaged(true);
+
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), moodResultsBox);
+                fadeIn.setFromValue(0.0);
+                fadeIn.setToValue(1.0);
+                fadeIn.play();
+            });
+            fadeOut.play();
+        }
+    }
+
+    private String capitalizeFirst(String str) {
+        if (str == null || str.isEmpty()) return str;
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    private String generateMoodSummary(double moodScore, Map<String, Integer> categoryScores,
+                                       Map<String, Integer> categoryCounts) {
+        StringBuilder summary = new StringBuilder();
+
+        if (moodScore >= 75) {
+            summary.append("You're doing great! Your mood is positive and balanced. ");
+        } else if (moodScore >= 50) {
+            summary.append("Your mood is moderate. There's room for improvement. ");
+        } else {
+            summary.append("You might be going through a tough time. Consider seeking support. ");
+        }
+
+        // Find the area that needs most attention
+        String lowestCategory = null;
+        double lowestAverage = 5.0;
+
+        for (Map.Entry<String, Integer> entry : categoryScores.entrySet()) {
+            double average = entry.getValue() / (double) categoryCounts.get(entry.getKey());
+            if (average < lowestAverage) {
+                lowestAverage = average;
+                lowestCategory = entry.getKey();
+            }
+        }
+
+        if (lowestCategory != null && lowestAverage < 2.5) {
+            summary.append("\n\nPay attention to your ").append(lowestCategory)
+                   .append(" - it seems to need extra care.");
+        }
+
+        return summary.toString();
+    }
+
+    private void showMoodAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Incomplete");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
+
