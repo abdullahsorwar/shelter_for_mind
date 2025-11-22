@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="root" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/user_messages.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.UserMessagesController">
+   <children>
+      <!-- Background -->
+      <Pane fx:id="backgroundPane" prefHeight="600.0" prefWidth="900.0">
+         <children>
+            <Rectangle fx:id="gradientRect" arcHeight="0.0" arcWidth="0.0" height="600.0" styleClass="bg-gradient" width="900.0" />
+         </children>
+      </Pane>
+      
+      <!-- Main Container -->
+      <VBox fx:id="mainContainer" layoutX="0.0" layoutY="0.0" prefHeight="600.0" prefWidth="900.0" spacing="0">
+         <children>
+            <!-- Fixed Header VBox - Back button and Title -->
+            <VBox fx:id="headerBox" minHeight="140.0" maxHeight="140.0" prefHeight="140.0" spacing="0" styleClass="header-container">
+               <children>
+                  <!-- Back Button and Title -->
+                  <HBox alignment="CENTER_LEFT" minHeight="80.0" maxHeight="80.0" prefHeight="80.0" spacing="20.0">
+                     <children>
+                        <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" minHeight="42.0" maxHeight="42.0" prefHeight="42.0" minWidth="110.0" maxWidth="110.0" prefWidth="110.0" styleClass="back-button" text="← Back">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Button>
+                        
+                        <Label fx:id="titleLabel" styleClass="page-title" text="📬 My Messages">
+                           <font>
+                              <Font name="System Bold" size="32.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="35.0" right="35.0" top="15.0" />
+                     </padding>
+                  </HBox>
+                  
+                  <!-- Stats and Actions Bar -->
+                  <HBox alignment="CENTER_LEFT" minHeight="60.0" maxHeight="60.0" prefHeight="60.0" spacing="20.0" styleClass="stats-bar">
+                     <children>
+                        <Label fx:id="unreadCountLabel" styleClass="unread-count-label" text="0 unread messages">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        
+                        <!-- Spacer -->
+                        <Pane HBox.hgrow="ALWAYS" />
+                        
+                        <Button fx:id="markAllReadBtn" mnemonicParsing="false" onAction="#handleMarkAllRead" minHeight="38.0" maxHeight="38.0" prefHeight="38.0" styleClass="action-btn" text="✓ Mark All as Read">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="35.0" right="35.0" top="10.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+            
+            <!-- Content VBox - Messages (Center aligned, Responsive) -->
+            <VBox fx:id="contentBox" alignment="TOP_CENTER" spacing="0" VBox.vgrow="ALWAYS">
+               <children>
+                  <!-- Messages List -->
+                  <ScrollPane fx:id="messagesScrollPane" fitToWidth="true" styleClass="messages-scroll" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox fx:id="messagesContainer" alignment="TOP_CENTER" spacing="18.0" styleClass="messages-container">
+                           <padding>
+                              <Insets bottom="25.0" left="35.0" right="35.0" top="15.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+                  
+                  <!-- Empty State -->
+                  <VBox fx:id="emptyState" alignment="CENTER" managed="false" spacing="15.0" styleClass="empty-state" visible="false" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="empty-icon" text="📭">
+                           <font>
+                              <Font size="60.0" />
+                           </font>
+                        </Label>
+                        <Label styleClass="empty-text" text="No Messages Yet">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Label styleClass="empty-subtext" text="You haven't received any moderation messages.">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</Pane>

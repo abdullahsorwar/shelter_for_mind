@@ -21,10 +21,12 @@ com\the_pathfinders\verification\VerificationServer.class
 com\the_pathfinders\db\SoulRepository.class
 com\the_pathfinders\AdminLoginController.class
 com\the_pathfinders\verification\VerificationServer$KeeperVerificationHandler.class
+com\the_pathfinders\db\ModerationRepository.class
 com\the_pathfinders\SeekHelpController.class
 com\the_pathfinders\App.class
 com\the_pathfinders\PasswordResetController.class
 com\the_pathfinders\db\KeeperRepository$SoulInfo.class
+com\the_pathfinders\db\ModerationRepository$Journal.class
 com\the_pathfinders\BlogContentLoader.class
 com\the_pathfinders\verification\EmailService$4.class
 com\the_pathfinders\DashboardController.class
@@ -58,7 +60,9 @@ com\the_pathfinders\SocialWorkController.class
 com\the_pathfinders\db\KeeperRepository$KeeperProfile.class
 com\the_pathfinders\verification\VerificationManager.class
 com\the_pathfinders\ProfileController$InfoRow.class
+com\the_pathfinders\UserMessagesController.class
 com\the_pathfinders\verification\VerificationServer$VerificationCallback.class
+com\the_pathfinders\db\ModerationRepository$ModerationMessage.class
 com\the_pathfinders\KeeperProfileController.class
 com\the_pathfinders\PrivateJournalsController.class
 com\the_pathfinders\db\MoodTrackerRepository.class

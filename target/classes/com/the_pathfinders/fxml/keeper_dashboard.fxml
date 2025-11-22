@@ -229,6 +229,65 @@
                         </content>
                      </ScrollPane>
                      
+                     <!-- Journal Moderation Section -->
+                     <ScrollPane fx:id="journalModerationPane" fitToWidth="true" styleClass="content-scroll" visible="false" managed="false">
+                        <content>
+                           <VBox spacing="20.0" styleClass="content-padding">
+                              <!-- Header Section -->
+                              <HBox alignment="CENTER_LEFT" spacing="15.0">
+                                 <Label text="📝 Journal Moderation" styleClass="section-title">
+                                    <font><Font name="System Bold" size="28.0" /></font>
+                                 </Label>
+                                 <Region HBox.hgrow="ALWAYS"/>
+                                 <Button fx:id="refreshJournalsBtn" text="🔄 Refresh" styleClass="action-btn" onAction="#loadPublicJournals"/>
+                              </HBox>
+                              
+                              <Label text="Review and moderate public journal posts" styleClass="section-subtitle">
+                                 <font><Font size="14.0" /></font>
+                              </Label>
+                              
+                              <!-- Stats Section -->
+                              <HBox spacing="15.0" alignment="CENTER_LEFT">
+                                 <VBox alignment="CENTER" spacing="5.0" styleClass="stat-card" prefWidth="200.0">
+                                    <Label fx:id="totalJournalsCount" text="0" styleClass="stat-number">
+                                       <font><Font name="System Bold" size="32.0" /></font>
+                                    </Label>
+                                    <Label text="📝 Public Journals" styleClass="stat-label">
+                                       <font><Font size="13.0" /></font>
+                                    </Label>
+                                 </VBox>
+                                 
+                                 <VBox alignment="CENTER" spacing="5.0" styleClass="stat-card" prefWidth="200.0">
+                                    <Label fx:id="moderatedJournalsCount" text="0" styleClass="stat-number">
+                                       <font><Font name="System Bold" size="32.0" /></font>
+                                    </Label>
+                                    <Label text="✅ Moderated" styleClass="stat-label">
+                                       <font><Font size="13.0" /></font>
+                                    </Label>
+                                 </VBox>
+                              </HBox>
+                              
+                              <!-- Journals List Container -->
+                              <VBox fx:id="journalsListContainer" spacing="10.0" styleClass="journals-container">
+                                 <!-- Journal cards will be added dynamically -->
+                              </VBox>
+                              
+                              <!-- Empty State -->
+                              <VBox fx:id="journalsEmptyState" alignment="CENTER" spacing="15.0" prefHeight="300.0" styleClass="empty-state" visible="false" managed="false">
+                                 <Label text="📝" styleClass="empty-icon">
+                                    <font><Font size="60.0" /></font>
+                                 </Label>
+                                 <Label text="No Public Journals Found" styleClass="empty-text">
+                                    <font><Font name="System Bold" size="18.0" /></font>
+                                 </Label>
+                                 <Label text="No public journals posted yet." styleClass="empty-subtext">
+                                    <font><Font size="13.0" /></font>
+                                 </Label>
+                              </VBox>
+                           </VBox>
+                        </content>
+                     </ScrollPane>
+                     
                      <!-- Placeholder for other sections -->
                      <VBox fx:id="otherSectionPane" alignment="CENTER" spacing="20.0" styleClass="placeholder-content" visible="false" managed="false">
                         <Label fx:id="placeholderText" text="Section Coming Soon" styleClass="placeholder-text">

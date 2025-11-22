@@ -523,3 +523,102 @@
     -fx-text-fill: #2c3e50;
     -fx-opacity: 1.0;
 }
+
+/* Journal Moderation Styles */
+.journals-container {
+    -fx-spacing: 10;
+}
+
+.journal-card {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 12;
+    -fx-padding: 15 20;
+    -fx-border-color: rgba(255, 123, 123, 0.15);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0.2, 0, 2);
+}
+
+.journal-card:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(255, 123, 123, 0.3);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 12, 0.3, 0, 3);
+}
+
+.light-mode .journal-card {
+    -fx-background-color: white;
+    -fx-border-color: rgba(231, 76, 60, 0.15);
+}
+
+.light-mode .journal-card:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: rgba(231, 76, 60, 0.3);
+}
+
+/* Journal card text styles - Dark Mode */
+.journal-title-label {
+    -fx-text-fill: white;
+    -fx-opacity: 1.0;
+}
+
+.journal-date-label {
+    -fx-text-fill: white;
+    -fx-opacity: 0.6;
+}
+
+.journal-soul-label {
+    -fx-text-fill: white;
+    -fx-opacity: 0.7;
+}
+
+.journal-content-label {
+    -fx-text-fill: white;
+    -fx-opacity: 0.8;
+}
+
+/* Light mode journal card text */
+.light-mode .journal-title-label {
+    -fx-text-fill: #2c3e50;
+    -fx-opacity: 1.0;
+}
+
+.light-mode .journal-date-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-opacity: 1.0;
+}
+
+.light-mode .journal-soul-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-opacity: 1.0;
+}
+
+.light-mode .journal-content-label {
+    -fx-text-fill: #2c3e50;
+    -fx-opacity: 1.0;
+}
+
+/* Action buttons for journal moderation */
+.action-btn {
+    -fx-background-color: rgba(255, 123, 123, 0.2);
+    -fx-text-fill: white;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
+    -fx-border-width: 0;
+}
+
+.action-btn:hover {
+    -fx-background-color: rgba(255, 123, 123, 0.35);
+    -fx-text-fill: white;
+}
+
+.light-mode .action-btn {
+    -fx-background-color: rgba(231, 76, 60, 0.15);
+    -fx-text-fill: #E74C3C;
+}
+
+.light-mode .action-btn:hover {
+    -fx-background-color: rgba(231, 76, 60, 0.25);
+    -fx-text-fill: #C0392B;
+}
+

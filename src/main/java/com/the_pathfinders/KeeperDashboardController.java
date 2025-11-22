@@ -16,12 +16,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import com.the_pathfinders.db.KeeperRepository;
+import com.the_pathfinders.db.ModerationRepository;
 import com.the_pathfinders.verification.EmailService;
 
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Optional;
 
 public class KeeperDashboardController implements Initializable {
 
@@ -62,6 +64,14 @@ public class KeeperDashboardController implements Initializable {
     @FXML private Label inactiveSoulsCount;
     @FXML private Label totalSoulsCount;
     @FXML private Button refreshSoulsBtn;
+    
+    // Journal Moderation Section
+    @FXML private ScrollPane journalModerationPane;
+    @FXML private VBox journalsListContainer;
+    @FXML private VBox journalsEmptyState;
+    @FXML private Label totalJournalsCount;
+    @FXML private Label moderatedJournalsCount;
+    @FXML private Button refreshJournalsBtn;
     
     @FXML private VBox otherSectionPane;
     @FXML private Label placeholderText;
@@ -247,9 +257,9 @@ public class KeeperDashboardController implements Initializable {
     
     @FXML
     private void showJournalModeration() {
-        switchContent("Journal Moderation", "other");
+        switchContent("Journal Moderation", "journalModeration");
         setActiveNavButton(journalModerationBtn);
-        placeholderText.setText("Journal Moderation - Coming Soon");
+        loadPublicJournals();
     }
     
     @FXML
@@ -280,6 +290,8 @@ public class KeeperDashboardController implements Initializable {
             keeperVerificationPane.setManaged(false);
             soulModerationPane.setVisible(false);
             soulModerationPane.setManaged(false);
+            journalModerationPane.setVisible(false);
+            journalModerationPane.setManaged(false);
             otherSectionPane.setVisible(false);
             otherSectionPane.setManaged(false);
             
@@ -292,6 +304,10 @@ public class KeeperDashboardController implements Initializable {
                 case "souls" -> {
                     soulModerationPane.setVisible(true);
                     soulModerationPane.setManaged(true);
+                }
+                case "journalModeration" -> {
+                    journalModerationPane.setVisible(true);
+                    journalModerationPane.setManaged(true);
                 }
                 case "other" -> {
                     otherSectionPane.setVisible(true);
@@ -688,6 +704,247 @@ public class KeeperDashboardController implements Initializable {
                     e.printStackTrace();
                 }
             }
+        });
+    }
+    
+    @FXML
+    private void loadPublicJournals() {
+        // Show loading state
+        journalsListContainer.getChildren().clear();
+        journalsEmptyState.setVisible(false);
+        journalsEmptyState.setManaged(false);
+        
+        // Disable refresh button while loading
+        if (refreshJournalsBtn != null) {
+            refreshJournalsBtn.setDisable(true);
+        }
+        
+        // Load in background thread
+        new Thread(() -> {
+            try {
+                List<ModerationRepository.Journal> journals = ModerationRepository.getPublicJournalsForModeration();
+                
+                Platform.runLater(() -> {
+                    journalsListContainer.getChildren().clear();
+                    
+                    if (journals.isEmpty()) {
+                        journalsEmptyState.setVisible(true);
+                        journalsEmptyState.setManaged(true);
+                        totalJournalsCount.setText("0");
+                        moderatedJournalsCount.setText("0");
+                    } else {
+                        journalsEmptyState.setVisible(false);
+                        journalsEmptyState.setManaged(false);
+                        
+                        // Update stats
+                        totalJournalsCount.setText(String.valueOf(journals.size()));
+                        
+                        // Count moderated journals (using moderationCount from query)
+                        long moderatedCount = journals.stream()
+                            .filter(j -> j.moderationCount > 0)
+                            .count();
+                        moderatedJournalsCount.setText(String.valueOf(moderatedCount));
+                        
+                        // Create journal cards
+                        for (ModerationRepository.Journal journal : journals) {
+                            journalsListContainer.getChildren().add(createJournalCard(journal));
+                        }
+                    }
+                    
+                    // Re-enable refresh button
+                    if (refreshJournalsBtn != null) {
+                        refreshJournalsBtn.setDisable(false);
+                    }
+                });
+            } catch (Exception e) {
+                System.err.println("Failed to load journals: " + e.getMessage());
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    showAlert("Error", "Failed to load public journals: " + e.getMessage());
+                    if (refreshJournalsBtn != null) {
+                        refreshJournalsBtn.setDisable(false);
+                    }
+                });
+            }
+        }).start();
+    }
+    
+    private VBox createJournalCard(ModerationRepository.Journal journal) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("journal-card");
+        card.setPadding(new Insets(15, 20, 15, 20));
+        
+        // Header with ID and date
+        HBox header = new HBox(15);
+        header.setAlignment(Pos.CENTER_LEFT);
+        
+        Label idLabel = new Label("Journal #" + journal.journalId);
+        idLabel.getStyleClass().add("journal-title-label");
+        HBox.setHgrow(idLabel, Priority.ALWAYS);
+        
+        Label dateLabel = new Label(journal.createdAt.format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")));
+        dateLabel.getStyleClass().add("journal-date-label");
+        
+        header.getChildren().addAll(idLabel, dateLabel);
+        
+        // Soul ID
+        Label soulLabel = new Label("By: " + journal.soulId);
+        soulLabel.getStyleClass().add("journal-soul-label");
+        
+        // Content preview (truncated)
+        String contentPreview = journal.content.length() > 150 
+            ? journal.content.substring(0, 150) + "..." 
+            : journal.content;
+        Label contentLabel = new Label(contentPreview);
+        contentLabel.getStyleClass().add("journal-content-label");
+        contentLabel.setWrapText(true);
+        
+        // Action buttons
+        HBox buttonBox = new HBox(10);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        
+        Button viewHistoryBtn = new Button("📋 View History");
+        viewHistoryBtn.getStyleClass().add("action-btn");
+        viewHistoryBtn.setOnAction(e -> viewModerationHistory(journal));
+        
+        Button sendMessageBtn = new Button("✉️ Send Message");
+        sendMessageBtn.getStyleClass().add("action-btn");
+        sendMessageBtn.setOnAction(e -> sendModerationMessage(journal));
+        
+        buttonBox.getChildren().addAll(viewHistoryBtn, sendMessageBtn);
+        
+        card.getChildren().addAll(header, soulLabel, contentLabel, buttonBox);
+        
+        return card;
+    }
+    
+    private void viewModerationHistory(ModerationRepository.Journal journal) {
+        // Create dialog to show moderation history
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Moderation History");
+        dialog.setHeaderText("Journal #" + journal.journalId + " by " + journal.soulId);
+        
+        // Content
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(15));
+        content.setPrefWidth(500);
+        
+        // Load history
+        new Thread(() -> {
+            try {
+                List<ModerationRepository.ModerationMessage> history = 
+                    ModerationRepository.getModerationHistoryForJournal(journal.journalId);
+                
+                Platform.runLater(() -> {
+                    if (history.isEmpty()) {
+                        Label emptyLabel = new Label("No moderation messages sent yet.");
+                        emptyLabel.setStyle("-fx-font-size: 14px;");
+                        content.getChildren().add(emptyLabel);
+                    } else {
+                        for (ModerationRepository.ModerationMessage msg : history) {
+                            VBox msgBox = new VBox(5);
+                            msgBox.setPadding(new Insets(10));
+                            msgBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
+                            
+                            Label dateLabel = new Label(
+                                msg.createdAt.format(DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm"))
+                            );
+                            dateLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #666;");
+                            
+                            Label keeperLabel = new Label("By: " + msg.keeperId);
+                            keeperLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+                            
+                            Label contentLabel = new Label(msg.messageContent);
+                            contentLabel.setStyle("-fx-font-size: 13px;");
+                            contentLabel.setWrapText(true);
+                            
+                            Label statusLabel = new Label(msg.isRead ? "✓ Read" : "○ Unread");
+                            statusLabel.setStyle("-fx-font-size: 11px;");
+                            
+                            msgBox.getChildren().addAll(dateLabel, keeperLabel, contentLabel, statusLabel);
+                            content.getChildren().add(msgBox);
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    Label errorLabel = new Label("Error loading history: " + e.getMessage());
+                    errorLabel.setStyle("-fx-text-fill: red;");
+                    content.getChildren().add(errorLabel);
+                });
+            }
+        }).start();
+        
+        ScrollPane scrollPane = new ScrollPane(content);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefHeight(400);
+        
+        dialog.getDialogPane().setContent(scrollPane);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        
+        dialog.showAndWait();
+    }
+    
+    private void sendModerationMessage(ModerationRepository.Journal journal) {
+        // Create dialog to send message
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Send Moderation Message");
+        dialog.setHeaderText("Journal #" + journal.journalId + "\nBy: " + journal.soulId);
+        
+        // Content
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(15));
+        content.setPrefWidth(500);
+        
+        Label instructionLabel = new Label("Enter your message to the user about this journal:");
+        instructionLabel.setStyle("-fx-font-size: 13px;");
+        
+        TextArea messageArea = new TextArea();
+        messageArea.setPrefRowCount(8);
+        messageArea.setPromptText("Type your moderation message here...");
+        messageArea.setWrapText(true);
+        
+        content.getChildren().addAll(instructionLabel, messageArea);
+        
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        // Enable/disable OK button based on message content
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
+        messageArea.textProperty().addListener((obs, oldText, newText) -> {
+            okButton.setDisable(newText.trim().isEmpty());
+        });
+        
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == ButtonType.OK) {
+                return messageArea.getText().trim();
+            }
+            return null;
+        });
+        
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(message -> {
+            // Send message in background
+            new Thread(() -> {
+                try {
+                    ModerationRepository.sendModerationMessage(
+                        journal.journalId, 
+                        journal.soulId, 
+                        currentKeeperId, 
+                        message
+                    );
+                    
+                    Platform.runLater(() -> {
+                        showAlert("Success", "Moderation message sent successfully!");
+                        loadPublicJournals(); // Refresh the list
+                    });
+                } catch (Exception e) {
+                    Platform.runLater(() -> {
+                        showAlert("Error", "Failed to send message: " + e.getMessage());
+                    });
+                }
+            }).start();
         });
     }
     

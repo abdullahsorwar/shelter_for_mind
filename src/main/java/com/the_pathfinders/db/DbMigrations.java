@@ -285,6 +285,39 @@ public final class DbMigrations {
             st.executeUpdate("""
                 create index if not exists idx_password_resets_expiry on keeper_password_resets(expires_at, used)
             """);
+            
+            // Create moderation messages table for journal moderation
+            st.executeUpdate("""
+                create table if not exists moderation_messages (
+                  message_id      serial primary key,
+                  journal_id      int not null,
+                  soul_id         text not null references soul_id_and_soul_key(soul_id) on delete cascade,
+                  keeper_id       text not null references keepers(keeper_id) on delete cascade,
+                  message_content text not null,
+                  is_read         boolean default false,
+                  created_at      timestamptz default now()
+                )
+            """);
+            
+            // Create index on soul_id for fetching user messages
+            st.executeUpdate("""
+                create index if not exists idx_moderation_messages_soul on moderation_messages(soul_id)
+            """);
+            
+            // Create index on journal_id for checking moderation history
+            st.executeUpdate("""
+                create index if not exists idx_moderation_messages_journal on moderation_messages(journal_id)
+            """);
+            
+            // Create index on keeper_id for admin tracking
+            st.executeUpdate("""
+                create index if not exists idx_moderation_messages_keeper on moderation_messages(keeper_id)
+            """);
+            
+            // Create index on is_read for unread message counts
+            st.executeUpdate("""
+                create index if not exists idx_moderation_messages_read on moderation_messages(soul_id, is_read)
+            """);
         }
     }
 }

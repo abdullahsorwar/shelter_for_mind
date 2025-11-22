@@ -30,6 +30,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -476,6 +477,11 @@ private void loadPage(String path) {
         }
     }
 
+    public void setSoulId(String soulId) {
+        this.soulId = soulId;
+        setUser(soulId, null);
+    }
+    
     public void setUser(String id, String name) {
         this.soulId = id == null ? "" : id;
         if (userLabel != null) userLabel.setText(this.soulId);
@@ -537,10 +543,49 @@ private void loadPage(String path) {
         userDropdown.setVisible(true);
         userDropdown.setManaged(true);
         userDropdown.getChildren().clear();
-        String[] items = {"My Profile", "Starred Journals", "Log Out"};
+        String[] items = {"My Profile", "Messages", "Starred Journals", "Log Out"};
         for (int i = 0; i < items.length; i++) {
             Button b = new Button(items[i]);
             b.getStyleClass().add("dropdown-item");
+            
+            // Add unread message badge if this is the Messages option
+            if (items[i].equals("Messages")) {
+                HBox buttonContent = new HBox(8);
+                buttonContent.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                
+                Label textLabel = new Label("Messages");
+                buttonContent.getChildren().add(textLabel);
+                
+                // Add notification badge asynchronously
+                Label badge = new Label();
+                badge.setVisible(false);
+                badge.setManaged(false);
+                badge.getStyleClass().add("notification-badge");
+                badge.setStyle("-fx-background-color: #ff4757; -fx-text-fill: white; " +
+                               "-fx-padding: 2 6 2 6; -fx-background-radius: 10; " +
+                               "-fx-font-size: 10px; -fx-font-weight: bold;");
+                buttonContent.getChildren().add(badge);
+                
+                b.setGraphic(buttonContent);
+                b.setText("");
+                
+                // Load unread count in background
+                new Thread(() -> {
+                    try {
+                        int unreadCount = com.the_pathfinders.db.ModerationRepository.getUnreadMessageCount(this.soulId);
+                        if (unreadCount > 0) {
+                            javafx.application.Platform.runLater(() -> {
+                                badge.setText(String.valueOf(unreadCount));
+                                badge.setVisible(true);
+                                badge.setManaged(true);
+                            });
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }).start();
+            }
+            
             userDropdown.getChildren().add(b);
             final int idx = i;
             b.setOnAction(e -> handleDropdownSelection(items[idx]));
@@ -551,8 +596,31 @@ private void loadPage(String path) {
     private void handleDropdownSelection(String which) {
         switch (which) {
             case "My Profile" -> openProfile();
+            case "Messages" -> openMessages();
             case "Starred Journals" -> showStarredPlaceholder();
             case "Log Out" -> onLogout();
+        }
+    }
+    
+    private void openMessages() {
+        com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/user_messages.fxml"));
+            Parent messagesRoot = loader.load();
+            Object controller = loader.getController();
+            if (controller instanceof UserMessagesController umc) {
+                umc.setSoulId(this.soulId);
+            }
+            if (root != null && root.getScene() != null) {
+                root.getScene().setRoot(messagesRoot);
+            }
+        } catch (Exception ex) { 
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Failed to load messages page: " + ex.getMessage());
+            alert.showAndWait();
         }
     }
 
