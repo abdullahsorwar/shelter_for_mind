@@ -23,17 +23,24 @@ public class AdminLoginController implements Initializable {
     
     // Login elements
     @FXML private Text loginTitle;
+    @FXML private Pane emailFieldPane;
+    @FXML private TextField emailField;
     @FXML private TextField keeperIdField;
     @FXML private PasswordField keeperPasswordField;
     @FXML private TextField keeperPasswordVisibleField;
     @FXML private CheckBox showPasswordCheckbox;
     @FXML private Button loginButton;
+    @FXML private javafx.scene.layout.HBox linksContainer;
     @FXML private Hyperlink forgotPasswordLink;
     @FXML private Hyperlink createAccountLink;
+    @FXML private javafx.scene.layout.HBox loginModeLink;
+    @FXML private Hyperlink backToLoginLink;
+    @FXML private javafx.scene.layout.VBox centerContent;
     
     // Theme toggle
     @FXML private Button themeToggleButton;
     private boolean isLightMode = false;
+    private boolean isSignupMode = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -141,6 +148,14 @@ public class AdminLoginController implements Initializable {
     
     @FXML
     private void handleLogin() {
+        if (isSignupMode) {
+            handleSignup();
+        } else {
+            performLogin();
+        }
+    }
+    
+    private void performLogin() {
         String keeperId = keeperIdField.getText().trim();
         String keeperPass = keeperPasswordField.getText();
         
@@ -154,6 +169,23 @@ public class AdminLoginController implements Initializable {
         
         // For now, just show success message
         showAlert("Login", "Keeper authentication to be implemented");
+    }
+    
+    private void handleSignup() {
+        String email = emailField.getText().trim();
+        String keeperId = keeperIdField.getText().trim();
+        String keeperPass = keeperPasswordField.getText();
+        
+        if (email.isEmpty() || keeperId.isEmpty() || keeperPass.isEmpty()) {
+            showAlert("Signup Error", "Please fill in all fields");
+            return;
+        }
+        
+        // TODO: Implement actual signup logic
+        System.out.println("Keeper signup attempt: " + email + ", " + keeperId);
+        
+        // For now, just show success message
+        showAlert("Sign Up", "Account creation to be implemented");
     }
     
     @FXML
@@ -197,7 +229,105 @@ public class AdminLoginController implements Initializable {
     
     @FXML
     private void handleCreateAccount() {
-        showAlert("Create Account", "Account creation form to be implemented");
+        switchToSignupMode();
+    }
+    
+    @FXML
+    private void handleBackToLogin() {
+        switchToLoginMode();
+    }
+    
+    private void switchToSignupMode() {
+        isSignupMode = true;
+        
+        // Fade out inner content
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), centerContent);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        
+        fadeOut.setOnFinished(e -> {
+            // Update UI elements
+            loginTitle.setText("Create Account");
+            loginButton.setText("SIGN UP");
+            
+            // Center the title text
+            centerTitle();
+            
+            // Show email field
+            emailFieldPane.setVisible(true);
+            emailFieldPane.setManaged(true);
+            
+            // Update links
+            forgotPasswordLink.setVisible(false);
+            forgotPasswordLink.setManaged(false);
+            createAccountLink.setVisible(false);
+            createAccountLink.setManaged(false);
+            loginModeLink.setVisible(true);
+            loginModeLink.setManaged(true);
+            
+            // Reapply prompt text colors
+            if (isLightMode) {
+                setPromptTextColors(Color.rgb(102, 102, 102));
+            } else {
+                setPromptTextColors(Color.rgb(255, 255, 255, 0.6));
+            }
+            
+            // Fade in
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), centerContent);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        });
+        
+        fadeOut.play();
+    }
+    
+    private void switchToLoginMode() {
+        isSignupMode = false;
+        
+        // Fade out inner content
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), centerContent);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        
+        fadeOut.setOnFinished(e -> {
+            // Update UI elements
+            loginTitle.setText("Welcome, Keeper!");
+            loginButton.setText("LOGIN");
+            
+            // Center the title text
+            centerTitle();
+            
+            // Hide email field
+            emailFieldPane.setVisible(false);
+            emailFieldPane.setManaged(false);
+            
+            // Clear email field
+            emailField.clear();
+            
+            // Update links
+            forgotPasswordLink.setVisible(true);
+            forgotPasswordLink.setManaged(true);
+            createAccountLink.setVisible(true);
+            createAccountLink.setManaged(true);
+            loginModeLink.setVisible(false);
+            loginModeLink.setManaged(false);
+            
+            // Reapply prompt text colors
+            if (isLightMode) {
+                setPromptTextColors(Color.rgb(102, 102, 102));
+            } else {
+                setPromptTextColors(Color.rgb(255, 255, 255, 0.6));
+            }
+            
+            // Fade in
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), centerContent);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        });
+        
+        fadeOut.play();
     }
     
     @FXML
@@ -233,6 +363,15 @@ public class AdminLoginController implements Initializable {
         fadeOut.play();
     }
     
+    private void centerTitle() {
+        // Center the title text based on its actual width
+        javafx.application.Platform.runLater(() -> {
+            double titleWidth = loginTitle.getLayoutBounds().getWidth();
+            double cardWidth = mainCard.getPrefWidth();
+            loginTitle.setLayoutX((cardWidth - titleWidth) / 2);
+        });
+    }
+    
     private void setPromptTextColors(Color color) {
         // Set prompt text fill for all text input fields
         String colorStyle = String.format("-fx-prompt-text-fill: rgba(%d, %d, %d, %.2f);",
@@ -242,6 +381,7 @@ public class AdminLoginController implements Initializable {
             color.getOpacity());
         
         // Clear and set style to ensure it takes effect
+        if (emailField != null) emailField.setStyle(colorStyle);
         keeperIdField.setStyle(colorStyle);
         keeperPasswordField.setStyle(colorStyle);
         keeperPasswordVisibleField.setStyle(colorStyle);

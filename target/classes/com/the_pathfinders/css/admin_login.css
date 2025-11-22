@@ -87,7 +87,7 @@
 }
 
 /* Input field container styling */
-.input-container {
+.input-field-container {
     -fx-background-color: rgba(255, 255, 255, 0.1);
     -fx-background-radius: 25;
     -fx-border-color: #FF7B7B;
@@ -96,13 +96,13 @@
 }
 
 /* Light Mode Input Containers */
-.light-mode .input-container {
+.light-mode .input-field-container {
     -fx-background-color: rgba(255, 255, 255, 0.6);
     -fx-border-color: #E74C3C;
 }
 
 /* Text field styling - Dark Mode */
-#keeperIdField, #keeperPasswordField, #keeperPasswordVisibleField {
+#emailField, #keeperIdField, #keeperPasswordField, #keeperPasswordVisibleField {
     -fx-background-color: transparent;
     -fx-text-fill: white;
     -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
@@ -111,11 +111,12 @@
     -fx-faint-focus-color: transparent;
 }
 
-#keeperIdField:focused, #keeperPasswordField:focused, #keeperPasswordVisibleField:focused {
+#emailField:focused, #keeperIdField:focused, #keeperPasswordField:focused, #keeperPasswordVisibleField:focused {
     -fx-background-color: transparent;
 }
 
 /* Light Mode Text Fields - Typed text color */
+.light-mode #emailField,
 .light-mode #keeperIdField,
 .light-mode #keeperPasswordField,
 .light-mode #keeperPasswordVisibleField {

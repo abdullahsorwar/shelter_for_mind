@@ -29,28 +29,40 @@
                   <!-- Dynamic Center: Input Fields -->
                   <VBox fx:id="centerContent" alignment="CENTER" layoutX="90.0" layoutY="150.0" prefHeight="300.0" prefWidth="420.0" spacing="20.0">
                      <children>
+                        <!-- Email field (for signup mode) -->
+                        <Pane fx:id="emailFieldPane" prefHeight="50.0" prefWidth="420.0" styleClass="input-field-container" visible="false" managed="false">
+                           <children>
+                              <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image><Image url="@../../../assets/icons/email.png" /></image>
+                              </ImageView>
+                              <TextField fx:id="emailField" layoutX="45.0" layoutY="5.0" prefHeight="40.0" prefWidth="365.0" promptText="email">
+                                 <font><Font size="14.0" /></font>
+                              </TextField>
+                           </children>
+                        </Pane>
+
                         <!-- Keeper ID field -->
-                        <Pane prefHeight="50.0" prefWidth="420.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 25; -fx-border-color: #FF7B7B; -fx-border-radius: 25; -fx-border-width: 1;">
+                        <Pane prefHeight="50.0" prefWidth="420.0" styleClass="input-field-container">
                            <children>
                               <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                                  <image><Image url="@../../../assets/icons/username.png" /></image>
                               </ImageView>
-                              <TextField fx:id="keeperIdField" layoutX="45.0" layoutY="5.0" prefHeight="40.0" prefWidth="365.0" promptText="keeper_id" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);">
+                              <TextField fx:id="keeperIdField" layoutX="45.0" layoutY="5.0" prefHeight="40.0" prefWidth="365.0" promptText="keeper_id">
                                  <font><Font size="14.0" /></font>
                               </TextField>
                            </children>
                         </Pane>
 
                         <!-- Password field -->
-                        <Pane prefHeight="50.0" prefWidth="420.0" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-background-radius: 25; -fx-border-color: #FF7B7B; -fx-border-radius: 25; -fx-border-width: 1;">
+                        <Pane prefHeight="50.0" prefWidth="420.0" styleClass="input-field-container">
                            <children>
                               <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                                  <image><Image url="@../../../assets/icons/password.png" /></image>
                               </ImageView>
-                              <PasswordField fx:id="keeperPasswordField" layoutX="45.0" layoutY="5.0" prefHeight="40.0" prefWidth="365.0" promptText="keeper_pass" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);" visible="true">
+                              <PasswordField fx:id="keeperPasswordField" layoutX="45.0" layoutY="5.0" prefHeight="40.0" prefWidth="365.0" promptText="keeper_pass" visible="true">
                                  <font><Font size="14.0" /></font>
                               </PasswordField>
-                              <TextField fx:id="keeperPasswordVisibleField" layoutX="45.0" layoutY="5.0" prefHeight="40.0" prefWidth="365.0" promptText="keeper_pass" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);" visible="false">
+                              <TextField fx:id="keeperPasswordVisibleField" layoutX="45.0" layoutY="5.0" prefHeight="40.0" prefWidth="365.0" promptText="keeper_pass" visible="false">
                                  <font><Font size="14.0" /></font>
                               </TextField>
                            </children>
@@ -70,14 +82,27 @@
                         <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLogin" prefHeight="45.0" prefWidth="420.0" style="-fx-background-radius: 25; -fx-cursor: hand; -fx-font-size: 16px; -fx-font-weight: bold;" text="LOGIN" textFill="WHITE" />
 
                         <!-- Links Container -->
-                        <HBox alignment="CENTER" prefHeight="30.0" prefWidth="420.0" spacing="20.0">
+                        <HBox fx:id="linksContainer" alignment="CENTER" prefHeight="30.0" prefWidth="420.0" spacing="5.0">
                            <children>
-                              <Hyperlink fx:id="forgotPasswordLink" onAction="#handleForgotPassword" style="-fx-text-fill: #A0B0C0; -fx-cursor: hand;" text="Forget Password?" underline="true">
+                              <!-- Login Mode Links -->
+                              <Hyperlink fx:id="forgotPasswordLink" onAction="#handleForgotPassword" style="-fx-text-fill: #A0B0C0; -fx-cursor: hand;" text="Forget Password?" underline="true" visible="true" managed="true">
                                  <font><Font size="11.0" /></font>
                               </Hyperlink>
-                              <Hyperlink fx:id="createAccountLink" onAction="#handleCreateAccount" style="-fx-text-fill: #A0B0C0; -fx-cursor: hand;" text="Create account" underline="true">
+                              <Hyperlink fx:id="createAccountLink" onAction="#handleCreateAccount" style="-fx-text-fill: #A0B0C0; -fx-cursor: hand;" text="Create account" underline="true" visible="true" managed="true">
                                  <font><Font size="11.0" /></font>
                               </Hyperlink>
+                              
+                              <!-- Signup Mode Link -->
+                              <HBox fx:id="loginModeLink" alignment="CENTER" spacing="0" visible="false" managed="false">
+                                 <children>
+                                    <Label text="Already have an account? " style="-fx-text-fill: #A0B0C0;">
+                                       <font><Font size="11.0" /></font>
+                                    </Label>
+                                    <Hyperlink fx:id="backToLoginLink" onAction="#handleBackToLogin" style="-fx-text-fill: #FF7B7B; -fx-cursor: hand;" text="Log in" underline="true">
+                                       <font><Font size="11.0" /></font>
+                                    </Hyperlink>
+                                 </children>
+                              </HBox>
                            </children>
                         </HBox>
                      </children>
