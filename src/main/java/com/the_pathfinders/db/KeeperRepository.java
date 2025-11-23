@@ -26,6 +26,8 @@ public class KeeperRepository {
         public LocalDateTime createdAt;
         public LocalDateTime approvedAt;
         public String approvedBy; // keeper_id of the approving admin
+        public LocalDateTime rejectedAt;
+        public String rejectedBy;
         
         public KeeperSignupRequest() {}
     }
@@ -132,6 +134,20 @@ public class KeeperRepository {
     }
     
     /**
+     * Delete a rejected signup request (allows retry after 48 hours)
+     */
+    public static boolean deleteRejectedSignup(String keeperId) throws SQLException {
+        String sql = "DELETE FROM keeper_signups WHERE keeper_id = ? AND status = 'REJECTED'";
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, keeperId.toLowerCase());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
+    
+    /**
      * Check if a keeper has an existing verified signup pending approval
      */
     public static boolean hasVerifiedPendingSignup(String keeperId) throws SQLException {
@@ -171,11 +187,65 @@ public class KeeperRepository {
                     }
                     request.approvedBy = rs.getString("approved_by");
                     
+                    Timestamp rejectedTs = rs.getTimestamp("rejected_at");
+                    if (rejectedTs != null) {
+                        request.rejectedAt = rejectedTs.toLocalDateTime();
+                    }
+                    request.rejectedBy = rs.getString("rejected_by");
+                    
                     return request;
                 }
             }
         }
         return null;
+    }
+    
+    /**
+     * Reject a keeper signup request
+     */
+    public static void rejectSignup(String keeperId, String rejectedByKeeperId) throws SQLException {
+        String sql = """
+            UPDATE keeper_signups 
+            SET status = 'REJECTED',
+                rejected_at = now(),
+                rejected_by = ?
+            WHERE keeper_id = ? AND status = 'PENDING'
+        """;
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, rejectedByKeeperId);
+            ps.setString(2, keeperId.toLowerCase());
+            int rows = ps.executeUpdate();
+            
+            if (rows == 0) {
+                throw new SQLException("No pending signup request found for keeper: " + keeperId);
+            }
+        }
+    }
+    
+    /**
+     * Check if a rejected keeper can retry (48 hours have passed)
+     */
+    public static boolean canRetryAfterRejection(String keeperId) throws SQLException {
+        String sql = "SELECT rejected_at FROM keeper_signups WHERE keeper_id = ? AND status = 'REJECTED'";
+        
+        try (Connection c = DB.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, keeperId.toLowerCase());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Timestamp rejectedAt = rs.getTimestamp("rejected_at");
+                    if (rejectedAt != null) {
+                        LocalDateTime rejectionTime = rejectedAt.toLocalDateTime();
+                        LocalDateTime now = LocalDateTime.now();
+                        long hoursSinceRejection = java.time.Duration.between(rejectionTime, now).toHours();
+                        return hoursSinceRejection >= 48;
+                    }
+                }
+            }
+        }
+        return true; // No rejection found, can proceed
     }
     
     /**

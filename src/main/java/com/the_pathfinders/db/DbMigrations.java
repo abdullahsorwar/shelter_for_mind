@@ -200,6 +200,8 @@ public final class DbMigrations {
                   created_at      timestamptz default now(),
                   approved_at     timestamptz,
                   approved_by     text,
+                  rejected_at     timestamptz,
+                  rejected_by     text,
                   constraint keeper_id_is_lower check (keeper_id = lower(keeper_id))
                 )
             """);
@@ -245,6 +247,19 @@ public final class DbMigrations {
                   end if;
                   if not exists (select 1 from information_schema.columns where table_name='keepers' and column_name='blood_group') then
                     alter table keepers add column blood_group text;
+                  end if;
+                end $$
+            """);
+            
+            // Add rejection columns to keeper_signups table if they don't exist
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (select 1 from information_schema.columns where table_name='keeper_signups' and column_name='rejected_at') then
+                    alter table keeper_signups add column rejected_at timestamptz;
+                  end if;
+                  if not exists (select 1 from information_schema.columns where table_name='keeper_signups' and column_name='rejected_by') then
+                    alter table keeper_signups add column rejected_by text;
                   end if;
                 end $$
             """);

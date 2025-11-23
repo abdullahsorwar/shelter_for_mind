@@ -20,6 +20,7 @@ import com.the_pathfinders.db.ModerationRepository;
 import com.the_pathfinders.verification.EmailService;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -526,12 +527,46 @@ public class KeeperDashboardController implements Initializable {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Reject Keeper");
         confirm.setHeaderText("Reject " + request.keeperId + "?");
-        confirm.setContentText("This will reject the keeper signup request. This action cannot be undone.");
+        confirm.setContentText(
+            "This will reject the keeper signup request.\n\n" +
+            "The applicant will receive a rejection email and " +
+            "can reapply after 48 hours."
+        );
         
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                // TODO: Implement reject functionality
-                showAlert("Info", "Reject functionality to be implemented");
+                new Thread(() -> {
+                    try {
+                        // Reject signup
+                        KeeperRepository.rejectSignup(request.keeperId, currentKeeperId);
+                        
+                        // Send rejection email
+                        try {
+                            com.the_pathfinders.verification.EmailService.sendKeeperRejectionNotification(
+                                request.email, 
+                                request.keeperId
+                            );
+                            System.out.println("Rejection email sent to: " + request.email);
+                        } catch (Exception emailEx) {
+                            System.err.println("Failed to send rejection email: " + emailEx.getMessage());
+                            // Continue anyway - rejection was saved to DB
+                        }
+                        
+                        Platform.runLater(() -> {
+                            showAlert("Keeper Rejected", 
+                                "Keeper " + request.keeperId + " has been rejected.\n\n" +
+                                "They can reapply after 48 hours.");
+                            loadPendingSignups(); // Refresh list
+                        });
+                        
+                    } catch (SQLException e) {
+                        System.err.println("Failed to reject keeper: " + e.getMessage());
+                        e.printStackTrace();
+                        Platform.runLater(() -> {
+                            showAlert("Error", "Failed to reject keeper: " + e.getMessage());
+                        });
+                    }
+                }).start();
             }
         });
     }

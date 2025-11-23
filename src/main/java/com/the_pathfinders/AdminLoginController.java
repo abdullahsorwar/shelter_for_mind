@@ -195,7 +195,7 @@ public class AdminLoginController implements Initializable {
                         } else if (request.status == com.the_pathfinders.db.KeeperRepository.KeeperStatus.PENDING) {
                             showAlert("Approval Pending", "Your account is pending approval by existing keepers.\n\nYou will receive an email once approved.");
                         } else if (request.status == com.the_pathfinders.db.KeeperRepository.KeeperStatus.REJECTED) {
-                            showAlert("Account Rejected", "Your keeper account request was not approved.\n\nPlease contact support for more information.");
+                            showAlert("Account Rejected", "Your keeper account request was not approved.\n\nYou can reapply after 48 hours from the rejection time.");
                         }
                     });
                     return;
@@ -286,7 +286,48 @@ public class AdminLoginController implements Initializable {
                     com.the_pathfinders.db.KeeperRepository.KeeperSignupRequest existingRequest = 
                         com.the_pathfinders.db.KeeperRepository.getSignupRequest(keeperId);
                     
-                    if (existingRequest != null && !existingRequest.emailVerified) {
+                    if (existingRequest != null && existingRequest.status == com.the_pathfinders.db.KeeperRepository.KeeperStatus.REJECTED) {
+                        // Check if 48 hours have passed
+                        if (!com.the_pathfinders.db.KeeperRepository.canRetryAfterRejection(keeperId)) {
+                            javafx.application.Platform.runLater(() -> {
+                                loginButton.setDisable(false);
+                                showAlert("Retry Not Allowed", 
+                                    "Your previous keeper application was rejected.\n\n" +
+                                    "You must wait 48 hours before reapplying.\n\n" +
+                                    "Please try again later.");
+                            });
+                            return;
+                        } else {
+                            // 48 hours passed, offer to delete and retry
+                            javafx.application.Platform.runLater(() -> {
+                                loginButton.setDisable(false);
+                                
+                                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                                alert.setTitle("Retry Application");
+                                alert.setHeaderText("Previous Application Rejected");
+                                alert.setContentText(
+                                    "Your previous application was rejected, but 48 hours have passed.\n\n" +
+                                    "Would you like to delete the old application and submit a new one?"
+                                );
+                                
+                                javafx.scene.control.ButtonType deleteButton = new javafx.scene.control.ButtonType("Delete & Retry");
+                                javafx.scene.control.ButtonType cancelButton = new javafx.scene.control.ButtonType("Cancel", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+                                alert.getButtonTypes().setAll(deleteButton, cancelButton);
+                                
+                                alert.showAndWait().ifPresent(response -> {
+                                    if (response == deleteButton) {
+                                        try {
+                                            com.the_pathfinders.db.KeeperRepository.deleteRejectedSignup(keeperId);
+                                            showAlert("Old Application Deleted", "Please try signing up again.");
+                                        } catch (Exception ex) {
+                                            showAlert("Error", "Failed to delete old application: " + ex.getMessage());
+                                        }
+                                    }
+                                });
+                            });
+                            return;
+                        }
+                    } else if (existingRequest != null && !existingRequest.emailVerified) {
                         // Offer to resend verification email
                         javafx.application.Platform.runLater(() -> {
                             loginButton.setDisable(false);
