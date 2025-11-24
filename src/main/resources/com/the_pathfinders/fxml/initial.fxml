@@ -5,9 +5,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -17,7 +17,7 @@
 
       <!-- Background image: no offsets; controller binds to window size -->
       <ImageView fx:id="bgImage" fitHeight="480.0" fitWidth="800.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="false">
-         <image><Image url="@../../../assets/images/green_bg.jpg" /></image>
+         <image><Image url="@/assets/images/green_bg_new.png" /></image>
       </ImageView>
 
       <!-- Fixed-size content centered by controller -->
@@ -27,66 +27,76 @@
             <!-- Logo block -->
             <Pane fx:id="logoBlock" layoutX="253.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="logoImage" fitHeight="376.0" fitWidth="408.0" layoutX="-96.0" layoutY="-88.0" preserveRatio="true">
-                     <image><Image url="@../../../assets/images/logo_new.png" /></image>
+                  <ImageView fx:id="logoImage" fitHeight="376.0" fitWidth="408.0" layoutX="-96.0" layoutY="-88.0" opacity="0.0" preserveRatio="true" scaleX="0.85" scaleY="0.85">
+                    <image><Image url="@../../../assets/images/logo_testing.png" /></image>
                   </ImageView>
 
                   <!-- 'Login As' (animates in) -->
                   <Pane layoutX="-58.0" layoutY="200.0" prefHeight="98.0" prefWidth="313.0">
                      <effect><DropShadow /></effect>
                      <children>
-                        <Text fx:id="loginAsText" fill="WHITE" layoutX="65.0" layoutY="76.0" opacity="0.0" scaleX="0.85" scaleY="0.85" strokeType="OUTSIDE" strokeWidth="0.0" text="Login As">
-                           <font><Font name="Agency FB" size="70.0" /></font>
+                        <Text fx:id="loginAsText" fill="WHITE" layoutX="105.0" layoutY="76.0" opacity="0.0" scaleX="0.85" scaleY="0.85" strokeType="OUTSIDE" strokeWidth="0.0" text="Login As">
+                           <font><Font name="Times New Roman" size="30.0" /></font>
                         </Text>
                      </children>
                   </Pane>
                </children>
             </Pane>
 
-            <!-- Buttons row -->
-            <Pane fx:id="buttonsPane" layoutX="0.0" layoutY="310.0" opacity="0.0" prefHeight="129.0" prefWidth="707.0" scaleX="0.9" scaleY="0.9">
-               <children>
-                  <!-- SOUL -->
-                  <Rectangle fx:id="soulRect" arcHeight="5.0" arcWidth="5.0" height="63.0" layoutX="80.0" layoutY="33.0" stroke="WHITE" strokeType="INSIDE" style="-fx-cursor: hand;" width="182.0">
-                     <fill>
-                        <!-- Blue → Green -->
-                        <LinearGradient endX="1.0" endY="0.0" startX="0.0" startY="0.0">
-                           <stops>
-                              <Stop offset="0.0"><color><Color red="0.23137255" green="0.50980392" blue="0.96470588" /></color></Stop>
-                              <Stop offset="1.0"><color><Color red="0.06274510" green="0.72549020" blue="0.50588235" /></color></Stop>
-                           </stops>
-                        </LinearGradient>
-                     </fill>
-                  </Rectangle>
-                  <Text fx:id="soulText" layoutX="141.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Soul">
-                     <font><Font name="Exo 2 Regular" size="30.0" /></font>
-                  </Text>
+            <!-- Reveal logos row -->
 
-                  <!-- SOUL KEEPER -->
-                  <Rectangle fx:id="keeperRect" arcHeight="5.0" arcWidth="5.0" height="63.0" layoutX="444.0" layoutY="33.0" stroke="WHITE" strokeType="INSIDE" style="-fx-cursor: hand;" width="182.0">
-                     <fill>
-                        <LinearGradient endX="1.0" endY="0.0" startX="0.0" startY="0.0">
-                           <stops>
-                              <Stop offset="0.0"><color><Color red="0.23137255" green="0.50980392" blue="0.96470588" /></color></Stop>
-                              <Stop offset="1.0"><color><Color red="0.06274510" green="0.72549020" blue="0.50588235" /></color></Stop>
-                           </stops>
-                        </LinearGradient>
-                     </fill>
-                  </Rectangle>
-                  <Text fx:id="keeperText" layoutX="454.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Soul Keeper">
-                     <font><Font name="Exo 2 Regular" size="30.0" /></font>
-                  </Text>
-                  
-                  <!-- Please wait text (centered and moved lower) -->
-                  <StackPane layoutX="0.0" layoutY="122.0" prefHeight="28.0" prefWidth="707.0" pickOnBounds="false">
+            <Pane fx:id="buttonsPane" layoutX="0.0" layoutY="280.0" opacity="0.0" prefHeight="200.0" prefWidth="707.0" scaleX="0.85" scaleY="0.85">
+
+               <children>
+
+                  <StackPane layoutX="0.0" layoutY="10.0" pickOnBounds="false" prefHeight="160.0" prefWidth="707.0">
                      <children>
-                        <Text fx:id="pleaseWaitText" fill="WHITE" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please wait..." textAlignment="CENTER">
-                           <font><Font name="Agency FB" size="24.0" /></font>
-                        </Text>
+                        <GridPane alignment="CENTER" hgap="80.0" prefWidth="707.0">
+                           <columnConstraints>
+                              <ColumnConstraints halignment="CENTER" percentWidth="50.0" />
+                              <ColumnConstraints halignment="CENTER" percentWidth="50.0" />
+                           </columnConstraints>
+                           <children>
+                              <StackPane alignment="CENTER" prefHeight="160.0" prefWidth="280.0">
+                                 <children>
+                                    <ImageView fx:id="soulImage" fitHeight="150.0" fitWidth="176.0" opacity="0.0" pickOnBounds="true" preserveRatio="false" scaleX="0.9" scaleY="0.9" style="-fx-cursor: hand;">
+                                       <image><Image url="@/assets/images/Soul.png" /></image>
+                                    </ImageView>
+                                 </children>
+                              </StackPane>
+
+                              <StackPane alignment="CENTER" GridPane.columnIndex="1" prefHeight="160.0" prefWidth="280.0">
+                                 <children>
+                                    <ImageView fx:id="keeperImage" fitHeight="150.0" fitWidth="176.0" opacity="0.0" pickOnBounds="true" preserveRatio="false" scaleX="0.9" scaleY="0.9" style="-fx-cursor: hand;">
+                                       <image><Image url="@/assets/images/SoulKeeper.png" /></image>
+                                    </ImageView>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </GridPane>
                      </children>
                   </StackPane>
+
+                  <!-- Please wait text (centered and moved below logos) -->
+
+                  <StackPane layoutX="0.0" layoutY="160.0" prefHeight="40.0" prefWidth="707.0" pickOnBounds="false">
+
+                     <children>
+
+                        <Text fx:id="pleaseWaitText" fill="WHITE" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please wait..." textAlignment="CENTER">
+
+                           <font><Font name="Agency FB" size="24.0" /></font>
+
+                        </Text>
+
+                     </children>
+
+                  </StackPane>
+
                </children>
+
             </Pane>
+
 
          </children>
       </Pane>

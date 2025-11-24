@@ -45,6 +45,7 @@ com\the_pathfinders\db\ToDoItem.class
 com\the_pathfinders\db\SoulRepository$DuplicateIdException.class
 com\the_pathfinders\ToDoController.class
 com\the_pathfinders\ToDo.class
+com\the_pathfinders\db\BloodSupportRepository.class
 com\the_pathfinders\db\KeeperRepository$BCrypt.class
 com\the_pathfinders\util\PasswordResetServer.class
 com\the_pathfinders\BlogController$1.class
@@ -64,9 +65,11 @@ com\the_pathfinders\UserMessagesController.class
 com\the_pathfinders\verification\VerificationServer$VerificationCallback.class
 com\the_pathfinders\db\ModerationRepository$ModerationMessage.class
 com\the_pathfinders\KeeperProfileController.class
+com\the_pathfinders\db\BloodRequest.class
 com\the_pathfinders\PrivateJournalsController.class
 com\the_pathfinders\db\MoodTrackerRepository.class
 com\the_pathfinders\util\PasswordResetServer$PasswordResetHandler.class
+com\the_pathfinders\db\BloodDonor.class
 com\the_pathfinders\db\JournalRepository.class
 com\the_pathfinders\verification\EmailService$1.class
 com\the_pathfinders\db\KeeperRepository$KeeperSignupRequest.class

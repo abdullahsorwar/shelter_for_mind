@@ -27,10 +27,10 @@ public class InitialController implements Initializable {
     @FXML private javafx.scene.text.Text loginAsText;
 
     @FXML private Pane buttonsPane;
+    @FXML private ImageView soulImage;
+    @FXML private ImageView keeperImage;
     @FXML private Rectangle whiteOverlay;
 
-    @FXML private Rectangle soulRect, keeperRect;
-    @FXML private javafx.scene.text.Text soulText, keeperText;
     @FXML private javafx.scene.text.Text pleaseWaitText;
     
     private boolean videoReady = false;
@@ -38,8 +38,17 @@ public class InitialController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Load images first
-        trySetImage(bgImage, "/assets/images/green_bg.jpg", "/green_bg.jpg");
-        trySetImage(logoImage, "/assets/images/shelter_of_mind.png", "/logo_new.png");
+        trySetImage(
+            bgImage,
+            "/assets/images/green_bg_new.png",
+            "/green_bg_new.png",
+            "/assets/images/green_bg.jpg",
+            "/green_bg.jpg"
+        );
+        trySetImage(logoImage,
+            "/assets/images/shelter_of_mind.png",
+            "/assets/images/logo_testing.png",
+            "/logo_testing.png");
 
         Platform.runLater(() -> {
             // Root grows with window
@@ -78,10 +87,12 @@ public class InitialController implements Initializable {
         });
 
         // Click wiring - start video initialization on Soul button click
-        soulRect.setOnMouseClicked(e -> onSoulClick());
-        soulText.setOnMouseClicked(e -> onSoulClick());
-        keeperRect.setOnMouseClicked(e -> goToAdminLogin());
-        keeperText.setOnMouseClicked(e -> goToAdminLogin());
+        if (soulImage != null) {
+            soulImage.setOnMouseClicked(e -> onSoulClick());
+        }
+        if (keeperImage != null) {
+            keeperImage.setOnMouseClicked(e -> goToAdminLogin());
+        }
     }
     
     private void onSoulClick() {
@@ -167,28 +178,75 @@ public class InitialController implements Initializable {
         fadeCover.setInterpolator(Interpolator.EASE_BOTH);
         fadeCover.setOnFinished(e -> whiteOverlay.setMouseTransparent(true));
 
-        loginAsText.setOpacity(0.0);
-        loginAsText.setScaleX(0.85);
-        loginAsText.setScaleY(0.85);
-        FadeTransition loginFade = new FadeTransition(Duration.millis(350), loginAsText);
-        loginFade.setToValue(1.0);
-        ScaleTransition loginScale = new ScaleTransition(Duration.millis(350), loginAsText);
-        loginScale.setToX(1.0); loginScale.setToY(1.0);
+        PauseTransition revealDelay = new PauseTransition(Duration.seconds(1.2));
 
-        buttonsPane.setOpacity(0.0);
-        buttonsPane.setScaleX(0.9);
-        buttonsPane.setScaleY(0.9);
-        FadeTransition btnFade = new FadeTransition(Duration.millis(300), buttonsPane);
-        btnFade.setToValue(1.0);
-        ScaleTransition btnScale = new ScaleTransition(Duration.millis(300), buttonsPane);
-        btnScale.setToX(1.0); btnScale.setToY(1.0);
+        ParallelTransition reveal = new ParallelTransition();
 
-        new SequentialTransition(
-            fadeCover,
-            new ParallelTransition(loginFade, loginScale),
-            new PauseTransition(Duration.millis(120)),
-            new ParallelTransition(btnFade, btnScale)
-        ).play();
+        if (logoImage != null) {
+            logoImage.setOpacity(0.0);
+            logoImage.setScaleX(0.85);
+            logoImage.setScaleY(0.85);
+            FadeTransition logoFade = new FadeTransition(Duration.millis(520), logoImage);
+            logoFade.setToValue(1.0);
+            ScaleTransition logoScale = new ScaleTransition(Duration.millis(520), logoImage);
+            logoScale.setToX(1.0);
+            logoScale.setToY(1.0);
+            reveal.getChildren().add(new ParallelTransition(logoFade, logoScale));
+        }
+
+        if (loginAsText != null) {
+            loginAsText.setOpacity(0.0);
+            loginAsText.setScaleX(0.85);
+            loginAsText.setScaleY(0.85);
+            FadeTransition loginFade = new FadeTransition(Duration.millis(420), loginAsText);
+            loginFade.setToValue(1.0);
+            ScaleTransition loginScale = new ScaleTransition(Duration.millis(420), loginAsText);
+            loginScale.setToX(1.0);
+            loginScale.setToY(1.0);
+            reveal.getChildren().add(new ParallelTransition(loginFade, loginScale));
+        }
+
+        if (buttonsPane != null) {
+            buttonsPane.setOpacity(0.0);
+            buttonsPane.setScaleX(0.85);
+            buttonsPane.setScaleY(0.85);
+            FadeTransition btnFade = new FadeTransition(Duration.millis(420), buttonsPane);
+            btnFade.setToValue(1.0);
+            ScaleTransition btnScale = new ScaleTransition(Duration.millis(420), buttonsPane);
+            btnScale.setToX(1.0);
+            btnScale.setToY(1.0);
+            reveal.getChildren().add(new ParallelTransition(btnFade, btnScale));
+        }
+
+        if (soulImage != null) {
+            soulImage.setOpacity(0.0);
+            soulImage.setScaleX(0.9);
+            soulImage.setScaleY(0.9);
+            FadeTransition soulFade = new FadeTransition(Duration.millis(360), soulImage);
+            soulFade.setToValue(1.0);
+            ScaleTransition soulScale = new ScaleTransition(Duration.millis(360), soulImage);
+            soulScale.setToX(1.0);
+            soulScale.setToY(1.0);
+            reveal.getChildren().add(new ParallelTransition(soulFade, soulScale));
+        }
+
+        if (keeperImage != null) {
+            keeperImage.setOpacity(0.0);
+            keeperImage.setScaleX(0.9);
+            keeperImage.setScaleY(0.9);
+            FadeTransition keeperFade = new FadeTransition(Duration.millis(360), keeperImage);
+            keeperFade.setToValue(1.0);
+            ScaleTransition keeperScale = new ScaleTransition(Duration.millis(360), keeperImage);
+            keeperScale.setToX(1.0);
+            keeperScale.setToY(1.0);
+            reveal.getChildren().add(new ParallelTransition(keeperFade, keeperScale));
+        }
+
+        if (reveal.getChildren().isEmpty()) {
+            reveal.getChildren().add(new PauseTransition(Duration.ZERO));
+        }
+
+        new SequentialTransition(fadeCover, revealDelay, reveal).play();
     }
 
     private void goToLoginSignup() {

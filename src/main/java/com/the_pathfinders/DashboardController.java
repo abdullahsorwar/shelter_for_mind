@@ -520,7 +520,7 @@ private void loadPage(String path) {
     public void setLogo() {
         try {
             URL u = getClass().getResource("/assets/images/shelter_of_mind.svg");
-            u = getClass().getResource("/assets/images/logo_new.png");
+            u = getClass().getResource("/assets/images/logo_testing.png");
             if (u != null && logoImage != null) {
                 Image img = new Image(u.toExternalForm(), 0, 0, true, true);
                 logoImage.setImage(img);

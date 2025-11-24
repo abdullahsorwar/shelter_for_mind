@@ -67,7 +67,7 @@ public class LoginSignupController implements Initializable {
         // Logo (centered, big)
         try {
             URL a = getClass().getResource("/assets/images/shelter_of_mind.png");
-            a = getClass().getResource("/assets/images/logo_new.png");
+            a = getClass().getResource("/assets/images/logo_testing.png");
             if (a != null) {
                 Image img = new Image(a.toExternalForm(), 360, 360, true, true);
                 logoImage.setImage(img);

@@ -1,47 +1,50 @@
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\DB.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\ToDoItem.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\Journal.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\DashboardController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\SavedBlogsManager.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\App.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\JournalController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\ToDoRepository.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\InitialController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\KeeperProfileController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\KeeperDashboardController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\util\ActivityTracker.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\DbMigrations.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\ToDoController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\util\PasswordResetServer.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\TranquilCornerController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\AdminLoginController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\JournalRepository.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\MusicManager.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\MoodTrackerController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\Blog.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\PublicJournalsController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\ProfileController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\BlogContentLoader.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\TranquilOptionsPopupController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\KeeperRepository.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\verification\VerificationWebSocketServer.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\util\ThemeManager.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\verification\EmailService.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\SocialWork.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\BlogDetailController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\LoginSignupController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\BlogController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\SoulInfoRepository.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\PrivateJournalsController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\VideoManager.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\verification\VerificationManager.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\util\JournalUtils.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\PasswordResetController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\SoulRepository.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\ToDo.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\verification\VerificationServer.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\SeekHelpController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\MoodTrackerRepository.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\UserMessagesController.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\db\ModerationRepository.java
-E:\2nd Year 1st Semester\shelter_of_mind\src\main\java\com\the_pathfinders\SocialWorkController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\JournalRepository.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\SeekHelpController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\verification\EmailService.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\BlogContentLoader.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\BlogDetailController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\PasswordResetController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\SoulInfoRepository.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\ModerationRepository.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\KeeperProfileController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\MoodTrackerController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\TranquilCornerController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\ToDoController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\SoulRepository.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\Journal.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\SocialWorkController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\App.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\ToDo.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\BloodSupportRepository.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\verification\VerificationWebSocketServer.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\VideoManager.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\PublicJournalsController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\KeeperRepository.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\BloodDonor.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\SocialWork.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\SavedBlogsManager.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\DbMigrations.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\util\PasswordResetServer.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\Blog.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\DB.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\KeeperDashboardController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\InitialController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\util\ActivityTracker.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\MusicManager.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\UserMessagesController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\BlogController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\LoginSignupController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\ProfileController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\AdminLoginController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\DashboardController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\util\JournalUtils.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\ToDoRepository.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\util\ThemeManager.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\BloodRequest.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\MoodTrackerRepository.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\TranquilOptionsPopupController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\db\ToDoItem.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\verification\VerificationServer.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\JournalController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\PrivateJournalsController.java
+C:\Users\HP\IdeaProjects\shelter_of_mind\src\main\java\com\the_pathfinders\verification\VerificationManager.java
