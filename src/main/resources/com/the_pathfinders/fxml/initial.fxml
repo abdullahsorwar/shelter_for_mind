@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
@@ -33,7 +32,6 @@
 
                   <!-- 'Login As' (animates in) -->
                   <Pane layoutX="-58.0" layoutY="200.0" prefHeight="98.0" prefWidth="313.0">
-                     <effect><DropShadow /></effect>
                      <children>
                         <Text fx:id="loginAsText" fill="WHITE" layoutX="105.0" layoutY="76.0" opacity="0.0" scaleX="0.85" scaleY="0.85" strokeType="OUTSIDE" strokeWidth="0.0" text="Login As">
                            <font><Font name="Times New Roman" size="30.0" /></font>
