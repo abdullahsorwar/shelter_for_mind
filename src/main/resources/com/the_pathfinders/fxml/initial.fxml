@@ -59,7 +59,7 @@
                            <children>
                               <StackPane alignment="CENTER" prefHeight="160.0" prefWidth="280.0">
                                  <children>
-                                    <ImageView fx:id="soulImage" fitHeight="150.0" fitWidth="176.0" opacity="0.0" pickOnBounds="true" preserveRatio="false" scaleX="0.9" scaleY="0.9" style="-fx-cursor: hand;">
+                                    <ImageView fx:id="soulImage" fitHeight="150.0" fitWidth="150.0" opacity="0.0" pickOnBounds="true" preserveRatio="true" scaleX="0.9" scaleY="0.9" style="-fx-cursor: hand;">
                                        <image><Image url="@/assets/images/Soul.png" /></image>
                                     </ImageView>
                                  </children>
@@ -67,7 +67,7 @@
 
                               <StackPane alignment="CENTER" GridPane.columnIndex="1" prefHeight="160.0" prefWidth="280.0">
                                  <children>
-                                    <ImageView fx:id="keeperImage" fitHeight="150.0" fitWidth="176.0" opacity="0.0" pickOnBounds="true" preserveRatio="false" scaleX="0.9" scaleY="0.9" style="-fx-cursor: hand;">
+                                    <ImageView fx:id="keeperImage" fitHeight="150.0" fitWidth="150.0" opacity="0.0" pickOnBounds="true" preserveRatio="true" scaleX="0.9" scaleY="0.9" style="-fx-cursor: hand;">
                                        <image><Image url="@/assets/images/SoulKeeper.png" /></image>
                                     </ImageView>
                                  </children>
