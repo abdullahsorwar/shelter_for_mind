@@ -20,6 +20,7 @@
     <!-- Main Content Wrapper (blurred when popup shows) -->
     <VBox fx:id="contentWrapper"
           styleClass="social-work-root"
+          style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fce4ec 0%, #f3e5f5 25%, #e1f5fe 50%, #e0f2f1 75%, #fff9e6 100%);"
           alignment="CENTER"
           spacing="30">
 
@@ -43,28 +44,28 @@
             <HBox alignment="CENTER_LEFT">
                 <Button fx:id="bloodDonationBtn"
                         text="Blood Donation"
-                        styleClass="hand-drawn-btn"/>
+                        styleClass="hand-drawn-btn, blood-btn"/>
             </HBox>
 
             <!-- Tree Plantation (top-right) -->
             <HBox alignment="CENTER_RIGHT">
                 <Button fx:id="treePlantationBtn"
                         text="Tree Plantation"
-                        styleClass="hand-drawn-btn"/>
+                        styleClass="hand-drawn-btn, tree-btn"/>
             </HBox>
 
             <!-- Seminar (bottom-left) -->
             <HBox alignment="CENTER_LEFT">
                 <Button fx:id="seminarBtn"
                         text="Seminar"
-                        styleClass="hand-drawn-btn"/>
+                        styleClass="hand-drawn-btn, seminar-btn"/>
             </HBox>
 
             <!-- Donation (bottom-right) -->
             <HBox alignment="CENTER_RIGHT">
                 <Button fx:id="donationBtn"
                         text="Donation"
-                        styleClass="hand-drawn-btn"/>
+                        styleClass="hand-drawn-btn, donation-btn"/>
             </HBox>
 
         </VBox>
