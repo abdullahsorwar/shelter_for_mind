@@ -45,6 +45,14 @@ public class SocialWorkController {
     @FXML private Button donateBloodBDBtn;
     @FXML private Button closeOverlayBtn;
     
+    // Tree Plantation Popup
+    @FXML private StackPane treePlantationOverlay;
+    @FXML private VBox treeOverlayContentBox;
+    @FXML private ImageView treeIcon;
+    @FXML private Button treeNationBtn;
+    @FXML private Button oneTreePlantedBtn;
+    @FXML private Button closeTreeOverlayBtn;
+
     // Browser Overlay
     @FXML private StackPane browserOverlay;
     @FXML private WebView webView;
@@ -72,6 +80,10 @@ public class SocialWorkController {
     private static final String RED_CRESCENT_URL = "https://bdrcs.org/donate-blood/";
     private static final String ROKTO_URL = "https://www.rokto.co/";
     private static final String DONATE_BLOOD_BD_URL = "https://donatebloodbd.com/";
+
+    // Tree plantation URLs
+    private static final String TREE_NATION_URL = "https://tree-nation.com/";
+    private static final String ONE_TREE_PLANTED_URL = "https://onetreeplanted.org/";
 
     public void setSoulId(String id) {
         this.soulId = id;
@@ -112,6 +124,17 @@ public class SocialWorkController {
             closeOverlayBtn.setOnAction(e -> hideBloodDonationOverlay());
         }
         
+        // Tree plantation popup buttons
+        if (treeNationBtn != null) {
+            treeNationBtn.setOnAction(e -> openWebsite("Tree Nation", TREE_NATION_URL));
+        }
+        if (oneTreePlantedBtn != null) {
+            oneTreePlantedBtn.setOnAction(e -> openWebsite("One Tree Planted", ONE_TREE_PLANTED_URL));
+        }
+        if (closeTreeOverlayBtn != null) {
+            closeTreeOverlayBtn.setOnAction(e -> hideTreePlantationOverlay());
+        }
+
         // Browser back button
         if (browserBackBtn != null) {
             browserBackBtn.setOnAction(e -> closeBrowser());
@@ -146,8 +169,7 @@ public class SocialWorkController {
     }
 
     private void onTreePlantation() {
-        // TODO: Navigate to Tree Plantation page
-        System.out.println("Tree Plantation selected");
+        showTreePlantationOverlay();
     }
 
     private void onSeminar() {
@@ -233,10 +255,77 @@ public class SocialWorkController {
         fadeOut.play();
     }
     
+    private void showTreePlantationOverlay() {
+        if (treePlantationOverlay == null || contentWrapper == null) return;
+
+        treePlantationOverlay.setVisible(true);
+        treePlantationOverlay.setManaged(true);
+
+        // Apply blur to content wrapper
+        GaussianBlur blur = new GaussianBlur(0);
+        contentWrapper.setEffect(blur);
+
+        Timeline blurTimeline = new Timeline(
+            new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 0)),
+            new KeyFrame(Duration.millis(280), new KeyValue(blur.radiusProperty(), 18))
+        );
+        blurTimeline.play();
+
+        // Fade in overlay
+        treePlantationOverlay.setOpacity(0);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(240), treePlantationOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        // Scale animation for content box
+        if (treeOverlayContentBox != null) {
+            treeOverlayContentBox.setScaleX(0.96);
+            treeOverlayContentBox.setScaleY(0.96);
+            ScaleTransition scaleIn = new ScaleTransition(Duration.millis(260), treeOverlayContentBox);
+            scaleIn.setFromX(0.96);
+            scaleIn.setFromY(0.96);
+            scaleIn.setToX(1);
+            scaleIn.setToY(1);
+            scaleIn.play();
+        }
+    }
+
+    private void hideTreePlantationOverlay() {
+        if (treePlantationOverlay == null || contentWrapper == null) return;
+
+        // Reverse blur
+        if (contentWrapper.getEffect() instanceof GaussianBlur blur) {
+            Timeline blurTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), blur.getRadius())),
+                new KeyFrame(Duration.millis(220), new KeyValue(blur.radiusProperty(), 0))
+            );
+            blurTimeline.setOnFinished(e -> contentWrapper.setEffect(null));
+            blurTimeline.play();
+        }
+
+        // Fade out overlay
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), treePlantationOverlay);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            treePlantationOverlay.setVisible(false);
+            treePlantationOverlay.setManaged(false);
+        });
+        fadeOut.play();
+    }
+
     private void openWebsite(String title, String url) {
-        // Hide blood donation overlay first
-        hideBloodDonationOverlay();
-        
+        // Hide blood donation overlay first if visible
+        if (bloodDonationOverlay != null && bloodDonationOverlay.isVisible()) {
+            hideBloodDonationOverlay();
+        }
+
+        // Hide tree plantation overlay first if visible
+        if (treePlantationOverlay != null && treePlantationOverlay.isVisible()) {
+            hideTreePlantationOverlay();
+        }
+
         // Wait for overlay to hide, then show browser
         Platform.runLater(() -> {
             try {

@@ -38,6 +38,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public class DashboardController {
@@ -107,6 +108,7 @@ public class DashboardController {
     private List<QuestionData> moodQuestions;
     private Map<String, String> moodAnswers;
     private MoodTrackerRepository moodRepository;
+    private FadeTransition moodTrackerFadeTransition; // Track the current animation
 
     private static class QuestionData {
         String question;
@@ -165,7 +167,10 @@ public class DashboardController {
         }
         if (blogBtn != null) blogBtn.setOnAction(e -> openBlogs());
         if (moodBtn != null) moodBtn.setOnAction(e -> openToDo());
-        if (moodTrackerBtn != null) moodTrackerBtn.setOnAction(e -> showMoodTrackerPopup());
+        if (moodTrackerBtn != null) moodTrackerBtn.setOnAction(e -> {
+            System.out.println("Mood tracker button clicked!");
+            showMoodTrackerPopup();
+        });
 
         // Initialize mood tracker popup
         initializeMoodTracker();
@@ -839,6 +844,10 @@ private void loadPage(String path) {
         moodRepository = new MoodTrackerRepository();
         moodAnswers = new HashMap<>();
 
+        // Initialize overlay state
+        moodTrackerOverlay.setMouseTransparent(true); // Don't block clicks when hidden
+        System.out.println("Mood tracker initialized. Overlay visible: " + moodTrackerOverlay.isVisible());
+
         // Initialize progress circles only if they exist
         if (progress1 != null && progress2 != null && progress3 != null &&
             progress4 != null && progress5 != null) {
@@ -900,16 +909,37 @@ private void loadPage(String path) {
     }
 
     private void showMoodTrackerPopup() {
-        if (moodTrackerOverlay == null) return;
+        if (moodTrackerOverlay == null) {
+            System.err.println("Error: moodTrackerOverlay is null!");
+            return;
+        }
+
+        System.out.println("Opening mood tracker popup...");
+        System.out.println("Overlay visible: " + moodTrackerOverlay.isVisible() + ", managed: " + moodTrackerOverlay.isManaged());
+
+        // Stop any running animation first
+        if (moodTrackerFadeTransition != null) {
+            System.out.println("Stopping previous animation...");
+            moodTrackerFadeTransition.stop();
+            moodTrackerFadeTransition = null;
+        }
 
         // Reset state
         currentMoodQuestion = 0;
         moodAnswers.clear();
 
+        // Clear all progress circle styles first
+        if (progressCircles != null) {
+            for (Circle circle : progressCircles) {
+                circle.getStyleClass().removeAll("active");
+            }
+        }
+
         // Show question view, hide results
         if (moodTrackerContentBox != null) {
             moodTrackerContentBox.setVisible(true);
             moodTrackerContentBox.setManaged(true);
+            moodTrackerContentBox.setOpacity(1.0);
         }
         if (moodResultsBox != null) {
             moodResultsBox.setVisible(false);
@@ -923,25 +953,44 @@ private void loadPage(String path) {
         // Show overlay with fade animation
         moodTrackerOverlay.setVisible(true);
         moodTrackerOverlay.setManaged(true);
+        moodTrackerOverlay.setMouseTransparent(false); // Allow mouse events
         moodTrackerOverlay.setOpacity(0);
+        moodTrackerOverlay.toFront(); // Ensure it's on top
 
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), moodTrackerOverlay);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.play();
+        moodTrackerFadeTransition = new FadeTransition(Duration.millis(300), moodTrackerOverlay);
+        moodTrackerFadeTransition.setFromValue(0);
+        moodTrackerFadeTransition.setToValue(1);
+        moodTrackerFadeTransition.setOnFinished(e -> {
+            moodTrackerFadeTransition = null;
+            System.out.println("Mood tracker fully opened. Opacity: " + moodTrackerOverlay.getOpacity());
+        });
+        moodTrackerFadeTransition.play();
     }
 
     private void hideMoodTrackerPopup() {
         if (moodTrackerOverlay == null) return;
 
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), moodTrackerOverlay);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setOnFinished(e -> {
+        System.out.println("Closing mood tracker popup...");
+        System.out.println("Current opacity: " + moodTrackerOverlay.getOpacity());
+
+        // Stop any running animation first
+        if (moodTrackerFadeTransition != null) {
+            System.out.println("Stopping previous animation...");
+            moodTrackerFadeTransition.stop();
+            moodTrackerFadeTransition = null;
+        }
+
+        moodTrackerFadeTransition = new FadeTransition(Duration.millis(300), moodTrackerOverlay);
+        moodTrackerFadeTransition.setFromValue(moodTrackerOverlay.getOpacity()); // Use current opacity
+        moodTrackerFadeTransition.setToValue(0);
+        moodTrackerFadeTransition.setOnFinished(e -> {
             moodTrackerOverlay.setVisible(false);
             moodTrackerOverlay.setManaged(false);
+            moodTrackerOverlay.setMouseTransparent(true); // Don't block clicks when hidden
+            moodTrackerFadeTransition = null;
+            System.out.println("Mood tracker popup closed. Visible: " + moodTrackerOverlay.isVisible());
         });
-        fadeOut.play();
+        moodTrackerFadeTransition.play();
     }
 
     private void loadMoodQuestion(int index) {
@@ -989,12 +1038,15 @@ private void loadPage(String path) {
 
     private void updateMoodProgress() {
         if (progressCircles == null) return;
-        for (int i = 0; i < progressCircles.size(); i++) {
-            if (i == currentMoodQuestion) {
-                progressCircles.get(i).getStyleClass().add("active");
-            } else {
-                progressCircles.get(i).getStyleClass().remove("active");
-            }
+
+        // First remove active class from all circles
+        for (Circle circle : progressCircles) {
+            circle.getStyleClass().removeAll("active");
+        }
+
+        // Then add active class to current question's circle
+        if (currentMoodQuestion >= 0 && currentMoodQuestion < progressCircles.size()) {
+            progressCircles.get(currentMoodQuestion).getStyleClass().add("active");
         }
     }
 

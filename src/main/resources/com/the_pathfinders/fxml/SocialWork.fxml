@@ -90,6 +90,24 @@
         </VBox>
     </StackPane>
 
+    <!-- Tree Plantation Popup Overlay -->
+    <StackPane fx:id="treePlantationOverlay" visible="false" managed="false" styleClass="overlay-root">
+        <VBox fx:id="treeOverlayContentBox" spacing="24" alignment="CENTER" styleClass="tree-overlay-box">
+            <ImageView fx:id="treeIcon" fitWidth="56" fitHeight="56" preserveRatio="true" />
+            <Label text="Choose Tree Plantation Platform" styleClass="tree-overlay-title" />
+            <Label text="Select a platform to contribute to reforestation efforts." wrapText="true" styleClass="tree-overlay-text" />
+
+            <!-- Two Buttons -->
+            <VBox spacing="16" alignment="CENTER">
+                <Button fx:id="treeNationBtn" text="Tree Nation" styleClass="tree-option-btn" />
+                <Button fx:id="oneTreePlantedBtn" text="One Tree Planted" styleClass="tree-option-btn" />
+            </VBox>
+
+            <!-- Close Button -->
+            <Button fx:id="closeTreeOverlayBtn" text="Close" styleClass="tree-overlay-close" />
+        </VBox>
+    </StackPane>
+
     <!-- Web Browser Overlay -->
     <StackPane fx:id="browserOverlay" visible="false" managed="false" styleClass="browser-overlay-root">
         <VBox spacing="0" alignment="TOP_CENTER" styleClass="browser-container" VBox.vgrow="ALWAYS">
