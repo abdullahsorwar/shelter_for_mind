@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.TypingGameController"
+           prefWidth="900" prefHeight="600"
+           styleClass="typing-root"
+           stylesheets="@/com/the_pathfinders/css/typing_game.css">
+
+    <VBox spacing="35" alignment="CENTER" styleClass="typing-container">
+        <padding>
+            <Insets top="40" left="60" right="60" bottom="40"/>
+        </padding>
+
+        <!-- Back Button -->
+        <HBox alignment="TOP_LEFT">
+            <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+        </HBox>
+
+        <!-- Title -->
+        <Label text="⌨️ Typing Zen ⌨️" styleClass="typing-title"/>
+        <Label text="Type the motivational phrase below" styleClass="typing-subtitle"/>
+
+        <!-- Phrase Display -->
+        <VBox spacing="15" alignment="CENTER" styleClass="phrase-box">
+            <padding>
+                <Insets top="30" left="40" right="40" bottom="30"/>
+            </padding>
+            
+            <Label fx:id="phraseLabel" 
+                   text="Click Start to begin" 
+                   wrapText="true"
+                   maxWidth="700"
+                   alignment="CENTER"
+                   styleClass="phrase-label"/>
+        </VBox>
+
+        <!-- Typing Field -->
+        <TextField fx:id="typingField" 
+                   promptText="Type the phrase here..."
+                   maxWidth="700"
+                   styleClass="typing-field"/>
+
+        <!-- Feedback Label -->
+        <Label fx:id="feedbackLabel" 
+               text="Ready to start?"
+               styleClass="feedback-label"/>
+
+        <!-- Stats Label -->
+        <Label fx:id="statsLabel" 
+               text="Phrases completed: 0"
+               styleClass="stats-label"/>
+
+        <!-- Control Buttons -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="startBtn" text="Start" prefWidth="140" styleClass="control-btn start-btn"/>
+            <Button fx:id="nextBtn" text="Next Phrase" prefWidth="140" styleClass="control-btn next-btn"/>
+        </HBox>
+
+    </VBox>
+
+</StackPane>

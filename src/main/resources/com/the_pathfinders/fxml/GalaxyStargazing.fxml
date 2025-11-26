@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.GalaxyStargazingController"
+           prefWidth="900" prefHeight="600"
+           styleClass="galaxy-root"
+           stylesheets="@/com/the_pathfinders/css/galaxy_stargazing.css">
+
+    <!-- Galaxy Background Pane with Stars -->
+    <Pane fx:id="galaxyPane" styleClass="galaxy-pane"/>
+
+    <!-- Overlay Content -->
+    <BorderPane mouseTransparent="false">
+        
+        <!-- Top Section -->
+        <top>
+            <HBox alignment="TOP_LEFT" styleClass="top-section">
+                <padding>
+                    <Insets top="20" left="20" right="20" bottom="10"/>
+                </padding>
+                <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+            </HBox>
+        </top>
+
+        <!-- Center - Floating Text -->
+        <center>
+            <StackPane>
+                <Label fx:id="floatingTextLabel" 
+                       text="Journey through the cosmos..."
+                       wrapText="true"
+                       maxWidth="600"
+                       alignment="CENTER"
+                       styleClass="floating-text"/>
+            </StackPane>
+        </center>
+
+        <!-- Bottom - Controls -->
+        <bottom>
+            <VBox spacing="15" alignment="CENTER" styleClass="control-section">
+                <padding>
+                    <Insets top="15" left="20" right="20" bottom="30"/>
+                </padding>
+                
+                <Label text="✨ Relax and gaze at the stars ✨" styleClass="instruction-label"/>
+                
+                <HBox spacing="20" alignment="CENTER">
+                    <Button fx:id="startBtn" text="Start Journey" prefWidth="150" styleClass="control-btn start-btn"/>
+                    <Button fx:id="pauseBtn" text="Pause" prefWidth="150" styleClass="control-btn pause-btn"/>
+                </HBox>
+            </VBox>
+        </bottom>
+
+    </BorderPane>
+
+</StackPane>

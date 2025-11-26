@@ -1,0 +1,235 @@
+/* Meditation Screen - Pastel Gradient Theme */
+
+.meditation-root {
+    -fx-background-color: linear-gradient(to bottom right, 
+        #FFE5EC, #FFF0F5, #E8F4F8, #E0F2E9, #F5E6FF);
+}
+
+.meditation-background {
+    -fx-background-color: linear-gradient(to bottom right, 
+        #FFE5EC 0%, #FFF0F5 25%, #E8F4F8 50%, #E0F2E9 75%, #F5E6FF 100%);
+}
+
+.top-section {
+    -fx-background-color: transparent;
+}
+
+.back-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-text-fill: #8B7BA8;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.3), 8, 0, 0, 2);
+}
+
+.back-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.session-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #B799D9, #93C9E8, #A8D8B9);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+}
+
+.timer-label {
+    -fx-font-size: 48px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #8B7BA8;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.2), 6, 0, 0, 2);
+}
+
+.session-progress {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 10;
+}
+
+.session-progress .bar {
+    -fx-background-color: linear-gradient(to right, #FFB6D9, #B799D9, #93C9E8);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0;
+}
+
+.center-section {
+    -fx-background-color: transparent;
+    -fx-padding: 20;
+}
+
+.breathing-circle {
+    -fx-fill: linear-gradient(to bottom right, 
+        rgba(255, 182, 217, 0.6), 
+        rgba(183, 153, 217, 0.6), 
+        rgba(147, 201, 232, 0.6));
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.4), 30, 0.3, 0, 0);
+    -fx-stroke: rgba(255, 255, 255, 0.8);
+    -fx-stroke-width: 3;
+}
+
+.breath-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #8B7BA8;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.2), 4, 0, 0, 1);
+}
+
+.guided-text {
+    -fx-font-size: 20px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #7A6B8C;
+    -fx-font-style: italic;
+    -fx-line-spacing: 4;
+    -fx-text-alignment: center;
+}
+
+.bottom-section {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-background-radius: 30 30 0 0;
+}
+
+.setting-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #8B7BA8;
+}
+
+.setting-combo {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 15;
+    -fx-text-fill: #7A6B8C;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.2), 4, 0, 0, 2);
+}
+
+.setting-combo:hover {
+    -fx-background-color: white;
+}
+
+.setting-combo .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #7A6B8C;
+}
+
+.setting-combo .list-cell:hover {
+    -fx-background-color: #FFE5EC;
+}
+
+.pattern-radio {
+    -fx-text-fill: #7A6B8C;
+    -fx-font-size: 13px;
+}
+
+.pattern-radio .radio {
+    -fx-background-color: white;
+    -fx-border-color: #B799D9;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+}
+
+.pattern-radio:selected .radio {
+    -fx-background-color: linear-gradient(to bottom right, #FFB6D9, #B799D9);
+}
+
+.sound-toggle {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: #7A6B8C;
+    -fx-font-size: 13px;
+    -fx-padding: 10 18 10 18;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.2), 4, 0, 0, 2);
+}
+
+.sound-toggle:hover {
+    -fx-background-color: rgba(255, 255, 255, 1);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.sound-toggle:selected {
+    -fx-background-color: linear-gradient(to right, #FFB6D9, #B799D9, #93C9E8);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.volume-icon {
+    -fx-font-size: 18px;
+}
+
+.volume-slider {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+}
+
+.volume-slider .track {
+    -fx-background-color: rgba(183, 153, 217, 0.3);
+    -fx-background-radius: 10;
+}
+
+.volume-slider .thumb {
+    -fx-background-color: linear-gradient(to bottom, #FFB6D9, #B799D9);
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.3), 4, 0, 0, 1);
+}
+
+.control-btn {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.3), 8, 0, 0, 3);
+    -fx-padding: 12 0 12 0;
+}
+
+.start-btn {
+    -fx-background-color: linear-gradient(to bottom right, #A8D8B9, #93C9E8);
+    -fx-text-fill: white;
+}
+
+.start-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #93C9E8, #A8D8B9);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.start-btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+.pause-btn {
+    -fx-background-color: linear-gradient(to bottom right, #FFD4A3, #FFC9A8);
+    -fx-text-fill: white;
+}
+
+.pause-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #FFC9A8, #FFD4A3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.pause-btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+.stop-btn {
+    -fx-background-color: linear-gradient(to bottom right, #FFB6D9, #FFD4E5);
+    -fx-text-fill: white;
+}
+
+.stop-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #FFD4E5, #FFB6D9);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.stop-btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.MeditationController"
+           prefWidth="900" prefHeight="600"
+           styleClass="meditation-root"
+           stylesheets="@/com/the_pathfinders/css/meditation.css">
+
+    <!-- Background with gradient -->
+    <AnchorPane styleClass="meditation-background"
+                AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"/>
+
+    <!-- Main Content -->
+    <BorderPane>
+        
+        <!-- Top Section - Timer Bar -->
+        <top>
+            <VBox spacing="8" alignment="CENTER" styleClass="top-section">
+                <padding>
+                    <Insets top="10" left="15" right="15" bottom="5"/>
+                </padding>
+                
+                <!-- Timer Display and Progress Bar -->
+                <HBox spacing="15" alignment="CENTER">
+                    <Label fx:id="timerLabel" text="05:00" styleClass="timer-label"/>
+                    <ProgressBar fx:id="sessionProgress" progress="0" prefWidth="500" styleClass="session-progress"/>
+                </HBox>
+            </VBox>
+        </top>
+
+        <!-- Center Section - Split Layout -->
+        <center>
+            <HBox spacing="40" alignment="CENTER" styleClass="center-section">
+                <padding>
+                    <Insets top="20" left="30" right="30" bottom="20"/>
+                </padding>
+                
+                <!-- LEFT SIDE - Breathing Circle -->
+                <VBox spacing="15" alignment="CENTER" prefWidth="300">
+                    <Label fx:id="sessionTitle" text="Mindfulness Meditation" styleClass="session-title" wrapText="true" maxWidth="280" alignment="CENTER"/>
+                    
+                    <Circle fx:id="breathingCircle" radius="90" styleClass="breathing-circle"/>
+                    <Label fx:id="breathLabel" text="Breathe..." styleClass="breath-label"/>
+                    
+                    <Label fx:id="guidedText" 
+                           text="Select your session and press Start" 
+                           wrapText="true"
+                           maxWidth="280"
+                           alignment="CENTER"
+                           styleClass="guided-text"/>
+                </VBox>
+                
+                <!-- RIGHT SIDE - All Controls -->
+                <VBox spacing="15" alignment="TOP_CENTER" prefWidth="450">
+                    
+                    <!-- Back Button -->
+                    <HBox alignment="TOP_LEFT">
+                        <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+                    </HBox>
+                    
+                    <!-- Session Settings -->
+                    <HBox spacing="12" alignment="CENTER">
+                        <VBox spacing="5" alignment="CENTER">
+                            <Label text="Session Type" styleClass="setting-label"/>
+                            <ComboBox fx:id="sessionTypeCombo" prefWidth="150" styleClass="setting-combo"/>
+                        </VBox>
+                        
+                        <VBox spacing="5" alignment="CENTER">
+                            <Label text="Duration" styleClass="setting-label"/>
+                            <ComboBox fx:id="durationCombo" prefWidth="80" styleClass="setting-combo"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Breathing Pattern -->
+                    <VBox fx:id="breathingPatternBox" spacing="5" alignment="CENTER">
+                        <Label text="Breathing Pattern" styleClass="setting-label"/>
+                        <HBox spacing="10" alignment="CENTER">
+                            <RadioButton fx:id="pattern478" text="4-7-8" styleClass="pattern-radio"/>
+                            <RadioButton fx:id="patternBox" text="Box" styleClass="pattern-radio"/>
+                            <RadioButton fx:id="patternDeep" text="Deep" styleClass="pattern-radio"/>
+                        </HBox>
+                    </VBox>
+                    
+                    <!-- Ambient Sounds with Labels -->
+                    <VBox spacing="5" alignment="CENTER">
+                        <Label text="Ambient Sounds" styleClass="setting-label"/>
+                        <HBox spacing="10" alignment="CENTER">
+                            <VBox spacing="3" alignment="CENTER">
+                                <ToggleButton fx:id="rainSoundBtn" text="🌧️" styleClass="sound-toggle" prefWidth="50" prefHeight="50"/>
+                                <Label text="Rain" styleClass="sound-label"/>
+                            </VBox>
+                            <VBox spacing="3" alignment="CENTER">
+                                <ToggleButton fx:id="oceanSoundBtn" text="🌊" styleClass="sound-toggle" prefWidth="50" prefHeight="50"/>
+                                <Label text="Ocean" styleClass="sound-label"/>
+                            </VBox>
+                            <VBox spacing="3" alignment="CENTER">
+                                <ToggleButton fx:id="forestSoundBtn" text="🌲" styleClass="sound-toggle" prefWidth="50" prefHeight="50"/>
+                                <Label text="Forest" styleClass="sound-label"/>
+                            </VBox>
+                            <VBox spacing="3" alignment="CENTER">
+                                <ToggleButton fx:id="bowlSoundBtn" text="🔔" styleClass="sound-toggle" prefWidth="50" prefHeight="50"/>
+                                <Label text="Bowl" styleClass="sound-label"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                    
+                    <!-- Volume Control -->
+                    <HBox spacing="8" alignment="CENTER">
+                        <Button fx:id="volumeDownBtn" text="🔉" styleClass="volume-btn" prefWidth="35" prefHeight="30"/>
+                        <Slider fx:id="volumeSlider" value="40" min="0" max="100" prefWidth="200" styleClass="volume-slider"/>
+                        <Button fx:id="volumeUpBtn" text="🔊" styleClass="volume-btn" prefWidth="35" prefHeight="30"/>
+                    </HBox>
+                    
+                    <!-- Control Buttons -->
+                    <HBox spacing="15" alignment="CENTER">
+                        <Button fx:id="startBtn" text="▶ Start" prefWidth="110" prefHeight="40" styleClass="control-btn start-btn"/>
+                        <Button fx:id="pauseBtn" text="⏸ Pause" prefWidth="110" prefHeight="40" styleClass="control-btn pause-btn"/>
+                        <Button fx:id="stopBtn" text="⏹ Stop" prefWidth="110" prefHeight="40" styleClass="control-btn stop-btn"/>
+                    </HBox>
+                    
+                </VBox>
+                
+            </HBox>
+        </center>
+
+    </BorderPane>
+
+</StackPane>

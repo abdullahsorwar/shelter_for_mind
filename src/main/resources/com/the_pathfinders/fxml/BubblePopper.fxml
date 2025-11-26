@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.BubblePopperController"
+           prefWidth="900" prefHeight="600"
+           styleClass="bubble-root"
+           stylesheets="@/com/the_pathfinders/css/bubble_popper.css">
+
+    <BorderPane>
+        
+        <!-- Top Section -->
+        <top>
+            <VBox spacing="15" alignment="TOP_CENTER" styleClass="top-section">
+                <padding>
+                    <Insets top="20" left="20" right="20" bottom="10"/>
+                </padding>
+
+                <!-- Back Button -->
+                <HBox alignment="TOP_LEFT">
+                    <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+                </HBox>
+
+                <!-- Title and Score -->
+                <Label text="💭 Bubble Popper 💭" styleClass="bubble-title"/>
+                <Label fx:id="scoreLabel" text="Score: 0" styleClass="score-label"/>
+                <Label fx:id="messageLabel" text="Click bubbles to pop them and relax 🫧" 
+                       styleClass="message-label" wrapText="true" maxWidth="600" alignment="CENTER"/>
+            </VBox>
+        </top>
+
+        <!-- Center - Bubble Game Area -->
+        <center>
+            <Pane fx:id="bubblePane" styleClass="bubble-pane"/>
+        </center>
+
+        <!-- Bottom - Controls -->
+        <bottom>
+            <HBox spacing="20" alignment="CENTER" styleClass="control-section">
+                <padding>
+                    <Insets top="15" left="20" right="20" bottom="25"/>
+                </padding>
+                
+                <Button fx:id="startBtn" text="Start Game" prefWidth="150" styleClass="control-btn start-btn"/>
+                <Button fx:id="resetBtn" text="Reset" prefWidth="150" styleClass="control-btn reset-btn"/>
+            </HBox>
+        </bottom>
+
+    </BorderPane>
+
+</StackPane>

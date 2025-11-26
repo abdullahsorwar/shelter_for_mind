@@ -19,9 +19,31 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         primaryStage = stage;
         System.out.println("Initializing database...");
-        DB.init();
-        DbMigrations.runAll();
-        System.out.println("Database initialized successfully.");
+        
+        // Try to initialize database with retries for Neon wake-up
+        int maxRetries = 3;
+        int retryCount = 0;
+        boolean dbInitialized = false;
+        
+        while (retryCount < maxRetries && !dbInitialized) {
+            try {
+                DB.init();
+                DbMigrations.runAll();
+                System.out.println("Database initialized successfully.");
+                dbInitialized = true;
+            } catch (Exception e) {
+                retryCount++;
+                System.err.println("Database connection attempt " + retryCount + " failed: " + e.getMessage());
+                if (retryCount < maxRetries) {
+                    System.out.println("Retrying in 5 seconds... (Neon database might be waking up)");
+                    Thread.sleep(5000);
+                } else {
+                    System.err.println("Failed to connect to database after " + maxRetries + " attempts.");
+                    System.err.println("The app will continue but some features may not work.");
+                    System.err.println("Please check your internet connection and Neon database status.");
+                }
+            }
+        }
 
         // Start loading background music asynchronously (non-blocking)
         System.out.println("Starting background music load (async)...");

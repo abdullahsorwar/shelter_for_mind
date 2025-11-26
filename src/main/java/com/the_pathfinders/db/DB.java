@@ -34,10 +34,13 @@ public final class DB {
         cfg.setMaximumPoolSize(5);
         cfg.setMinimumIdle(0);
         cfg.setIdleTimeout(30_000);
-        cfg.setConnectionTimeout(10_000);
+        cfg.setConnectionTimeout(30_000); // Increased to 30s for Neon wake-up
+        cfg.setValidationTimeout(5_000);
+        cfg.setInitializationFailTimeout(-1); // Don't fail fast on startup
         // Extra explicitness for SSL (your URL already has sslmode=require)
         cfg.addDataSourceProperty("ssl", "true");
         cfg.addDataSourceProperty("sslmode", "require");
+        cfg.addDataSourceProperty("connectTimeout", "30");
         ds = new HikariDataSource(cfg);
     }
 

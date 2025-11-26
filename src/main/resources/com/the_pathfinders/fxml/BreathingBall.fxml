@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.BreathingBallController"
+           prefWidth="900" prefHeight="600"
+           styleClass="breathing-root"
+           stylesheets="@/com/the_pathfinders/css/breathing_ball.css">
+
+    <VBox spacing="40" alignment="CENTER" styleClass="breathing-container">
+        <padding>
+            <Insets top="30" left="40" right="40" bottom="30"/>
+        </padding>
+
+        <!-- Back Button -->
+        <HBox alignment="TOP_LEFT">
+            <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+        </HBox>
+
+        <!-- Title -->
+        <Label text="🫧 Breathing Ball 🫧" styleClass="breathing-title"/>
+
+        <!-- Breathing Ball Circle -->
+        <StackPane>
+            <Circle fx:id="breathingBall" radius="80" styleClass="breathing-ball"/>
+        </StackPane>
+
+        <!-- Phase Label -->
+        <Label fx:id="phaseLabel" text="Ready" styleClass="phase-label"/>
+
+        <!-- Instruction Label -->
+        <Label fx:id="instructionLabel" 
+               text="Press Start to begin your breathing exercise" 
+               wrapText="true"
+               maxWidth="500"
+               alignment="CENTER"
+               styleClass="instruction-label"/>
+
+        <!-- Pattern Selection -->
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Breathing Pattern" styleClass="setting-label"/>
+            <ComboBox fx:id="patternCombo" prefWidth="250" styleClass="pattern-combo"/>
+        </VBox>
+
+        <!-- Control Buttons -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="startBtn" text="Start" prefWidth="140" styleClass="control-btn start-btn"/>
+            <Button fx:id="stopBtn" text="Stop" prefWidth="140" styleClass="control-btn stop-btn"/>
+        </HBox>
+
+    </VBox>
+
+</StackPane>

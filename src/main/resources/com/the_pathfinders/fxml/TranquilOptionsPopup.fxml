@@ -42,42 +42,25 @@
         <Label text="Choose how you'd like to relax"
                styleClass="popup-subtitle"/>
 
-        <!-- 2×2 Grid -->
-        <GridPane hgap="12" vgap="12" alignment="CENTER">
-            <columnConstraints>
-                <ColumnConstraints percentWidth="50"/>
-                <ColumnConstraints percentWidth="50"/>
-            </columnConstraints>
-
-            <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
-
+        <!-- 3 Options in Column -->
+        <VBox spacing="16" alignment="CENTER" prefWidth="400">
             <children>
-
                 <Button fx:id="meditationBtn"
-                        text="Guided\nMeditation"
-                        GridPane.rowIndex="0" GridPane.columnIndex="0"
+                        text="✨ MEDITATION ✨"
+                        prefWidth="350" prefHeight="80"
                         styleClass="popup-option"/>
 
-                <Button fx:id="breathingBtn"
-                        text="Breathing +\nAmbient"
-                        GridPane.rowIndex="0" GridPane.columnIndex="1"
-                        styleClass="popup-option"/>
-
-                <Button fx:id="minigamesBtn"
-                        text="Calm\nMini-Games"
-                        GridPane.rowIndex="1" GridPane.columnIndex="0"
+                <Button fx:id="calmActivitiesBtn"
+                        text="🌸 CALM ACTIVITIES 🌸"
+                        prefWidth="350" prefHeight="80"
                         styleClass="popup-option"/>
 
                 <Button fx:id="pomodoroBtn"
-                        text="Soft\nPomodoro"
-                        GridPane.rowIndex="1" GridPane.columnIndex="1"
+                        text="🍅 POMODORO 🍅"
+                        prefWidth="350" prefHeight="80"
                         styleClass="popup-option"/>
-
             </children>
-        </GridPane>
+        </VBox>
 
     </VBox>
 

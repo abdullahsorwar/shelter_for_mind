@@ -92,10 +92,10 @@ public class DashboardController {
     @FXML private StackPane tranquilOverlay;
     @FXML private VBox tranquilContentBox;
     @FXML private Button meditationBtn;
-    @FXML private Button breathingBtn;
-    @FXML private Button minigamesBtn;
+    @FXML private Button calmActivitiesBtn;
     @FXML private Button pomodoroBtn;
     @FXML private Button tranquilBackBtn;
+
 
 
 
@@ -176,6 +176,11 @@ public class DashboardController {
         initializeMoodTracker();
 
         // ─── Tranquil Corner Popup Setup ───────────────────
+        System.out.println("Setting up tranquil corner buttons...");
+        System.out.println("meditationBtn: " + meditationBtn);
+        System.out.println("calmActivitiesBtn: " + calmActivitiesBtn);
+        System.out.println("pomodoroBtn: " + pomodoroBtn);
+        
 if (tranquilCornerBtn != null) {
     tranquilCornerBtn.setOnAction(e -> showTranquilPopup());
 }
@@ -185,16 +190,37 @@ if (tranquilBackBtn != null) {
 }
 
 if (meditationBtn != null) {
-    meditationBtn.setOnAction(e -> loadPage("/com/the_pathfinders/fxml/Meditation.fxml"));
+    meditationBtn.setOnAction(e -> {
+        System.out.println("Meditation button clicked!");
+        try {
+            loadPage("/com/the_pathfinders/fxml/Meditation.fxml");
+        } catch (Exception ex) {
+            System.err.println("Error loading Meditation: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    });
 }
-if (breathingBtn != null) {
-    breathingBtn.setOnAction(e -> loadPage("/com/the_pathfinders/fxml/TranquilCorner.fxml"));
-}
-if (minigamesBtn != null) {
-    minigamesBtn.setOnAction(e -> loadPage("/com/the_pathfinders/fxml/MiniGame.fxml"));
+if (calmActivitiesBtn != null) {
+    calmActivitiesBtn.setOnAction(e -> {
+        System.out.println("Calm Activities button clicked!");
+        try {
+            loadPage("/com/the_pathfinders/fxml/CalmActivities.fxml");
+        } catch (Exception ex) {
+            System.err.println("Error loading Calm Activities: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    });
 }
 if (pomodoroBtn != null) {
-    pomodoroBtn.setOnAction(e -> loadPage("/com/the_pathfinders/fxml/MiniPomodoro.fxml"));
+    pomodoroBtn.setOnAction(e -> {
+        System.out.println("Pomodoro button clicked!");
+        try {
+            loadPage("/com/the_pathfinders/fxml/Pomodoro.fxml");
+        } catch (Exception ex) {
+            System.err.println("Error loading Pomodoro: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    });
 }
 
 
@@ -377,12 +403,26 @@ private void hideTranquilPopup() {
     fadeOut.play();
 }
 private void loadPage(String path) {
+    System.out.println("loadPage called with path: " + path);
     com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
     try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+        System.out.println("Getting resource for: " + path);
+        java.net.URL resourceUrl = getClass().getResource(path);
+        System.out.println("Resource URL: " + resourceUrl);
+        
+        if (resourceUrl == null) {
+            System.err.println("ERROR: Resource not found at path: " + path);
+            return;
+        }
+        
+        FXMLLoader loader = new FXMLLoader(resourceUrl);
+        System.out.println("Loading FXML...");
         Parent p = loader.load();
+        System.out.println("FXML loaded successfully, setting scene root...");
         root.getScene().setRoot(p);
+        System.out.println("Scene root set successfully!");
     } catch (Exception ex) {
+        System.err.println("ERROR in loadPage: " + ex.getMessage());
         ex.printStackTrace();
     }
 } 

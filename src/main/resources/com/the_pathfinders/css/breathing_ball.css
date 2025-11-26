@@ -1,0 +1,117 @@
+/* Breathing Ball - Pastel Gradient Theme */
+
+.breathing-root {
+    -fx-background-color: linear-gradient(to bottom right, 
+        #E8F4F8, #B8E0F6, #E0F2E9, #C9EDD4);
+}
+
+.breathing-container {
+    -fx-background-color: transparent;
+}
+
+.back-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: #6B93A8;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(107, 147, 168, 0.3), 8, 0, 0, 2);
+}
+
+.back-btn:hover {
+    -fx-background-color: white;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.breathing-title {
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #93C9E8, #A8D8B9);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+}
+
+.breathing-ball {
+    -fx-fill: linear-gradient(to bottom right, 
+        rgba(147, 201, 232, 0.7), 
+        rgba(184, 224, 246, 0.7), 
+        rgba(168, 216, 185, 0.7));
+    -fx-effect: dropshadow(gaussian, rgba(147, 201, 232, 0.5), 40, 0.4, 0, 0);
+    -fx-stroke: rgba(255, 255, 255, 0.9);
+    -fx-stroke-width: 4;
+}
+
+.phase-label {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6B93A8;
+    -fx-effect: dropshadow(gaussian, rgba(107, 147, 168, 0.2), 4, 0, 0, 1);
+}
+
+.instruction-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #7AA3B8;
+    -fx-font-style: italic;
+    -fx-text-alignment: center;
+}
+
+.setting-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #6B93A8;
+}
+
+.pattern-combo {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 15;
+    -fx-text-fill: #6B93A8;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12 8 12;
+    -fx-effect: dropshadow(gaussian, rgba(107, 147, 168, 0.2), 4, 0, 0, 2);
+}
+
+.pattern-combo:hover {
+    -fx-background-color: white;
+}
+
+.control-btn {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(107, 147, 168, 0.3), 8, 0, 0, 3);
+    -fx-padding: 12 0 12 0;
+}
+
+.start-btn {
+    -fx-background-color: linear-gradient(to bottom right, #93C9E8, #A8D8B9);
+    -fx-text-fill: white;
+}
+
+.start-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #A8D8B9, #93C9E8);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.start-btn:disabled {
+    -fx-opacity: 0.5;
+}
+
+.stop-btn {
+    -fx-background-color: linear-gradient(to bottom right, #FFB6D9, #FFC9E5);
+    -fx-text-fill: white;
+}
+
+.stop-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #FFC9E5, #FFB6D9);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.stop-btn:disabled {
+    -fx-opacity: 0.5;
+}

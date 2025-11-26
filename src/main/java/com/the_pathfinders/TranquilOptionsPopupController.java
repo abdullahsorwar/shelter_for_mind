@@ -8,8 +8,7 @@ import javafx.scene.control.Button;
 public class TranquilOptionsPopupController {
 
     @FXML private Button meditationBtn;
-    @FXML private Button breathingBtn;
-    @FXML private Button minigamesBtn;
+    @FXML private Button calmActivitiesBtn;
     @FXML private Button pomodoroBtn;
     @FXML private Button backBtn;
 
@@ -17,9 +16,8 @@ public class TranquilOptionsPopupController {
     public void initialize() {
 
         meditationBtn.setOnAction(e -> load("/com/the_pathfinders/fxml/Meditation.fxml"));
-        breathingBtn.setOnAction(e -> load("/com/the_pathfinders/fxml/TranquilCorner.fxml"));
-        minigamesBtn.setOnAction(e -> load("/com/the_pathfinders/fxml/MiniGame.fxml"));
-        pomodoroBtn.setOnAction(e -> load("/com/the_pathfinders/fxml/MiniPomodoro.fxml"));
+        calmActivitiesBtn.setOnAction(e -> load("/com/the_pathfinders/fxml/CalmActivities.fxml"));
+        pomodoroBtn.setOnAction(e -> load("/com/the_pathfinders/fxml/Pomodoro.fxml"));
 
         backBtn.setOnAction(e -> load("/com/the_pathfinders/fxml/Dashboard.fxml"));
     }

@@ -142,68 +142,49 @@
 
     <children>
         <VBox fx:id="tranquilContentBox"
-              spacing="22"
+              spacing="25"
               alignment="CENTER"
               styleClass="journaling-popup-box"
-              prefWidth="420" prefHeight="480">  
-              <!-- shortened from original 650px -->
+              prefWidth="450" prefHeight="520">
 
             <!-- ICON -->
-            <ImageView fx:id="tranquilIcon" fitWidth="54" fitHeight="54" preserveRatio="true">
+            <ImageView fx:id="tranquilIcon" fitWidth="64" fitHeight="64" preserveRatio="true">
                 <image>
                     <Image url="@/assets/icons/ques.png"/>
                 </image>
             </ImageView>
 
             <!-- TITLE & SUBTITLE -->
-            <Label text="Tranquil Corner" styleClass="journaling-title"/>
-            <Label text="Choose Option" styleClass="journaling-subtitle"/>
+            <Label text="🌸 Tranquil Corner 🌸" styleClass="journaling-title" style="-fx-font-size: 32px;"/>
+            <Label text="Choose how you'd like to relax" styleClass="journaling-subtitle" style="-fx-font-size: 16px; -fx-font-style: italic;"/>
 
-            <!-- 2×2 GRID -->
-            <GridPane alignment="CENTER" hgap="12" vgap="12">
+            <!-- 3 BUTTONS IN COLUMN -->
+            <VBox spacing="18" alignment="CENTER">
+                <Button fx:id="meditationBtn"
+                        text="✨ MEDITATION ✨"
+                        styleClass="journaling-btn"
+                        prefWidth="370" prefHeight="85"
+                        style="-fx-font-size: 20px; -fx-background-color: linear-gradient(to right, #FFE5EC, #F5E6FF); -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
 
-                <columnConstraints>
-                    <ColumnConstraints prefWidth="170"/>
-                    <ColumnConstraints prefWidth="170"/>
-                </columnConstraints>
+                <Button fx:id="calmActivitiesBtn"
+                        text="🌸 CALM ACTIVITIES 🌸"
+                        styleClass="journaling-btn"
+                        prefWidth="370" prefHeight="85"
+                        style="-fx-font-size: 20px; -fx-background-color: linear-gradient(to right, #E8F4F8, #E0F2E9); -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
 
-                <rowConstraints>
-                    <RowConstraints prefHeight="90"/>
-                    <RowConstraints prefHeight="90"/>
-                </rowConstraints>
-
-                <children>
-                    <Button fx:id="meditationBtn"
-                            text="Meditation"
-                            styleClass="journaling-btn"
-                            prefWidth="170" prefHeight="90"
-                            GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-
-                    <Button fx:id="breathingBtn"
-                            text="Breathing Companion"
-                            styleClass="journaling-btn"
-                            prefWidth="170" prefHeight="90"
-                            GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-
-                    <Button fx:id="minigamesBtn"
-                            text="Calm activity"
-                            styleClass="journaling-btn"
-                            prefWidth="170" prefHeight="90"
-                            GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-
-                    <Button fx:id="pomodoroBtn"
-                            text="Pomodoro"
-                            styleClass="journaling-btn"
-                            prefWidth="170" prefHeight="90"
-                            GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                </children>
-            </GridPane>
+                <Button fx:id="pomodoroBtn"
+                        text="🍅 POMODORO 🍅"
+                        styleClass="journaling-btn"
+                        prefWidth="370" prefHeight="85"
+                        style="-fx-font-size: 20px; -fx-background-color: linear-gradient(to right, #FFD4D4, #FFC9C9); -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
+            </VBox>
 
             <!-- BACK BUTTON -->
             <Button fx:id="tranquilBackBtn"
-                    text="Back"
+                    text="← Back"
                     styleClass="journaling-btn"
-                    prefWidth="200" prefHeight="45"/>
+                    prefWidth="200" prefHeight="45"
+                    style="-fx-font-size: 16px; -fx-background-radius: 18px;"/>
         </VBox>
     </children>
 </StackPane>

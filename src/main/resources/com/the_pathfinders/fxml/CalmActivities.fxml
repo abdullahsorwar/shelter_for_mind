@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.CalmActivitiesController"
+           prefWidth="900" prefHeight="600"
+           styleClass="calm-root"
+           stylesheets="@/com/the_pathfinders/css/calm_activities.css">
+
+    <VBox spacing="30" alignment="CENTER" styleClass="calm-container">
+        <padding>
+            <Insets top="40" left="60" right="60" bottom="40"/>
+        </padding>
+
+        <!-- Back Button -->
+        <HBox alignment="TOP_LEFT">
+            <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+        </HBox>
+
+        <!-- Title -->
+        <Label text="🌸 Calm Activities 🌸" styleClass="calm-title"/>
+        <Label text="Choose an activity to relax and unwind" styleClass="calm-subtitle"/>
+
+        <!-- Activities Grid -->
+        <VBox spacing="20" alignment="CENTER" maxWidth="700">
+            
+            <!-- Row 1 -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="drawingBtn" 
+                        prefWidth="330" prefHeight="120"
+                        styleClass="activity-btn drawing-btn">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label text="🎨" styleClass="activity-emoji"/>
+                            <Label text="Drawing &amp; Coloring" styleClass="activity-label"/>
+                            <Label text="Express yourself creatively" styleClass="activity-desc"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="breathingBallBtn" 
+                        prefWidth="330" prefHeight="120"
+                        styleClass="activity-btn breathing-btn">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label text="🫧" styleClass="activity-emoji"/>
+                            <Label text="Breathing Ball" styleClass="activity-label"/>
+                            <Label text="Follow the rhythm" styleClass="activity-desc"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <!-- Row 2 -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="bubblePopperBtn" 
+                        prefWidth="330" prefHeight="120"
+                        styleClass="activity-btn bubble-btn">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label text="💭" styleClass="activity-emoji"/>
+                            <Label text="Bubble Popper" styleClass="activity-label"/>
+                            <Label text="Pop away your stress" styleClass="activity-desc"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="typingGameBtn" 
+                        prefWidth="330" prefHeight="120"
+                        styleClass="activity-btn typing-btn">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label text="⌨️" styleClass="activity-emoji"/>
+                            <Label text="Typing Zen" styleClass="activity-label"/>
+                            <Label text="Type motivational quotes" styleClass="activity-desc"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <!-- Row 3 - Center -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button fx:id="galaxyStargazingBtn" 
+                        prefWidth="330" prefHeight="120"
+                        styleClass="activity-btn galaxy-btn">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label text="✨" styleClass="activity-emoji"/>
+                            <Label text="Galaxy Stargazing" styleClass="activity-label"/>
+                            <Label text="Journey through the stars" styleClass="activity-desc"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+            </HBox>
+
+        </VBox>
+
+    </VBox>
+
+</StackPane>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.PomodoroController"
+           prefWidth="900" prefHeight="600"
+           styleClass="pomodoro-root"
+           stylesheets="@/com/the_pathfinders/css/pomodoro.css">
+
+    <BorderPane>
+        
+        <!-- Top Section -->
+        <top>
+            <VBox spacing="15" alignment="TOP_CENTER" styleClass="top-section">
+                <padding>
+                    <Insets top="20" left="20" right="20" bottom="10"/>
+                </padding>
+
+                <!-- Back Button -->
+                <HBox alignment="TOP_LEFT">
+                    <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+                </HBox>
+
+                <!-- Title -->
+                <Label text="🍅 Pomodoro Timer 🍅" styleClass="pomodoro-title"/>
+                <Label fx:id="phaseLabel" text="🍅 READY" styleClass="phase-label"/>
+            </VBox>
+        </top>
+
+        <!-- Center Section - Timer Display -->
+        <center>
+            <VBox spacing="25" alignment="CENTER" styleClass="center-section">
+                
+                <!-- Timer Circle with Progress -->
+                <StackPane>
+                    <ProgressIndicator fx:id="progressCircle" 
+                                     progress="0" 
+                                     prefWidth="250" 
+                                     prefHeight="250"
+                                     styleClass="progress-circle"/>
+                    
+                    <VBox alignment="CENTER" spacing="10">
+                        <Circle fx:id="tomatoCircle" radius="60" styleClass="tomato-circle"/>
+                        <Label fx:id="timerLabel" text="25:00" styleClass="timer-label"/>
+                    </VBox>
+                </StackPane>
+
+                <!-- Motivation Label -->
+                <Label fx:id="motivationLabel" 
+                       text="Ready to start your focused session? 🍅"
+                       wrapText="true"
+                       maxWidth="500"
+                       alignment="CENTER"
+                       styleClass="motivation-label"/>
+
+                <!-- Session Count -->
+                <HBox spacing="15" alignment="CENTER">
+                    <Label fx:id="sessionCountLabel" text="Pomodoros: 0" styleClass="session-count"/>
+                    <VBox fx:id="completedSessionsBox" spacing="5" alignment="CENTER" styleClass="tomato-display"/>
+                </HBox>
+
+            </VBox>
+        </center>
+
+        <!-- Bottom Section - Settings and Controls -->
+        <bottom>
+            <VBox spacing="20" alignment="CENTER" styleClass="bottom-section">
+                <padding>
+                    <Insets top="15" left="30" right="30" bottom="30"/>
+                </padding>
+
+                <!-- Duration Settings -->
+                <HBox spacing="25" alignment="CENTER">
+                    <VBox spacing="8" alignment="CENTER">
+                        <Label text="Work (min)" styleClass="setting-label"/>
+                        <ComboBox fx:id="workDurationCombo" prefWidth="90" styleClass="duration-combo"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" alignment="CENTER">
+                        <Label text="Short Break" styleClass="setting-label"/>
+                        <ComboBox fx:id="shortBreakCombo" prefWidth="90" styleClass="duration-combo"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" alignment="CENTER">
+                        <Label text="Long Break" styleClass="setting-label"/>
+                        <ComboBox fx:id="longBreakCombo" prefWidth="90" styleClass="duration-combo"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Control Buttons -->
+                <HBox spacing="15" alignment="CENTER">
+                    <Button fx:id="startBtn" text="Start" prefWidth="120" styleClass="control-btn start-btn"/>
+                    <Button fx:id="pauseBtn" text="Pause" prefWidth="120" styleClass="control-btn pause-btn"/>
+                    <Button fx:id="resetBtn" text="Reset" prefWidth="120" styleClass="control-btn reset-btn"/>
+                    <Button fx:id="skipBtn" text="Skip Phase" prefWidth="120" styleClass="control-btn skip-btn"/>
+                </HBox>
+
+            </VBox>
+        </bottom>
+
+    </BorderPane>
+
+</StackPane>

@@ -1,0 +1,96 @@
+/* Calm Activities Hub - Pastel Gradient Theme */
+
+.calm-root {
+    -fx-background-color: linear-gradient(to bottom right, 
+        #FFF0F5, #FFE5EC, #E8F4F8, #F5E6FF, #E0F2E9);
+}
+
+.calm-container {
+    -fx-background-color: transparent;
+}
+
+.back-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: #8B7BA8;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.3), 8, 0, 0, 2);
+}
+
+.back-btn:hover {
+    -fx-background-color: white;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.calm-title {
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #B799D9, #93C9E8, #A8D8B9);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 3);
+}
+
+.calm-subtitle {
+    -fx-font-size: 18px;
+    -fx-text-fill: #7A6B8C;
+    -fx-font-style: italic;
+}
+
+.activity-btn {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.3), 10, 0, 0, 4);
+    -fx-border-width: 0;
+}
+
+.activity-btn:hover {
+    -fx-background-color: white;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.5), 15, 0, 0, 6);
+}
+
+.drawing-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, 
+        rgba(255, 182, 217, 0.3), rgba(255, 255, 255, 0.95));
+}
+
+.breathing-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, 
+        rgba(147, 201, 232, 0.3), rgba(255, 255, 255, 0.95));
+}
+
+.bubble-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, 
+        rgba(183, 153, 217, 0.3), rgba(255, 255, 255, 0.95));
+}
+
+.typing-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, 
+        rgba(168, 216, 185, 0.3), rgba(255, 255, 255, 0.95));
+}
+
+.galaxy-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, 
+        rgba(245, 198, 236, 0.3), rgba(255, 255, 255, 0.95));
+}
+
+.activity-emoji {
+    -fx-font-size: 36px;
+}
+
+.activity-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #8B7BA8;
+}
+
+.activity-desc {
+    -fx-font-size: 13px;
+    -fx-text-fill: #9B8BAA;
+    -fx-font-style: italic;
+}
