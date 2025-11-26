@@ -62,13 +62,16 @@
 }
 
 .breathing-circle {
-    -fx-fill: linear-gradient(to bottom right, 
-        rgba(255, 182, 217, 0.6), 
-        rgba(183, 153, 217, 0.6), 
-        rgba(147, 201, 232, 0.6));
-    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.4), 30, 0.3, 0, 0);
-    -fx-stroke: rgba(255, 255, 255, 0.8);
-    -fx-stroke-width: 3;
+    -fx-fill: transparent;
+}
+
+/* Lotus Flower Styling */
+.lotus-petal {
+    -fx-effect: dropshadow(gaussian, rgba(232, 165, 192, 0.4), 15, 0.4, 0, 0);
+}
+
+.lotus-center {
+    -fx-effect: dropshadow(gaussian, rgba(255, 215, 0, 0.6), 20, 0.5, 0, 0);
 }
 
 .breath-label {

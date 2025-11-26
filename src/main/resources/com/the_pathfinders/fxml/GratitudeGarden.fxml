@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/25"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.the_pathfinders.GratitudeGardenController"
+           prefWidth="900" prefHeight="600"
+           styleClass="garden-root"
+           stylesheets="@/com/the_pathfinders/css/gratitude_garden.css">
+
+    <BorderPane>
+        
+        <!-- Top Controls -->
+        <top>
+            <VBox spacing="12" styleClass="top-panel">
+                <padding>
+                    <Insets top="20" left="30" right="30" bottom="15"/>
+                </padding>
+                
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="flowerCountLabel" text="🌸 0 Flowers" styleClass="flower-count"/>
+                </HBox>
+                
+                <Label text="🌸 Gratitude Garden 🌸" styleClass="garden-title"/>
+                <Label text="Plant a flower for each thing you're grateful for today" 
+                       styleClass="garden-subtitle"/>
+            </VBox>
+        </top>
+
+        <!-- Center Garden Area -->
+        <center>
+            <StackPane>
+                <!-- Garden bed with flowers -->
+                <Pane fx:id="gardenPane" styleClass="garden-bed" minWidth="850" minHeight="400"/>
+                
+                <!-- Overlay message when no flowers -->
+                <VBox fx:id="emptyGardenMessage" spacing="15" alignment="CENTER" 
+                      styleClass="empty-message">
+                    <Label text="🌱" styleClass="empty-icon"/>
+                    <Label text="Your garden is waiting to bloom..." styleClass="empty-text"/>
+                    <Label text="Share what you're grateful for below" styleClass="empty-hint"/>
+                </VBox>
+            </StackPane>
+        </center>
+
+        <!-- Bottom Input Area -->
+        <bottom>
+            <VBox spacing="15" styleClass="bottom-panel">
+                <padding>
+                    <Insets top="15" left="40" right="40" bottom="20"/>
+                </padding>
+                
+                <Label text="What are you grateful for today?" styleClass="input-label"/>
+                
+                <HBox spacing="12" alignment="CENTER">
+                    <TextField fx:id="gratitudeInput" 
+                               promptText="Type something you're grateful for..." 
+                               styleClass="gratitude-input"
+                               HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="plantBtn" text="🌸 Plant" styleClass="plant-btn"/>
+                </HBox>
+                
+                <HBox spacing="20" alignment="CENTER">
+                    <Button fx:id="viewAllBtn" text="📖 View All" styleClass="secondary-btn"/>
+                    <Button fx:id="clearGardenBtn" text="🌿 Start Fresh" styleClass="secondary-btn"/>
+                </HBox>
+            </VBox>
+        </bottom>
+
+    </BorderPane>
+
+    <!-- Gratitude List Overlay -->
+    <StackPane fx:id="gratitudeListOverlay" visible="false" managed="false" 
+               styleClass="overlay">
+        <VBox spacing="20" styleClass="list-panel" maxWidth="600" maxHeight="500">
+            <padding>
+                <Insets top="25" left="30" right="30" bottom="25"/>
+            </padding>
+            
+            <HBox alignment="CENTER">
+                <Label text="📖 Your Gratitude List" styleClass="list-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="closeListBtn" text="✕" styleClass="close-btn"/>
+            </HBox>
+            
+            <ScrollPane styleClass="list-scroll" fitToWidth="true" VBox.vgrow="ALWAYS">
+                <VBox fx:id="gratitudeListBox" spacing="10" styleClass="list-content"/>
+            </ScrollPane>
+        </VBox>
+    </StackPane>
+
+</StackPane>

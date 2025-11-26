@@ -126,6 +126,28 @@ public class DashboardController {
 
     public void initialize() {
         setLogo();
+        
+        // Ensure user image is visible and clickable
+        if (userImage != null) {
+            userImage.setVisible(true);
+            userImage.setOpacity(1.0);
+            userImage.setOnMouseClicked(e -> toggleUserMenu());
+            // Set default image if not already set
+            if (userImage.getImage() == null) {
+                try {
+                    URL u = getClass().getResource("/assets/icons/user.png");
+                    if (u != null) {
+                        Image img = new Image(u.toExternalForm(), 50, 50, true, true);
+                        userImage.setImage(img);
+                    }
+                } catch (Exception ignored) {}
+            }
+        }
+        if (userLabel != null) {
+            userLabel.setVisible(true);
+            userLabel.setOpacity(1.0);
+        }
+        
         try {
             if (greetingLabel != null) {
                 updateGreeting();
@@ -193,6 +215,7 @@ if (meditationBtn != null) {
     meditationBtn.setOnAction(e -> {
         System.out.println("Meditation button clicked!");
         try {
+            MeditationController.setSoulId(this.soulId);
             loadPage("/com/the_pathfinders/fxml/Meditation.fxml");
         } catch (Exception ex) {
             System.err.println("Error loading Meditation: " + ex.getMessage());
@@ -312,10 +335,6 @@ if (pomodoroBtn != null) {
                 ft[0].play();
             }
         } catch (Exception ignored) {}
-
-        if (userImage != null) {
-            userImage.setOnMouseClicked(e -> toggleUserMenu());
-        }
     }
 
     private void swapButtons(int idx1, int idx2) {
@@ -529,7 +548,11 @@ private void loadPage(String path) {
     
     public void setUser(String id, String name) {
         this.soulId = id == null ? "" : id;
-        if (userLabel != null) userLabel.setText(this.soulId);
+        if (userLabel != null) {
+            userLabel.setText(this.soulId);
+            userLabel.setVisible(true);
+            userLabel.setOpacity(1.0);
+        }
         
         // Track activity when dashboard loads
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
@@ -540,8 +563,10 @@ private void loadPage(String path) {
             URL u = getClass().getResource("/com/the_pathfinders/" + this.soulId + ".jpg");
             if (u == null) u = getClass().getResource("/assets/icons/user.png");
             if (u != null && userImage != null) {
-                Image img = new Image(u.toExternalForm(), 38, 38, true, true);
+                Image img = new Image(u.toExternalForm(), 50, 50, true, true);
                 userImage.setImage(img);
+                userImage.setVisible(true);
+                userImage.setOpacity(1.0);
             }
         } catch (Exception ignored) {}
     }

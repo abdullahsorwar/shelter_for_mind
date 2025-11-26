@@ -26,72 +26,69 @@
         <Label text="Choose an activity to relax and unwind" styleClass="calm-subtitle"/>
 
         <!-- Activities Grid -->
-        <VBox spacing="20" alignment="CENTER" maxWidth="700">
+        <VBox spacing="18" alignment="CENTER" maxWidth="650">
             
             <!-- Row 1 -->
-            <HBox spacing="20" alignment="CENTER">
+            <HBox spacing="18" alignment="CENTER">
                 <Button fx:id="drawingBtn" 
-                        prefWidth="330" prefHeight="120"
+                        prefWidth="210" prefHeight="120"
                         styleClass="activity-btn drawing-btn">
                     <graphic>
                         <VBox alignment="CENTER" spacing="8">
                             <Label text="🎨" styleClass="activity-emoji"/>
-                            <Label text="Drawing &amp; Coloring" styleClass="activity-label"/>
-                            <Label text="Express yourself creatively" styleClass="activity-desc"/>
+                            <Label text="Drawing" styleClass="activity-label"/>
+                            <Label text="Express creativity" styleClass="activity-desc"/>
                         </VBox>
                     </graphic>
                 </Button>
 
                 <Button fx:id="breathingBallBtn" 
-                        prefWidth="330" prefHeight="120"
+                        prefWidth="210" prefHeight="120"
                         styleClass="activity-btn breathing-btn">
                     <graphic>
                         <VBox alignment="CENTER" spacing="8">
                             <Label text="🫧" styleClass="activity-emoji"/>
-                            <Label text="Breathing Ball" styleClass="activity-label"/>
-                            <Label text="Follow the rhythm" styleClass="activity-desc"/>
+                            <Label text="Breathing" styleClass="activity-label"/>
+                            <Label text="Follow rhythm" styleClass="activity-desc"/>
+                        </VBox>
+                    </graphic>
+                </Button>
+
+                <Button fx:id="bubblePopperBtn" 
+                        prefWidth="210" prefHeight="120"
+                        styleClass="activity-btn bubble-btn">
+                    <graphic>
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label text="💭" styleClass="activity-emoji"/>
+                            <Label text="Bubbles" styleClass="activity-label"/>
+                            <Label text="Pop stress away" styleClass="activity-desc"/>
                         </VBox>
                     </graphic>
                 </Button>
             </HBox>
 
             <!-- Row 2 -->
-            <HBox spacing="20" alignment="CENTER">
-                <Button fx:id="bubblePopperBtn" 
-                        prefWidth="330" prefHeight="120"
-                        styleClass="activity-btn bubble-btn">
-                    <graphic>
-                        <VBox alignment="CENTER" spacing="8">
-                            <Label text="💭" styleClass="activity-emoji"/>
-                            <Label text="Bubble Popper" styleClass="activity-label"/>
-                            <Label text="Pop away your stress" styleClass="activity-desc"/>
-                        </VBox>
-                    </graphic>
-                </Button>
-
+            <HBox spacing="18" alignment="CENTER">
                 <Button fx:id="typingGameBtn" 
-                        prefWidth="330" prefHeight="120"
+                        prefWidth="210" prefHeight="120"
                         styleClass="activity-btn typing-btn">
                     <graphic>
                         <VBox alignment="CENTER" spacing="8">
                             <Label text="⌨️" styleClass="activity-emoji"/>
                             <Label text="Typing Zen" styleClass="activity-label"/>
-                            <Label text="Type motivational quotes" styleClass="activity-desc"/>
+                            <Label text="Mindful typing" styleClass="activity-desc"/>
                         </VBox>
                     </graphic>
                 </Button>
-            </HBox>
 
-            <!-- Row 3 - Center -->
-            <HBox spacing="20" alignment="CENTER">
-                <Button fx:id="galaxyStargazingBtn" 
-                        prefWidth="330" prefHeight="120"
-                        styleClass="activity-btn galaxy-btn">
+                <Button fx:id="gratitudeGardenBtn" 
+                        prefWidth="210" prefHeight="120"
+                        styleClass="activity-btn garden-btn">
                     <graphic>
                         <VBox alignment="CENTER" spacing="8">
-                            <Label text="✨" styleClass="activity-emoji"/>
-                            <Label text="Galaxy Stargazing" styleClass="activity-label"/>
-                            <Label text="Journey through the stars" styleClass="activity-desc"/>
+                            <Label text="🌸" styleClass="activity-emoji"/>
+                            <Label text="Gratitude Garden" styleClass="activity-label"/>
+                            <Label text="Plant positivity" styleClass="activity-desc"/>
                         </VBox>
                     </graphic>
                 </Button>

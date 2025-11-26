@@ -40,47 +40,45 @@
 }
 
 .activity-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.85);
-    -fx-background-radius: 20;
+    -fx-background-radius: 35;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.3), 10, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.4), 12, 0, 0, 5);
     -fx-border-width: 0;
 }
 
 .activity-btn:hover {
-    -fx-background-color: white;
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
-    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.5), 15, 0, 0, 6);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.6), 18, 0, 0, 8);
 }
 
-.drawing-btn:hover {
+.drawing-btn {
     -fx-background-color: linear-gradient(to bottom right, 
-        rgba(255, 182, 217, 0.3), rgba(255, 255, 255, 0.95));
+        #FFB6D9, #FFCCE5, #FFE0F0);
 }
 
-.breathing-btn:hover {
+.breathing-btn {
     -fx-background-color: linear-gradient(to bottom right, 
-        rgba(147, 201, 232, 0.3), rgba(255, 255, 255, 0.95));
+        #A8D8F0, #C0E5F8, #D8F0FF);
 }
 
-.bubble-btn:hover {
+.bubble-btn {
     -fx-background-color: linear-gradient(to bottom right, 
-        rgba(183, 153, 217, 0.3), rgba(255, 255, 255, 0.95));
+        #C5A8E8, #D9C5F5, #EFE0FF);
 }
 
-.typing-btn:hover {
+.typing-btn {
     -fx-background-color: linear-gradient(to bottom right, 
-        rgba(168, 216, 185, 0.3), rgba(255, 255, 255, 0.95));
+        #B8E8C8, #D0F0DC, #E5F7EC);
 }
 
-.galaxy-btn:hover {
+.garden-btn {
     -fx-background-color: linear-gradient(to bottom right, 
-        rgba(245, 198, 236, 0.3), rgba(255, 255, 255, 0.95));
+        #FFE4F5, #FFF0F8, #FFF5FB);
 }
 
 .activity-emoji {
-    -fx-font-size: 36px;
+    -fx-font-size: 40px;
 }
 
 .activity-label {

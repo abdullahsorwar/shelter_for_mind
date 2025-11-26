@@ -14,7 +14,7 @@ public class CalmActivitiesController {
     @FXML private Button breathingBallBtn;
     @FXML private Button bubblePopperBtn;
     @FXML private Button typingGameBtn;
-    @FXML private Button galaxyStargazingBtn;
+    @FXML private Button gratitudeGardenBtn;
 
     @FXML
     public void initialize() {
@@ -44,7 +44,7 @@ public class CalmActivitiesController {
         breathingBallBtn.setOnAction(e -> loadActivity("/com/the_pathfinders/fxml/BreathingBall.fxml"));
         bubblePopperBtn.setOnAction(e -> loadActivity("/com/the_pathfinders/fxml/BubblePopper.fxml"));
         typingGameBtn.setOnAction(e -> loadActivity("/com/the_pathfinders/fxml/TypingGame.fxml"));
-        galaxyStargazingBtn.setOnAction(e -> loadActivity("/com/the_pathfinders/fxml/GalaxyStargazing.fxml"));
+        gratitudeGardenBtn.setOnAction(e -> loadActivity("/com/the_pathfinders/fxml/GratitudeGarden.fxml"));
     }
 
     private void openDrawingTool() {

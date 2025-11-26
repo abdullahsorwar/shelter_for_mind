@@ -42,11 +42,28 @@
                     <Insets top="20" left="30" right="30" bottom="20"/>
                 </padding>
                 
-                <!-- LEFT SIDE - Breathing Circle -->
+                <!-- LEFT SIDE - Breathing Lotus Flower -->
                 <VBox spacing="15" alignment="CENTER" prefWidth="300">
                     <Label fx:id="sessionTitle" text="Mindfulness Meditation" styleClass="session-title" wrapText="true" maxWidth="280" alignment="CENTER"/>
                     
-                    <Circle fx:id="breathingCircle" radius="90" styleClass="breathing-circle"/>
+                    <!-- Lotus Flower Shape instead of circle -->
+                    <StackPane fx:id="breathingLotus" prefWidth="180" prefHeight="180">
+                        <Circle fx:id="breathingCircle" radius="90" opacity="0" managed="false"/> <!-- Hidden, kept for controller -->
+                        
+                        <!-- Lotus Petals (8 petals in circle formation) -->
+                        <Ellipse radiusX="45" radiusY="70" fill="#E8A5C0" opacity="0.8" rotate="0" styleClass="lotus-petal"/>
+                        <Ellipse radiusX="45" radiusY="70" fill="#F0B5D0" opacity="0.8" rotate="45" styleClass="lotus-petal"/>
+                        <Ellipse radiusX="45" radiusY="70" fill="#E8A5C0" opacity="0.8" rotate="90" styleClass="lotus-petal"/>
+                        <Ellipse radiusX="45" radiusY="70" fill="#F0B5D0" opacity="0.8" rotate="135" styleClass="lotus-petal"/>
+                        <Ellipse radiusX="45" radiusY="70" fill="#E8A5C0" opacity="0.8" rotate="180" styleClass="lotus-petal"/>
+                        <Ellipse radiusX="45" radiusY="70" fill="#F0B5D0" opacity="0.8" rotate="225" styleClass="lotus-petal"/>
+                        <Ellipse radiusX="45" radiusY="70" fill="#E8A5C0" opacity="0.8" rotate="270" styleClass="lotus-petal"/>
+                        <Ellipse radiusX="45" radiusY="70" fill="#F0B5D0" opacity="0.8" rotate="315" styleClass="lotus-petal"/>
+                        
+                        <!-- Center Core -->
+                        <Circle radius="35" fill="#FFD700" opacity="0.9" styleClass="lotus-center"/>
+                    </StackPane>
+                    
                     <Label fx:id="breathLabel" text="Breathe..." styleClass="breath-label"/>
                     
                     <Label fx:id="guidedText" 

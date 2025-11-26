@@ -163,20 +163,20 @@
                 <Button fx:id="meditationBtn"
                         text="✨ MEDITATION ✨"
                         styleClass="journaling-btn"
-                        prefWidth="370" prefHeight="85"
-                        style="-fx-font-size: 20px; -fx-background-color: linear-gradient(to right, #FFE5EC, #F5E6FF); -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
+                        prefWidth="420" prefHeight="65"
+                        style="-fx-font-size: 18px; -fx-background-color: linear-gradient(to right, #E8D5F5, #F0E0FF); -fx-background-radius: 30px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
 
                 <Button fx:id="calmActivitiesBtn"
                         text="🌸 CALM ACTIVITIES 🌸"
                         styleClass="journaling-btn"
-                        prefWidth="370" prefHeight="85"
-                        style="-fx-font-size: 20px; -fx-background-color: linear-gradient(to right, #E8F4F8, #E0F2E9); -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
+                        prefWidth="420" prefHeight="65"
+                        style="-fx-font-size: 18px; -fx-background-color: linear-gradient(to right, #FFE8F0, #FFF0F8); -fx-background-radius: 30px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
 
                 <Button fx:id="pomodoroBtn"
-                        text="🍅 POMODORO 🍅"
+                        text="⏱️ POMODORO TIMER ⏱️"
                         styleClass="journaling-btn"
-                        prefWidth="370" prefHeight="85"
-                        style="-fx-font-size: 20px; -fx-background-color: linear-gradient(to right, #FFD4D4, #FFC9C9); -fx-background-radius: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
+                        prefWidth="420" prefHeight="65"
+                        style="-fx-font-size: 18px; -fx-background-color: linear-gradient(to right, #FFE8D8, #FFF0E5); -fx-background-radius: 30px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 3);"/>
             </VBox>
 
             <!-- BACK BUTTON -->

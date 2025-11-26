@@ -1,0 +1,194 @@
+/* Gratitude Garden Styles */
+
+.garden-root {
+    -fx-background-color: linear-gradient(to bottom, 
+        #E8F5E9, #F0F8F1, #F5FDF7, #FAFFFE);
+}
+
+.top-panel {
+    -fx-background-color: linear-gradient(to right, 
+        rgba(232, 245, 233, 0.9), 
+        rgba(240, 248, 241, 0.9));
+    -fx-background-radius: 0 0 20 20;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.2), 10, 0, 0, 2);
+}
+
+.bottom-panel {
+    -fx-background-color: linear-gradient(to right, 
+        rgba(245, 253, 247, 0.95), 
+        rgba(255, 255, 255, 0.95));
+    -fx-background-radius: 20 20 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.2), 10, 0, 0, -2);
+}
+
+.back-btn {
+    -fx-background-color: linear-gradient(to bottom right, #E8F5E9, #F0F8F1);
+    -fx-text-fill: #5A8B6E;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(90, 139, 110, 0.3), 8, 0, 0, 2);
+}
+
+.back-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #D5EED8, #E8F5E9);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.garden-title {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #81C784, #66BB6A, #4CAF50);
+    -fx-alignment: center;
+}
+
+.garden-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #5A8B6E;
+    -fx-font-style: italic;
+    -fx-alignment: center;
+}
+
+.flower-count {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FF8FB1;
+    -fx-padding: 8 16;
+    -fx-background-color: rgba(255, 255, 255, 0.7);
+    -fx-background-radius: 20;
+}
+
+.garden-bed {
+    -fx-background-color: linear-gradient(to bottom, 
+        #F0F8F1, #F5FDF7);
+    -fx-background-radius: 20;
+    -fx-effect: inset-shadow(gaussian, rgba(139, 123, 168, 0.15), 15, 0, 0, 3);
+}
+
+.empty-message {
+    -fx-opacity: 0.6;
+}
+
+.empty-icon {
+    -fx-font-size: 60px;
+}
+
+.empty-text {
+    -fx-font-size: 20px;
+    -fx-text-fill: #8B7BA8;
+    -fx-font-style: italic;
+}
+
+.empty-hint {
+    -fx-font-size: 14px;
+    -fx-text-fill: #A89BC5;
+}
+
+.input-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5A8B6E;
+    -fx-alignment: center;
+}
+
+.gratitude-input {
+    -fx-font-size: 15px;
+    -fx-padding: 12 18;
+    -fx-background-color: white;
+    -fx-background-radius: 25;
+    -fx-border-color: #C5E8D5;
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+    -fx-text-fill: #5A8B6E;
+}
+
+.gratitude-input:focused {
+    -fx-border-color: #81C784;
+    -fx-effect: dropshadow(gaussian, rgba(129, 199, 132, 0.4), 10, 0, 0, 0);
+}
+
+.plant-btn {
+    -fx-background-color: linear-gradient(to bottom right, #81C784, #66BB6A);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 24;
+    -fx-background-radius: 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.4), 10, 0, 0, 3);
+}
+
+.plant-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #66BB6A, #4CAF50);
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+}
+
+.secondary-btn {
+    -fx-background-color: linear-gradient(to bottom right, #F5E6FF, #FFF0F5);
+    -fx-text-fill: #8B7BA8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(139, 123, 168, 0.3), 8, 0, 0, 2);
+}
+
+.secondary-btn:hover {
+    -fx-background-color: linear-gradient(to bottom right, #E8D5FF, #FFE5F0);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+}
+
+.list-panel {
+    -fx-background-color: linear-gradient(to bottom, #FFFBFC, #FFF5F8);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 20, 0, 0, 5);
+}
+
+.list-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #8B7BA8;
+}
+
+.close-btn {
+    -fx-background-color: #FFE5EC;
+    -fx-text-fill: #FF8FB1;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 12;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+}
+
+.close-btn:hover {
+    -fx-background-color: #FFD4E5;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.list-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.list-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.list-scroll .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.list-content {
+    -fx-padding: 5;
+}

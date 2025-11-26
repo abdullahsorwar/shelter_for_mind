@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -21,6 +22,7 @@ public class MeditationController {
     @FXML private Label timerLabel;
     @FXML private Label guidedText;
     @FXML private Circle breathingCircle;
+    @FXML private StackPane breathingLotus;
     @FXML private Label breathLabel;
     
     @FXML private ComboBox<String> sessionTypeCombo;
@@ -57,6 +59,11 @@ public class MeditationController {
     private final Map<String, String[]> guidedTexts = new HashMap<>();
     private int textIndex = 0;
     private String currentSessionType = "Mindfulness";
+    private static String soulId = "";
+
+    public static void setSoulId(String id) {
+        soulId = id;
+    }
 
     @FXML
     public void initialize() {
@@ -87,9 +94,14 @@ public class MeditationController {
             stopSession();
             // Resume background music when leaving meditation
             MusicManager.playBackgroundMusic();
-            Parent dashboard = FXMLLoader.load(
+            FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml")
             );
+            Parent dashboard = loader.load();
+            DashboardController controller = loader.getController();
+            if (controller != null && soulId != null && !soulId.isEmpty()) {
+                controller.setSoulId(soulId);
+            }
             backBtn.getScene().setRoot(dashboard);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -209,31 +221,35 @@ public class MeditationController {
         }
 
         breathingAnimation = new Timeline(
-            // Inhale
+            // Inhale - expand lotus flower
             new KeyFrame(Duration.ZERO,
-                new KeyValue(breathingCircle.scaleXProperty(), 0.6),
-                new KeyValue(breathingCircle.scaleYProperty(), 0.6),
+                new KeyValue(breathingLotus.scaleXProperty(), 0.7),
+                new KeyValue(breathingLotus.scaleYProperty(), 0.7),
+                new KeyValue(breathingLotus.rotateProperty(), 0),
                 new KeyValue(breathLabel.textProperty(), "Inhale...")
             ),
             new KeyFrame(Duration.seconds(inhale),
-                new KeyValue(breathingCircle.scaleXProperty(), 1.3),
-                new KeyValue(breathingCircle.scaleYProperty(), 1.3)
+                new KeyValue(breathingLotus.scaleXProperty(), 1.2),
+                new KeyValue(breathingLotus.scaleYProperty(), 1.2),
+                new KeyValue(breathingLotus.rotateProperty(), 15)
             ),
-            // Hold
+            // Hold - keep expanded with gentle rotation
             new KeyFrame(Duration.seconds(inhale + 0.1),
                 new KeyValue(breathLabel.textProperty(), "Hold...")
             ),
             new KeyFrame(Duration.seconds(inhale + hold),
-                new KeyValue(breathingCircle.scaleXProperty(), 1.3),
-                new KeyValue(breathingCircle.scaleYProperty(), 1.3)
+                new KeyValue(breathingLotus.scaleXProperty(), 1.2),
+                new KeyValue(breathingLotus.scaleYProperty(), 1.2),
+                new KeyValue(breathingLotus.rotateProperty(), 25)
             ),
-            // Exhale
+            // Exhale - contract lotus flower
             new KeyFrame(Duration.seconds(inhale + hold + 0.1),
                 new KeyValue(breathLabel.textProperty(), "Exhale...")
             ),
             new KeyFrame(Duration.seconds(inhale + hold + exhale),
-                new KeyValue(breathingCircle.scaleXProperty(), 0.6),
-                new KeyValue(breathingCircle.scaleYProperty(), 0.6)
+                new KeyValue(breathingLotus.scaleXProperty(), 0.7),
+                new KeyValue(breathingLotus.scaleYProperty(), 0.7),
+                new KeyValue(breathingLotus.rotateProperty(), 0)
             )
         );
 
@@ -427,9 +443,10 @@ public class MeditationController {
         guidedText.setText("Select your session and press Start");
         breathLabel.setText("Breathe...");
         
-        // Reset circle
-        breathingCircle.setScaleX(0.6);
-        breathingCircle.setScaleY(0.6);
+        // Reset lotus flower
+        breathingLotus.setScaleX(0.7);
+        breathingLotus.setScaleY(0.7);
+        breathingLotus.setRotate(0);
         
         startBtn.setDisable(false);
         startBtn.setText("Start");
