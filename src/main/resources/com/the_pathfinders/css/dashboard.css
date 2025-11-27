@@ -6,9 +6,10 @@
 
 /* Top-right user label */
 #userLabel {
-	-fx-text-fill: #2b2b2b;
+	-fx-text-fill: #4a4a4a;
 	-fx-font-size: 16px;
-	-fx-font-family: "Agency FB Bold";
+	-fx-font-weight: bold;
+	-fx-font-family: "Segoe UI", "Poppins", sans-serif;
 }
 
 /* Card-like pastel buttons - larger floating cards */

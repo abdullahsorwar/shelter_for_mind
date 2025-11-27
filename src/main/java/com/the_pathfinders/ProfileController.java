@@ -98,7 +98,10 @@ public class ProfileController {
         boolean isComboBox;
     }
 
-    public void setSoulId(String id) { this.soulId = id == null ? "" : id; }
+    public void setSoulId(String id) { 
+        this.soulId = id == null ? "" : id; 
+        System.out.println("ProfileController.setSoulId called with: " + this.soulId);
+    }
 
     @FXML
     public void initialize() {
@@ -143,6 +146,7 @@ public class ProfileController {
     @FXML
     public void onShown() {
         // Called after soulId is set externally
+        System.out.println("ProfileController.onShown called with soulId: " + soulId);
         loadProfileImage();
         checkFirstTimeAndLoad();
         // Default page

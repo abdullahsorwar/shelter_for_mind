@@ -552,6 +552,7 @@ private void loadPage(String path) {
             userLabel.setText(this.soulId);
             userLabel.setVisible(true);
             userLabel.setOpacity(1.0);
+            userLabel.setStyle("-fx-text-fill: #4a4a4a; -fx-font-size: 16px; -fx-font-weight: bold;");
         }
         
         // Track activity when dashboard loads
@@ -697,11 +698,16 @@ private void loadPage(String path) {
     private void openProfile() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         try {
+            System.out.println("Opening profile for soulId: " + this.soulId);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/profile.fxml"));
             Parent profileRoot = loader.load();
             Object controller = loader.getController();
             if (controller instanceof ProfileController pc) {
+                if (this.soulId == null || this.soulId.isEmpty()) {
+                    System.err.println("WARNING: soulId is empty in openProfile!");
+                }
                 pc.setSoulId(this.soulId);
+                System.out.println("Set soulId in ProfileController: " + this.soulId);
                 pc.onShown();
             }
             if (root != null && root.getScene() != null) {
