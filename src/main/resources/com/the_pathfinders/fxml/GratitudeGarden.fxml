@@ -37,7 +37,7 @@
         <center>
             <StackPane>
                 <!-- Garden bed with flowers -->
-                <Pane fx:id="gardenPane" styleClass="garden-bed" minWidth="850" minHeight="400"/>
+                <Pane fx:id="gardenPane" styleClass="garden-bed" minWidth="850" minHeight="280"/>
                 
                 <!-- Overlay message when no flowers -->
                 <VBox fx:id="emptyGardenMessage" spacing="15" alignment="CENTER" 
@@ -53,7 +53,7 @@
         <bottom>
             <VBox spacing="15" styleClass="bottom-panel">
                 <padding>
-                    <Insets top="15" left="40" right="40" bottom="20"/>
+                    <Insets top="15" left="40" right="40" bottom="30"/>
                 </padding>
                 
                 <Label text="What are you grateful for today?" styleClass="input-label"/>

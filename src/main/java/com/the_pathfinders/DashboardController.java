@@ -227,6 +227,7 @@ if (calmActivitiesBtn != null) {
     calmActivitiesBtn.setOnAction(e -> {
         System.out.println("Calm Activities button clicked!");
         try {
+            CalmActivitiesController.setSoulId(this.soulId);
             loadPage("/com/the_pathfinders/fxml/CalmActivities.fxml");
         } catch (Exception ex) {
             System.err.println("Error loading Calm Activities: " + ex.getMessage());
@@ -238,6 +239,7 @@ if (pomodoroBtn != null) {
     pomodoroBtn.setOnAction(e -> {
         System.out.println("Pomodoro button clicked!");
         try {
+            PomodoroController.setSoulId(this.soulId);
             loadPage("/com/the_pathfinders/fxml/Pomodoro.fxml");
         } catch (Exception ex) {
             System.err.println("Error loading Pomodoro: " + ex.getMessage());

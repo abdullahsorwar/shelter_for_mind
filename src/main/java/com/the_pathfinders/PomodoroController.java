@@ -8,11 +8,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public class PomodoroController {
+
+    private static String soulId = "";
+    
+    public static void setSoulId(String id) {
+        soulId = id;
+    }
 
     @FXML private Button backBtn;
     @FXML private Label timerLabel;
@@ -24,13 +29,13 @@ public class PomodoroController {
     @FXML private ComboBox<Integer> workDurationCombo;
     @FXML private ComboBox<Integer> shortBreakCombo;
     @FXML private ComboBox<Integer> longBreakCombo;
+    @FXML private ComboBox<String> themeCombo;
     
     @FXML private Button startBtn;
     @FXML private Button pauseBtn;
     @FXML private Button resetBtn;
     @FXML private Button skipBtn;
     
-    @FXML private VBox completedSessionsBox;
     @FXML private Label motivationLabel;
 
     private Timeline timer;
@@ -65,6 +70,7 @@ public class PomodoroController {
     public void initialize() {
         setupBackButton();
         setupDurationCombos();
+        setupThemeCombo();
         setupControls();
         updateDisplay();
         
@@ -81,9 +87,14 @@ public class PomodoroController {
     private void goBack() {
         try {
             stopTimer();
-            Parent dashboard = FXMLLoader.load(
+            FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml")
             );
+            Parent dashboard = loader.load();
+            DashboardController controller = loader.getController();
+            if (controller != null && soulId != null && !soulId.isEmpty()) {
+                controller.setSoulId(soulId);
+            }
             backBtn.getScene().setRoot(dashboard);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -105,6 +116,55 @@ public class PomodoroController {
         longBreakCombo.getItems().addAll(15, 20, 25, 30);
         longBreakCombo.setValue(15);
         longBreakCombo.setOnAction(e -> longBreakDuration = longBreakCombo.getValue());
+    }
+
+    private void setupThemeCombo() {
+        themeCombo.getItems().addAll(
+            "🌊 Ocean Serenity",
+            "🌸 Cherry Blossom",
+            "🌿 Forest Calm", 
+            "💜 Lavender Peace",
+            "🌅 Sunset Harmony",
+            "🌙 Moonlight Zen"
+        );
+        themeCombo.setValue("🌊 Ocean Serenity");
+        themeCombo.setOnAction(e -> applyTheme(themeCombo.getValue()));
+    }
+
+    private void applyTheme(String theme) {
+        Parent root = backBtn.getScene().getRoot();
+        String circleGradient = "";
+        String backgroundGradient = "";
+        
+        switch (theme) {
+            case "🌸 Cherry Blossom":
+                backgroundGradient = "linear-gradient(to bottom right, #FFE8F0, #FFD4E5, #FFC9E0, #FFE0EB)";
+                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #FFB6D9, #FFC9E5);";
+                break;
+            case "🌿 Forest Calm":
+                backgroundGradient = "linear-gradient(to bottom right, #E8F5E9, #C8E6C9, #A5D6A7, #DCF2DD)";
+                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #81C784, #A5D6A7);";
+                break;
+            case "💜 Lavender Peace":
+                backgroundGradient = "linear-gradient(to bottom right, #F3E5F5, #E1BEE7, #CE93D8, #EDD7F0)";
+                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #BA68C8, #CE93D8);";
+                break;
+            case "🌅 Sunset Harmony":
+                backgroundGradient = "linear-gradient(to bottom right, #FFF3E0, #FFE0B2, #FFCC80, #FFECC7)";
+                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #FFB74D, #FFCC80);";
+                break;
+            case "🌙 Moonlight Zen":
+                backgroundGradient = "linear-gradient(to bottom right, #E8EAF6, #C5CAE9, #9FA8DA, #D9DCF2)";
+                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #7986CB, #9FA8DA);";
+                break;
+            default: // Ocean Serenity
+                backgroundGradient = "linear-gradient(to bottom right, #E0F7FA, #B2EBF2, #80DEEA, #D4F1F4)";
+                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #4DD0E1, #80DEEA);";
+                break;
+        }
+        
+        root.setStyle("-fx-background-color: " + backgroundGradient + ";");
+        tomatoCircle.setStyle(circleGradient);
     }
 
     private void setupControls() {
@@ -178,7 +238,6 @@ public class PomodoroController {
         completedPomodoros = 0;
         updateDisplay();
         sessionCountLabel.setText("Pomodoros: 0");
-        completedSessionsBox.getChildren().clear();
         motivationLabel.setText("Ready to start your focused session? 🍅");
     }
 
@@ -210,7 +269,7 @@ public class PomodoroController {
             // Work phase completed
             completedPomodoros++;
             sessionCountLabel.setText("Pomodoros: " + completedPomodoros);
-            addCompletedTomato();
+            // Removed addCompletedTomato() - replaced with theme selector
             
             // Celebration animation
             celebrateCompletion();
@@ -247,18 +306,6 @@ public class PomodoroController {
         pulse.setCycleCount(Animation.INDEFINITE);
         pulse.setAutoReverse(true);
         pulse.play();
-    }
-
-    private void addCompletedTomato() {
-        Label tomato = new Label("🍅");
-        tomato.setStyle("-fx-font-size: 24px;");
-        completedSessionsBox.getChildren().add(tomato);
-        
-        // Fade in animation
-        FadeTransition fade = new FadeTransition(Duration.seconds(0.5), tomato);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-        fade.play();
     }
 
     private void celebrateCompletion() {

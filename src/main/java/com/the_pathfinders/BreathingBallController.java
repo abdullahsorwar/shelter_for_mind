@@ -12,6 +12,12 @@ import javafx.util.Duration;
 
 public class BreathingBallController {
 
+    private static String soulId = "";
+    
+    public static void setSoulId(String id) {
+        soulId = id;
+    }
+
     @FXML private Button backBtn;
     @FXML private Circle breathingBall;
     @FXML private Label phaseLabel;
@@ -42,9 +48,14 @@ public class BreathingBallController {
     private void goBack() {
         try {
             stopBreathing();
-            Parent calmActivities = FXMLLoader.load(
+            FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/the_pathfinders/fxml/CalmActivities.fxml")
             );
+            Parent calmActivities = loader.load();
+            CalmActivitiesController controller = loader.getController();
+            if (controller != null && soulId != null && !soulId.isEmpty()) {
+                CalmActivitiesController.setSoulId(soulId);
+            }
             backBtn.getScene().setRoot(calmActivities);
         } catch (Exception ex) {
             ex.printStackTrace();

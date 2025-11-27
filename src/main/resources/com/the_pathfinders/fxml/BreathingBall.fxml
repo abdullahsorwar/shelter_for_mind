@@ -12,9 +12,9 @@
            styleClass="breathing-root"
            stylesheets="@/com/the_pathfinders/css/breathing_ball.css">
 
-    <VBox spacing="40" alignment="CENTER" styleClass="breathing-container">
+    <VBox spacing="25" alignment="CENTER" styleClass="breathing-container">
         <padding>
-            <Insets top="30" left="40" right="40" bottom="30"/>
+            <Insets top="25" left="40" right="40" bottom="40"/>
         </padding>
 
         <!-- Back Button -->

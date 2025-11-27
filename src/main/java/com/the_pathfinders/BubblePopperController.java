@@ -20,6 +20,12 @@ import java.util.Random;
 
 public class BubblePopperController {
 
+    private static String soulId = "";
+    
+    public static void setSoulId(String id) {
+        soulId = id;
+    }
+
     @FXML private Button backBtn;
     @FXML private Pane bubblePane;
     @FXML private Label scoreLabel;
@@ -73,9 +79,13 @@ public class BubblePopperController {
     private void goBack() {
         try {
             stopGame();
-            Parent calmActivities = FXMLLoader.load(
+            FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/the_pathfinders/fxml/CalmActivities.fxml")
             );
+            Parent calmActivities = loader.load();
+            if (soulId != null && !soulId.isEmpty()) {
+                CalmActivitiesController.setSoulId(soulId);
+            }
             backBtn.getScene().setRoot(calmActivities);
         } catch (Exception ex) {
             ex.printStackTrace();

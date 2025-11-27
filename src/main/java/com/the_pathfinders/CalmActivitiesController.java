@@ -9,6 +9,12 @@ import java.net.URI;
 
 public class CalmActivitiesController {
 
+    private static String soulId = "";
+    
+    public static void setSoulId(String id) {
+        soulId = id;
+    }
+
     @FXML private Button backBtn;
     @FXML private Button drawingBtn;
     @FXML private Button breathingBallBtn;
@@ -30,9 +36,14 @@ public class CalmActivitiesController {
 
     private void goBack() {
         try {
-            Parent dashboard = FXMLLoader.load(
+            FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml")
             );
+            Parent dashboard = loader.load();
+            DashboardController controller = loader.getController();
+            if (controller != null && soulId != null && !soulId.isEmpty()) {
+                controller.setSoulId(soulId);
+            }
             backBtn.getScene().setRoot(dashboard);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -65,6 +76,17 @@ public class CalmActivitiesController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent p = loader.load();
+            
+            // Pass soulId to child controller if it has setSoulId method
+            Object controller = loader.getController();
+            if (controller != null) {
+                try {
+                    controller.getClass().getMethod("setSoulId", String.class).invoke(controller, soulId);
+                } catch (Exception e) {
+                    // Controller doesn't have setSoulId method, that's okay
+                }
+            }
+            
             backBtn.getScene().setRoot(p);
         } catch (Exception ex) {
             ex.printStackTrace();
