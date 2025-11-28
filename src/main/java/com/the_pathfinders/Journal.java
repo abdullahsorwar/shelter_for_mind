@@ -16,6 +16,7 @@ public class Journal {
     private Integer loveCount;
     private String[] lovedBy;
     private Boolean isPublic;
+    private boolean savedForLater; // For UI star button state
 
     public Journal() {
         this.createdAt = LocalDateTime.now();
@@ -67,6 +68,9 @@ public class Journal {
 
     public Boolean getIsPublic() { return isPublic; }
     public void setIsPublic(Boolean isPublic) { this.isPublic = isPublic; }
+
+    public boolean isSavedForLater() { return savedForLater; }
+    public void setSavedForLater(boolean savedForLater) { this.savedForLater = savedForLater; }
 
     @Override
     public String toString() {

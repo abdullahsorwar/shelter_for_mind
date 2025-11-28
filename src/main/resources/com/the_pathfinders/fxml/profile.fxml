@@ -70,6 +70,16 @@
                                         </ScrollPane>
                                     </children>
                                 </VBox>
+                                <!-- Saved Journals Page -->
+                                <VBox fx:id="savedJournalsPage" spacing="12" visible="false" managed="false">
+                                    <children>
+                                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="saved-journals-scroll">
+                                            <content>
+                                                <VBox fx:id="savedJournalsList" spacing="10" />
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
+                                </VBox>
                                 <!-- Achievements Page -->
                                 <VBox fx:id="achievementsPage" alignment="CENTER" spacing="16" visible="false" managed="false">
                                     <children>

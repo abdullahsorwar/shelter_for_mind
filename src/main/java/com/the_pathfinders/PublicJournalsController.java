@@ -36,6 +36,7 @@ public class PublicJournalsController {
 
     private String currentSoulId = "";
     private JournalRepository journalRepo;
+    private SavedJournalsManager savedJournalsManager;
     private Timeline timestampUpdateTimeline;
     private Timeline loveCountUpdateTimeline;
     private Timeline newJournalCheckTimeline;
@@ -48,6 +49,7 @@ public class PublicJournalsController {
     @FXML
     public void initialize() {
         journalRepo = new JournalRepository();
+        savedJournalsManager = new SavedJournalsManager();
 
         if (backBtn != null) {
             backBtn.setOnAction(e -> goBackToJournal());
@@ -202,7 +204,61 @@ public class PublicJournalsController {
         // Love button action using shared toggle
         loveBtn.setOnAction(e -> JournalUtils.toggleLove(journal.getId(), currentSoulId, loveBtn, loveCountLabel, journal, heartOutline, heartFilled));
 
-        loveBox.getChildren().addAll(loveBtn, loveCountLabel);
+        // Add spacer to push save button to the right
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+        
+        // Save for Later button (matching BlogDetailController style with green background and text)
+        Button saveBtn = new Button();
+        saveBtn.setFocusTraversable(false);
+        
+        // Set initial state
+        boolean isSaved = savedJournalsManager.isJournalSaved(currentSoulId, journal.getId());
+        journal.setSavedForLater(isSaved);
+        
+        if (isSaved) {
+            saveBtn.setText("★ Saved");
+            saveBtn.setStyle("-fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-color: #4caf50; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5; -fx-border-radius: 5;");
+        } else {
+            saveBtn.setText("☆ Save for Later");
+            saveBtn.setStyle("-fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-cursor: hand; -fx-background-radius: 5; -fx-border-radius: 5;");
+        }
+        
+        // Save button action with smooth transition
+        saveBtn.setOnAction(e -> {
+            boolean currentlySaved = journal.isSavedForLater();
+            
+            // Create fade transition
+            javafx.animation.FadeTransition fade = new javafx.animation.FadeTransition(javafx.util.Duration.millis(150), saveBtn);
+            fade.setFromValue(1.0);
+            fade.setToValue(0.3);
+            
+            fade.setOnFinished(evt -> {
+                if (currentlySaved) {
+                    // Unsave
+                    savedJournalsManager.removeSavedJournal(currentSoulId, journal.getId());
+                    journal.setSavedForLater(false);
+                    saveBtn.setText("☆ Save for Later");
+                    saveBtn.setStyle("-fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-cursor: hand; -fx-background-radius: 5; -fx-border-radius: 5;");
+                } else {
+                    // Save
+                    savedJournalsManager.saveJournal(currentSoulId, journal);
+                    journal.setSavedForLater(true);
+                    saveBtn.setText("★ Saved");
+                    saveBtn.setStyle("-fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-color: #4caf50; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5; -fx-border-radius: 5;");
+                }
+                
+                // Fade back in
+                javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(javafx.util.Duration.millis(150), saveBtn);
+                fadeIn.setFromValue(0.3);
+                fadeIn.setToValue(1.0);
+                fadeIn.play();
+            });
+            
+            fade.play();
+        });
+
+        loveBox.getChildren().addAll(loveBtn, loveCountLabel, spacer, saveBtn);
 
         // Assemble inner box
         innerBox.getChildren().addAll(userInfoBox, separator, journalText, loveBox);

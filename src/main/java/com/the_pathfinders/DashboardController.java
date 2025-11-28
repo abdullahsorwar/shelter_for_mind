@@ -719,9 +719,19 @@ private void loadPage(String path) {
     }
 
     private void showStarredPlaceholder() {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "Starred journals feature coming soon.", ButtonType.OK);
-        a.setHeaderText("Coming Soon");
-        a.showAndWait();
+        // Navigate to profile page with starred journals section
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/profile.fxml"));
+            Parent profileRoot = loader.load();
+            ProfileController controller = loader.getController();
+            if (controller != null) {
+                controller.setSoulId(soulId);
+                controller.showStarredJournalsSection(); // Show starred journals directly
+            }
+            if (root != null && root.getScene() != null) {
+                root.getScene().setRoot(profileRoot);
+            }
+        } catch (Exception ex) { ex.printStackTrace(); }
     }
 
     private void onLogout() {

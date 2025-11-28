@@ -78,6 +78,26 @@
 /* Love count label */
 .love-count { -fx-font-size: 14px; -fx-text-fill: #666666; -fx-font-weight: bold; }
 
+/* Star button for saving journals */
+.star-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 18px;
+    -fx-text-fill: #aaa;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.4), 2, 0, 0, 0);
+}
+
+.star-button:hover {
+    -fx-text-fill: #f5b700;
+    -fx-effect: dropshadow(gaussian, rgba(255,215,0,0.5), 6, 0.8, 0, 0);
+}
+
+.star-button.saved {
+    -fx-text-fill: #f5b700;
+    -fx-effect: dropshadow(gaussian, rgba(255,215,0,0.9), 10, 0.8, 0, 0);
+}
+
 /* Edit journal button (for private journals) */
 .edit-journal-btn {
     -fx-background-color: linear-gradient(to bottom right, #4caf50, #45a049);

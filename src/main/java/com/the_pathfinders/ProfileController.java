@@ -53,6 +53,8 @@ public class ProfileController {
     @FXML private VBox journalsList;
     @FXML private VBox savedBlogsPage;
     @FXML private VBox savedBlogsList;
+    @FXML private VBox savedJournalsPage;
+    @FXML private VBox savedJournalsList;
     @FXML private VBox achievementsPage;
 
     // Menu buttons
@@ -74,6 +76,7 @@ public class ProfileController {
     private final SoulInfoRepository soulInfoRepo = new SoulInfoRepository();
     private final JournalRepository journalRepo = new JournalRepository();
     private final SavedBlogsManager savedBlogsManager = new SavedBlogsManager();
+    private final SavedJournalsManager savedJournalsManager = new SavedJournalsManager();
     private SoulInfo currentInfo;
     private final List<InfoRow> rows = new ArrayList<>();
     private boolean editMode = false;
@@ -583,6 +586,40 @@ public class ProfileController {
         }).start();
     }
 
+    private void loadSavedJournals() {
+        if (savedJournalsList == null) return;
+        
+        savedJournalsList.getChildren().clear();
+        
+        new Thread(() -> {
+            try {
+                // Load all public journals from database
+                com.the_pathfinders.db.JournalRepository journalRepo = new com.the_pathfinders.db.JournalRepository();
+                java.util.List<Journal> allJournals = journalRepo.getAllPublicJournals();
+                
+                // Get saved journal IDs for this user
+                java.util.Set<String> savedIds = savedJournalsManager.loadSavedJournalIds(soulId);
+                
+                Platform.runLater(() -> {
+                    for (Journal journal : allJournals) {
+                        if (savedIds.contains(String.valueOf(journal.getId()))) {
+                            savedJournalsList.getChildren().add(createSavedJournalBox(journal));
+                        }
+                    }
+                    
+                    // If no saved journals, show a message
+                    if (savedJournalsList.getChildren().isEmpty()) {
+                        Label noSavedLabel = new Label("No saved journals yet. Start saving journals from the Public Journals section!");
+                        noSavedLabel.setStyle("-fx-text-fill: #999; -fx-font-style: italic; -fx-padding: 20;");
+                        savedJournalsList.getChildren().add(noSavedLabel);
+                    }
+                });
+            } catch (Exception ex) { 
+                ex.printStackTrace(); 
+            }
+        }).start();
+    }
+
     private VBox createSavedBlogBox(Blog blog) {
         // Outer box with spacing
         VBox outerBox = new VBox();
@@ -654,6 +691,83 @@ public class ProfileController {
         });
 
         header.getChildren().addAll(expandBtn, title, category, spacer);
+
+        outerBox.getChildren().addAll(header, contentBox);
+
+        return outerBox;
+    }
+
+    private VBox createSavedJournalBox(Journal journal) {
+        // Outer box with spacing
+        VBox outerBox = new VBox();
+        outerBox.getStyleClass().add("saved-journal-outer-box");
+        outerBox.setPadding(new javafx.geometry.Insets(12));
+        outerBox.setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-spacing: 8;");
+
+        // Header with author + date + expand/collapse button
+        HBox header = new HBox(10);
+        header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        header.setStyle("-fx-padding: 8; -fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
+
+        Label author = new Label("@" + journal.getSoulId());
+        author.setStyle("-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #264653;");
+
+        Label date = new Label(journal.getEntryDate() != null ? journal.getEntryDate().toString() : "");
+        date.setStyle("-fx-font-size: 11px; -fx-text-fill: #888;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+        // Expandable content area (initially hidden)
+        VBox contentBox = new VBox(10);
+        contentBox.setPadding(new javafx.geometry.Insets(12));
+        contentBox.setStyle("-fx-background-color: #ffffff;");
+        contentBox.setVisible(false);
+        contentBox.setManaged(false);
+
+        // Full journal content
+        Label content = new Label(journal.getText());
+        content.setWrapText(true);
+        content.setStyle("-fx-font-size: 13px; -fx-text-fill: #333; -fx-line-spacing: 2px;");
+
+        // Remove button
+        Button removeBtn = new Button("✕ Remove");
+        removeBtn.setStyle("-fx-font-size: 12px; -fx-padding: 6px 12px; -fx-background-color: #ffcccc; -fx-text-fill: #c0392b; -fx-cursor: hand;");
+        removeBtn.setOnAction(e -> {
+            savedJournalsManager.removeSavedJournal(soulId, String.valueOf(journal.getId()));
+            savedJournalsList.getChildren().remove(outerBox);
+            
+            // Show message if no saved journals left
+            if (savedJournalsList.getChildren().isEmpty()) {
+                Label noSavedLabel = new Label("No saved journals yet. Start saving journals from the Public Journals section!");
+                noSavedLabel.setStyle("-fx-text-fill: #999; -fx-font-style: italic; -fx-padding: 20;");
+                savedJournalsList.getChildren().add(noSavedLabel);
+            }
+        });
+
+        HBox actions = new HBox(10);
+        actions.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
+        actions.getChildren().add(removeBtn);
+
+        contentBox.getChildren().addAll(content, actions);
+
+        // Expand/collapse button
+        Button expandBtn = new Button("▼");
+        expandBtn.setStyle("-fx-font-size: 12px; -fx-padding: 4px 8px; -fx-background-color: transparent; -fx-cursor: hand;");
+
+        expandBtn.setOnAction(e -> {
+            if (contentBox.isVisible()) {
+                contentBox.setVisible(false);
+                contentBox.setManaged(false);
+                expandBtn.setText("▶");
+            } else {
+                contentBox.setVisible(true);
+                contentBox.setManaged(true);
+                expandBtn.setText("▼");
+            }
+        });
+
+        header.getChildren().addAll(expandBtn, author, date, spacer);
 
         outerBox.getChildren().addAll(header, contentBox);
 
@@ -792,34 +906,45 @@ public class ProfileController {
 
     private void showBasicInfo() {
         if (subtitleLabel != null) subtitleLabel.setText("Basic Information");
-        setPageVisibility(true, false, false, false);
+        setPageVisibility(true, false, false, false, false);
         if (editInfoBtn != null) { editInfoBtn.setVisible(true); editInfoBtn.setManaged(true); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(true); saveInfoBtn.setManaged(true); }
     }
     private void showJournals() {
         if (subtitleLabel != null) subtitleLabel.setText("Journal");
-        setPageVisibility(false, true, false, false);
+        setPageVisibility(false, true, false, false, false);
         loadJournals();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
     private void showSavedBlogs() {
         if (subtitleLabel != null) subtitleLabel.setText("Starred Blogs");
-        setPageVisibility(false, false, true, false);
+        setPageVisibility(false, false, true, false, false);
         loadSavedBlogs();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
-    private void showAchievements() {
-        if (subtitleLabel != null) subtitleLabel.setText("Achievements");
-        setPageVisibility(false, false, false, true);
+    private void showSavedJournals() {
+        if (subtitleLabel != null) subtitleLabel.setText("Starred Journals");
+        setPageVisibility(false, false, false, true, false);
+        loadSavedJournals();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
-    private void setPageVisibility(boolean basic, boolean journal, boolean savedBlogs, boolean achievement) {
+    public void showStarredJournalsSection() {
+        showSavedJournals();
+    }
+    private void showAchievements() {
+        if (subtitleLabel != null) subtitleLabel.setText("Achievements");
+        setPageVisibility(false, false, false, false, false);
+        if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
+        if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
+    }
+    private void setPageVisibility(boolean basic, boolean journal, boolean savedBlogs, boolean savedJournals, boolean achievement) {
         if (basicInfoScroll != null) { basicInfoScroll.setVisible(basic); basicInfoScroll.setManaged(basic); }
         if (journalsPage != null) { journalsPage.setVisible(journal); journalsPage.setManaged(journal); }
         if (savedBlogsPage != null) { savedBlogsPage.setVisible(savedBlogs); savedBlogsPage.setManaged(savedBlogs); }
+        if (savedJournalsPage != null) { savedJournalsPage.setVisible(savedJournals); savedJournalsPage.setManaged(savedJournals); }
         if (achievementsPage != null) { achievementsPage.setVisible(achievement); achievementsPage.setManaged(achievement); }
     }
 
