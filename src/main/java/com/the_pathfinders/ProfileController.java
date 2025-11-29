@@ -58,6 +58,7 @@ public class ProfileController {
     @FXML private VBox achievementsPage;
 
     // Menu buttons
+    @FXML private Button savedJournalsMenuBtn;
     @FXML private Button savedBlogsMenuBtn;
 
     // Edit/save controls
@@ -133,6 +134,7 @@ public class ProfileController {
         if (menuBtn != null) menuBtn.setOnAction(e -> toggleSidePanel());
         if (basicInfoMenuBtn != null) basicInfoMenuBtn.setOnAction(e -> showBasicInfo());
         if (journalsMenuBtn != null) journalsMenuBtn.setOnAction(e -> showJournals());
+        if (savedJournalsMenuBtn != null) savedJournalsMenuBtn.setOnAction(e -> showSavedJournals());
         if (savedBlogsMenuBtn != null) savedBlogsMenuBtn.setOnAction(e -> showSavedBlogs());
         if (achievementsMenuBtn != null) achievementsMenuBtn.setOnAction(e -> showAchievements());
 

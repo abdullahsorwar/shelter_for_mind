@@ -15,6 +15,7 @@
                             <children>
                                 <Button fx:id="basicInfoMenuBtn" text="Basic Information" styleClass="menu-item" />
                                 <Button fx:id="journalsMenuBtn" text="Published Journals" styleClass="menu-item" />
+                                <Button fx:id="savedJournalsMenuBtn" text="Starred Journals" styleClass="menu-item" />
                                 <Button fx:id="savedBlogsMenuBtn" text="Starred Blogs" styleClass="menu-item" />
                                 <Button fx:id="achievementsMenuBtn" text="Achievements" styleClass="menu-item" />
                             </children>

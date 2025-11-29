@@ -616,7 +616,7 @@ private void loadPage(String path) {
         userDropdown.setVisible(true);
         userDropdown.setManaged(true);
         userDropdown.getChildren().clear();
-        String[] items = {"My Profile", "Messages", "Starred Journals", "Log Out"};
+        String[] items = {"My Profile", "Messages", "Log Out"};
         for (int i = 0; i < items.length; i++) {
             Button b = new Button(items[i]);
             b.getStyleClass().add("dropdown-item");
@@ -670,7 +670,6 @@ private void loadPage(String path) {
         switch (which) {
             case "My Profile" -> openProfile();
             case "Messages" -> openMessages();
-            case "Starred Journals" -> showStarredPlaceholder();
             case "Log Out" -> onLogout();
         }
     }
@@ -711,22 +710,6 @@ private void loadPage(String path) {
                 pc.setSoulId(this.soulId);
                 System.out.println("Set soulId in ProfileController: " + this.soulId);
                 pc.onShown();
-            }
-            if (root != null && root.getScene() != null) {
-                root.getScene().setRoot(profileRoot);
-            }
-        } catch (Exception ex) { ex.printStackTrace(); }
-    }
-
-    private void showStarredPlaceholder() {
-        // Navigate to profile page with starred journals section
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/profile.fxml"));
-            Parent profileRoot = loader.load();
-            ProfileController controller = loader.getController();
-            if (controller != null) {
-                controller.setSoulId(soulId);
-                controller.showStarredJournalsSection(); // Show starred journals directly
             }
             if (root != null && root.getScene() != null) {
                 root.getScene().setRoot(profileRoot);

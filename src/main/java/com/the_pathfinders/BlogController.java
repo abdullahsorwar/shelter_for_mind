@@ -294,41 +294,23 @@ public class BlogController {
                 popup.prefHeightProperty().bind(container.heightProperty());
                 container.getChildren().add(popup);
 
-                // Fade in and scale animation (smooth pop-up effect)
-                detail.setOpacity(0);
-                detail.setScaleX(0.85);
-                detail.setScaleY(0.85);
+                // Fade in animation (matching journal popup style)
+                popup.setOpacity(0);
 
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(400), detail);
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), popup);
                 fadeIn.setFromValue(0);
                 fadeIn.setToValue(1);
-
-                ScaleTransition scaleIn = new ScaleTransition(Duration.millis(400), detail);
-                scaleIn.setFromX(0.85);
-                scaleIn.setFromY(0.85);
-                scaleIn.setToX(1.0);
-                scaleIn.setToY(1.0);
-
-                javafx.animation.ParallelTransition openTransition = new javafx.animation.ParallelTransition(fadeIn, scaleIn);
-                openTransition.play();
+                fadeIn.play();
             } else if (root != null) {
                 root.getChildren().add(popup);
             }
 
-            // Close handler with smooth animation
+            // Close handler with fade animation (matching journal popup style)
             controller.setOnClose(() -> {
-                FadeTransition fadeOut = new FadeTransition(Duration.millis(400), detail);
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), popup);
                 fadeOut.setFromValue(1);
                 fadeOut.setToValue(0);
-
-                ScaleTransition scaleOut = new ScaleTransition(Duration.millis(400), detail);
-                scaleOut.setFromX(1.0);
-                scaleOut.setFromY(1.0);
-                scaleOut.setToX(0.85);
-                scaleOut.setToY(0.85);
-
-                javafx.animation.ParallelTransition closeTransition = new javafx.animation.ParallelTransition(fadeOut, scaleOut);
-                closeTransition.setOnFinished(e -> {
+                fadeOut.setOnFinished(e -> {
                     if (root != null && root.getScene() != null && root.getScene().getRoot() instanceof javafx.scene.layout.Pane) {
                         javafx.scene.layout.Pane container = (javafx.scene.layout.Pane) root.getScene().getRoot();
                         if (container.getChildren().contains(popup)) container.getChildren().remove(popup);
@@ -336,7 +318,7 @@ public class BlogController {
                         root.getChildren().remove(popup);
                     }
                 });
-                closeTransition.play();
+                fadeOut.play();
             });
             controller.setOnSave(() -> {
                 if (soulId == null || soulId.isBlank()) {

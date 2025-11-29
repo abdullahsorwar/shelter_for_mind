@@ -1,12 +1,10 @@
 package com.the_pathfinders;
 
-import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 
 public class BlogDetailController {
 
@@ -69,14 +67,10 @@ public class BlogDetailController {
     }
 
     private void close() {
-        if (root != null) {
-            FadeTransition fade = new FadeTransition(Duration.millis(300), root);
-            fade.setFromValue(1);
-            fade.setToValue(0);
-            fade.setOnFinished(e -> {
-                if (onClose != null) onClose.run();
-            });
-            fade.play();
+        // Animation is handled by the parent controller (BlogController)
+        // Just trigger the callback immediately to avoid double animation flicker
+        if (onClose != null) {
+            onClose.run();
         }
     }
 }
