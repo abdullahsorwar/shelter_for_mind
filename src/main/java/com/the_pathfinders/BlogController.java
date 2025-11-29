@@ -267,9 +267,12 @@ public class BlogController {
             BlogDetailController controller = loader.getController();
             controller.setBlog(blog);
 
-            // Create popup container
+            // Create popup container with semi-transparent dark overlay
             javafx.scene.layout.StackPane popup = new javafx.scene.layout.StackPane();
-            popup.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+            popup.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);"); // Darker overlay effect
+            
+            // Prevent mouse events from passing through
+            popup.setPickOnBounds(true);
 
             // Put detail directly into the StackPane and center it
             popup.getChildren().add(detail);
@@ -289,9 +292,17 @@ public class BlogController {
             // Add popup to the top-level scene root (so it overlays like the journaling overlay)
             if (root != null && root.getScene() != null && root.getScene().getRoot() instanceof javafx.scene.layout.Pane) {
                 javafx.scene.layout.Pane container = (javafx.scene.layout.Pane) root.getScene().getRoot();
-                // ensure popup covers whole window
+                // ensure popup covers whole window from top-left corner
                 popup.prefWidthProperty().bind(container.widthProperty());
                 popup.prefHeightProperty().bind(container.heightProperty());
+                
+                // Position at origin to cover entire screen including header
+                if (popup instanceof javafx.scene.layout.Region) {
+                    javafx.scene.layout.Region popupRegion = (javafx.scene.layout.Region) popup;
+                    popupRegion.setLayoutX(0);
+                    popupRegion.setLayoutY(0);
+                }
+                
                 container.getChildren().add(popup);
 
                 // Fade in animation (matching journal popup style)
@@ -306,17 +317,24 @@ public class BlogController {
             }
 
             // Close handler with fade animation (matching journal popup style)
+            final boolean[] isClosing = {false}; // Prevent multiple close attempts
             controller.setOnClose(() -> {
+                if (isClosing[0]) return; // Already closing, prevent duplicate
+                isClosing[0] = true;
+                
                 FadeTransition fadeOut = new FadeTransition(Duration.millis(300), popup);
-                fadeOut.setFromValue(1);
+                fadeOut.setFromValue(popup.getOpacity());
                 fadeOut.setToValue(0);
                 fadeOut.setOnFinished(e -> {
-                    if (root != null && root.getScene() != null && root.getScene().getRoot() instanceof javafx.scene.layout.Pane) {
-                        javafx.scene.layout.Pane container = (javafx.scene.layout.Pane) root.getScene().getRoot();
-                        if (container.getChildren().contains(popup)) container.getChildren().remove(popup);
-                    } else if (root != null && root.getChildren().contains(popup)) {
-                        root.getChildren().remove(popup);
-                    }
+                    // Only remove after fade completes
+                    javafx.application.Platform.runLater(() -> {
+                        if (root != null && root.getScene() != null && root.getScene().getRoot() instanceof javafx.scene.layout.Pane) {
+                            javafx.scene.layout.Pane container = (javafx.scene.layout.Pane) root.getScene().getRoot();
+                            if (container.getChildren().contains(popup)) container.getChildren().remove(popup);
+                        } else if (root != null && root.getChildren().contains(popup)) {
+                            root.getChildren().remove(popup);
+                        }
+                    });
                 });
                 fadeOut.play();
             });
