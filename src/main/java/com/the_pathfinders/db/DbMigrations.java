@@ -361,6 +361,33 @@ public final class DbMigrations {
             st.executeUpdate("create index if not exists idx_blood_requests_group on blood_requests(blood_group)");
             st.executeUpdate("create index if not exists idx_blood_donors_group on blood_donors(blood_group)");
             st.executeUpdate("create index if not exists idx_blood_donors_area on blood_donors(area)");
+
+            // Consultation tables
+            st.executeUpdate("""
+                create table if not exists doctors (
+                  id              bigserial primary key,
+                  name            text not null,
+                  degree          text not null,
+                  phone           text not null,
+                  consulting_hours text not null,
+                  specialization  text,
+                  created_at      timestamptz default now()
+                )
+            """);
+
+            st.executeUpdate("""
+                create table if not exists appointments (
+                  id                bigserial primary key,
+                  soul_id           text not null,
+                  doctor_id         bigint not null references doctors(id),
+                  appointment_date  text not null,
+                  status            text default 'PENDING' check (status in ('PENDING', 'CONFIRMED', 'CANCELLED')),
+                  created_at        timestamptz default now()
+                )
+            """);
+
+            st.executeUpdate("create index if not exists idx_appointments_soul on appointments(soul_id)");
+            st.executeUpdate("create index if not exists idx_appointments_doctor on appointments(doctor_id)");
         }
     }
 }

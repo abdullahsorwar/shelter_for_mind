@@ -68,15 +68,25 @@
                 <!-- Consultancy placeholder -->
                 <VBox fx:id="consultancyPane"
                       styleClass="content-card"
-                      spacing="10"
-                      maxWidth="520"
+                      spacing="12"
+                      maxWidth="650"
                       alignment="TOP_LEFT">
                     <padding>
                         <Insets top="18" right="18" bottom="18" left="18"/>
                     </padding>
                     <children>
                         <Label text="Consultancy" styleClass="card-title"/>
-                        <Label text="Content coming soon." styleClass="muted-text"/>
+                        <Label text="Connect with mental health professionals." styleClass="muted-text"/>
+
+                        <ScrollPane fitToWidth="true"
+                                    prefHeight="400"
+                                    styleClass="donor-scroll">
+                            <content>
+                                <VBox fx:id="doctorsListBox"
+                                      spacing="12"
+                                      styleClass="donor-list"/>
+                            </content>
+                        </ScrollPane>
                     </children>
                 </VBox>
 
