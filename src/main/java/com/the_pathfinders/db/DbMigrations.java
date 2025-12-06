@@ -388,6 +388,22 @@ public final class DbMigrations {
 
             st.executeUpdate("create index if not exists idx_appointments_soul on appointments(soul_id)");
             st.executeUpdate("create index if not exists idx_appointments_doctor on appointments(doctor_id)");
+            
+            // Add safety plan columns to soul_id_and_soul_key table
+            st.executeUpdate("""
+                do $$
+                begin
+                  if not exists (
+                    select 1 from information_schema.columns
+                    where table_name = 'soul_id_and_soul_key' and column_name = 'safety_plan_contact'
+                  ) then
+                    alter table soul_id_and_soul_key 
+                    add column safety_plan_contact text,
+                    add column safety_plan_calm text,
+                    add column safety_plan_place text;
+                  end if;
+                end $$
+            """);
         }
     }
 }

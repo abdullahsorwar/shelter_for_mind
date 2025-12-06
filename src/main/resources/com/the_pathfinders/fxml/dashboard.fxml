@@ -334,25 +334,32 @@
                 </HBox>
 
                 <!-- Email Contacts -->
-                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" prefHeight="300">
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" prefHeight="250">
                     <VBox spacing="15" style="-fx-padding: 10;">
                         <!-- Email 1 -->
                         <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 12;">
-                            <Label text="Developer 1" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Label text="📧" style="-fx-font-size: 16px;"/>
                                 <Label fx:id="email1Label" text="raisatabassum2023115989@cs.du.ac.bd" 
-                                    style="-fx-font-size: 12px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
+                                    style="-fx-font-size: 13px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
                             </HBox>
                         </VBox>
 
                         <!-- Email 2 -->
                         <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 12;">
-                            <Label text="Developer 2" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Label text="📧" style="-fx-font-size: 16px;"/>
                                 <Label fx:id="email2Label" text="mdabdullah-2023715965@cs.du.ac.bd" 
-                                    style="-fx-font-size: 12px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
+                                    style="-fx-font-size: 13px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Email 3 -->
+                        <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 12;">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="📧" style="-fx-font-size: 16px;"/>
+                                <Label fx:id="email3Label" text="the.pathfinders.dev@gmail.com" 
+                                    style="-fx-font-size: 13px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
                             </HBox>
                         </VBox>
                     </VBox>
@@ -382,7 +389,7 @@
     AnchorPane.bottomAnchor="0" style="-fx-background-color: rgba(0,0,0,0.6);">
     <children>
         <VBox spacing="20" alignment="TOP_CENTER"
-            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 40; -fx-max-width: 700; -fx-max-height: 750;">
+            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 40; -fx-max-width: 700; -fx-max-height: 650;">
             <children>
                 <!-- Header -->
                 <HBox alignment="CENTER_LEFT" spacing="15">
@@ -402,23 +409,84 @@
                 </VBox>
 
                 <!-- Hotlines List -->
-                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" prefHeight="350">
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" prefHeight="320">
                     <VBox fx:id="hotlinesContainer" spacing="12" style="-fx-padding: 10;"/>
                 </ScrollPane>
 
-                <!-- Safety Plan Section -->
-                <VBox spacing="12" style="-fx-background-color: #e8f5e9; -fx-padding: 20; -fx-background-radius: 12;">
-                    <Label text="🛡️ Create Your Safety Plan" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
-                    <VBox spacing="5" style="-fx-padding-left: 15;">
-                        <Label text="• Who can you call?" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
-                        <Label text="• What calms you?" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
-                        <Label text="• Where is your safe place?" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
-                    </VBox>
-                </VBox>
+                <!-- Create Safety Plan Button -->
+                <Button fx:id="createSafetyPlanBtn" text="🛡️ Create Your Safety Plan" 
+                    style="-fx-background-color: linear-gradient(to right, #66bb6a, #43a047); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);"
+                    prefWidth="280"/>
 
                 <!-- Close Button -->
                 <Button fx:id="emergencyCloseBtn" text="Close" styleClass="journaling-btn"
                     prefWidth="150" style="-fx-background-color: #c62828; -fx-text-fill: white;"/>
+            </children>
+        </VBox>
+    </children>
+</StackPane>
+
+<!-- Safety Plan Popup Overlay -->
+<StackPane fx:id="safetyPlanOverlay" visible="false" managed="false"
+    AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+    AnchorPane.bottomAnchor="0" style="-fx-background-color: rgba(0,0,0,0.7);">
+    <children>
+        <VBox spacing="20" alignment="TOP_CENTER"
+            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 35; -fx-max-width: 600; -fx-max-height: 600;">
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Button fx:id="safetyPlanBackBtn" text="←" style="-fx-font-size: 20px; -fx-background-color: transparent; -fx-cursor: hand;"/>
+                    <VBox spacing="5">
+                        <Label text="🛡️ Create Your Safety Plan" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                        <Label text="Plan ahead for moments when you need support" 
+                            wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
+                    </VBox>
+                </HBox>
+
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" prefHeight="350">
+                    <VBox spacing="20" style="-fx-padding: 10;">
+                        <!-- Question 1 -->
+                        <VBox spacing="10">
+                            <Label text="Who can you call when you feel this way?" 
+                                style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                            <Label text="List trusted contacts (friends, family, therapist, etc.)" 
+                                wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-style: italic;"/>
+                            <javafx.scene.control.TextField fx:id="safetyPlanContact" promptText="e.g., Mom (555-1234), Dr. Smith (555-5678)..."
+                                style="-fx-background-color: #f1f8e9; -fx-background-radius: 10; -fx-padding: 12; -fx-border-color: #81c784; -fx-border-width: 2; -fx-border-radius: 10; -fx-font-size: 13px;"/>
+                        </VBox>
+                        
+                        <!-- Question 2 -->
+                        <VBox spacing="10">
+                            <Label text="What can you do to calm yourself down?" 
+                                style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                            <Label text="Coping strategies and calming activities" 
+                                wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-style: italic;"/>
+                            <javafx.scene.control.TextField fx:id="safetyPlanCalm" promptText="e.g., deep breathing, listening to music, walking..."
+                                style="-fx-background-color: #f1f8e9; -fx-background-radius: 10; -fx-padding: 12; -fx-border-color: #81c784; -fx-border-width: 2; -fx-border-radius: 10; -fx-font-size: 13px;"/>
+                        </VBox>
+                        
+                        <!-- Question 3 -->
+                        <VBox spacing="10">
+                            <Label text="Where can you go to feel safe?" 
+                                style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                            <Label text="Physical spaces where you feel secure and comfortable" 
+                                wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-style: italic;"/>
+                            <javafx.scene.control.TextField fx:id="safetyPlanPlace" promptText="e.g., my bedroom, the park, library, friend's house..."
+                                style="-fx-background-color: #f1f8e9; -fx-background-radius: 10; -fx-padding: 12; -fx-border-color: #81c784; -fx-border-width: 2; -fx-border-radius: 10; -fx-font-size: 13px;"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+
+                <!-- Action Buttons -->
+                <HBox spacing="15" alignment="CENTER">
+                    <Button fx:id="saveSafetyPlanBtn" text="💾 Save Safety Plan" 
+                        style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 12 25; -fx-background-radius: 25; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);"
+                        prefWidth="180"/>
+                    <Button fx:id="cancelSafetyPlanBtn" text="Cancel" 
+                        style="-fx-background-color: #e0e0e0; -fx-text-fill: #424242; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 12 25; -fx-background-radius: 25; -fx-cursor: hand;"
+                        prefWidth="120"/>
+                </HBox>
             </children>
         </VBox>
     </children>

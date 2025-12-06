@@ -77,11 +77,21 @@ public class DashboardController {
     @FXML private Button techSupportCloseBtn;
     @FXML private Label email1Label;
     @FXML private Label email2Label;
+    @FXML private Label email3Label;
     
     @FXML private StackPane emergencyHotlinesOverlay;
     @FXML private Button emergencyBackBtn;
     @FXML private Button emergencyCloseBtn;
     @FXML private VBox hotlinesContainer;
+    @FXML private Button createSafetyPlanBtn;
+    
+    @FXML private StackPane safetyPlanOverlay;
+    @FXML private Button safetyPlanBackBtn;
+    @FXML private javafx.scene.control.TextField safetyPlanContact;
+    @FXML private javafx.scene.control.TextField safetyPlanCalm;
+    @FXML private javafx.scene.control.TextField safetyPlanPlace;
+    @FXML private Button saveSafetyPlanBtn;
+    @FXML private Button cancelSafetyPlanBtn;
 
     // Mood Tracker popup elements
     @FXML private StackPane moodTrackerOverlay;
@@ -232,6 +242,11 @@ public class DashboardController {
             showHelpCenter();
         });
         if (emergencyCloseBtn != null) emergencyCloseBtn.setOnAction(e -> hideEmergencyHotlines());
+        if (createSafetyPlanBtn != null) createSafetyPlanBtn.setOnAction(e -> showSafetyPlanPopup());
+        
+        // Safety Plan overlay handlers
+        if (safetyPlanBackBtn != null) safetyPlanBackBtn.setOnAction(e -> hideSafetyPlanPopup());
+        if (cancelSafetyPlanBtn != null) cancelSafetyPlanBtn.setOnAction(e -> hideSafetyPlanPopup());
         
         // Setup email click handlers
         if (email1Label != null) {
@@ -239,6 +254,14 @@ public class DashboardController {
         }
         if (email2Label != null) {
             email2Label.setOnMouseClicked(e -> openEmail("mdabdullah-2023715965@cs.du.ac.bd"));
+        }
+        if (email3Label != null) {
+            email3Label.setOnMouseClicked(e -> openEmail("the.pathfinders.dev@gmail.com"));
+        }
+        
+        // Setup Safety Plan save button
+        if (saveSafetyPlanBtn != null) {
+            saveSafetyPlanBtn.setOnAction(e -> saveSafetyPlan());
         }
         
         // Close overlays when clicking outside
@@ -255,6 +278,11 @@ public class DashboardController {
         if (emergencyHotlinesOverlay != null) {
             emergencyHotlinesOverlay.setOnMouseClicked(e -> {
                 if (e.getTarget() == emergencyHotlinesOverlay) hideEmergencyHotlines();
+            });
+        }
+        if (safetyPlanOverlay != null) {
+            safetyPlanOverlay.setOnMouseClicked(e -> {
+                if (e.getTarget() == safetyPlanOverlay) hideSafetyPlanPopup();
             });
         }
         
@@ -1487,6 +1515,7 @@ private void loadPage(String path) {
         
         String[][] hotlines = {
             {"Emergency Services", "999", "🚨"},
+            {"Helpline (Emotional Support & Suicide Prevention)", "+880 9612-119911", "💚"},
             {"Child Support", "1098", "👶"},
             {"Women & Children Violence", "109 / 10921", "🆘"},
             {"Public Law Services", "16430", "⚖️"},
@@ -1578,5 +1607,104 @@ private void loadPage(String path) {
             alert.showAndWait();
         }
     }
+    
+    private void saveSafetyPlan() {
+        if (soulId == null || soulId.isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Not Logged In");
+            alert.setHeaderText(null);
+            alert.setContentText("Please log in to save your safety plan.");
+            alert.showAndWait();
+            return;
+        }
+        
+        String contact = safetyPlanContact != null ? safetyPlanContact.getText() : "";
+        String calm = safetyPlanCalm != null ? safetyPlanCalm.getText() : "";
+        String place = safetyPlanPlace != null ? safetyPlanPlace.getText() : "";
+        
+        if (contact.isBlank() && calm.isBlank() && place.isBlank()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Empty Safety Plan");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill in at least one field to save your safety plan.");
+            alert.showAndWait();
+            return;
+        }
+        
+        try {
+            // Save to database
+            SoulRepository soulRepo = new SoulRepository();
+            soulRepo.updateSafetyPlan(soulId, contact, calm, place);
+            
+            // Show success message
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Safety Plan Saved");
+            alert.setHeaderText(null);
+            alert.setContentText("Your safety plan has been saved successfully.\nIt's also visible to administrators for support purposes.");
+            alert.showAndWait();
+            
+            // Close the popup after successful save
+            hideSafetyPlanPopup();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Save Failed");
+            alert.setHeaderText(null);
+            alert.setContentText("Failed to save safety plan: " + ex.getMessage());
+            alert.showAndWait();
+        }
+    }
+    
+    private void loadSafetyPlan() {
+        if (soulId == null || soulId.isBlank()) return;
+        
+        try {
+            SoulRepository soulRepo = new SoulRepository();
+            Map<String, String> safetyPlan = soulRepo.getSafetyPlan(soulId);
+            
+            if (safetyPlan != null) {
+                if (safetyPlanContact != null && safetyPlan.get("contact") != null) {
+                    safetyPlanContact.setText(safetyPlan.get("contact"));
+                }
+                if (safetyPlanCalm != null && safetyPlan.get("calm") != null) {
+                    safetyPlanCalm.setText(safetyPlan.get("calm"));
+                }
+                if (safetyPlanPlace != null && safetyPlan.get("place") != null) {
+                    safetyPlanPlace.setText(safetyPlan.get("place"));
+                }
+            }
+        } catch (Exception ex) {
+            // Silently fail - safety plan is optional
+            ex.printStackTrace();
+        }
+    }
+    
+    private void showSafetyPlanPopup() {
+        if (safetyPlanOverlay != null) {
+            // Load existing safety plan data
+            loadSafetyPlan();
+            
+            safetyPlanOverlay.setVisible(true);
+            safetyPlanOverlay.setManaged(true);
+            
+            FadeTransition fade = new FadeTransition(Duration.millis(250), safetyPlanOverlay);
+            fade.setFromValue(0);
+            fade.setToValue(1);
+            fade.play();
+        }
+    }
+    
+    private void hideSafetyPlanPopup() {
+        if (safetyPlanOverlay != null) {
+            FadeTransition fade = new FadeTransition(Duration.millis(200), safetyPlanOverlay);
+            fade.setFromValue(1);
+            fade.setToValue(0);
+            fade.setOnFinished(e -> {
+                safetyPlanOverlay.setVisible(false);
+                safetyPlanOverlay.setManaged(false);
+            });
+            fade.play();
+        }
+    }
 }
-

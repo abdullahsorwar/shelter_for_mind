@@ -59,4 +59,34 @@ public class SoulRepository {
             }
         }
     }
+    
+    public void updateSafetyPlan(String soulId, String contact, String calm, String place) throws SQLException {
+        final String sql = """
+            update soul_id_and_soul_key
+            set safety_plan_contact = ?, safety_plan_calm = ?, safety_plan_place = ?
+            where soul_id = ?
+        """;
+        try (var c = DB.getConnection(); var ps = c.prepareStatement(sql)) {
+            ps.setString(1, contact);
+            ps.setString(2, calm);
+            ps.setString(3, place);
+            ps.setString(4, soulId.toLowerCase());
+            ps.executeUpdate();
+        }
+    }
+    
+    public java.util.Map<String, String> getSafetyPlan(String soulId) throws SQLException {
+        final String sql = "select safety_plan_contact, safety_plan_calm, safety_plan_place from soul_id_and_soul_key where soul_id = ?";
+        try (var c = DB.getConnection(); var ps = c.prepareStatement(sql)) {
+            ps.setString(1, soulId.toLowerCase());
+            try (var rs = ps.executeQuery()) {
+                if (!rs.next()) return null;
+                java.util.Map<String, String> plan = new java.util.HashMap<>();
+                plan.put("contact", rs.getString("safety_plan_contact"));
+                plan.put("calm", rs.getString("safety_plan_calm"));
+                plan.put("place", rs.getString("safety_plan_place"));
+                return plan;
+            }
+        }
+    }
 }
