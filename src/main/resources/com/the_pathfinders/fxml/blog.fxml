@@ -21,7 +21,8 @@
                 vbarPolicy="AS_NEEDED"
                 hbarPolicy="NEVER"
                 VBox.vgrow="ALWAYS"
-                style="-fx-background-color: transparent;">
+                pannable="true"
+                style="-fx-background-color: transparent; -fx-background: transparent;">
         <FlowPane fx:id="categoriesPane"
                   hgap="12" vgap="12"
                   alignment="CENTER"

@@ -30,10 +30,29 @@ public class BlogController {
     private final ObservableList<Blog> allPosts = FXCollections.observableArrayList();
 
     private final List<String> categories = Arrays.asList(
+            // Original Mental Disorders
             "Depression", "Anxiety Disorders", "Bipolar Disorder", "Schizophrenia",
             "Obsessive-Compulsive Disorder", "Post-Traumatic Stress Disorder",
             "Eating Disorder", "Generalized Anxiety Disorder", "Neurodevelopmental Disorder",
-            "ADHD", "Panic Disorder", "Social Anxiety Disorder"
+            "ADHD", "Panic Disorder", "Social Anxiety Disorder",
+            
+            // Mental Wellness Categories
+            "Overthinking & Rumination", "Burnout & Stress", "Loneliness & Emotional Support",
+            "Sleep & Insomnia", "Self-Esteem & Confidence", "Relationship Anxiety",
+            "Grief & Loss", "Panic & Grounding Techniques", "Productivity & Motivation",
+            "Burnout & Workplace Stress",
+            
+            // For Students
+            "Academic Stress", "Social Pressure", "Digital Addiction",
+            "Identity & Self-Discovery", "Friendship Problems",
+            
+            // Trauma, Abuse, and Recovery
+            "Childhood Trauma", "Toxic Relationships", "Emotional Abuse",
+            "Healing Attachment Styles",
+            
+            // Cognitive Health & Aging
+            "Dementia", "Alzheimer's", "Memory Strengthening",
+            "Brain Fog", "Age-Related Cognitive Decline"
     );    private final List<String> pastelColors = Arrays.asList(
             "#FDE8E8","#EAF7F3","#F9F0EA","#F2E7FF","#F0F8FF",
             "#FFF4E6","#F7F6F8","#E8F6FF","#FFF1F6","#F8FFF4"
