@@ -6,23 +6,25 @@
 /* Header Bar */
 .header-bar {
     -fx-background-color: linear-gradient(to right, #ffffff, #f7f9fc);
-    -fx-padding: 18 30 18 30;
+    -fx-padding: 12 20 12 20;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 6, 0, 0, 2);
+    -fx-min-height: 60;
+    -fx-max-height: 60;
 }
 
 .page-title {
-    -fx-font-size: 24px;
+    -fx-font-size: 20px;
     -fx-font-weight: 600;
     -fx-text-fill: #1a1a2e;
 }
 
 .back-arrow {
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-background-color: #f0f2f5;
     -fx-text-fill: #4a5568;
     -fx-cursor: hand;
     -fx-background-radius: 10;
-    -fx-padding: 8 12 8 12;
+    -fx-padding: 6 10 6 10;
 }
 .back-arrow:hover {
     -fx-background-color: #e2e6ea;
@@ -106,7 +108,7 @@
 /* Side Panel */
 .side-panel {
     -fx-background-color: #ffffff;
-    -fx-padding: 25 20 25 20;
+    -fx-padding: 20 15 20 15;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, -2, 0);
     -fx-border-color: #e8eaed;
     -fx-border-width: 0 0 0 1;

@@ -86,6 +86,26 @@ public final class DbMigrations {
             st.executeUpdate("""
                 create index if not exists idx_mood_soul on mood_tracker(soul_id)
             """);
+            
+            // Create blog_reading_history table for tracking article views
+            st.executeUpdate("""
+                create table if not exists blog_reading_history (
+                  id            bigserial primary key,
+                  soul_id       text not null,
+                  blog_id       text not null,
+                  blog_category text not null,
+                  viewed_at     timestamptz default now()
+                )
+            """);
+            
+            st.executeUpdate("""
+                create index if not exists idx_blog_history_soul on blog_reading_history(soul_id)
+            """);
+            
+            st.executeUpdate("""
+                create index if not exists idx_blog_history_date on blog_reading_history(soul_id, viewed_at)
+            """);
+            
             // Add loved_by column if it doesn't exist (for existing tables)
             st.executeUpdate("""
                 do $$

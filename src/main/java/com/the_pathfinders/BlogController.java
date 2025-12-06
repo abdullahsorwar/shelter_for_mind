@@ -1,12 +1,12 @@
 package com.the_pathfinders;
 
+import com.the_pathfinders.db.BlogHistoryRepository;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -27,17 +27,22 @@ public class BlogController {
     @FXML private Button shuffleBtn;
     @FXML private Button listenModeBtn;
     @FXML private Button expertPickBtn;
-    @FXML private ComboBox<String> disorderFilter;
-    @FXML private ComboBox<String> emotionFilter;
+    @FXML private ComboBox<String> sectionFilter;
     @FXML private ComboBox<String> lengthFilter;
-    @FXML private ComboBox<String> moodFilter;
     @FXML private Button clearFiltersBtn;
     @FXML private Label statsLabel;
+    @FXML private Label progressLabel;
+    @FXML private Label savedCountLabel;
+    @FXML private Button viewHistoryBtn;
+    @FXML private Button viewSavedBtn;
 
     private String soulId = "";
     private SavedBlogsManager savedBlogsManager;
+    private BlogHistoryRepository blogHistoryRepo;
     private final ObservableList<Blog> allPosts = FXCollections.observableArrayList();
     private final List<Blog> filteredPosts = new ArrayList<>();
+    private final Set<String> viewedArticlesToday = new HashSet<>();
+    private final List<String> readingHistory = new ArrayList<>();
     
     // TTS Management
     private Process ttsProcess = null;
@@ -106,10 +111,39 @@ public class BlogController {
 
     public void setSoulId(String id) {
         this.soulId = id == null ? "" : id;
+        
+        // Initialize blog history repository
+        if (this.blogHistoryRepo == null) {
+            this.blogHistoryRepo = new BlogHistoryRepository();
+        }
+        
+        // Load reading history from database
+        loadReadingHistoryFromDatabase();
+        
         if (savedBlogsManager != null && !allPosts.isEmpty()) {
             for (Blog b : allPosts) {
                 b.setSavedForLater(savedBlogsManager.isBlogSaved(this.soulId, b.getId()));
             }
+        }
+        
+        // Update progress labels with persisted data
+        updateProgressLabels();
+    }
+    
+    private void loadReadingHistoryFromDatabase() {
+        try {
+            if (blogHistoryRepo != null && soulId != null && !soulId.isEmpty()) {
+                viewedArticlesToday.clear();
+                viewedArticlesToday.addAll(blogHistoryRepo.getViewedTodayBlogIds(soulId));
+                
+                readingHistory.clear();
+                readingHistory.addAll(blogHistoryRepo.getReadingHistoryCategories(soulId, 50));
+                
+                System.out.println("✓ Loaded reading history: " + viewedArticlesToday.size() + " articles read today");
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load reading history: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -282,21 +316,14 @@ public class BlogController {
         }
         
         // Filters
-        if (disorderFilter != null) {
-            List<String> allCategories = new ArrayList<>();
-            allCategories.add("All Categories");
+        if (sectionFilter != null) {
+            List<String> sectionNames = new ArrayList<>();
+            sectionNames.add("All Sections");
             for (CategorySection section : sections) {
-                allCategories.addAll(section.categories);
+                sectionNames.add(section.title);
             }
-            disorderFilter.setItems(FXCollections.observableArrayList(allCategories));
-            disorderFilter.setOnAction(e -> applyFilters());
-        }
-        
-        if (emotionFilter != null) {
-            emotionFilter.setItems(FXCollections.observableArrayList(
-                "Any Emotion", "Anxious", "Sad", "Stressed", "Overwhelmed", "Lonely", "Confused", "Hopeful"
-            ));
-            emotionFilter.setOnAction(e -> applyFilters());
+            sectionFilter.setItems(FXCollections.observableArrayList(sectionNames));
+            sectionFilter.setOnAction(e -> applyFilters());
         }
         
         if (lengthFilter != null) {
@@ -306,16 +333,21 @@ public class BlogController {
             lengthFilter.setOnAction(e -> applyFilters());
         }
         
-        if (moodFilter != null) {
-            moodFilter.setItems(FXCollections.observableArrayList(
-                "Current Mood", "Need Immediate Help", "Learning & Exploring", "Crisis Support", "Daily Management"
-            ));
-            moodFilter.setOnAction(e -> applyFilters());
-        }
-        
         if (clearFiltersBtn != null) {
             clearFiltersBtn.setOnAction(e -> clearAllFilters());
         }
+        
+        // Reading Progress Features
+        if (viewHistoryBtn != null) {
+            viewHistoryBtn.setOnAction(e -> showReadingHistory());
+        }
+        
+        if (viewSavedBtn != null) {
+            viewSavedBtn.setOnAction(e -> showSavedArticles());
+        }
+        
+        // Update progress labels
+        updateProgressLabels();
     }
     
     // TTS Helper Methods
@@ -486,30 +518,46 @@ public class BlogController {
             
             if (query.isEmpty()) {
                 suggestions.hide();
+                buildCategorizedSections(); // Show all when search is cleared
+                return;
+            }
+            
+            if (query.length() < 2) {
+                suggestions.hide();
                 return;
             }
             
             Set<String> matches = new LinkedHashSet<>();
             
-            // Search categories
-            for (CategorySection section : sections) {
-                for (String cat : section.categories) {
-                    if (cat.toLowerCase().contains(query)) {
-                        matches.add(cat);
-                        if (matches.size() >= 8) break;
-                    }
+            // Search across all blog attributes
+            for (Blog blog : allPosts) {
+                if (matches.size() >= 10) break;
+                
+                String category = blog.getCategory();
+                if (category != null && category.toLowerCase().contains(query)) {
+                    matches.add(category);
                 }
-                if (matches.size() >= 8) break;
             }
             
             for (String match : matches) {
-                MenuItem item = new MenuItem(match);
+                MenuItem item = new MenuItem("📄 " + match);
                 item.setOnAction(e -> {
                     searchBar.setText(match);
                     performSearch(match);
                     suggestions.hide();
                 });
                 suggestions.getItems().add(item);
+            }
+            
+            // Add a "Search All" option
+            if (!matches.isEmpty()) {
+                MenuItem searchAll = new MenuItem("🔍 Search all for '" + query + "'");
+                searchAll.setStyle("-fx-font-weight: bold;");
+                searchAll.setOnAction(e -> {
+                    performSearch(query);
+                    suggestions.hide();
+                });
+                suggestions.getItems().add(0, searchAll);
             }
             
             if (!suggestions.getItems().isEmpty()) {
@@ -519,7 +567,10 @@ public class BlogController {
             }
         });
         
-        searchBar.setOnAction(e -> performSearch(searchBar.getText()));
+        searchBar.setOnAction(e -> {
+            performSearch(searchBar.getText());
+            suggestions.hide();
+        });
     }
 
     private void performSearch(String query) {
@@ -529,18 +580,59 @@ public class BlogController {
         }
         
         String q = query.trim().toLowerCase();
-        List<String> matchingCategories = new ArrayList<>();
+        Set<String> matchingCategories = new LinkedHashSet<>();
         
-        for (CategorySection section : sections) {
-            for (String category : section.categories) {
-                if (category.toLowerCase().contains(q)) {
-                    matchingCategories.add(category);
-                }
+        // Search across title, category, and content
+        for (Blog blog : allPosts) {
+            boolean matches = false;
+            
+            // Check category
+            if (blog.getCategory() != null && blog.getCategory().toLowerCase().contains(q)) {
+                matches = true;
+            }
+            
+            // Check title
+            if (blog.getTitle() != null && blog.getTitle().toLowerCase().contains(q)) {
+                matches = true;
+            }
+            
+            // Check content
+            if (blog.getFullDescription() != null && blog.getFullDescription().toLowerCase().contains(q)) {
+                matches = true;
+            }
+            
+            if (matches) {
+                matchingCategories.add(blog.getCategory());
             }
         }
         
         if (!matchingCategories.isEmpty()) {
-            highlightCategories(matchingCategories);
+            highlightCategories(new ArrayList<>(matchingCategories));
+        } else {
+            // Show no results message
+            categoriesContainer.getChildren().clear();
+            VBox emptyState = new VBox(15);
+            emptyState.setAlignment(Pos.CENTER);
+            emptyState.setStyle("-fx-padding: 60px;");
+            
+            Label emoji = new Label("🔍");
+            emoji.setStyle("-fx-font-size: 48px;");
+            
+            Label message = new Label("No results found for '" + query + "'");
+            message.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #555;");
+            
+            Label suggestion = new Label("Try different keywords or browse categories below");
+            suggestion.setStyle("-fx-font-size: 14px; -fx-text-fill: #888;");
+            
+            Button showAllBtn = new Button("Show All Articles");
+            showAllBtn.setStyle("-fx-background-color: #667eea; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand; -fx-background-radius: 8;");
+            showAllBtn.setOnAction(e -> {
+                searchBar.clear();
+                buildCategorizedSections();
+            });
+            
+            emptyState.getChildren().addAll(emoji, message, suggestion, showAllBtn);
+            categoriesContainer.getChildren().add(emptyState);
         }
     }
 
@@ -693,43 +785,66 @@ public class BlogController {
     }
 
     private void applyFilters() {
-        List<String> matchingCategories = new ArrayList<>();
+        // Start with all blogs
+        List<Blog> matchingBlogs = new ArrayList<>(allPosts);
         
-        // Category filter
-        if (disorderFilter != null && disorderFilter.getValue() != null && 
-            !disorderFilter.getValue().equals("All Categories")) {
-            matchingCategories.add(disorderFilter.getValue());
-        } else {
-            // If no category filter, show all
+        // Apply section filter
+        if (sectionFilter != null && sectionFilter.getValue() != null && 
+            !sectionFilter.getValue().equals("All Sections")) {
+            String selectedSection = sectionFilter.getValue();
+            // Find which categories belong to this section
+            List<String> sectionCategories = new ArrayList<>();
             for (CategorySection section : sections) {
-                matchingCategories.addAll(section.categories);
+                if (section.title.equals(selectedSection)) {
+                    sectionCategories.addAll(section.categories);
+                    break;
+                }
             }
+            matchingBlogs = matchingBlogs.stream()
+                .filter(blog -> sectionCategories.contains(blog.getCategory()))
+                .collect(Collectors.toList());
         }
         
         // Apply length filter
         if (lengthFilter != null && lengthFilter.getValue() != null && 
             !lengthFilter.getValue().equals("Any Length")) {
             String lengthValue = lengthFilter.getValue();
-            List<String> filteredByLength = new ArrayList<>();
-            
-            for (String category : matchingCategories) {
-                Blog blog = findBlogByCategory(category);
-                if (blog != null && matchesLengthFilter(blog, lengthValue)) {
-                    filteredByLength.add(category);
-                }
-            }
-            matchingCategories = filteredByLength;
+            matchingBlogs = matchingBlogs.stream()
+                .filter(blog -> matchesLengthFilter(blog, lengthValue))
+                .collect(Collectors.toList());
         }
         
-        // Apply other filters as needed
+        // Convert blogs to categories
+        List<String> matchingCategories = matchingBlogs.stream()
+            .map(Blog::getCategory)
+            .distinct()
+            .collect(Collectors.toList());
+        
+        // Display results
         if (!matchingCategories.isEmpty()) {
             highlightCategories(matchingCategories);
         } else {
             // Show empty state
             categoriesContainer.getChildren().clear();
-            Label noResults = new Label("No articles match your filters. Try adjusting your selection.");
-            noResults.setStyle("-fx-font-size: 16px; -fx-text-fill: #666; -fx-padding: 40px;");
-            categoriesContainer.getChildren().add(noResults);
+            VBox emptyState = new VBox(15);
+            emptyState.setAlignment(Pos.CENTER);
+            emptyState.setStyle("-fx-padding: 60px;");
+            
+            Label emoji = new Label("🔍");
+            emoji.setStyle("-fx-font-size: 48px;");
+            
+            Label message = new Label("No articles match your filters");
+            message.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #555;");
+            
+            Label suggestion = new Label("Try adjusting your filter selections");
+            suggestion.setStyle("-fx-font-size: 14px; -fx-text-fill: #888;");
+            
+            Button clearBtn = new Button("Clear All Filters");
+            clearBtn.setStyle("-fx-background-color: #667eea; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand; -fx-background-radius: 8;");
+            clearBtn.setOnAction(e -> clearAllFilters());
+            
+            emptyState.getChildren().addAll(emoji, message, suggestion, clearBtn);
+            categoriesContainer.getChildren().add(emptyState);
         }
         
         updateStats();
@@ -755,14 +870,105 @@ public class BlogController {
     }
 
     private void clearAllFilters() {
-        if (disorderFilter != null) disorderFilter.setValue(null);
-        if (emotionFilter != null) emotionFilter.setValue(null);
+        if (sectionFilter != null) sectionFilter.setValue(null);
         if (lengthFilter != null) lengthFilter.setValue(null);
-        if (moodFilter != null) moodFilter.setValue(null);
         if (searchBar != null) searchBar.clear();
         
         buildCategorizedSections();
         updateStats();
+    }
+    
+    private void updateProgressLabels() {
+        // Update reading progress
+        if (progressLabel != null) {
+            int readCount = viewedArticlesToday.size();
+            progressLabel.setText(readCount + (readCount == 1 ? " read today" : " read today"));
+        }
+        
+        // Update saved count - refresh from SavedBlogsManager
+        if (savedCountLabel != null) {
+            int savedCount = 0;
+            for (Blog blog : allPosts) {
+                if (savedBlogsManager.isBlogSaved(soulId, blog.getId())) {
+                    savedCount++;
+                }
+            }
+            savedCountLabel.setText(savedCount + (savedCount == 1 ? " saved" : " saved"));
+        }
+    }
+    
+    private void showReadingHistory() {
+        if (readingHistory.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("📚 Reading History");
+            alert.setHeaderText("No Reading History Yet");
+            alert.setContentText("Start reading articles to build your reading history!\n\nYour history will show:\n• Articles you've viewed\n• Reading patterns\n• Most visited topics");
+            alert.showAndWait();
+        } else {
+            // Show dialog with reading history
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("📚 Reading History");
+            dialog.setHeaderText("Articles You've Read Today: " + viewedArticlesToday.size());
+            
+            VBox content = new VBox(10);
+            content.setStyle("-fx-padding: 20;");
+            
+            Label info = new Label("Recently viewed articles:");
+            info.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
+            content.getChildren().add(info);
+            
+            // Show up to 10 most recent
+            int displayCount = Math.min(10, readingHistory.size());
+            for (int i = 0; i < displayCount; i++) {
+                String category = readingHistory.get(i);
+                Label item = new Label((i + 1) + ". " + category);
+                item.setStyle("-fx-font-size: 12px; -fx-padding: 4 0;");
+                content.getChildren().add(item);
+            }
+            
+            Button viewAllBtn = new Button("🔍 Show All Articles from History");
+            viewAllBtn.setStyle("-fx-background-color: #667eea; -fx-text-fill: white; -fx-padding: 10 16; -fx-cursor: hand; -fx-background-radius: 8; -fx-font-size: 12px;");
+            viewAllBtn.setOnAction(e -> {
+                highlightCategories(readingHistory);
+                dialog.close();
+            });
+            content.getChildren().add(viewAllBtn);
+            
+            ScrollPane scrollPane = new ScrollPane(content);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setPrefHeight(400);
+            
+            dialog.getDialogPane().setContent(scrollPane);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+            dialog.showAndWait();
+        }
+    }
+    
+    private void showSavedArticles() {
+        // Refresh saved status from SavedBlogsManager
+        for (Blog blog : allPosts) {
+            blog.setSavedForLater(savedBlogsManager.isBlogSaved(soulId, blog.getId()));
+        }
+        
+        List<String> savedCategories = new ArrayList<>();
+        for (Blog blog : allPosts) {
+            if (blog.isSavedForLater()) {
+                savedCategories.add(blog.getCategory());
+            }
+        }
+        
+        updateProgressLabels(); // Update the count display
+        
+        if (savedCategories.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("⭐ Saved Articles");
+            alert.setHeaderText("No Saved Articles Yet");
+            alert.setContentText("Start saving articles by clicking the 'Save for Later' button when reading!");
+            alert.showAndWait();
+        } else {
+            highlightCategories(savedCategories);
+            if (searchBar != null) searchBar.setPromptText("Showing " + savedCategories.size() + " saved articles...");
+        }
     }
 
     private void updateStats() {
@@ -783,6 +989,23 @@ public class BlogController {
 
     private void showBlogDetail(Blog blog) {
         try {
+            // Track reading history in memory
+            viewedArticlesToday.add(blog.getId());
+            if (!readingHistory.contains(blog.getCategory())) {
+                readingHistory.add(0, blog.getCategory()); // Add to beginning
+            }
+            
+            // Save to database for persistence
+            try {
+                if (blogHistoryRepo != null) {
+                    blogHistoryRepo.recordBlogView(soulId, blog.getId(), blog.getCategory());
+                }
+            } catch (Exception e) {
+                System.err.println("Failed to record blog view: " + e.getMessage());
+            }
+            
+            updateProgressLabels();
+            
             System.out.println("=== showBlogDetail START ===");
             System.out.println("Blog title: " + blog.getTitle());
             System.out.println("Blog category: " + blog.getCategory());
@@ -799,25 +1022,24 @@ public class BlogController {
             System.out.println("✓ Blog set in controller");
 
             javafx.scene.layout.StackPane popup = new javafx.scene.layout.StackPane();
-            popup.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6);");
+            popup.setStyle("-fx-background-color: rgba(0, 0, 0, 0.45);"); // Softer overlay
             popup.setPickOnBounds(true);
-            popup.setMouseTransparent(false); // Ensure it receives mouse events
+            popup.setMouseTransparent(false);
             popup.getChildren().add(detail);
             javafx.scene.layout.StackPane.setAlignment(detail, Pos.CENTER);
             System.out.println("✓ Popup created");
 
             if (detail instanceof javafx.scene.layout.Region && root != null) {
                 javafx.scene.layout.Region region = (javafx.scene.layout.Region) detail;
-                region.setPrefWidth(root.getWidth() * 0.6);  // Increased from 0.45 to 0.6
-                region.setPrefHeight(root.getHeight() * 0.9); // Increased from 0.85 to 0.9
-                region.setMinWidth(400);  // Increased from 300
-                region.setMinHeight(600); // Increased from 550
-                region.setStyle("-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 5);");
+                region.setPrefWidth(root.getWidth() * 0.55);  // Better proportions
+                region.setPrefHeight(root.getHeight() * 0.80); // More breathing room
+                region.setMaxWidth(900);  // Cap maximum width for better readability
+                region.setMinWidth(500);  // Ensure minimum readable width
+                region.setMinHeight(550); 
+                region.setStyle("-fx-background-color: #fafbfc; -fx-background-radius: 16; -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.25), 40, 0.3, 0, 8);");
                 region.setVisible(true);
                 region.setManaged(true);
                 System.out.println("✓ Region sized: " + region.getPrefWidth() + "x" + region.getPrefHeight());
-                System.out.println("✓ Region style: " + region.getStyle());
-                System.out.println("✓ Region visible: " + region.isVisible() + ", managed: " + region.isManaged());
             }
 
             if (root != null && root.getScene() != null) {

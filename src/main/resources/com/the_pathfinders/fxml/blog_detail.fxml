@@ -4,37 +4,40 @@
 
 <VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.the_pathfinders.BlogDetailController"
-      spacing="16" alignment="TOP_CENTER"
+      spacing="0" alignment="TOP_CENTER"
       stylesheets="/com/the_pathfinders/css/blog.css"
-      style="-fx-padding: 20; -fx-background-color: #ffffff;">
+      style="-fx-padding: 0; -fx-background-color: #fafbfc; -fx-background-radius: 16;">
 
-    <!-- Header with close button -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
+    <!-- Header with gradient background -->
+    <VBox spacing="8" style="-fx-padding: 32 40 24 40; -fx-background-color: linear-gradient(to bottom right, #667eea 0%, #764ba2 100%); -fx-background-radius: 16 16 0 0;">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="closeBtn" text="✕" 
+                    style="-fx-font-size: 18px; -fx-padding: 6px 12px; -fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 20; -fx-font-weight: bold;" />
+        </HBox>
+        
         <Label fx:id="titleLabel" text="Blog Title" 
-                style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #264653;" />
-        <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="closeBtn" text="✕" 
-                style="-fx-font-size: 16px; -fx-padding: 4px 8px; -fx-background-color: transparent; -fx-cursor: hand;" />
-    </HBox>
+                wrapText="true"
+                style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white; -fx-padding: 8 0 0 0;" />
+        
+        <Label fx:id="categoryLabel" text="Category"
+                style="-fx-font-size: 13px; -fx-text-fill: rgba(255,255,255,0.85); -fx-padding: 4 0 0 0;" />
+    </VBox>
 
-    <!-- Category label -->
-    <Label fx:id="categoryLabel" text="Category"
-            style="-fx-font-size: 12px; -fx-text-fill: #888; -fx-font-style: italic;" />
-
-    <!-- Content - scrollable plain text -->
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-border-color: transparent;">
-        <content>
+    <!-- Content area with generous padding -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" 
+                style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;">
+        <VBox style="-fx-padding: 40 50 40 50; -fx-background-color: #fafbfc;">
             <Label fx:id="contentLabel" text="Blog content goes here..." 
                    wrapText="true"
-                   style="-fx-font-size: 14px; -fx-text-fill: #333; -fx-line-spacing: 2px; -fx-padding: 8;" />
-        </content>
+                   style="-fx-font-size: 16px; -fx-text-fill: #2c3e50; -fx-line-spacing: 6px; -fx-font-family: 'Segoe UI', Arial, sans-serif;" />
+        </VBox>
     </ScrollPane>
 
-    <!-- Bottom actions -->
-    <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 12 0 0 0;">
-        <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="saveBtn" text="☆ Save for Later" 
-                style="-fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-cursor: hand;" />
+    <!-- Bottom actions with subtle separation -->
+    <HBox spacing="12" alignment="CENTER" style="-fx-padding: 20 40 28 40; -fx-background-color: #f0f2f5; -fx-border-color: #e0e4e8; -fx-border-width: 1 0 0 0;">
+        <Button fx:id="saveBtn" text="💾 Save for Later" 
+                style="-fx-font-size: 14px; -fx-padding: 12px 24px; -fx-background-color: white; -fx-text-fill: #667eea; -fx-cursor: hand; -fx-background-radius: 8; -fx-border-color: #667eea; -fx-border-width: 2; -fx-border-radius: 8; -fx-font-weight: 600;" />
     </HBox>
 
 </VBox>
