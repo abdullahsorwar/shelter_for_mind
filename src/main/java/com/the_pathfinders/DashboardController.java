@@ -12,6 +12,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.FillTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -62,6 +63,25 @@ public class DashboardController {
     @FXML private Button tranquilCornerBtn;
     @FXML private Button moodTrackerBtn;
     @FXML private VBox buttonCardsBox;
+
+    // Help Center elements
+    @FXML private Button helpCenterBtn;
+    @FXML private StackPane helpCenterOverlay;
+    @FXML private VBox helpCenterContentBox;
+    @FXML private Button technicalSupportBtn;
+    @FXML private Button emergencyHotlinesBtn;
+    @FXML private Button helpCenterCloseBtn;
+    
+    @FXML private StackPane technicalSupportOverlay;
+    @FXML private Button techSupportBackBtn;
+    @FXML private Button techSupportCloseBtn;
+    @FXML private Label email1Label;
+    @FXML private Label email2Label;
+    
+    @FXML private StackPane emergencyHotlinesOverlay;
+    @FXML private Button emergencyBackBtn;
+    @FXML private Button emergencyCloseBtn;
+    @FXML private VBox hotlinesContainer;
 
     // Mood Tracker popup elements
     @FXML private StackPane moodTrackerOverlay;
@@ -196,6 +216,50 @@ public class DashboardController {
 
         // Initialize mood tracker popup
         initializeMoodTracker();
+
+        // Initialize Help Center
+        if (helpCenterBtn != null) helpCenterBtn.setOnAction(e -> showHelpCenter());
+        if (helpCenterCloseBtn != null) helpCenterCloseBtn.setOnAction(e -> hideHelpCenter());
+        if (technicalSupportBtn != null) technicalSupportBtn.setOnAction(e -> showTechnicalSupport());
+        if (emergencyHotlinesBtn != null) emergencyHotlinesBtn.setOnAction(e -> showEmergencyHotlines());
+        if (techSupportBackBtn != null) techSupportBackBtn.setOnAction(e -> {
+            hideTechnicalSupport();
+            showHelpCenter();
+        });
+        if (techSupportCloseBtn != null) techSupportCloseBtn.setOnAction(e -> hideTechnicalSupport());
+        if (emergencyBackBtn != null) emergencyBackBtn.setOnAction(e -> {
+            hideEmergencyHotlines();
+            showHelpCenter();
+        });
+        if (emergencyCloseBtn != null) emergencyCloseBtn.setOnAction(e -> hideEmergencyHotlines());
+        
+        // Setup email click handlers
+        if (email1Label != null) {
+            email1Label.setOnMouseClicked(e -> openEmail("raisatabassum2023115989@cs.du.ac.bd"));
+        }
+        if (email2Label != null) {
+            email2Label.setOnMouseClicked(e -> openEmail("mdabdullah-2023715965@cs.du.ac.bd"));
+        }
+        
+        // Close overlays when clicking outside
+        if (helpCenterOverlay != null) {
+            helpCenterOverlay.setOnMouseClicked(e -> {
+                if (e.getTarget() == helpCenterOverlay) hideHelpCenter();
+            });
+        }
+        if (technicalSupportOverlay != null) {
+            technicalSupportOverlay.setOnMouseClicked(e -> {
+                if (e.getTarget() == technicalSupportOverlay) hideTechnicalSupport();
+            });
+        }
+        if (emergencyHotlinesOverlay != null) {
+            emergencyHotlinesOverlay.setOnMouseClicked(e -> {
+                if (e.getTarget() == emergencyHotlinesOverlay) hideEmergencyHotlines();
+            });
+        }
+        
+        // Populate emergency hotlines
+        populateEmergencyHotlines();
 
         // ─── Tranquil Corner Popup Setup ───────────────────
         System.out.println("Setting up tranquil corner buttons...");
@@ -1323,6 +1387,196 @@ private void loadPage(String path) {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    // ==================== Help Center Methods ====================
+    
+    private void showHelpCenter() {
+        if (helpCenterOverlay != null) {
+            helpCenterOverlay.setVisible(true);
+            helpCenterOverlay.setManaged(true);
+            
+            // Fade in animation
+            FadeTransition fade = new FadeTransition(Duration.millis(200), helpCenterOverlay);
+            fade.setFromValue(0);
+            fade.setToValue(1);
+            fade.play();
+            
+            // Scale animation for content box
+            if (helpCenterContentBox != null) {
+                helpCenterContentBox.setScaleX(0.8);
+                helpCenterContentBox.setScaleY(0.8);
+                ScaleTransition scale = new ScaleTransition(Duration.millis(250), helpCenterContentBox);
+                scale.setFromX(0.8);
+                scale.setFromY(0.8);
+                scale.setToX(1.0);
+                scale.setToY(1.0);
+                scale.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+                scale.play();
+            }
+        }
+    }
+    
+    private void hideHelpCenter() {
+        if (helpCenterOverlay != null) {
+            FadeTransition fade = new FadeTransition(Duration.millis(150), helpCenterOverlay);
+            fade.setFromValue(1);
+            fade.setToValue(0);
+            fade.setOnFinished(e -> {
+                helpCenterOverlay.setVisible(false);
+                helpCenterOverlay.setManaged(false);
+            });
+            fade.play();
+        }
+    }
+    
+    private void showTechnicalSupport() {
+        hideHelpCenter();
+        if (technicalSupportOverlay != null) {
+            technicalSupportOverlay.setVisible(true);
+            technicalSupportOverlay.setManaged(true);
+            
+            FadeTransition fade = new FadeTransition(Duration.millis(200), technicalSupportOverlay);
+            fade.setFromValue(0);
+            fade.setToValue(1);
+            fade.play();
+        }
+    }
+    
+    private void hideTechnicalSupport() {
+        if (technicalSupportOverlay != null) {
+            FadeTransition fade = new FadeTransition(Duration.millis(150), technicalSupportOverlay);
+            fade.setFromValue(1);
+            fade.setToValue(0);
+            fade.setOnFinished(e -> {
+                technicalSupportOverlay.setVisible(false);
+                technicalSupportOverlay.setManaged(false);
+            });
+            fade.play();
+        }
+    }
+    
+    private void showEmergencyHotlines() {
+        hideHelpCenter();
+        if (emergencyHotlinesOverlay != null) {
+            emergencyHotlinesOverlay.setVisible(true);
+            emergencyHotlinesOverlay.setManaged(true);
+            
+            FadeTransition fade = new FadeTransition(Duration.millis(200), emergencyHotlinesOverlay);
+            fade.setFromValue(0);
+            fade.setToValue(1);
+            fade.play();
+        }
+    }
+    
+    private void hideEmergencyHotlines() {
+        if (emergencyHotlinesOverlay != null) {
+            FadeTransition fade = new FadeTransition(Duration.millis(150), emergencyHotlinesOverlay);
+            fade.setFromValue(1);
+            fade.setToValue(0);
+            fade.setOnFinished(e -> {
+                emergencyHotlinesOverlay.setVisible(false);
+                emergencyHotlinesOverlay.setManaged(false);
+            });
+            fade.play();
+        }
+    }
+    
+    private void populateEmergencyHotlines() {
+        if (hotlinesContainer == null) return;
+        
+        String[][] hotlines = {
+            {"Emergency Services", "999", "🚨"},
+            {"Child Support", "1098", "👶"},
+            {"Women & Children Violence", "109 / 10921", "🆘"},
+            {"Public Law Services", "16430", "⚖️"},
+            {"Disaster Hotline", "10941", "🌪️"},
+            {"ACC Hotline", "106", "📞"},
+            {"National Information Service", "333", "ℹ️"}
+        };
+        
+        for (String[] hotline : hotlines) {
+            VBox card = createHotlineCard(hotline[0], hotline[1], hotline[2]);
+            hotlinesContainer.getChildren().add(card);
+        }
+    }
+    
+    private VBox createHotlineCard(String service, String number, String emoji) {
+        VBox card = new VBox(8);
+        card.setStyle("-fx-background-color: linear-gradient(to right, #fff9f9, #ffe6e6); " +
+                      "-fx-padding: 15; -fx-background-radius: 12; " +
+                      "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 2);");
+        
+        HBox header = new HBox(12);
+        header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        
+        Label emojiLabel = new Label(emoji);
+        emojiLabel.setStyle("-fx-font-size: 24px;");
+        
+        VBox textBox = new VBox(3);
+        Label serviceLabel = new Label(service);
+        serviceLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c62828;");
+        
+        Label numberLabel = new Label(number);
+        numberLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1565c0;");
+        
+        textBox.getChildren().addAll(serviceLabel, numberLabel);
+        header.getChildren().addAll(emojiLabel, textBox);
+        
+        // Add call button
+        Button callBtn = new Button("📞 Call");
+        callBtn.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; " +
+                         "-fx-padding: 8 20; -fx-background-radius: 20; -fx-cursor: hand; " +
+                         "-fx-font-weight: bold;");
+        callBtn.setOnAction(e -> {
+            // Open phone dialer
+            try {
+                java.awt.Desktop.getDesktop().browse(new java.net.URI("tel:" + number.replaceAll(" / ", "")));
+            } catch (Exception ex) {
+                // Copy to clipboard as fallback
+                javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+                javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+                content.putString(number);
+                clipboard.setContent(content);
+                
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Number Copied");
+                alert.setHeaderText(null);
+                alert.setContentText("Phone number copied to clipboard: " + number);
+                alert.showAndWait();
+            }
+        });
+        
+        card.getChildren().addAll(header, callBtn);
+        return card;
+    }
+    
+    private void openEmail(String email) {
+        try {
+            java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+            if (desktop.isSupported(java.awt.Desktop.Action.MAIL)) {
+                desktop.mail(new java.net.URI("mailto:" + email + "?subject=Shelter%20of%20Mind%20Support%20Request"));
+            } else {
+                // Fallback: copy to clipboard
+                javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+                javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+                content.putString(email);
+                clipboard.setContent(content);
+                
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Email Copied");
+                alert.setHeaderText(null);
+                alert.setContentText("Email address copied to clipboard:\n" + email);
+                alert.showAndWait();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Could not open email client. Please contact: " + email);
+            alert.showAndWait();
+        }
     }
 }
 

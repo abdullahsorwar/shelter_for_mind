@@ -49,6 +49,11 @@
                     wrapText="true" text="MOOD&#10;TRACKER"/>
         </AnchorPane>
 
+        <!-- Help Center Button (Bottom left corner) -->
+        <Button fx:id="helpCenterBtn" text="?" styleClass="help-center-btn"
+                AnchorPane.leftAnchor="20" AnchorPane.bottomAnchor="20"
+                prefWidth="50" prefHeight="50"/>
+
         <!-- Top-center: greeting label -->
         <Label fx:id="greetingLabel" text="Good Morning 🌞" styleClass="greeting" 
             AnchorPane.topAnchor="32" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" 
@@ -253,6 +258,168 @@
 
             <!-- Close button -->
             <Button fx:id="moodDoneBtn" text="Done" styleClass="journaling-btn" prefWidth="150"/>
+        </VBox>
+    </children>
+</StackPane>
+
+<!-- Help Center Overlay -->
+<StackPane fx:id="helpCenterOverlay" visible="false" managed="false"
+    AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+    AnchorPane.bottomAnchor="0" style="-fx-background-color: rgba(0,0,0,0.6);">
+    <children>
+        <VBox fx:id="helpCenterContentBox" spacing="25" alignment="TOP_CENTER"
+            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 40; -fx-max-width: 600; -fx-max-height: 700;">
+            <children>
+                <!-- Title -->
+                <VBox spacing="8" alignment="CENTER">
+                    <Label text="Help Center" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label text="Choose the type of assistance you need." style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"/>
+                </VBox>
+
+                <!-- Technical Support Option -->
+                <Button fx:id="technicalSupportBtn" styleClass="help-option-btn"
+                    prefWidth="500" prefHeight="100"
+                    style="-fx-background-color: linear-gradient(to right, #e8f5e9, #c8e6c9); -fx-background-radius: 20; -fx-border-radius: 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <graphic>
+                        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10;">
+                            <Label text="🛠️" style="-fx-font-size: 32px;"/>
+                            <VBox spacing="5">
+                                <Label text="Technical Support" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                                <Label text="App issues, bugs, or technical problems" style="-fx-font-size: 12px; -fx-text-fill: #558b2f;"/>
+                            </VBox>
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <!-- Emergency Hotlines Option -->
+                <Button fx:id="emergencyHotlinesBtn" styleClass="help-option-btn"
+                    prefWidth="500" prefHeight="100"
+                    style="-fx-background-color: linear-gradient(to right, #ffebee, #ffcdd2); -fx-background-radius: 20; -fx-border-radius: 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <graphic>
+                        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10;">
+                            <Label text="🚨" style="-fx-font-size: 32px;"/>
+                            <VBox spacing="5">
+                                <Label text="Emergency Hotlines" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #c62828;"/>
+                                <Label text="Immediate help, crisis support services" style="-fx-font-size: 12px; -fx-text-fill: #d32f2f;"/>
+                            </VBox>
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <!-- Close Button -->
+                <Button fx:id="helpCenterCloseBtn" text="Close" styleClass="journaling-btn"
+                    prefWidth="150" prefHeight="40"
+                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 20; -fx-cursor: hand;"/>
+            </children>
+        </VBox>
+    </children>
+</StackPane>
+
+<!-- Technical Support View -->
+<StackPane fx:id="technicalSupportOverlay" visible="false" managed="false"
+    AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+    AnchorPane.bottomAnchor="0" style="-fx-background-color: rgba(0,0,0,0.6);">
+    <children>
+        <VBox spacing="20" alignment="TOP_CENTER"
+            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 40; -fx-max-width: 650; -fx-max-height: 750;">
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Button fx:id="techSupportBackBtn" text="←" style="-fx-font-size: 20px; -fx-background-color: transparent; -fx-cursor: hand;"/>
+                    <VBox spacing="5">
+                        <Label text="📧 Developer Support" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                        <Label text="If the app behaves unexpectedly, freezes, or shows incorrect data — we're here." 
+                            wrapText="true" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Email Contacts -->
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" prefHeight="300">
+                    <VBox spacing="15" style="-fx-padding: 10;">
+                        <!-- Email 1 -->
+                        <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 12;">
+                            <Label text="Developer 1" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="📧" style="-fx-font-size: 16px;"/>
+                                <Label fx:id="email1Label" text="raisatabassum2023115989@cs.du.ac.bd" 
+                                    style="-fx-font-size: 12px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Email 2 -->
+                        <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 12;">
+                            <Label text="Developer 2" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="📧" style="-fx-font-size: 16px;"/>
+                                <Label fx:id="email2Label" text="mdabdullah-2023715965@cs.du.ac.bd" 
+                                    style="-fx-font-size: 12px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+
+                <!-- Before Contacting Section -->
+                <VBox spacing="10" style="-fx-background-color: #fff3e0; -fx-padding: 20; -fx-background-radius: 12;">
+                    <Label text="💡 Before contacting us, try:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e65100;"/>
+                    <VBox spacing="5" style="-fx-padding-left: 20;">
+                        <Label text="• Restarting the application" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
+                        <Label text="• Checking your internet connection" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
+                        <Label text="• Logging out and logging in again" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Close Button -->
+                <Button fx:id="techSupportCloseBtn" text="Close" styleClass="journaling-btn"
+                    prefWidth="150" style="-fx-background-color: #2e7d32; -fx-text-fill: white;"/>
+            </children>
+        </VBox>
+    </children>
+</StackPane>
+
+<!-- Emergency Hotlines View -->
+<StackPane fx:id="emergencyHotlinesOverlay" visible="false" managed="false"
+    AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+    AnchorPane.bottomAnchor="0" style="-fx-background-color: rgba(0,0,0,0.6);">
+    <children>
+        <VBox spacing="20" alignment="TOP_CENTER"
+            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 40; -fx-max-width: 700; -fx-max-height: 750;">
+            <children>
+                <!-- Header -->
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Button fx:id="emergencyBackBtn" text="←" style="-fx-font-size: 20px; -fx-background-color: transparent; -fx-cursor: hand;"/>
+                    <VBox spacing="5">
+                        <Label text="🔥 Emergency Hotlines" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #c62828;"/>
+                        <Label text="If you feel unsafe or need immediate help, call a hotline now." 
+                            wrapText="true" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Disclaimer -->
+                <VBox spacing="8" style="-fx-background-color: #ffebee; -fx-padding: 15; -fx-background-radius: 12;">
+                    <Label text="⚠️ Disclaimer" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c62828;"/>
+                    <Label text="Shelter of Mind is not a crisis center. For immediate danger, contact your local emergency services." 
+                        wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #d32f2f;"/>
+                </VBox>
+
+                <!-- Hotlines List -->
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" prefHeight="350">
+                    <VBox fx:id="hotlinesContainer" spacing="12" style="-fx-padding: 10;"/>
+                </ScrollPane>
+
+                <!-- Safety Plan Section -->
+                <VBox spacing="12" style="-fx-background-color: #e8f5e9; -fx-padding: 20; -fx-background-radius: 12;">
+                    <Label text="🛡️ Create Your Safety Plan" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                    <VBox spacing="5" style="-fx-padding-left: 15;">
+                        <Label text="• Who can you call?" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
+                        <Label text="• What calms you?" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
+                        <Label text="• Where is your safe place?" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Close Button -->
+                <Button fx:id="emergencyCloseBtn" text="Close" styleClass="journaling-btn"
+                    prefWidth="150" style="-fx-background-color: #c62828; -fx-text-fill: white;"/>
+            </children>
         </VBox>
     </children>
 </StackPane>
