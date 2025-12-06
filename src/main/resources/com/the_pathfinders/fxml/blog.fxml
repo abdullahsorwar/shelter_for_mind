@@ -4,31 +4,83 @@
 
 <VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.the_pathfinders.BlogController"
-      spacing="12" alignment="TOP_CENTER"
+      spacing="0" alignment="TOP_CENTER"
       stylesheets="/com/the_pathfinders/css/blog.css">
 
     <!-- Header -->
-    <HBox spacing="10" alignment="CENTER" style="-fx-padding: 16 30 0 30;">
+    <HBox spacing="10" alignment="CENTER" styleClass="header-bar">
         <Button fx:id="backBtn" text="←" styleClass="back-arrow" />
-        <Label fx:id="pageTitle" text="Find Your Calm 🌿" styleClass="page-title" />
+        <Label fx:id="pageTitle" text="Mental Wellness Library 🧠" styleClass="page-title" />
         <Region HBox.hgrow="ALWAYS" />
-        <TextField fx:id="searchBar" promptText="Search something peaceful..." styleClass="search-bar" prefWidth="220" />
+        <TextField fx:id="searchBar" promptText="Search by topic, emotion, or concern..." styleClass="search-bar" prefWidth="280" />
     </HBox>
 
-    <!-- Categories -->
-    <ScrollPane fx:id="scrollPane"
-                fitToWidth="true"
-                vbarPolicy="AS_NEEDED"
-                hbarPolicy="NEVER"
-                VBox.vgrow="ALWAYS"
-                pannable="true"
-                style="-fx-background-color: transparent; -fx-background: transparent;">
-        <FlowPane fx:id="categoriesPane"
-                  hgap="12" vgap="12"
-                  alignment="CENTER"
-                  prefWrapLength="750"
-                  style="-fx-padding: 20 25 20 25;" />
-    </ScrollPane>
-    <!-- Posts -->
-    <ListView fx:id="postsListView" VBox.vgrow="ALWAYS" styleClass="post-list" />
+    <!-- Main Content Area -->
+    <HBox VBox.vgrow="ALWAYS" spacing="0" style="-fx-background-color: #f8f9fb;">
+        
+        <!-- Left: Categorized Content -->
+        <ScrollPane fx:id="scrollPane"
+                    fitToWidth="true"
+                    vbarPolicy="AS_NEEDED"
+                    hbarPolicy="NEVER"
+                    HBox.hgrow="ALWAYS"
+                    pannable="true"
+                    styleClass="main-scroll">
+            <VBox fx:id="categoriesContainer" spacing="30" style="-fx-padding: 25 30 25 30;" />
+        </ScrollPane>
+
+        <!-- Right: Side Panel with Quick Actions & Filters -->
+        <VBox fx:id="sidePanel" prefWidth="280" minWidth="280" maxWidth="280" 
+              spacing="20" styleClass="side-panel">
+            
+            <!-- Quick Actions Section -->
+            <VBox spacing="12" styleClass="panel-section">
+                <Label text="⚡ Quick Actions" styleClass="panel-heading" />
+                
+                <Button fx:id="shuffleBtn" text="🎲 Topic Shuffle (Discover)" 
+                        styleClass="action-button" maxWidth="Infinity" />
+                        
+                <Button fx:id="listenModeBtn" text="🎧 Listen Instead (TTS)" 
+                        styleClass="action-button" maxWidth="Infinity" />
+                        
+                <Button fx:id="expertPickBtn" text="⭐ Expert Recommended" 
+                        styleClass="action-button" maxWidth="Infinity" />
+            </VBox>
+            
+            <Separator />
+            
+            <!-- Advanced Filters Section -->
+            <VBox spacing="12" styleClass="panel-section">
+                <Label text="🔍 Filter Content" styleClass="panel-heading" />
+                
+                <Label text="By Category" style="-fx-font-size: 11px; -fx-text-fill: #666;" />
+                <ComboBox fx:id="disorderFilter" promptText="All Categories" 
+                          styleClass="filter-combo" maxWidth="Infinity" />
+                
+                <Label text="By Emotion" style="-fx-font-size: 11px; -fx-text-fill: #666;" />
+                <ComboBox fx:id="emotionFilter" promptText="Any Emotion" 
+                          styleClass="filter-combo" maxWidth="Infinity" />
+                
+                <Label text="Reading Length" style="-fx-font-size: 11px; -fx-text-fill: #666;" />
+                <ComboBox fx:id="lengthFilter" promptText="Any Length" 
+                          styleClass="filter-combo" maxWidth="Infinity" />
+                
+                <Label text="Recommended For" style="-fx-font-size: 11px; -fx-text-fill: #666;" />
+                <ComboBox fx:id="moodFilter" promptText="Current Mood" 
+                          styleClass="filter-combo" maxWidth="Infinity" />
+                
+                <Button fx:id="clearFiltersBtn" text="Clear All Filters" 
+                        styleClass="clear-filters-btn" maxWidth="Infinity" />
+            </VBox>
+            
+            <Separator />
+            
+            <!-- Stats Section -->
+            <VBox spacing="8" styleClass="panel-section">
+                <Label text="📊 Your Reading" styleClass="panel-heading" />
+                <Label fx:id="statsLabel" text="36 articles available" 
+                       style="-fx-font-size: 12px; -fx-text-fill: #777;" wrapText="true" />
+            </VBox>
+        </VBox>
+    </HBox>
 </VBox>
