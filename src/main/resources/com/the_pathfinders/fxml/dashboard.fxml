@@ -268,7 +268,7 @@
     AnchorPane.bottomAnchor="0" style="-fx-background-color: rgba(0,0,0,0.6);">
     <children>
         <VBox fx:id="helpCenterContentBox" spacing="25" alignment="TOP_CENTER"
-            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 40; -fx-max-width: 600; -fx-max-height: 700;">
+            style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 40; -fx-max-width: 600; -fx-max-height: 450;">
             <children>
                 <!-- Title -->
                 <VBox spacing="8" alignment="CENTER">

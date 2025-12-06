@@ -310,6 +310,9 @@ public class ProfileController {
         makeRow("Home Address", currentInfo == null ? "" : safe(currentInfo.address), "address", false);
         makeRow("Country Code", currentInfo == null ? "" : safe(currentInfo.countryCode), "country_code", true);
         
+        // Load and display Safety Plan
+        loadAndDisplaySafetyPlan();
+        
         // Show verify button if email exists, is valid, but NOT verified
         String email = currentInfo == null ? "" : safe(currentInfo.email);
         boolean emailVerified = currentInfo != null && currentInfo.emailVerified != null && currentInfo.emailVerified;
@@ -948,6 +951,70 @@ public class ProfileController {
         if (savedBlogsPage != null) { savedBlogsPage.setVisible(savedBlogs); savedBlogsPage.setManaged(savedBlogs); }
         if (savedJournalsPage != null) { savedJournalsPage.setVisible(savedJournals); savedJournalsPage.setManaged(savedJournals); }
         if (achievementsPage != null) { achievementsPage.setVisible(achievement); achievementsPage.setManaged(achievement); }
+    }
+
+    private void loadAndDisplaySafetyPlan() {
+        if (soulId == null || soulId.isBlank()) return;
+        
+        try {
+            com.the_pathfinders.db.SoulRepository soulRepo = new com.the_pathfinders.db.SoulRepository();
+            java.util.Map<String, String> safetyPlan = soulRepo.getSafetyPlan(soulId);
+            
+            if (safetyPlan != null && (safetyPlan.get("contact") != null || safetyPlan.get("calm") != null || safetyPlan.get("place") != null)) {
+                // Add separator
+                javafx.scene.control.Separator separator = new javafx.scene.control.Separator();
+                separator.getStyleClass().add("safety-plan-separator");
+                separator.setStyle("-fx-padding: 10 0 10 0;");
+                basicInfoFields.getChildren().add(separator);
+                
+                // Add Safety Plan header
+                Label safetyPlanHeader = new Label("🛡️ Safety Plan");
+                safetyPlanHeader.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2e7d32; -fx-padding: 10 0 5 0;");
+                basicInfoFields.getChildren().add(safetyPlanHeader);
+                
+                // Add note
+                Label noteLabel = new Label("Personal crisis support plan for immediate help");
+                noteLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666; -fx-font-style: italic; -fx-padding: 0 0 10 0;");
+                noteLabel.setWrapText(true);
+                basicInfoFields.getChildren().add(noteLabel);
+                
+                // Display each safety plan field as read-only
+                if (safetyPlan.get("contact") != null && !safetyPlan.get("contact").isBlank()) {
+                    VBox contactBox = createSafetyPlanField("Who can you contact?", safetyPlan.get("contact"));
+                    basicInfoFields.getChildren().add(contactBox);
+                }
+                
+                if (safetyPlan.get("calm") != null && !safetyPlan.get("calm").isBlank()) {
+                    VBox calmBox = createSafetyPlanField("What helps you calm down?", safetyPlan.get("calm"));
+                    basicInfoFields.getChildren().add(calmBox);
+                }
+                
+                if (safetyPlan.get("place") != null && !safetyPlan.get("place").isBlank()) {
+                    VBox placeBox = createSafetyPlanField("Where is your safe place?", safetyPlan.get("place"));
+                    basicInfoFields.getChildren().add(placeBox);
+                }
+            }
+        } catch (Exception ex) {
+            System.err.println("Failed to load safety plan: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+    
+    private VBox createSafetyPlanField(String question, String answer) {
+        VBox box = new VBox(8);
+        box.getStyleClass().add("safety-plan-item");
+        box.setStyle("-fx-background-color: #f1f8e9; -fx-padding: 12; -fx-background-radius: 8; -fx-border-color: #c5e1a5; -fx-border-width: 1; -fx-border-radius: 8;");
+        
+        Label questionLabel = new Label(question);
+        questionLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;");
+        
+        Label answerLabel = new Label(answer);
+        answerLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #424242;");
+        answerLabel.setWrapText(true);
+        answerLabel.setMaxWidth(Double.MAX_VALUE);
+        
+        box.getChildren().addAll(questionLabel, answerLabel);
+        return box;
     }
 
     private String safe(String s) { return s == null ? "" : s; }
