@@ -10,6 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -37,18 +38,15 @@
         <ToggleButton fx:id="musicToggle" styleClass="music-toggle" text="Music: On"
             AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="12.0" />
 
-        <!-- Theme toggle (top-right) -->
-        <ToggleButton fx:id="themeToggle" styleClass="theme-toggle" text="Dark"
-            AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="12.0" />
-
         <!-- FROSTED PANEL -->
-        <VBox fx:id="rightPane" alignment="TOP_CENTER" layoutX="250.0" layoutY="140.0"
-            prefHeight="470.0" prefWidth="780.0" spacing="0.0" styleClass="pane"
+        <Pane fx:id="rightPane" layoutX="250.0" layoutY="140.0"
+            prefHeight="470.0" prefWidth="780.0" styleClass="pane"
             AnchorPane.bottomAnchor="56.0" AnchorPane.leftAnchor="250.0"
             AnchorPane.rightAnchor="252.0" AnchorPane.topAnchor="140.0">
-            <!-- Top: login / sign up tabs (fixed at top-center of this pane) -->
-            <HBox fx:id="menuBar" alignment="TOP_CENTER" maxWidth="300" minWidth="300"
-                prefHeight="30.0" prefWidth="300.0">
+            
+            <!-- Fixed Top: Login/Signup Toggle Buttons -->
+            <HBox fx:id="menuBar" alignment="CENTER" layoutX="240.0" layoutY="20.0" 
+                maxWidth="300" minWidth="300" prefHeight="45.0" prefWidth="300.0">
                 <Button fx:id="loginBtn" maxHeight="45.0" maxWidth="140" minHeight="45.0"
                     minWidth="140" prefHeight="45.0" prefWidth="140" styleClass="tab-text"
                     text="Login" />
@@ -59,12 +57,12 @@
             </HBox>
 
             <!-- invisible tabStack used by controller for border snapping/animation calculations -->
-            <StackPane fx:id="tabStack" alignment="CENTER" managed="false" minHeight="20.0"
-                prefHeight="20.0" prefWidth="778.0" />
+            <StackPane fx:id="tabStack" alignment="CENTER" layoutX="1.0" layoutY="20.0" 
+                managed="false" minHeight="45.0" prefHeight="45.0" prefWidth="778.0" />
 
-            <!-- Center: forms area. Keep forms in a StackPane so active one is visible and centered -->
-            <VBox fx:id="centerWrapper" alignment="CENTER" prefHeight="360.0" spacing="0.0"
-                VBox.vgrow="ALWAYS">
+            <!-- Dynamic Center: Input Fields -->
+            <VBox fx:id="centerWrapper" alignment="CENTER" layoutX="110.0" layoutY="100.0" 
+                prefHeight="280.0" prefWidth="560.0" spacing="0.0">
                 <StackPane fx:id="formStack" alignment="CENTER" prefWidth="560.0">
                     <!-- LOGIN FORM -->
                     <VBox fx:id="loginForm" alignment="CENTER" maxWidth="560" spacing="12">
@@ -96,11 +94,10 @@
                 </StackPane>
             </VBox>
 
-            <!-- Bottom: primary action and status. Fixed position for consistent layout -->
-            <VBox fx:id="bottomBox" alignment="BOTTOM_CENTER" prefHeight="80.0" spacing="8.0"
-                VBox.vgrow="NEVER">
-                <!-- Primary buttons for each mode. Controller should toggle managed/visible as
-                needed -->
+            <!-- Fixed Bottom: Confirmation Buttons and Status -->
+            <VBox fx:id="bottomBox" alignment="CENTER" layoutX="280.0" layoutY="420.0" 
+                prefHeight="60.0" prefWidth="220.0" spacing="8.0">
+                <!-- Primary buttons for each mode. Controller should toggle managed/visible as needed -->
                 <Button fx:id="btnLoginSubmit" maxHeight="30.0" maxWidth="220" minHeight="30.0"
                     minWidth="220" prefHeight="30.0" prefWidth="220" styleClass="primary-button"
                     text="Login" />
@@ -110,6 +107,6 @@
                 <Label fx:id="lblLoginStatus" alignment="CENTER" maxWidth="560" minHeight="18" />
                 <Label fx:id="lblSubmitStatus" alignment="CENTER" maxWidth="560" minHeight="18" />
             </VBox>
-        </VBox>
+        </Pane>
     </children>
 </AnchorPane>

@@ -28,7 +28,6 @@ public class LoginSignupController implements Initializable {
     @FXML private Label subtitleLabel;
     @FXML private AnchorPane root;
     @FXML private ToggleButton musicToggle;
-    @FXML private ToggleButton themeToggle;
 
     /* Tabs + border */
     @FXML private StackPane tabStack;
@@ -96,14 +95,6 @@ public class LoginSignupController implements Initializable {
             musicToggle.setOnAction(e -> toggleMusicEnabled());
         }
 
-        // Theme toggle wiring (smooth cross-fade)
-        if (themeToggle != null && root != null) {
-            // initial state
-            themeToggle.setSelected(root.getStyleClass().contains("dark-theme"));
-            updateThemeToggleText();
-            themeToggle.setOnAction(e -> toggleThemeWithFade());
-        }
-
         // Border path removed
 
         // Form wiring
@@ -162,32 +153,7 @@ public class LoginSignupController implements Initializable {
         updateMusicToggleText();
     }
 
-    /* ---------- Theme toggling (smooth cross-fade) ---------- */
-    private void updateThemeToggleText() {
-        if (themeToggle == null) return;
-        themeToggle.setText(themeToggle.isSelected() ? "Dark" : "Light");
-    }
 
-    private void toggleThemeWithFade() {
-        if (root == null || themeToggle == null) return;
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(180), root);
-        fadeOut.setFromValue(1.0); fadeOut.setToValue(0.96);
-        fadeOut.setOnFinished(ev -> {
-            // toggle class
-            if (root.getStyleClass().contains("dark-theme")) {
-                root.getStyleClass().remove("dark-theme");
-                themeToggle.setSelected(false);
-            } else {
-                root.getStyleClass().add("dark-theme");
-                themeToggle.setSelected(true);
-            }
-            updateThemeToggleText();
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(220), root);
-            fadeIn.setFromValue(0.96); fadeIn.setToValue(1.0);
-            fadeIn.play();
-        });
-        fadeOut.play();
-    }
 
     /* ---------- Subtitle ---------- */
     private void switchSubtitle() {
