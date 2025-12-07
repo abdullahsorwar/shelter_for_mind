@@ -353,51 +353,167 @@ public class BlogController {
     // TTS Helper Methods
     private void showTTSSelectionDialog() {
         System.out.println("Opening TTS dialog with " + allPosts.size() + " articles");
-        Dialog<Blog> dialog = new Dialog<>();
-        dialog.setTitle("🎧 Text-to-Speech");
-        dialog.setHeaderText("Select an article to listen to:");
         
-        DialogPane dialogPane = dialog.getDialogPane();
-        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        javafx.stage.Stage stage = new javafx.stage.Stage();
+        stage.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+        stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
         
-        ListView<Blog> listView = new ListView<>();
-        listView.setItems(allPosts);
-        listView.setCellFactory(lv -> new ListCell<Blog>() {
-            @Override
-            protected void updateItem(Blog item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getTitle());
+        VBox mainContainer = new VBox(20);
+        mainContainer.setStyle("-fx-background-color: rgba(255, 255, 255, 0.95); " +
+                              "-fx-background-radius: 15; " +
+                              "-fx-padding: 25; " +
+                              "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 5);");
+        
+        // Header
+        HBox header = new HBox(15);
+        header.setAlignment(Pos.CENTER_LEFT);
+        Label titleLabel = new Label("🎧 Select Article to Listen");
+        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1e40af;");
+        
+        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+        
+        Button closeBtn = new Button("✕");
+        closeBtn.setStyle("-fx-background-color: transparent; " +
+                         "-fx-text-fill: #64748b; " +
+                         "-fx-font-size: 20px; " +
+                         "-fx-cursor: hand; " +
+                         "-fx-padding: 5 10;");
+        closeBtn.setOnAction(e -> stage.close());
+        closeBtn.setOnMouseEntered(e -> closeBtn.setStyle(closeBtn.getStyle() + "-fx-text-fill: #ef4444;"));
+        closeBtn.setOnMouseExited(e -> closeBtn.setStyle(closeBtn.getStyle().replace("-fx-text-fill: #ef4444;", "-fx-text-fill: #64748b;")));
+        
+        header.getChildren().addAll(titleLabel, spacer, closeBtn);
+        
+        // Search bar
+        TextField searchField = new TextField();
+        searchField.setPromptText("🔍 Search articles...");
+        searchField.setStyle("-fx-background-color: #f1f5f9; " +
+                            "-fx-background-radius: 10; " +
+                            "-fx-padding: 12; " +
+                            "-fx-font-size: 14px; " +
+                            "-fx-border-color: #cbd5e1; " +
+                            "-fx-border-radius: 10;");
+        
+        // Articles container
+        VBox articlesBox = new VBox(12);
+        articlesBox.setStyle("-fx-background-color: transparent;");
+        
+        ScrollPane scrollPane = new ScrollPane(articlesBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background-color: transparent; " +
+                           "-fx-background: transparent;");
+        scrollPane.setPrefHeight(400);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        
+        // Populate articles
+        ObservableList<Blog> displayList = FXCollections.observableArrayList(allPosts);
+        for (Blog blog : displayList) {
+            VBox card = createArticleCard(blog, stage);
+            articlesBox.getChildren().add(card);
+        }
+        
+        // Search functionality
+        searchField.textProperty().addListener((obs, oldV, newV) -> {
+            articlesBox.getChildren().clear();
+            String query = newV == null ? "" : newV.toLowerCase().trim();
+            
+            for (Blog blog : displayList) {
+                if (query.isEmpty() || 
+                    blog.getTitle().toLowerCase().contains(query) ||
+                    blog.getCategory().toLowerCase().contains(query)) {
+                    articlesBox.getChildren().add(createArticleCard(blog, stage));
                 }
             }
         });
         
-        VBox content = new VBox(10);
-        content.getChildren().addAll(
-            new Label("Choose an article from the list below:"),
-            listView
-        );
-        content.setPrefHeight(400);
-        listView.setPrefHeight(350);
+        mainContainer.getChildren().addAll(header, searchField, scrollPane);
+        mainContainer.setPrefWidth(500);
         
-        dialogPane.setContent(content);
+        javafx.scene.layout.StackPane root = new javafx.scene.layout.StackPane(mainContainer);
+        root.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
+        root.setPadding(new javafx.geometry.Insets(20));
         
-        dialog.setResultConverter(button -> {
-            if (button == ButtonType.OK && listView.getSelectionModel().getSelectedItem() != null) {
-                return listView.getSelectionModel().getSelectedItem();
-            }
-            return null;
+        javafx.scene.Scene scene = new javafx.scene.Scene(root);
+        scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        stage.setScene(scene);
+        
+        // Position to right of center
+        javafx.stage.Screen screen = javafx.stage.Screen.getPrimary();
+        javafx.geometry.Rectangle2D bounds = screen.getVisualBounds();
+        stage.setX(bounds.getMinX() + bounds.getWidth() * 0.6 - 250);
+        stage.setY(bounds.getMinY() + bounds.getHeight() * 0.5 - 250);
+        
+        // Fade in animation
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), root);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        
+        stage.show();
+    }
+    
+    private VBox createArticleCard(Blog blog, javafx.stage.Stage parentStage) {
+        VBox card = new VBox(8);
+        card.setStyle("-fx-background-color: white; " +
+                     "-fx-background-radius: 10; " +
+                     "-fx-padding: 15; " +
+                     "-fx-border-color: #e2e8f0; " +
+                     "-fx-border-radius: 10; " +
+                     "-fx-border-width: 1; " +
+                     "-fx-cursor: hand; " +
+                     "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+        
+        Label title = new Label(blog.getTitle());
+        title.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-wrap-text: true;");
+        title.setWrapText(true);
+        
+        Label category = new Label("📚 " + blog.getCategory());
+        category.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b;");
+        
+        HBox playBox = new HBox(8);
+        playBox.setAlignment(Pos.CENTER_LEFT);
+        Label playIcon = new Label("▶");
+        playIcon.setStyle("-fx-text-fill: #2563eb; -fx-font-size: 14px;");
+        Label playText = new Label("Click to play");
+        playText.setStyle("-fx-text-fill: #2563eb; -fx-font-size: 12px;");
+        playBox.getChildren().addAll(playIcon, playText);
+        
+        card.getChildren().addAll(title, category, playBox);
+        
+        // Hover effects
+        card.setOnMouseEntered(e -> {
+            card.setStyle(card.getStyle().replace("rgba(0,0,0,0.05)", "rgba(0,0,0,0.15)") +
+                         "-fx-background-color: #f8fafc;");
+            ScaleTransition st = new ScaleTransition(Duration.millis(100), card);
+            st.setToX(1.02);
+            st.setToY(1.02);
+            st.play();
         });
         
-        Optional<Blog> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            System.out.println("User selected: " + result.get().getTitle());
-            speakBlog(result.get());
-        } else {
-            System.out.println("User cancelled TTS dialog");
-        }
+        card.setOnMouseExited(e -> {
+            card.setStyle("-fx-background-color: white; " +
+                         "-fx-background-radius: 10; " +
+                         "-fx-padding: 15; " +
+                         "-fx-border-color: #e2e8f0; " +
+                         "-fx-border-radius: 10; " +
+                         "-fx-border-width: 1; " +
+                         "-fx-cursor: hand; " +
+                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+            ScaleTransition st = new ScaleTransition(Duration.millis(100), card);
+            st.setToX(1.0);
+            st.setToY(1.0);
+            st.play();
+        });
+        
+        card.setOnMouseClicked(e -> {
+            parentStage.close();
+            speakBlog(blog);
+            System.out.println("User selected: " + blog.getTitle());
+        });
+        
+        return card;
     }
     
     private void speakBlog(Blog blog) {
@@ -466,13 +582,12 @@ public class BlogController {
                 // Thread was interrupted - normal stop behavior
                 Thread.currentThread().interrupt();
             } catch (Exception e) {
-                javafx.application.Platform.runLater(() -> {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("TTS Error");
-                    alert.setHeaderText("Text-to-Speech Failed");
-                    alert.setContentText("Unable to read the article aloud. Error: " + e.getMessage());
-                    alert.showAndWait();
-                });
+                // Only show error if it's not a result of forcibly destroying the process
+                if (ttsProcess != null && ttsProcess.isAlive()) {
+                    javafx.application.Platform.runLater(() -> {
+                        showModernError("TTS Error", "Unable to read the article aloud", e.getMessage());
+                    });
+                }
             } finally {
                 synchronized (this) {
                     isSpeaking = false;
@@ -486,11 +601,7 @@ public class BlogController {
             }
         }).start();
         
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("🎧 Now Playing");
-        info.setHeaderText("Reading: " + blog.getTitle());
-        info.setContentText("Audio playback has started. Click the '⏸️ Stop Audio' button to stop.");
-        info.show();
+        showModernNowPlaying(blog.getTitle());
     }
     
     private void stopSpeaking() {
@@ -505,6 +616,170 @@ public class BlogController {
     
     private void cleanupTTS() {
         stopSpeaking();
+    }
+    
+    private void showModernNowPlaying(String articleTitle) {
+        javafx.stage.Stage popup = new javafx.stage.Stage();
+        popup.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+        popup.initModality(javafx.stage.Modality.NONE);
+        
+        VBox container = new VBox(15);
+        container.setAlignment(Pos.CENTER);
+        container.setStyle("-fx-background-color: linear-gradient(to bottom right, #3b82f6, #2563eb); " +
+                          "-fx-background-radius: 15; " +
+                          "-fx-padding: 20 25; " +
+                          "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 25, 0, 0, 8);");
+        container.setPrefWidth(350);
+        
+        // Animated speaker icon
+        Label icon = new Label("🎧");
+        icon.setStyle("-fx-font-size: 40px;");
+        
+        // Pulsing animation for icon
+        ScaleTransition pulse = new ScaleTransition(Duration.millis(1000), icon);
+        pulse.setFromX(1.0);
+        pulse.setFromY(1.0);
+        pulse.setToX(1.2);
+        pulse.setToY(1.2);
+        pulse.setCycleCount(ScaleTransition.INDEFINITE);
+        pulse.setAutoReverse(true);
+        pulse.play();
+        
+        Label title = new Label("Now Playing");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;");
+        
+        Label article = new Label(articleTitle);
+        article.setStyle("-fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.9); -fx-wrap-text: true; -fx-text-alignment: center;");
+        article.setWrapText(true);
+        article.setMaxWidth(300);
+        
+        Label instruction = new Label("Click '⏸️ Stop Audio' to stop playback");
+        instruction.setStyle("-fx-font-size: 11px; -fx-text-fill: rgba(255,255,255,0.7); -fx-wrap-text: true; -fx-text-alignment: center;");
+        instruction.setWrapText(true);
+        
+        // Progress indicator
+        ProgressIndicator progress = new ProgressIndicator();
+        progress.setStyle("-fx-progress-color: white;");
+        progress.setPrefSize(30, 30);
+        
+        // Close button
+        Button closeBtn = new Button("✕");
+        closeBtn.setStyle("-fx-background-color: rgba(255,255,255,0.2); " +
+                         "-fx-text-fill: white; " +
+                         "-fx-font-size: 16px; " +
+                         "-fx-cursor: hand; " +
+                         "-fx-padding: 5 12; " +
+                         "-fx-background-radius: 20;");
+        closeBtn.setOnAction(e -> {
+            pulse.stop();
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(200), container);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(ev -> popup.close());
+            fadeOut.play();
+        });
+        closeBtn.setOnMouseEntered(e -> closeBtn.setStyle(closeBtn.getStyle() + "-fx-background-color: rgba(255,255,255,0.3);"));
+        closeBtn.setOnMouseExited(e -> closeBtn.setStyle(closeBtn.getStyle().replace("-fx-background-color: rgba(255,255,255,0.3);", "-fx-background-color: rgba(255,255,255,0.2);")));
+        
+        container.getChildren().addAll(icon, title, article, progress, instruction, closeBtn);
+        
+        javafx.scene.layout.StackPane root = new javafx.scene.layout.StackPane(container);
+        root.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
+        root.setPadding(new javafx.geometry.Insets(15));
+        
+        javafx.scene.Scene scene = new javafx.scene.Scene(root);
+        scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        popup.setScene(scene);
+        
+        // Position to right side of screen
+        javafx.stage.Screen screen = javafx.stage.Screen.getPrimary();
+        javafx.geometry.Rectangle2D bounds = screen.getVisualBounds();
+        popup.setX(bounds.getMaxX() - 400);
+        popup.setY(bounds.getMinY() + 100);
+        
+        // Slide in from right animation
+        popup.setOpacity(0);
+        popup.show();
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        
+        // Auto-close after 4 seconds
+        javafx.animation.PauseTransition autoClose = new javafx.animation.PauseTransition(Duration.seconds(4));
+        autoClose.setOnFinished(e -> {
+            if (popup.isShowing()) {
+                pulse.stop();
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), root);
+                fadeOut.setFromValue(1);
+                fadeOut.setToValue(0);
+                fadeOut.setOnFinished(ev -> popup.close());
+                fadeOut.play();
+            }
+        });
+        autoClose.play();
+    }
+    
+    private void showModernError(String title, String header, String content) {
+        javafx.stage.Stage popup = new javafx.stage.Stage();
+        popup.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+        popup.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        
+        VBox container = new VBox(15);
+        container.setAlignment(Pos.CENTER_LEFT);
+        container.setStyle("-fx-background-color: linear-gradient(to bottom right, #fee2e2, #fecaca); " +
+                          "-fx-background-radius: 15; " +
+                          "-fx-padding: 25; " +
+                          "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 5);");
+        container.setPrefWidth(400);
+        
+        Label icon = new Label("⚠️");
+        icon.setStyle("-fx-font-size: 35px;");
+        
+        Label titleLabel = new Label(title);
+        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #991b1b;");
+        
+        Label headerLabel = new Label(header);
+        headerLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #b91c1c;");
+        
+        Label contentLabel = new Label(content);
+        contentLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f1d1d; -fx-wrap-text: true;");
+        contentLabel.setWrapText(true);
+        contentLabel.setMaxWidth(350);
+        
+        Button okBtn = new Button("OK");
+        okBtn.setStyle("-fx-background-color: #dc2626; " +
+                      "-fx-text-fill: white; " +
+                      "-fx-font-size: 13px; " +
+                      "-fx-font-weight: bold; " +
+                      "-fx-cursor: hand; " +
+                      "-fx-padding: 10 30; " +
+                      "-fx-background-radius: 8;");
+        okBtn.setOnAction(e -> popup.close());
+        okBtn.setOnMouseEntered(e -> okBtn.setStyle(okBtn.getStyle() + "-fx-background-color: #b91c1c;"));
+        okBtn.setOnMouseExited(e -> okBtn.setStyle(okBtn.getStyle().replace("-fx-background-color: #b91c1c;", "-fx-background-color: #dc2626;")));
+        
+        HBox buttonBox = new HBox(okBtn);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        
+        container.getChildren().addAll(icon, titleLabel, headerLabel, contentLabel, buttonBox);
+        
+        javafx.scene.layout.StackPane root = new javafx.scene.layout.StackPane(container);
+        root.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
+        root.setPadding(new javafx.geometry.Insets(20));
+        
+        javafx.scene.Scene scene = new javafx.scene.Scene(root);
+        scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        popup.setScene(scene);
+        popup.centerOnScreen();
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), root);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        
+        popup.showAndWait();
     }
 
     private void setupSearch() {
