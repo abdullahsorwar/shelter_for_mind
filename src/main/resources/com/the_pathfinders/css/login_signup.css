@@ -1,36 +1,36 @@
 .root {
-    /* background video is used instead; fallback to solid dark gradient */
-    -fx-background-image: none;
+    /* Background image from assets */
+    -fx-background-image: url('/assets/icons/bg.jpeg');
     -fx-background-size: cover;
     -fx-background-position: center;
     -fx-font-family: "Poppins", "Segoe UI", sans-serif;
 }
 
-/* Frosted glass panel */
+/* Frosted glass panel - semi-transparent with blur effect */
 .pane {
     -fx-background-color: rgba(255,255,255,0.25);
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-border-color: rgba(255,255,255,0.3);
-    -fx-border-width: 1;
-    -fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.3), 20, 0, 0, 0);
-    -fx-padding: 28 28 28 28;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-border-color: rgba(255,255,255,0.4);
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 30, 0.4, 0, 10);
+    -fx-padding: 32 32 32 32;
 }
 
-/* Subtitle under logo */
+/* Subtitle under logo - high contrast */
 .label.subtext {
-    -fx-text-fill: #ffffff;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
     -fx-padding: 0 0 20 0;
-    -fx-effect: dropshadow(three-pass-box, rgba(209, 43, 173, 0.6), 4, 0.2, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 2, 0.8, 0, 1);
 }
 
 /* Text-only tabs */
 .tab-text {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-text-fill: #e6edff;
+    -fx-text-fill: #1e293b;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
     -fx-padding: 0;
@@ -42,20 +42,28 @@
     -fx-max-height: 45;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
-    -fx-effect: none;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 1, 0.5, 0, 1);
     -fx-alignment: center;
 }
 
-/* Inputs */
+/* Inputs - crisp white with better contrast */
 .text-field, .password-field {
-    -fx-background-color: rgba(255,255,255,0.85);
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-border-color: #a3c4f3;
-    -fx-border-width: 1.2;
-    -fx-text-fill: #1f1f1f;
-    -fx-prompt-text-fill: derive(#444, 30%);
-    -fx-padding: 10 12;
+    -fx-background-color: rgba(255,255,255,0.95);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.8);
+    -fx-border-width: 2;
+    -fx-text-fill: #0f172a;
+    -fx-font-weight: 600;
+    -fx-prompt-text-fill: #64748b;
+    -fx-padding: 12 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #6366f1;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.3), 12, 0.5, 0, 0);
 }
 
 /* Modern ComboBox */
@@ -114,28 +122,43 @@
     -fx-background-radius: 6;
 }
 
-/* Primary blue buttons: fixed size & position */
+/* Primary buttons: enhanced for light background */
 .primary-button {
-    -fx-background-color: linear-gradient(to right, #4a90e2, #657ced);
-    -fx-background-radius: 25;
-    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to right, #6366f1, #8b5cf6);
+    -fx-background-radius: 28;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
+    -fx-font-size: 14px;
     -fx-pref-width: 220;
     -fx-pref-height: 50;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 3);
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.3), 15, 0.4, 0, 5);
 }
 .primary-button:hover {
-    -fx-background-color: linear-gradient(to right, #6a8fd4, #8aa7ef);
+    -fx-background-color: linear-gradient(to right, #7c3aed, #a78bfa);
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.5), 20, 0.5, 0, 5);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
 }
 .primary-button:pressed {
-    -fx-background-color: linear-gradient(to right, #395fa4, #566ed2);
+    -fx-background-color: linear-gradient(to right, #5b21b6, #7c3aed);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
 }
 
 /* Messages — keep the slot height stable */
 .label {
     -fx-font-size: 12px;
     -fx-text-alignment: center;
+    -fx-text-fill: #0f172a;
+    -fx-font-weight: 600;
+}
+
+/* Checkboxes */
+.check-box {
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: 600;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.6), 1, 0.5, 0, 1);
 }
 
 /* ---------------------------------------------------------
@@ -148,10 +171,11 @@
 
 .tab-text.active, .tab-text:selected {
     -fx-text-fill: #ffffff;
-    -fx-background-color: linear-gradient(to bottom, rgba(79,145,255,0.14), rgba(79,145,255,0.06));
-    -fx-background-radius: 12;
-    -fx-padding: 6 12 6 12;
-    -fx-effect: dropshadow(gaussian, rgba(80,140,255,0.45), 18, 0.4, 0, 0);
+    -fx-background-color: linear-gradient(to right, #6366f1, #8b5cf6);
+    -fx-background-radius: 16;
+    -fx-padding: 8 16 8 16;
+    -fx-effect: dropshadow(gaussian, rgba(99,102,241,0.4), 15, 0.5, 0, 3);
+    -fx-font-size: 15px;
 }
 
 .music-toggle {
@@ -195,8 +219,7 @@
 --------------------------------------------------------- */
 
 .root.dark-theme {
-    -fx-background-color: linear-gradient(to bottom right, rgba(15,18,32,0.8), rgba(18,21,30,0.8));
-    -fx-background-blend-mode: overlay;
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #1e1b4b, #1e293b);
 }
 
 .root.dark-theme .pane {

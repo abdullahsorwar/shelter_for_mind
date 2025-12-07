@@ -74,8 +74,8 @@ public class LoginSignupController implements Initializable {
             }
         } catch (Exception ignored) {}
 
-        // Attach background video from VideoManager (reuses existing instance)
-        attachBackgroundVideo();
+        // Create minimal animated background
+        createMinimalAnimatedBackground();
 
         // Subtitle alternating
         Timeline t = new Timeline(new KeyFrame(Duration.seconds(3), e -> switchSubtitle()));
@@ -359,23 +359,24 @@ public class LoginSignupController implements Initializable {
     /* ---------- Background Video ---------- */
     
     /**
-     * Attach the background video from VideoManager (reuses existing instance).
+     * Creates background with image
      */
-    private void attachBackgroundVideo() {
+    private void createMinimalAnimatedBackground() {
         if (root == null) return;
         
-        // Wait for scene to be attached
-        if (root.getScene() != null) {
-            VideoManager.getInstance().attachToPane(root);
-        } else {
-            root.sceneProperty().addListener((obs, oldScene, newScene) -> {
-                if (newScene != null) {
-                    Platform.runLater(() -> VideoManager.getInstance().attachToPane(root));
-                }
-            });
+        // Load and set background image
+        try {
+            URL bgUrl = getClass().getResource("/assets/icons/bg.jpeg");
+            if (bgUrl != null) {
+                root.setStyle("-fx-background-image: url('" + bgUrl.toExternalForm() + "'); " +
+                            "-fx-background-size: cover; " +
+                            "-fx-background-position: center;");
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load background image: " + e.getMessage());
         }
     }
-
+    
     /* Validation helpers */
     private boolean isValidName(String name) {
         return name.matches("^[a-zA-Z][a-zA-Z .\\-]*[a-zA-Z]$");
