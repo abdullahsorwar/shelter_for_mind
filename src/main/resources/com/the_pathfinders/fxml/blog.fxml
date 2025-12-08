@@ -6,16 +6,17 @@
       fx:controller="com.the_pathfinders.BlogController"
       spacing="0" alignment="TOP_CENTER"
       stylesheets="/com/the_pathfinders/css/blog.css"
-      prefWidth="1200" prefHeight="700" maxWidth="Infinity" maxHeight="Infinity">
+      minWidth="600" minHeight="400" maxWidth="Infinity" maxHeight="Infinity">
 
     <!-- Header -->
-    <HBox spacing="6" alignment="CENTER" styleClass="header-bar" minHeight="50" maxHeight="50">
-        <Button fx:id="backBtn" text="⬅ Back" styleClass="back-arrow" 
+    <HBox spacing="8" alignment="CENTER_LEFT" styleClass="header-bar" minHeight="50" maxHeight="50">
+        <Button fx:id="backBtn" text="⬅" styleClass="back-arrow" minWidth="40" maxWidth="60"
                 style="-fx-font-size: 12px; -fx-padding: 5 10; -fx-background-color: #667eea; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 6; -fx-font-weight: 600;" />
-        <Label fx:id="pageTitle" text="Mental Wellness Library 🧠" styleClass="page-title" 
-               style="-fx-font-size: 18px; -fx-font-weight: 600;" />
-        <Region HBox.hgrow="ALWAYS" />
-        <TextField fx:id="searchBar" promptText="Search articles..." styleClass="search-bar" prefWidth="240" maxWidth="240" />
+        <Label fx:id="pageTitle" text="Mental Wellness 🧠" styleClass="page-title" 
+               style="-fx-font-size: 14px; -fx-font-weight: 600;" wrapText="false" minWidth="100" maxWidth="200" />
+        <Region HBox.hgrow="ALWAYS" minWidth="10" />
+        <TextField fx:id="searchBar" promptText="Search..." styleClass="search-bar" 
+                   minWidth="100" prefWidth="200" maxWidth="300" HBox.hgrow="SOMETIMES" />
     </HBox>
 
     <!-- Main Content Area -->
@@ -29,82 +30,82 @@
                     HBox.hgrow="ALWAYS"
                     pannable="true"
                     styleClass="main-scroll">
-            <VBox fx:id="categoriesContainer" spacing="20" style="-fx-padding: 20 25 20 25;" />
+            <VBox fx:id="categoriesContainer" spacing="15" style="-fx-padding: 15 12 15 12;" />
         </ScrollPane>
 
         <!-- Right: Side Panel with Quick Actions & Filters -->
-        <VBox fx:id="sidePanel" prefWidth="240" minWidth="240" maxWidth="240" 
-              spacing="12" styleClass="side-panel">
+        <VBox fx:id="sidePanel" prefWidth="220" minWidth="180" maxWidth="240" 
+              spacing="10" styleClass="side-panel">
             
             <!-- Quick Actions Section -->
-            <VBox spacing="8" styleClass="panel-section">
-                <Label text="⚡ Quick Actions" styleClass="panel-heading" />
+            <VBox spacing="6" styleClass="panel-section">
+                <Label text="⚡ Actions" styleClass="panel-heading" wrapText="true" />
                 
-                <Button fx:id="shuffleBtn" text="🎲 Topic Shuffle" 
-                        styleClass="action-button" maxWidth="Infinity" 
-                        style="-fx-font-size: 11px; -fx-padding: 8 10;" />
+                <Button fx:id="shuffleBtn" text="🎲 Shuffle" 
+                        styleClass="action-button" maxWidth="Infinity" minWidth="120"
+                        style="-fx-font-size: 10px; -fx-padding: 6 8;" wrapText="true" />
                         
-                <Button fx:id="listenModeBtn" text="🎧 Listen (TTS)" 
-                        styleClass="action-button" maxWidth="Infinity" 
-                        style="-fx-font-size: 11px; -fx-padding: 8 10;" />
+                <Button fx:id="listenModeBtn" text="🎧 Listen" 
+                        styleClass="action-button" maxWidth="Infinity" minWidth="120"
+                        style="-fx-font-size: 10px; -fx-padding: 6 8;" wrapText="true" />
                         
-                <Button fx:id="expertPickBtn" text="⭐ Expert Picks" 
-                        styleClass="action-button" maxWidth="Infinity" 
-                        style="-fx-font-size: 11px; -fx-padding: 8 10;" />
+                <Button fx:id="expertPickBtn" text="⭐ Picks" 
+                        styleClass="action-button" maxWidth="Infinity" minWidth="120"
+                        style="-fx-font-size: 10px; -fx-padding: 6 8;" wrapText="true" />
             </VBox>
             
             <Separator />
             
             <!-- Simplified Filters Section -->
-            <VBox spacing="6" styleClass="panel-section">
-                <Label text="🔍 Filters" styleClass="panel-heading" />
+            <VBox spacing="5" styleClass="panel-section">
+                <Label text="🔍 Filters" styleClass="panel-heading" wrapText="true" />
                 
-                <Label text="By Section" style="-fx-font-size: 10px; -fx-text-fill: #666;" />
-                <ComboBox fx:id="sectionFilter" promptText="All Sections" 
-                          styleClass="filter-combo" maxWidth="Infinity" 
-                          style="-fx-font-size: 11px; -fx-padding: 6 10;" />
+                <Label text="Section" style="-fx-font-size: 9px; -fx-text-fill: #666;" wrapText="true" />
+                <ComboBox fx:id="sectionFilter" promptText="All" 
+                          styleClass="filter-combo" maxWidth="Infinity" minWidth="120"
+                          style="-fx-font-size: 10px; -fx-padding: 5 8;" />
                 
-                <Label text="Reading Length" style="-fx-font-size: 10px; -fx-text-fill: #666;" />
-                <ComboBox fx:id="lengthFilter" promptText="Any Length" 
-                          styleClass="filter-combo" maxWidth="Infinity" 
-                          style="-fx-font-size: 11px; -fx-padding: 6 10;" />
+                <Label text="Length" style="-fx-font-size: 9px; -fx-text-fill: #666;" wrapText="true" />
+                <ComboBox fx:id="lengthFilter" promptText="Any" 
+                          styleClass="filter-combo" maxWidth="Infinity" minWidth="120"
+                          style="-fx-font-size: 10px; -fx-padding: 5 8;" />
                 
-                <Button fx:id="clearFiltersBtn" text="Clear Filters" 
-                        styleClass="clear-filters-btn" maxWidth="Infinity" 
-                        style="-fx-font-size: 11px; -fx-padding: 6 10;" />
+                <Button fx:id="clearFiltersBtn" text="Clear" 
+                        styleClass="clear-filters-btn" maxWidth="Infinity" minWidth="120"
+                        style="-fx-font-size: 10px; -fx-padding: 5 8;" wrapText="true" />
             </VBox>
             
             <Separator />
             
             <!-- Reading Progress Section -->
-            <VBox spacing="6" styleClass="panel-section">
-                <Label text="📚 Progress" styleClass="panel-heading" />
+            <VBox spacing="5" styleClass="panel-section">
+                <Label text="📚 Progress" styleClass="panel-heading" wrapText="true" />
                 <Label fx:id="progressLabel" text="0 read today" 
-                       style="-fx-font-size: 11px; -fx-text-fill: #555;" wrapText="true" />
+                       style="-fx-font-size: 10px; -fx-text-fill: #555;" wrapText="true" />
                 <Button fx:id="viewHistoryBtn" text="📅 History" 
-                        styleClass="action-button" maxWidth="Infinity" 
-                        style="-fx-background-color: linear-gradient(to bottom, #667eea, #764ba2); -fx-font-size: 11px; -fx-padding: 8 10;" />
+                        styleClass="action-button" maxWidth="Infinity" minWidth="120"
+                        style="-fx-background-color: linear-gradient(to bottom, #667eea, #764ba2); -fx-font-size: 10px; -fx-padding: 6 8;" wrapText="true" />
             </VBox>
             
             <Separator />
             
             <!-- Quick Access Bookmarks -->
-            <VBox spacing="6" styleClass="panel-section">
-                <Label text="⭐ Saved" styleClass="panel-heading" />
+            <VBox spacing="5" styleClass="panel-section">
+                <Label text="⭐ Saved" styleClass="panel-heading" wrapText="true" />
                 <Label fx:id="savedCountLabel" text="0 saved" 
-                       style="-fx-font-size: 11px; -fx-text-fill: #555;" wrapText="true" />
-                <Button fx:id="viewSavedBtn" text="💾 View Saved" 
-                        styleClass="action-button" maxWidth="Infinity" 
-                        style="-fx-background-color: linear-gradient(to bottom, #667eea, #764ba2); -fx-font-size: 11px; -fx-padding: 8 10;" />
+                       style="-fx-font-size: 10px; -fx-text-fill: #555;" wrapText="true" />
+                <Button fx:id="viewSavedBtn" text="💾 Saved" 
+                        styleClass="action-button" maxWidth="Infinity" minWidth="120"
+                        style="-fx-background-color: linear-gradient(to bottom, #667eea, #764ba2); -fx-font-size: 10px; -fx-padding: 6 8;" wrapText="true" />
             </VBox>
             
             <Separator />
             
             <!-- Stats Section -->
-            <VBox spacing="8" styleClass="panel-section">
-                <Label text="📊 Your Reading" styleClass="panel-heading" />
+            <VBox spacing="5" styleClass="panel-section">
+                <Label text="📊 Reading" styleClass="panel-heading" wrapText="true" />
                 <Label fx:id="statsLabel" text="36 articles available" 
-                       style="-fx-font-size: 12px; -fx-text-fill: #777;" wrapText="true" />
+                       style="-fx-font-size: 10px; -fx-text-fill: #777;" wrapText="true" />
             </VBox>
         </VBox>
     </HBox>

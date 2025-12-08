@@ -1,101 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 
-<StackPane xmlns="http://javafx.com/javafx/25"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.the_pathfinders.CalmActivitiesController"
-           prefWidth="900" prefHeight="600"
-           styleClass="calm-root"
-           stylesheets="@/com/the_pathfinders/css/calm_activities.css">
+<BorderPane fx:id="root"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.the_pathfinders.CalmActivitiesController"
+            prefWidth="900" prefHeight="600"
+            styleClass="calm-root">
 
-    <VBox spacing="30" alignment="CENTER" styleClass="calm-container">
-        <padding>
-            <Insets top="40" left="60" right="60" bottom="40"/>
-        </padding>
-
-        <!-- Back Button -->
-        <HBox alignment="TOP_LEFT">
-            <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+    <!-- Header with hamburger and back button -->
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="12"
+              styleClass="header-bar"
+              BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="hamburgerBtn" text="☰" styleClass="hamburger-btn"/>
+                <Button fx:id="backBtn" text="Back" styleClass="back-btn"/>
+            </children>
         </HBox>
+    </top>
 
-        <!-- Title -->
-        <Label text="🌸 Calm Activities 🌸" styleClass="calm-title"/>
-        <Label text="Choose an activity to relax and unwind" styleClass="calm-subtitle"/>
-
-        <!-- Activities Grid -->
-        <VBox spacing="18" alignment="CENTER" maxWidth="650">
-            
-            <!-- Row 1 -->
-            <HBox spacing="18" alignment="CENTER">
-                <Button fx:id="drawingBtn" 
-                        prefWidth="210" prefHeight="120"
-                        styleClass="activity-btn drawing-btn">
-                    <graphic>
-                        <VBox alignment="CENTER" spacing="8">
-                            <Label text="🎨" styleClass="activity-emoji"/>
-                            <Label text="Drawing" styleClass="activity-label"/>
-                            <Label text="Express creativity" styleClass="activity-desc"/>
-                        </VBox>
-                    </graphic>
-                </Button>
-
-                <Button fx:id="breathingBallBtn" 
-                        prefWidth="210" prefHeight="120"
-                        styleClass="activity-btn breathing-btn">
-                    <graphic>
-                        <VBox alignment="CENTER" spacing="8">
-                            <Label text="🫧" styleClass="activity-emoji"/>
-                            <Label text="Breathing" styleClass="activity-label"/>
-                            <Label text="Follow rhythm" styleClass="activity-desc"/>
-                        </VBox>
-                    </graphic>
-                </Button>
-
-                <Button fx:id="bubblePopperBtn" 
-                        prefWidth="210" prefHeight="120"
-                        styleClass="activity-btn bubble-btn">
-                    <graphic>
-                        <VBox alignment="CENTER" spacing="8">
-                            <Label text="💭" styleClass="activity-emoji"/>
-                            <Label text="Bubbles" styleClass="activity-label"/>
-                            <Label text="Pop stress away" styleClass="activity-desc"/>
-                        </VBox>
-                    </graphic>
-                </Button>
-            </HBox>
-
-            <!-- Row 2 -->
-            <HBox spacing="18" alignment="CENTER">
-                <Button fx:id="typingGameBtn" 
-                        prefWidth="210" prefHeight="120"
-                        styleClass="activity-btn typing-btn">
-                    <graphic>
-                        <VBox alignment="CENTER" spacing="8">
-                            <Label text="⌨️" styleClass="activity-emoji"/>
-                            <Label text="Typing Zen" styleClass="activity-label"/>
-                            <Label text="Mindful typing" styleClass="activity-desc"/>
-                        </VBox>
-                    </graphic>
-                </Button>
-
-                <Button fx:id="gratitudeGardenBtn" 
-                        prefWidth="210" prefHeight="120"
-                        styleClass="activity-btn garden-btn">
-                    <graphic>
-                        <VBox alignment="CENTER" spacing="8">
-                            <Label text="🌸" styleClass="activity-emoji"/>
-                            <Label text="Gratitude Garden" styleClass="activity-label"/>
-                            <Label text="Plant positivity" styleClass="activity-desc"/>
-                        </VBox>
-                    </graphic>
-                </Button>
-            </HBox>
-
+    <!-- Left navigation sidebar - Hidden by default -->
+    <left>
+        <VBox fx:id="sidebarPanel"
+              styleClass="nav-panel"
+              prefWidth="200"
+              spacing="10"
+              alignment="CENTER"
+              translateX="-200">
+            <padding>
+                <Insets top="24" right="18" bottom="24" left="18"/>
+            </padding>
+            <children>
+                <Label text="Activities" styleClass="nav-title"/>
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button fx:id="drawingBtn"
+                        text="🎨 Drawing"
+                        maxWidth="Infinity"
+                        styleClass="nav-btn"/>
+                <Button fx:id="breathingBallBtn"
+                        text="🫧 Breathing"
+                        maxWidth="Infinity"
+                        styleClass="nav-btn"/>
+                <Button fx:id="bubblePopperBtn"
+                        text="💭 Bubbles"
+                        maxWidth="Infinity"
+                        styleClass="nav-btn"/>
+                <Button fx:id="typingGameBtn"
+                        text="⌨️ Typing Zen"
+                        maxWidth="Infinity"
+                        styleClass="nav-btn"/>
+                <Button fx:id="gratitudeGardenBtn"
+                        text="🌸 Garden"
+                        maxWidth="Infinity"
+                        styleClass="nav-btn"/>
+                <Region VBox.vgrow="ALWAYS"/>
+            </children>
         </VBox>
+    </left>
 
-    </VBox>
-
-</StackPane>
+    <!-- Main content area - Inner Voice Console -->
+    <center>
+        <StackPane styleClass="welcome-area">
+            <!-- Background with drifting notes -->
+            <Pane fx:id="driftingNotesPane" pickOnBounds="false" mouseTransparent="true"/>
+            
+            <!-- Inner Voice Console -->
+            <VBox alignment="CENTER" spacing="30" maxWidth="600">
+                <VBox alignment="CENTER" spacing="12">
+                    <Label text="Find Your Calm" 
+                           style="-fx-font-size: 36px; -fx-font-weight: 800; -fx-text-fill: #5a6b7d;"/>
+                </VBox>
+                
+                <!-- Console Content -->
+                <VBox fx:id="consoleContent" alignment="CENTER" spacing="25">
+                    
+                    <!-- Step 1: Inner Voice Prompt -->
+                    <VBox fx:id="step1Container" alignment="CENTER" spacing="20" visible="true" managed="true">
+                        <Label fx:id="promptLabel1" styleClass="prompt-text" wrapText="true" maxWidth="550" alignment="CENTER"/>
+                        
+                        <TextField fx:id="wordInput" styleClass="inner-voice-input" promptText="Type one word..." 
+                                  maxWidth="400" alignment="CENTER" visible="false" managed="false"/>
+                        
+                        <Label fx:id="responseLabel1" styleClass="response-text" wrapText="true" maxWidth="550" 
+                               alignment="CENTER" visible="false" managed="false"/>
+                    </VBox>
+                    
+                    <!-- Step 2: Micro-Letter Prompt -->
+                    <VBox fx:id="step2Container" alignment="CENTER" spacing="20" visible="false" managed="false">
+                        <Label fx:id="promptLabel2" styleClass="prompt-text" wrapText="true" maxWidth="550" alignment="CENTER"/>
+                        
+                        <TextField fx:id="letterInput" styleClass="inner-voice-input" promptText="One sentence..." 
+                                  maxWidth="500" alignment="CENTER" visible="false" managed="false"/>
+                        
+                        <Label fx:id="responseLabel2" styleClass="response-text" wrapText="true" maxWidth="550" 
+                               alignment="CENTER" visible="false" managed="false"/>
+                    </VBox>
+                    
+                    <!-- Folding Letter Animation Container -->
+                    <StackPane fx:id="letterAnimationPane" alignment="CENTER" prefWidth="300" prefHeight="200" 
+                              visible="false" managed="false">
+                        <VBox fx:id="letterCard" styleClass="letter-card" alignment="CENTER" spacing="10" maxWidth="280">
+                            <padding>
+                                <Insets top="20" bottom="20" left="20" right="20"/>
+                            </padding>
+                            <Label fx:id="letterText" styleClass="letter-content" wrapText="true" alignment="CENTER"/>
+                        </VBox>
+                    </StackPane>
+                    
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

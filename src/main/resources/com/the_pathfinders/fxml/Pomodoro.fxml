@@ -27,8 +27,8 @@
                 </HBox>
 
                 <!-- Title -->
-                <Label text="🍅 Pomodoro Timer 🍅" styleClass="pomodoro-title"/>
-                <Label fx:id="phaseLabel" text="🍅 READY" styleClass="phase-label"/>
+                <Label text="Pomodoro Timer" styleClass="pomodoro-title"/>
+                <Label fx:id="phaseLabel" text="READY" styleClass="phase-label"/>
             </VBox>
         </top>
 
@@ -41,16 +41,9 @@
                 
                 <!-- Left Side: Timer Circle -->
                 <VBox spacing="20" alignment="CENTER" prefWidth="400">
-                    <!-- Timer Circle with Progress -->
+                    <!-- Timer Display -->
                     <StackPane>
-                        <ProgressIndicator fx:id="progressCircle" 
-                                         progress="0" 
-                                         prefWidth="280" 
-                                         prefHeight="280"
-                                         styleClass="progress-circle"/>
-                        
                         <VBox alignment="CENTER" spacing="10">
-                            <Circle fx:id="tomatoCircle" radius="70" styleClass="tomato-circle"/>
                             <Label fx:id="timerLabel" text="25:00" styleClass="timer-label"/>
                         </VBox>
                     </StackPane>
@@ -60,7 +53,7 @@
                     
                     <!-- Motivation Label -->
                     <Label fx:id="motivationLabel" 
-                           text="Ready to start your focused session? 🍅"
+                           text="Ready to start your focused session?"
                            wrapText="true"
                            maxWidth="400"
                            alignment="CENTER"
@@ -97,12 +90,16 @@
                         </HBox>
                     </VBox>
 
-                    <!-- Control Buttons Stacked Vertically -->
-                    <VBox spacing="15" alignment="CENTER">
-                        <Button fx:id="startBtn" text="▶ Start" prefWidth="220" prefHeight="50" styleClass="control-btn start-btn"/>
-                        <Button fx:id="pauseBtn" text="⏸ Pause" prefWidth="220" prefHeight="50" styleClass="control-btn pause-btn"/>
-                        <Button fx:id="resetBtn" text="↻ Reset" prefWidth="220" prefHeight="50" styleClass="control-btn reset-btn"/>
-                        <Button fx:id="skipBtn" text="⏭ Skip Phase" prefWidth="220" prefHeight="50" styleClass="control-btn skip-btn"/>
+                    <!-- Control Buttons in Grid Layout -->
+                    <VBox spacing="12" alignment="CENTER">
+                        <HBox spacing="12" alignment="CENTER">
+                            <Button fx:id="startBtn" text="▶ Start" prefWidth="140" prefHeight="38" styleClass="control-btn start-btn"/>
+                            <Button fx:id="pauseBtn" text="⏸ Pause" prefWidth="140" prefHeight="38" styleClass="control-btn pause-btn"/>
+                        </HBox>
+                        <HBox spacing="12" alignment="CENTER">
+                            <Button fx:id="resetBtn" text="↻ Reset" prefWidth="140" prefHeight="38" styleClass="control-btn reset-btn"/>
+                            <Button fx:id="skipBtn" text="⏭ Skip" prefWidth="140" prefHeight="38" styleClass="control-btn skip-btn"/>
+                        </HBox>
                     </VBox>
                     
                 </VBox>

@@ -7,8 +7,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 public class PomodoroController {
@@ -23,8 +21,6 @@ public class PomodoroController {
     @FXML private Label timerLabel;
     @FXML private Label phaseLabel;
     @FXML private Label sessionCountLabel;
-    @FXML private ProgressIndicator progressCircle;
-    @FXML private Circle tomatoCircle;
     
     @FXML private ComboBox<Integer> workDurationCombo;
     @FXML private ComboBox<Integer> shortBreakCombo;
@@ -51,7 +47,7 @@ public class PomodoroController {
     private int longBreakDuration = 15;
 
     private final String[] workMotivations = {
-        "Stay focused! 🍅",
+        "Stay focused!",
         "You're doing great! 💪",
         "Keep the momentum going! ✨",
         "One step closer to your goal! 🎯",
@@ -133,38 +129,30 @@ public class PomodoroController {
 
     private void applyTheme(String theme) {
         Parent root = backBtn.getScene().getRoot();
-        String circleGradient = "";
         String backgroundGradient = "";
         
         switch (theme) {
             case "🌸 Cherry Blossom":
                 backgroundGradient = "linear-gradient(to bottom right, #FFE8F0, #FFD4E5, #FFC9E0, #FFE0EB)";
-                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #FFB6D9, #FFC9E5);";
                 break;
             case "🌿 Forest Calm":
                 backgroundGradient = "linear-gradient(to bottom right, #E8F5E9, #C8E6C9, #A5D6A7, #DCF2DD)";
-                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #81C784, #A5D6A7);";
                 break;
             case "💜 Lavender Peace":
                 backgroundGradient = "linear-gradient(to bottom right, #F3E5F5, #E1BEE7, #CE93D8, #EDD7F0)";
-                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #BA68C8, #CE93D8);";
                 break;
             case "🌅 Sunset Harmony":
                 backgroundGradient = "linear-gradient(to bottom right, #FFF3E0, #FFE0B2, #FFCC80, #FFECC7)";
-                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #FFB74D, #FFCC80);";
                 break;
             case "🌙 Moonlight Zen":
                 backgroundGradient = "linear-gradient(to bottom right, #E8EAF6, #C5CAE9, #9FA8DA, #D9DCF2)";
-                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #7986CB, #9FA8DA);";
                 break;
             default: // Ocean Serenity
                 backgroundGradient = "linear-gradient(to bottom right, #E0F7FA, #B2EBF2, #80DEEA, #D4F1F4)";
-                circleGradient = "-fx-background-radius: 125; -fx-fill: linear-gradient(to bottom, #4DD0E1, #80DEEA);";
                 break;
         }
         
         root.setStyle("-fx-background-color: " + backgroundGradient + ";");
-        tomatoCircle.setStyle(circleGradient);
     }
 
     private void setupControls() {
@@ -172,6 +160,45 @@ public class PomodoroController {
         pauseBtn.setOnAction(e -> pauseTimer());
         resetBtn.setOnAction(e -> resetTimer());
         skipBtn.setOnAction(e -> skipPhase());
+        
+        // Apply modern pastel styling
+        applyModernButtonStyle(startBtn, "#A7C7E7", "#92B4D4"); // Pastel blue
+        applyModernButtonStyle(pauseBtn, "#FFD4A3", "#FFC18A"); // Pastel peach
+        applyModernButtonStyle(resetBtn, "#D4A5E8", "#C192D5"); // Pastel purple
+        applyModernButtonStyle(skipBtn, "#B4E5A8", "#A1D296"); // Pastel green
+    }
+    
+    private void applyModernButtonStyle(Button btn, String color1, String color2) {
+        btn.setStyle("-fx-background-color: linear-gradient(to bottom, " + color1 + ", " + color2 + "); " +
+                    "-fx-text-fill: white; " +
+                    "-fx-background-radius: 10; " +
+                    "-fx-padding: 10 20; " +
+                    "-fx-font-size: 13px; " +
+                    "-fx-font-weight: 600; " +
+                    "-fx-cursor: hand; " +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);");
+        
+        btn.setOnMouseEntered(e -> {
+            btn.setStyle("-fx-background-color: linear-gradient(to bottom, " + color2 + ", " + color1 + "); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10 20; " +
+                        "-fx-font-size: 13px; " +
+                        "-fx-font-weight: 600; " +
+                        "-fx-cursor: hand; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 12, 0, 0, 4);");
+        });
+        
+        btn.setOnMouseExited(e -> {
+            btn.setStyle("-fx-background-color: linear-gradient(to bottom, " + color1 + ", " + color2 + "); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10 20; " +
+                        "-fx-font-size: 13px; " +
+                        "-fx-font-weight: 600; " +
+                        "-fx-cursor: hand; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);");
+        });
     }
 
     private void startTimer() {
@@ -182,7 +209,7 @@ public class PomodoroController {
                 // Starting new phase
                 if (isWorkPhase) {
                     totalSeconds = workDuration * 60;
-                    phaseLabel.setText("🍅 FOCUS TIME");
+                    phaseLabel.setText(" FOCUS TIME");
                     motivationLabel.setText(workMotivations[(int)(Math.random() * workMotivations.length)]);
                 } else {
                     // Determine if long break (every 4 pomodoros)
@@ -238,7 +265,7 @@ public class PomodoroController {
         completedPomodoros = 0;
         updateDisplay();
         sessionCountLabel.setText("Pomodoros: 0");
-        motivationLabel.setText("Ready to start your focused session? 🍅");
+        motivationLabel.setText("Ready to start your focused session?");
     }
 
     private void stopTimer() {
@@ -287,25 +314,10 @@ public class PomodoroController {
         int minutes = remainingSeconds / 60;
         int seconds = remainingSeconds % 60;
         timerLabel.setText(String.format("%02d:%02d", minutes, seconds));
-        
-        if (totalSeconds > 0) {
-            double progress = 1.0 - ((double) remainingSeconds / totalSeconds);
-            progressCircle.setProgress(progress);
-        } else {
-            progressCircle.setProgress(0);
-        }
     }
 
     private void animateTomato() {
-        // Gentle pulsing animation
-        ScaleTransition pulse = new ScaleTransition(Duration.seconds(2), tomatoCircle);
-        pulse.setFromX(1.0);
-        pulse.setFromY(1.0);
-        pulse.setToX(1.1);
-        pulse.setToY(1.1);
-        pulse.setCycleCount(Animation.INDEFINITE);
-        pulse.setAutoReverse(true);
-        pulse.play();
+        // Animation removed - no visual element to animate
     }
 
     private void celebrateCompletion() {

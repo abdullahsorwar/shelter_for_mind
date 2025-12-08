@@ -218,14 +218,15 @@ public class BlogController {
         for (CategorySection section : sections) {
             VBox sectionBox = new VBox(15);
             sectionBox.setStyle("-fx-background-color: white; -fx-background-radius: 15; " +
-                              "-fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);");
+                              "-fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);");
+            sectionBox.setMaxWidth(Double.MAX_VALUE);
             
             // Section Header
             HBox header = new HBox(10);
             header.setAlignment(Pos.CENTER_LEFT);
             
             Label emoji = new Label(section.emoji);
-            emoji.setStyle("-fx-font-size: 28px;");
+            emoji.setStyle("-fx-font-size: 24px;");
             
             VBox titleBox = new VBox(5);
             Label title = new Label(section.title);
@@ -234,16 +235,17 @@ public class BlogController {
             Label description = new Label(section.description);
             description.getStyleClass().add("section-description");
             description.setWrapText(true);
-            description.setMaxWidth(700);
+            description.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(titleBox, Priority.ALWAYS);
             
             titleBox.getChildren().addAll(title, description);
             header.getChildren().addAll(emoji, titleBox);
             
             // Category Pills
             FlowPane pillsPane = new FlowPane();
-            pillsPane.setHgap(10);
-            pillsPane.setVgap(10);
-            pillsPane.setPrefWrapLength(900);
+            pillsPane.setHgap(8);
+            pillsPane.setVgap(8);
+            pillsPane.setMaxWidth(Double.MAX_VALUE);
             
             for (String category : section.categories) {
                 Button pill = createPillButton(category, section.color, section.borderColor);
@@ -259,6 +261,9 @@ public class BlogController {
         Button pill = new Button(category);
         pill.getStyleClass().add("pill-button");
         pill.setStyle("-fx-background-color: " + bgColor + "; -fx-border-color: " + borderColor + ";");
+        pill.setWrapText(true);
+        pill.setMaxWidth(Double.MAX_VALUE);
+        pill.setMinWidth(100);
         
         // Hover animation
         pill.setOnMouseEntered(e -> {
@@ -1345,9 +1350,15 @@ public class BlogController {
                 System.out.println("✓ Popup added to StackPane root, children count: " + stackRoot.getChildren().size());
                 System.out.println("✓ Popup size: " + scene.getWidth() + "x" + scene.getHeight());
                 
-                // Make fully visible
-                popup.setOpacity(1.0);
+                // Start with invisible popup for fade-in effect
+                popup.setOpacity(0.0);
                 popup.setVisible(true);
+                
+                // Fade in animation
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), popup);
+                fadeIn.setFromValue(0.0);
+                fadeIn.setToValue(1.0);
+                fadeIn.play();
                 
                 // Force layout
                 javafx.application.Platform.runLater(() -> {

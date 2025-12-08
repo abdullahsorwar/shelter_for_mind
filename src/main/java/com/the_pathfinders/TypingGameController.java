@@ -92,10 +92,47 @@ public class TypingGameController {
             ex.printStackTrace();
         }
     }
+    
+    private void applyModernButtonStyle(Button btn, String color1, String color2) {
+        btn.setStyle("-fx-background-color: linear-gradient(to bottom, " + color1 + ", " + color2 + "); " +
+                    "-fx-text-fill: white; " +
+                    "-fx-background-radius: 10; " +
+                    "-fx-padding: 10 20; " +
+                    "-fx-font-size: 13px; " +
+                    "-fx-font-weight: 600; " +
+                    "-fx-cursor: hand; " +
+                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);");
+        
+        btn.setOnMouseEntered(e -> {
+            btn.setStyle("-fx-background-color: linear-gradient(to bottom, " + color2 + ", " + color1 + "); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10 20; " +
+                        "-fx-font-size: 13px; " +
+                        "-fx-font-weight: 600; " +
+                        "-fx-cursor: hand; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 12, 0, 0, 4);");
+        });
+        
+        btn.setOnMouseExited(e -> {
+            btn.setStyle("-fx-background-color: linear-gradient(to bottom, " + color1 + ", " + color2 + "); " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-padding: 10 20; " +
+                        "-fx-font-size: 13px; " +
+                        "-fx-font-weight: 600; " +
+                        "-fx-cursor: hand; " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);");
+        });
+    }
 
     private void setupControls() {
         startBtn.setOnAction(e -> startGame());
         nextBtn.setOnAction(e -> loadNextPhrase());
+        
+        // Apply modern pastel styling
+        applyModernButtonStyle(startBtn, "#A7C7E7", "#92B4D4"); // Pastel blue
+        applyModernButtonStyle(nextBtn, "#B4E5A8", "#A1D296"); // Pastel green
         
         typingField.textProperty().addListener((obs, oldText, newText) -> {
             if (isGameActive) {

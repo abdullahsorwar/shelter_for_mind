@@ -75,7 +75,7 @@
                 </VBox>
                 
                 <!-- RIGHT SIDE - All Controls -->
-                <VBox spacing="15" alignment="TOP_CENTER" prefWidth="450">
+                <VBox spacing="20" alignment="TOP_CENTER" prefWidth="450">
                     
                     <!-- Back Button -->
                     <HBox alignment="TOP_LEFT">
@@ -83,22 +83,22 @@
                     </HBox>
                     
                     <!-- Session Settings -->
-                    <HBox spacing="12" alignment="CENTER">
-                        <VBox spacing="5" alignment="CENTER">
+                    <HBox spacing="15" alignment="CENTER">
+                        <VBox spacing="6" alignment="CENTER">
                             <Label text="Session Type" styleClass="setting-label"/>
-                            <ComboBox fx:id="sessionTypeCombo" prefWidth="150" styleClass="setting-combo"/>
+                            <ComboBox fx:id="sessionTypeCombo" prefWidth="160" styleClass="setting-combo"/>
                         </VBox>
                         
-                        <VBox spacing="5" alignment="CENTER">
+                        <VBox spacing="6" alignment="CENTER">
                             <Label text="Duration" styleClass="setting-label"/>
-                            <ComboBox fx:id="durationCombo" prefWidth="80" styleClass="setting-combo"/>
+                            <ComboBox fx:id="durationCombo" prefWidth="90" styleClass="setting-combo"/>
                         </VBox>
                     </HBox>
                     
                     <!-- Breathing Pattern -->
-                    <VBox fx:id="breathingPatternBox" spacing="5" alignment="CENTER">
+                    <VBox fx:id="breathingPatternBox" spacing="8" alignment="CENTER">
                         <Label text="Breathing Pattern" styleClass="setting-label"/>
-                        <HBox spacing="10" alignment="CENTER">
+                        <HBox spacing="15" alignment="CENTER">
                             <RadioButton fx:id="pattern478" text="4-7-8" styleClass="pattern-radio"/>
                             <RadioButton fx:id="patternBox" text="Box" styleClass="pattern-radio"/>
                             <RadioButton fx:id="patternDeep" text="Deep" styleClass="pattern-radio"/>
@@ -106,40 +106,49 @@
                     </VBox>
                     
                     <!-- Ambient Sounds with Labels -->
-                    <VBox spacing="5" alignment="CENTER">
+                    <VBox spacing="8" alignment="CENTER">
+                        <padding>
+                            <Insets top="5" bottom="5"/>
+                        </padding>
                         <Label text="Ambient Sounds" styleClass="setting-label"/>
-                        <HBox spacing="10" alignment="CENTER">
-                            <VBox spacing="3" alignment="CENTER">
-                                <ToggleButton fx:id="rainSoundBtn" text="🌧️" styleClass="sound-toggle" prefWidth="50" prefHeight="50"/>
+                        <HBox spacing="18" alignment="CENTER">
+                            <VBox spacing="5" alignment="CENTER">
+                                <ToggleButton fx:id="rainSoundBtn" text="🌧️" styleClass="sound-toggle" prefWidth="55" prefHeight="55"/>
                                 <Label text="Rain" styleClass="sound-label"/>
                             </VBox>
-                            <VBox spacing="3" alignment="CENTER">
-                                <ToggleButton fx:id="oceanSoundBtn" text="🌊" styleClass="sound-toggle" prefWidth="50" prefHeight="50"/>
+                            <VBox spacing="5" alignment="CENTER">
+                                <ToggleButton fx:id="oceanSoundBtn" text="🌊" styleClass="sound-toggle" prefWidth="55" prefHeight="55"/>
                                 <Label text="Ocean" styleClass="sound-label"/>
                             </VBox>
-                            <VBox spacing="3" alignment="CENTER">
-                                <ToggleButton fx:id="forestSoundBtn" text="🌲" styleClass="sound-toggle" prefWidth="50" prefHeight="50"/>
+                            <VBox spacing="5" alignment="CENTER">
+                                <ToggleButton fx:id="forestSoundBtn" text="🌲" styleClass="sound-toggle" prefWidth="55" prefHeight="55"/>
                                 <Label text="Forest" styleClass="sound-label"/>
                             </VBox>
-                            <VBox spacing="3" alignment="CENTER">
-                                <ToggleButton fx:id="bowlSoundBtn" text="🔔" styleClass="sound-toggle" prefWidth="50" prefHeight="50"/>
+                            <VBox spacing="5" alignment="CENTER">
+                                <ToggleButton fx:id="bowlSoundBtn" text="🔔" styleClass="sound-toggle" prefWidth="55" prefHeight="55"/>
                                 <Label text="Bowl" styleClass="sound-label"/>
                             </VBox>
                         </HBox>
                     </VBox>
                     
                     <!-- Volume Control -->
-                    <HBox spacing="8" alignment="CENTER">
-                        <Button fx:id="volumeDownBtn" text="🔉" styleClass="volume-btn" prefWidth="35" prefHeight="30"/>
-                        <Slider fx:id="volumeSlider" value="40" min="0" max="100" prefWidth="200" styleClass="volume-slider"/>
-                        <Button fx:id="volumeUpBtn" text="🔊" styleClass="volume-btn" prefWidth="35" prefHeight="30"/>
+                    <HBox spacing="10" alignment="CENTER">
+                        <padding>
+                            <Insets top="5" bottom="5"/>
+                        </padding>
+                        <Button fx:id="volumeDownBtn" text="🔉" styleClass="volume-btn" prefWidth="38" prefHeight="32"/>
+                        <Slider fx:id="volumeSlider" value="40" min="0" max="100" prefWidth="220" styleClass="volume-slider"/>
+                        <Button fx:id="volumeUpBtn" text="🔊" styleClass="volume-btn" prefWidth="38" prefHeight="32"/>
                     </HBox>
                     
                     <!-- Control Buttons -->
-                    <HBox spacing="15" alignment="CENTER">
-                        <Button fx:id="startBtn" text="▶ Start" prefWidth="110" prefHeight="40" styleClass="control-btn start-btn"/>
-                        <Button fx:id="pauseBtn" text="⏸ Pause" prefWidth="110" prefHeight="40" styleClass="control-btn pause-btn"/>
-                        <Button fx:id="stopBtn" text="⏹ Stop" prefWidth="110" prefHeight="40" styleClass="control-btn stop-btn"/>
+                    <HBox spacing="18" alignment="CENTER">
+                        <padding>
+                            <Insets top="10" bottom="5"/>
+                        </padding>
+                        <Button fx:id="startBtn" text="▶ Start" prefWidth="115" prefHeight="42" styleClass="control-btn start-btn"/>
+                        <Button fx:id="pauseBtn" text="⏸ Pause" prefWidth="115" prefHeight="42" styleClass="control-btn pause-btn"/>
+                        <Button fx:id="stopBtn" text="⏹ Stop" prefWidth="115" prefHeight="42" styleClass="control-btn stop-btn"/>
                     </HBox>
                     
                 </VBox>

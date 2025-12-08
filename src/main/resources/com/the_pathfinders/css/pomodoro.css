@@ -1,8 +1,8 @@
-/* Pomodoro Timer - Pastel Gradient Theme with Tomato Accents */
+/* Pomodoro Timer - Minimal Soft Pastel Theme */
 
 .pomodoro-root {
     -fx-background-color: linear-gradient(to bottom right, 
-        #FFE8E8, #FFD4D4, #FFC9C9, #FFE5E5);
+        #F8FAFE, #F0F6FF, #E8F2FF, #F5F9FF);
 }
 
 .top-section {
@@ -10,34 +10,33 @@
 }
 
 .back-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.8);
-    -fx-text-fill: #D97777;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-padding: 10 20 10 20;
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-text-fill: #7a9cc6;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 8 18 8 18;
     -fx-background-radius: 20;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(217, 119, 119, 0.3), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(122, 156, 198, 0.2), 6, 0, 0, 2);
 }
 
 .back-btn:hover {
     -fx-background-color: white;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(122, 156, 198, 0.3), 10, 0, 0, 3);
 }
 
 .pomodoro-title {
-    -fx-font-size: 42px;
-    -fx-font-weight: bold;
-    -fx-text-fill: linear-gradient(to right, #FF6B6B, #FF8787, #FFA3A3);
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 3);
+    -fx-font-size: 38px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #7a9cc6;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 4, 0, 0, 2);
 }
 
 .phase-label {
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #D97777;
-    -fx-effect: dropshadow(gaussian, rgba(217, 119, 119, 0.2), 4, 0, 0, 1);
+    -fx-font-size: 24px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #93b8d9;
+    -fx-effect: dropshadow(gaussian, rgba(147, 184, 217, 0.15), 3, 0, 0, 1);
 }
 
 .center-section {
@@ -46,90 +45,73 @@
 }
 
 .progress-circle {
-    -fx-progress-color: linear-gradient(to bottom right, #FF6B6B, #FF8787, #FFA3A3);
+    -fx-progress-color: linear-gradient(to bottom right, #A9C2E8, #BCD4FF, #DAE8FF);
 }
 
 .progress-circle .percentage {
     -fx-fill: transparent;
 }
 
-.tomato-circle {
-    -fx-fill: linear-gradient(to bottom right, 
-        #FF6B6B, #FF8787, #FFA3A3);
-    -fx-effect: dropshadow(gaussian, rgba(255, 107, 107, 0.5), 30, 0.4, 0, 0);
-    -fx-stroke: rgba(255, 255, 255, 0.9);
-    -fx-stroke-width: 3;
-}
-
 .timer-label {
-    -fx-font-size: 56px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #D97777;
-    -fx-effect: dropshadow(gaussian, rgba(217, 119, 119, 0.3), 6, 0, 0, 2);
+    -fx-font-size: 52px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #7a9cc6;
+    -fx-effect: dropshadow(gaussian, rgba(122, 156, 198, 0.2), 5, 0, 0, 2);
 }
 
 .motivation-label {
-    -fx-font-size: 20px;
-    -fx-font-weight: 500;
-    -fx-text-fill: #B96868;
+    -fx-font-size: 16px;
+    -fx-font-weight: 400;
+    -fx-text-fill: #93b8d9;
     -fx-font-style: italic;
     -fx-text-alignment: center;
 }
 
 .session-count {
-    -fx-font-size: 18px;
-    -fx-font-weight: 600;
-    -fx-text-fill: #D97777;
-}
-
-.tomato-display {
-    -fx-background-color: rgba(255, 255, 255, 0.5);
-    -fx-background-radius: 15;
-    -fx-padding: 8 12 8 12;
-}
-
-.bottom-section {
-    -fx-background-color: rgba(255, 255, 255, 0.4);
-    -fx-background-radius: 30 30 0 0;
+    -fx-font-size: 16px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #7a9cc6;
 }
 
 .setting-label {
-    -fx-font-size: 13px;
-    -fx-font-weight: 600;
-    -fx-text-fill: #D97777;
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #7a9cc6;
 }
 
 .duration-combo {
     -fx-background-color: rgba(255, 255, 255, 0.9);
     -fx-background-radius: 12;
-    -fx-text-fill: #B96868;
-    -fx-font-size: 14px;
+    -fx-text-fill: #7a9cc6;
+    -fx-font-size: 13px;
     -fx-padding: 6 10 6 10;
-    -fx-effect: dropshadow(gaussian, rgba(217, 119, 119, 0.2), 4, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(122, 156, 198, 0.15), 4, 0, 0, 2);
 }
 
 .duration-combo:hover {
     -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(122, 156, 198, 0.25), 6, 0, 0, 2);
 }
 
 .control-btn {
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
     -fx-background-radius: 25;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(217, 119, 119, 0.3), 8, 0, 0, 3);
-    -fx-padding: 10 0 10 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 6, 0, 0, 2);
+    -fx-padding: 8 0 8 0;
 }
 
 .start-btn {
-    -fx-background-color: linear-gradient(to bottom right, #A8D8B9, #C9EDD4);
-    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to right, #D4F1E8, #B8E6D5);
+    -fx-text-fill: #5a8a7a;
 }
 
 .start-btn:hover {
-    -fx-background-color: linear-gradient(to bottom right, #C9EDD4, #A8D8B9);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: linear-gradient(to right, #B8E6D5, #A3DCC8);
+    -fx-effect: dropshadow(gaussian, rgba(90, 138, 122, 0.2), 10, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
 .start-btn:disabled {
@@ -137,14 +119,15 @@
 }
 
 .pause-btn {
-    -fx-background-color: linear-gradient(to bottom right, #FFD4A3, #FFE5C2);
-    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to right, #FFE8D1, #FFD9B8);
+    -fx-text-fill: #B8845A;
 }
 
 .pause-btn:hover {
-    -fx-background-color: linear-gradient(to bottom right, #FFE5C2, #FFD4A3);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: linear-gradient(to right, #FFD9B8, #FFCCA3);
+    -fx-effect: dropshadow(gaussian, rgba(184, 132, 90, 0.2), 10, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
 .pause-btn:disabled {
@@ -152,14 +135,15 @@
 }
 
 .reset-btn {
-    -fx-background-color: linear-gradient(to bottom right, #FFB6D9, #FFC9E5);
-    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to right, #F5E8FF, #E8D5FF);
+    -fx-text-fill: #9A7AB8;
 }
 
 .reset-btn:hover {
-    -fx-background-color: linear-gradient(to bottom right, #FFC9E5, #FFB6D9);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: linear-gradient(to right, #E8D5FF, #DCC5F5);
+    -fx-effect: dropshadow(gaussian, rgba(154, 122, 184, 0.2), 10, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
 .reset-btn:disabled {
@@ -167,16 +151,18 @@
 }
 
 .skip-btn {
-    -fx-background-color: linear-gradient(to bottom right, #B799D9, #D4C5F9);
-    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(to right, #FFE8F5, #FFD9ED);
+    -fx-text-fill: #B87AA3;
 }
 
 .skip-btn:hover {
-    -fx-background-color: linear-gradient(to bottom right, #D4C5F9, #B799D9);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: linear-gradient(to right, #FFD9ED, #FFC9E3);
+    -fx-effect: dropshadow(gaussian, rgba(184, 122, 163, 0.2), 10, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
 .skip-btn:disabled {
     -fx-opacity: 0.5;
 }
+
