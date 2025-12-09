@@ -20,7 +20,7 @@
 <?import java.net.URL?>
 
 <AnchorPane fx:id="root" prefHeight="600" prefWidth="900"
-    stylesheets="/com/the_pathfinders/css/dashboard.css, /com/the_pathfinders/css/tranquil_popup.css" xmlns="http://javafx.com/javafx/25"
+    stylesheets="/com/the_pathfinders/css/dashboard.css, /com/the_pathfinders/css/tranquil_popup.css, /com/the_pathfinders/css/MoodTracker.css" xmlns="http://javafx.com/javafx/25"
     xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.DashboardController">
     <children>
         <!-- Background animated rectangle (fills window) -->
@@ -199,17 +199,18 @@
            visible="false" managed="false"
            AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
            AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
-           styleClass="journaling-overlay-root">
+           styleClass="mood-overlay-root">
     <children>
         <VBox fx:id="moodTrackerContentBox" spacing="20" alignment="CENTER"
-              styleClass="journaling-popup-box"
+              styleClass="mood-popup-box"
               prefWidth="500" maxWidth="500" prefHeight="600" maxHeight="600">
 
             <!-- Header -->
-            <HBox alignment="CENTER_LEFT" spacing="10">
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="header-box">
                 <Button fx:id="moodBackBtn" text="←" styleClass="back-btn"/>
-                <Label text="Mood Tracker" styleClass="journaling-title"/>
+                <Label text="Assessment" styleClass="mood-title"/>
                 <javafx.scene.layout.Region HBox.hgrow="ALWAYS"/>
+                <Label text="4 OF 7" styleClass="progress-indicator-label"/>
                 <Button fx:id="moodCloseBtn" text="✕" styleClass="close-btn"/>
             </HBox>
 
@@ -230,34 +231,34 @@
 
             <!-- Navigation buttons -->
             <HBox spacing="15" alignment="CENTER">
-                <Button fx:id="moodPrevBtn" text="Previous" styleClass="journaling-btn" disable="true"/>
-                <Button fx:id="moodNextBtn" text="Next" styleClass="journaling-btn"/>
-                <Button fx:id="moodSubmitBtn" text="Submit" styleClass="journaling-btn"
+                <Button fx:id="moodPrevBtn" text="Previous" styleClass="nav-btn" disable="true"/>
+                <Button fx:id="moodNextBtn" text="Next" styleClass="nav-btn"/>
+                <Button fx:id="moodSubmitBtn" text="Submit" styleClass="nav-btn, submit-btn"
                         visible="false" managed="false"/>
             </HBox>
         </VBox>
 
         <!-- Results overlay (initially hidden) -->
         <VBox fx:id="moodResultsBox" spacing="25" alignment="CENTER"
-              styleClass="journaling-popup-box"
+              styleClass="results-box"
               prefWidth="550" maxWidth="550" prefHeight="650" maxHeight="650"
               visible="false" managed="false">
 
-            <Label text="Your Mood Analysis" styleClass="journaling-title"/>
+            <Label text="📊 Your Mood Analysis" styleClass="results-title"/>
 
             <!-- Pie chart -->
             <javafx.scene.chart.PieChart fx:id="moodPieChart" legendVisible="true"
                       prefWidth="400" prefHeight="350"/>
 
             <!-- Summary text -->
-            <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #f7fafc; -fx-background-radius: 12px; -fx-padding: 20px;">
+            <VBox spacing="10" alignment="CENTER" styleClass="summary-box">
                 <Label fx:id="moodSummaryLabel" wrapText="true" alignment="CENTER"
-                       maxWidth="450" style="-fx-font-size: 15px; -fx-text-fill: #4a5568;"/>
-                <Label fx:id="moodScoreLabel" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #667eea;"/>
+                       styleClass="summary-text" maxWidth="450"/>
+                <Label fx:id="moodScoreLabel" styleClass="score-label"/>
             </VBox>
 
             <!-- Close button -->
-            <Button fx:id="moodDoneBtn" text="Done" styleClass="journaling-btn" prefWidth="150"/>
+            <Button fx:id="moodDoneBtn" text="Done" styleClass="nav-btn, submit-btn" prefWidth="150"/>
         </VBox>
     </children>
 </StackPane>

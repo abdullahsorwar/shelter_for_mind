@@ -325,7 +325,7 @@ public class SeekHelpController {
 
             try {
                 doctorRepository.saveAppointment(appointment);
-                feedbackLabel.setText("✓ Appointment booked successfully!");
+                feedbackLabel.setText("✓ Appointment booked successfully! Please wait for confirmation");
                 feedbackLabel.setStyle("-fx-text-fill: #065f46; -fx-font-weight: 700;");
                 feedbackLabel.setVisible(true);
                 feedbackLabel.setManaged(true);

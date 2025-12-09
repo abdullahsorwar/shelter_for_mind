@@ -55,36 +55,36 @@ public class MoodTrackerController {
         answers = new HashMap<>();
         repository = new MoodTrackerRepository();
 
-        // Initialize questions
+        // Initialize questions with emojis
         questions = new ArrayList<>();
         questions.add(new QuestionData(
             "How many pending tasks do you have?",
             "stress",
-            Arrays.asList("Too Much", "Much", "A Little", "None"),
+            Arrays.asList("😱 Too Much", "😓 Much", "😌 A Little", "😊 None"),
             new int[]{1, 2, 3, 4}
         ));
         questions.add(new QuestionData(
             "How would you rate your stress level today?",
             "stress",
-            Arrays.asList("Very High", "High", "Moderate", "Low"),
+            Arrays.asList("😤 Very High", "😣 High", "😐 Moderate", "😌 Low"),
             new int[]{1, 2, 3, 4}
         ));
         questions.add(new QuestionData(
             "How anxious do you feel right now?",
             "anxiety",
-            Arrays.asList("Very Anxious", "Anxious", "Slightly Anxious", "Calm"),
+            Arrays.asList("😰 Very Anxious", "😟 Anxious", "😕 Slightly Anxious", "😊 Calm"),
             new int[]{1, 2, 3, 4}
         ));
         questions.add(new QuestionData(
             "How is your energy level today?",
             "energy",
-            Arrays.asList("Very Low", "Low", "Moderate", "High"),
+            Arrays.asList("😴 Very Low", "😪 Low", "🙂 Moderate", "🤩 High"),
             new int[]{1, 2, 3, 4}
         ));
         questions.add(new QuestionData(
             "How well did you sleep last night?",
             "sleep",
-            Arrays.asList("Very Poor", "Poor", "Fair", "Good"),
+            Arrays.asList("😫 Very Poor", "😞 Poor", "😐 Fair", "😴 Good"),
             new int[]{1, 2, 3, 4}
         ));
 

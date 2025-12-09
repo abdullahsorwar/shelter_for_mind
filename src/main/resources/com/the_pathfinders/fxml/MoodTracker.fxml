@@ -19,9 +19,9 @@
           prefWidth="500" maxWidth="500" prefHeight="600" maxHeight="600">
 
         <!-- Header -->
-        <HBox alignment="CENTER_LEFT" spacing="10">
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="header-box">
             <Button fx:id="backBtn" text="←" styleClass="back-btn" onAction="#onBack"/>
-            <Label text="Mood Tracker" styleClass="mood-title"/>
+            <Label text="💚 Mood Tracker" styleClass="mood-title"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Button fx:id="closeBtn" text="✕" styleClass="close-btn" onAction="#onClose"/>
         </HBox>
@@ -59,7 +59,7 @@
           prefWidth="550" maxWidth="550" prefHeight="650" maxHeight="650"
           visible="false" managed="false">
 
-        <Label text="Your Mood Analysis" styleClass="results-title"/>
+        <Label text="📊 Your Mood Analysis" styleClass="results-title"/>
 
         <!-- Pie chart -->
         <PieChart fx:id="moodPieChart" legendVisible="true"

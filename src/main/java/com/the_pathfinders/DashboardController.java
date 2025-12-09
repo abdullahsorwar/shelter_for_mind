@@ -25,6 +25,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.chart.PieChart;
@@ -1158,38 +1159,96 @@ private void loadPage(String path) {
         if (index >= 0 && index < moodQuestions.size()) {
             QuestionData question = moodQuestions.get(index);
 
-            VBox questionBox = new VBox(15);
+            VBox questionBox = new VBox(30);
             questionBox.getStyleClass().add("question-box");
 
+            // Question label
             Label questionLabel = new Label(question.question);
             questionLabel.getStyleClass().add("question-label");
             questionLabel.setWrapText(true);
+            questionLabel.setMaxWidth(Double.MAX_VALUE);
+            questionLabel.setAlignment(javafx.geometry.Pos.CENTER);
 
-            ToggleGroup toggleGroup = new ToggleGroup();
+            // Create slider container with labels and emojis
+            HBox sliderContainer = new HBox(20);
+            sliderContainer.getStyleClass().add("slider-container");
+            sliderContainer.setAlignment(javafx.geometry.Pos.CENTER);
 
-            for (int i = 0; i < question.options.size(); i++) {
-                RadioButton radio = new RadioButton(question.options.get(i));
-                radio.getStyleClass().add("answer-radio");
-                radio.setToggleGroup(toggleGroup);
+            // Left side - option labels
+            VBox labelsBox = new VBox(0);
+            labelsBox.setAlignment(javafx.geometry.Pos.CENTER);
+            labelsBox.setPrefWidth(130);
 
-                // Pre-select if already answered
-                String savedAnswer = moodAnswers.get(String.valueOf(index));
-                if (savedAnswer != null && savedAnswer.equals(question.options.get(i))) {
-                    radio.setSelected(true);
+            // Right side - emoji circles
+            VBox emojiBox = new VBox(0);
+            emojiBox.setAlignment(javafx.geometry.Pos.CENTER);
+            emojiBox.setPrefWidth(60);
+
+            // Define emojis and colors
+            String[] emojis = {"😊", "🙂", "😐", "☹️", "😢"};
+            String[] emojiStyles = {"emoji-excellent", "emoji-good", "emoji-fair", "emoji-poor", "emoji-worst"};
+            String[] subLabels = {"Best", "Good", "Okay", "Not Great", "Worst"};
+
+            // Create labels and emojis for each option (reverse order for top-to-bottom)
+            for (int i = question.options.size() - 1; i >= 0; i--) {
+                // Option label
+                VBox optionLabelBox = new VBox(3);
+                optionLabelBox.getStyleClass().add("option-label-box");
+                optionLabelBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+                Label mainLabel = new Label(question.options.get(i));
+                mainLabel.getStyleClass().add("option-main-label");
+
+                Label subLabel = new Label(i < subLabels.length ? subLabels[i] : "");
+                subLabel.getStyleClass().add("option-sub-label");
+
+                optionLabelBox.getChildren().addAll(mainLabel, subLabel);
+                labelsBox.getChildren().add(optionLabelBox);
+
+                // Emoji circle
+                Label emojiCircle = new Label(i < emojis.length ? emojis[i] : "");
+                emojiCircle.getStyleClass().addAll("emoji-circle", i < emojiStyles.length ? emojiStyles[i] : "");
+                emojiBox.getChildren().add(emojiCircle);
+            }
+
+            // Create vertical slider
+            Slider slider = new Slider(1, question.options.size(), question.options.size());
+            slider.setOrientation(javafx.geometry.Orientation.VERTICAL);
+            slider.getStyleClass().add("mood-slider");
+            slider.setMajorTickUnit(1);
+            slider.setMinorTickCount(0);
+            slider.setSnapToTicks(true);
+            slider.setShowTickLabels(false);
+            slider.setShowTickMarks(false);
+            slider.setPrefHeight(260);
+
+            // Pre-select if already answered
+            String savedAnswer = moodAnswers.get(String.valueOf(index));
+            if (savedAnswer != null) {
+                for (int i = 0; i < question.options.size(); i++) {
+                    if (savedAnswer.equals(question.options.get(i))) {
+                        slider.setValue(question.options.size() - i);
+                        break;
+                    }
                 }
+            }
 
-                final int score = question.scores[i];
-                final String option = question.options.get(i);
-                radio.setOnAction(e -> {
+            // Slider change listener
+            slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                int selectedIndex = question.options.size() - newVal.intValue();
+                if (selectedIndex >= 0 && selectedIndex < question.options.size()) {
+                    String option = question.options.get(selectedIndex);
+                    int score = question.scores[selectedIndex];
+
                     moodAnswers.put(String.valueOf(currentMoodQuestion), option);
                     moodAnswers.put(String.valueOf(currentMoodQuestion) + "_score", String.valueOf(score));
                     moodAnswers.put(String.valueOf(currentMoodQuestion) + "_category", question.category);
-                });
+                }
+            });
 
-                questionBox.getChildren().add(radio);
-            }
+            sliderContainer.getChildren().addAll(labelsBox, slider, emojiBox);
 
-            questionBox.getChildren().add(0, questionLabel);
+            questionBox.getChildren().addAll(questionLabel, sliderContainer);
             moodQuestionsContainer.getChildren().add(questionBox);
         }
     }
