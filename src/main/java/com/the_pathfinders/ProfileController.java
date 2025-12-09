@@ -945,6 +945,7 @@ public class ProfileController {
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
+
     private void setPageVisibility(boolean basic, boolean journal, boolean savedBlogs, boolean savedJournals, boolean achievement) {
         if (basicInfoScroll != null) { basicInfoScroll.setVisible(basic); basicInfoScroll.setManaged(basic); }
         if (journalsPage != null) { journalsPage.setVisible(journal); journalsPage.setManaged(journal); }

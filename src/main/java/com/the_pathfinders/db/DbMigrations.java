@@ -401,7 +401,7 @@ public final class DbMigrations {
                   soul_id           text not null,
                   doctor_id         bigint not null references doctors(id),
                   appointment_date  text not null,
-                  status            text default 'PENDING' check (status in ('PENDING', 'CONFIRMED', 'CANCELLED')),
+                  status            text default 'PENDING' check (status in ('PENDING', 'CONFIRMED', 'CANCELLED', 'RESCHEDULED')),
                   created_at        timestamptz default now()
                 )
             """);
@@ -409,6 +409,29 @@ public final class DbMigrations {
             st.executeUpdate("create index if not exists idx_appointments_soul on appointments(soul_id)");
             st.executeUpdate("create index if not exists idx_appointments_doctor on appointments(doctor_id)");
             
+            // Alter existing appointments table to update status constraint if it exists
+            st.executeUpdate("""
+                do $$
+                begin
+                  -- Drop old constraint if exists
+                  if exists (
+                    select 1 from information_schema.constraint_column_usage 
+                    where table_name = 'appointments' and constraint_name = 'appointments_status_check'
+                  ) then
+                    alter table appointments drop constraint appointments_status_check;
+                  end if;
+                  
+                  -- Add new constraint with RESCHEDULED
+                  if not exists (
+                    select 1 from information_schema.constraint_column_usage 
+                    where table_name = 'appointments' and constraint_name = 'appointments_status_check'
+                  ) then
+                    alter table appointments add constraint appointments_status_check 
+                    check (status in ('PENDING', 'CONFIRMED', 'CANCELLED', 'RESCHEDULED'));
+                  end if;
+                end $$
+            """);
+
             // Add safety plan columns to soul_id_and_soul_key table
             st.executeUpdate("""
                 do $$
@@ -424,6 +447,24 @@ public final class DbMigrations {
                   end if;
                 end $$
             """);
+
+            // Create user_messages table for appointment notifications and system messages
+            st.executeUpdate("""
+                create table if not exists user_messages (
+                  id              bigserial primary key,
+                  soul_id         text not null,
+                  message_type    text not null check (message_type in ('APPOINTMENT_CONFIRMED', 'APPOINTMENT_RESCHEDULED', 'SYSTEM', 'MODERATION')),
+                  subject         text not null,
+                  message_content text not null,
+                  appointment_id  bigint,
+                  is_read         boolean default false,
+                  created_at      timestamptz default now()
+                )
+            """);
+
+            st.executeUpdate("create index if not exists idx_user_messages_soul on user_messages(soul_id)");
+            st.executeUpdate("create index if not exists idx_user_messages_read on user_messages(soul_id, is_read)");
+            st.executeUpdate("create index if not exists idx_user_messages_appointment on user_messages(appointment_id)");
         }
     }
 }

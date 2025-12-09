@@ -2,9 +2,35 @@
    SOCIAL WORK – COLORFUL & VIBRANT DESIGN
    ======================================== */
 
+/* ScrollPane wrapper for responsiveness */
+.social-work-scroll {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
+.social-work-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.social-work-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10;
+}
+
+.social-work-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-background-radius: 5;
+}
+
+.social-work-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+}
+
 .social-work-root {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fce4ec 0%, #f3e5f5 25%, #e1f5fe 50%, #e0f2f1 75%, #fff9e6 100%);
     -fx-font-family: "Segoe UI", "Comic Sans MS", "Arial", sans-serif;
+    -fx-min-height: 100%;
 }
 
 /* Header */
@@ -30,90 +56,112 @@
 }
 
 .page-title {
-    -fx-text-fill: #2c3e50;
-    -fx-font-size: 32px;
+    -fx-text-fill: #1a1a2e;
+    -fx-font-size: 38px;
     -fx-font-weight: 900;
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 2, 0, 1, 1);
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 3, 0, 2, 2);
 }
 
 .subtitle {
-    -fx-text-fill: #34495e;
-    -fx-font-size: 28px;
-    -fx-font-style: italic;
-    -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.6), 2, 0, 1, 1);
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 26px;
+    -fx-font-weight: 600;
+    -fx-font-family: "Segoe UI", "Verdana", sans-serif;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 1, 1);
 }
 
-/* Container */
+/* Container - Dynamic & Responsive */
 .hand-drawn-box {
     -fx-background-color: rgba(255, 255, 255, 0.75);
-
     -fx-background-radius: 40;
-    -fx-padding: 60 90 60 90;
+    -fx-padding: 60 80 60 80;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0, 4, 5);
-    -fx-max-width: 680;
+    -fx-pref-width: 90%;
+    -fx-max-width: 1000;
+    -fx-min-width: 400;
 }
 
-/* BIG BUTTONS - Base Style */
+/* BIG BUTTONS - Base Style with Glass Effect & Responsive */
 .hand-drawn-btn {
-    -fx-font-size: 22px;
+    -fx-font-size: 20px;
     -fx-font-weight: 900;
     -fx-text-fill: #ffffff;
+    -fx-pref-width: 420;
+    -fx-max-width: 500;
     -fx-min-width: 280;
-    -fx-pref-width: 280;
-    -fx-max-width: 280;
     -fx-padding: 20 40 20 40;
     -fx-border-radius: 28;
     -fx-background-radius: 28;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 10, 0, 3, 4);
-    -fx-border-width: 0;
+    -fx-border-width: 2;
+    -fx-border-color: rgba(255, 255, 255, 0.4);
 }
 
-/* ---- INDIVIDUAL BUTTON COLORS (Solid, Vibrant Fills) ---- */
+/* ---- INDIVIDUAL BUTTON COLORS (Gradient & Glass Finish) ---- */
 .blood-btn {
-    -fx-background-color: #ff6b9d;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.08)),
+        linear-gradient(to bottom, #ffb3ba, #ffa7b0);
 }
 
 .blood-btn:hover {
-    -fx-background-color: #ff5285;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.12)),
+        linear-gradient(to bottom, #ffa7b0, #ff9ba5);
 }
 
 .tree-btn {
-    -fx-background-color: #4ade80;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.08)),
+        linear-gradient(to bottom, #66ff99, #5ef58e);
 }
 
 .tree-btn:hover {
-    -fx-background-color: #22c55e;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.12)),
+        linear-gradient(to bottom, #5ef58e, #52eb82);
 }
 
 .seminar-btn {
-    -fx-background-color: #ffb347;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.08)),
+        linear-gradient(to bottom, #ffe066, #ffd84d);
 }
 
 .seminar-btn:hover {
-    -fx-background-color: #ff9800;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.12)),
+        linear-gradient(to bottom, #ffd84d, #ffcc33);
 }
 
 .donation-btn {
-    -fx-background-color: #a78bfa;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.08)),
+        linear-gradient(to bottom, #c299ff, #b585ff);
 }
 
 .donation-btn:hover {
-    -fx-background-color: #8b5cf6;
+    -fx-background-color:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.12)),
+        linear-gradient(to bottom, #b585ff, #a870ff);
 }
 
-/* Hover / Pressed Effects */
+/* Hover / Pressed Effects with Glass Glow */
 .hand-drawn-btn:hover {
     -fx-scale-x: 1.08;
     -fx-scale-y: 1.08;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 15, 0, 4, 6);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 15, 0, 4, 6),
+                innershadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0, 0, 2);
+    -fx-border-color: rgba(255, 255, 255, 0.6);
 }
 
 .hand-drawn-btn:pressed {
     -fx-scale-x: 0.96;
     -fx-scale-y: 0.96;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 1, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 1, 2),
+                innershadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 2);
 }
 
 /* ========================================

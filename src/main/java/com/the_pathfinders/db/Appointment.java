@@ -5,8 +5,9 @@ public class Appointment {
     private String soulId;
     private long doctorId;
     private String appointmentDate;
-    private String status; // PENDING, CONFIRMED, CANCELLED
+    private String status; // PENDING, CONFIRMED, CANCELLED, RESCHEDULED
     private String createdAt;
+    private String userPhone; // User's phone number
 
     public Appointment() {}
 
@@ -63,6 +64,14 @@ public class Appointment {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 }
 

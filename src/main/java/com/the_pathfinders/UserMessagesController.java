@@ -122,7 +122,9 @@ public class UserMessagesController implements Initializable {
     private void handleMarkAllRead() {
         new Thread(() -> {
             try {
+                // Mark both moderation messages and user messages as read
                 ModerationRepository.markAllMessagesAsRead(this.soulId);
+                com.the_pathfinders.db.UserMessageRepository.markAllAsRead(this.soulId);
                 Platform.runLater(() -> {
                     loadMessages();
                 });
@@ -145,13 +147,19 @@ public class UserMessagesController implements Initializable {
         
         new Thread(() -> {
             try {
-                List<ModerationRepository.ModerationMessage> messages = 
+                // Load both moderation messages AND appointment messages
+                List<ModerationRepository.ModerationMessage> moderationMessages =
                     ModerationRepository.getMessagesForSoul(this.soulId);
-                
-                int unreadCount = (int) messages.stream().filter(m -> !m.isRead).count();
-                
+
+                List<com.the_pathfinders.db.UserMessage> userMessages =
+                    com.the_pathfinders.db.UserMessageRepository.getMessagesForUser(this.soulId);
+
+                int moderationUnread = (int) moderationMessages.stream().filter(m -> !m.isRead).count();
+                int userUnread = (int) userMessages.stream().filter(m -> !m.isRead()).count();
+                int totalUnread = moderationUnread + userUnread;
+
                 Platform.runLater(() -> {
-                    if (messages.isEmpty()) {
+                    if (moderationMessages.isEmpty() && userMessages.isEmpty()) {
                         emptyState.setVisible(true);
                         emptyState.setManaged(true);
                         unreadCountLabel.setText("No messages");
@@ -160,15 +168,21 @@ public class UserMessagesController implements Initializable {
                         emptyState.setVisible(false);
                         emptyState.setManaged(false);
                         
-                        if (unreadCount > 0) {
-                            unreadCountLabel.setText(unreadCount + " unread message" + (unreadCount > 1 ? "s" : ""));
+                        if (totalUnread > 0) {
+                            unreadCountLabel.setText(totalUnread + " unread message" + (totalUnread > 1 ? "s" : ""));
                             markAllReadBtn.setDisable(false);
                         } else {
                             unreadCountLabel.setText("All messages read");
                             markAllReadBtn.setDisable(true);
                         }
                         
-                        for (ModerationRepository.ModerationMessage msg : messages) {
+                        // Display appointment messages first (newer feature)
+                        for (com.the_pathfinders.db.UserMessage msg : userMessages) {
+                            messagesContainer.getChildren().add(createUserMessageCard(msg));
+                        }
+
+                        // Then moderation messages
+                        for (ModerationRepository.ModerationMessage msg : moderationMessages) {
                             messagesContainer.getChildren().add(createMessageCard(msg));
                         }
                     }
@@ -254,7 +268,120 @@ public class UserMessagesController implements Initializable {
             }
         }).start();
     }
-    
+
+    private void markUserMessageAsRead(long messageId) {
+        new Thread(() -> {
+            try {
+                com.the_pathfinders.db.UserMessageRepository.markAsRead(messageId);
+                Platform.runLater(() -> {
+                    loadMessages();
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    showAlert("Error", "Failed to mark message as read: " + e.getMessage());
+                });
+            }
+        }).start();
+    }
+
+    private VBox createUserMessageCard(com.the_pathfinders.db.UserMessage msg) {
+        VBox card = new VBox(14);
+        card.getStyleClass().add("message-card");
+        if (!msg.isRead()) {
+            card.getStyleClass().add("unread-message");
+        }
+
+        // Header with date and read status
+        HBox header = new HBox(15);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        Label typeIcon = new Label(getMessageIcon(msg.getMessageType()));
+        typeIcon.setStyle("-fx-font-size: 20px;");
+
+        Label subjectLabel = new Label(msg.getSubject());
+        subjectLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        subjectLabel.getStyleClass().add("message-subject-label");
+        HBox.setHgrow(subjectLabel, Priority.ALWAYS);
+
+        Label statusLabel = new Label(msg.isRead() ? "✓ Read" : "● Unread");
+        statusLabel.getStyleClass().addAll("status-badge", msg.isRead() ? "status-read" : "status-unread");
+
+        header.getChildren().addAll(typeIcon, subjectLabel, statusLabel);
+
+        // Date
+        Label dateLabel = new Label(msg.getCreatedAt());
+        dateLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #888;");
+        dateLabel.getStyleClass().add("message-date-label");
+
+        card.getChildren().addAll(header, dateLabel);
+
+        // Separator
+        Separator separator = new Separator();
+        card.getChildren().add(separator);
+
+        // Message content
+        Label messageLabel = new Label(msg.getMessageContent());
+        messageLabel.setStyle("-fx-font-size: 14px; -fx-line-spacing: 4px;");
+        messageLabel.getStyleClass().add("message-content-label");
+        messageLabel.setWrapText(true);
+
+        card.getChildren().add(messageLabel);
+
+        // Action buttons
+        HBox actionBox = new HBox(10);
+        actionBox.setAlignment(Pos.CENTER_RIGHT);
+
+        if (!msg.isRead()) {
+            Button markReadBtn = new Button("✓ Mark as Read");
+            markReadBtn.getStyleClass().add("mark-read-btn");
+            markReadBtn.setOnAction(e -> markUserMessageAsRead(msg.getId()));
+            actionBox.getChildren().add(markReadBtn);
+        }
+
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.getStyleClass().add("delete-btn");
+        deleteBtn.setOnAction(e -> deleteUserMessage(msg.getId()));
+        actionBox.getChildren().add(deleteBtn);
+
+        card.getChildren().add(actionBox);
+
+        return card;
+    }
+
+    private String getMessageIcon(String messageType) {
+        return switch (messageType) {
+            case "APPOINTMENT_CONFIRMED" -> "✅";
+            case "APPOINTMENT_RESCHEDULED" -> "📅";
+            case "MODERATION" -> "✉️";
+            case "SYSTEM" -> "ℹ️";
+            default -> "📬";
+        };
+    }
+
+    private void deleteUserMessage(long messageId) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Message");
+        confirm.setHeaderText("Delete this message?");
+        confirm.setContentText("This action cannot be undone.");
+
+        confirm.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                new Thread(() -> {
+                    try {
+                        com.the_pathfinders.db.UserMessageRepository.deleteMessage(messageId);
+                        Platform.runLater(() -> {
+                            loadMessages();
+                        });
+                    } catch (Exception e) {
+                        Platform.runLater(() -> {
+                            showAlert("Error", "Failed to delete message: " + e.getMessage());
+                        });
+                    }
+                }).start();
+            }
+        });
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);

@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,6 +29,7 @@ import java.net.URL;
 import java.sql.SQLException;
 
 public class SocialWorkController {
+    @FXML private ScrollPane scrollWrapper;
     @FXML private VBox contentWrapper;
     @FXML private Button backBtn;
     @FXML private Button bloodDonationBtn;

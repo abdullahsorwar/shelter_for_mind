@@ -74,6 +74,15 @@ public class KeeperDashboardController implements Initializable {
     @FXML private Label moderatedJournalsCount;
     @FXML private Button refreshJournalsBtn;
     
+    // Appointment Section
+    @FXML private ScrollPane appointmentPane;
+    @FXML private VBox appointmentsListContainer;
+    @FXML private VBox appointmentsEmptyState;
+    @FXML private Label pendingAppointmentsCount;
+    @FXML private Label confirmedAppointmentsCount;
+    @FXML private Label totalAppointmentsCount;
+    @FXML private Button refreshAppointmentsBtn;
+
     @FXML private VBox otherSectionPane;
     @FXML private Label placeholderText;
     
@@ -265,9 +274,9 @@ public class KeeperDashboardController implements Initializable {
     
     @FXML
     private void showAppointment() {
-        switchContent("Appointment", "other");
+        switchContent("Appointment", "appointments");
         setActiveNavButton(appointmentBtn);
-        placeholderText.setText("Appointment - Coming Soon");
+        loadAppointments();
     }
     
     @FXML
@@ -293,6 +302,8 @@ public class KeeperDashboardController implements Initializable {
             soulModerationPane.setManaged(false);
             journalModerationPane.setVisible(false);
             journalModerationPane.setManaged(false);
+            appointmentPane.setVisible(false);
+            appointmentPane.setManaged(false);
             otherSectionPane.setVisible(false);
             otherSectionPane.setManaged(false);
             
@@ -309,6 +320,10 @@ public class KeeperDashboardController implements Initializable {
                 case "journalModeration" -> {
                     journalModerationPane.setVisible(true);
                     journalModerationPane.setManaged(true);
+                }
+                case "appointments" -> {
+                    appointmentPane.setVisible(true);
+                    appointmentPane.setManaged(true);
                 }
                 case "other" -> {
                     otherSectionPane.setVisible(true);
@@ -1011,6 +1026,411 @@ public class KeeperDashboardController implements Initializable {
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // ========================================
+    //  APPOINTMENT MANAGEMENT
+    // ========================================
+
+    private void loadAppointments() {
+        new Thread(() -> {
+            try {
+                com.the_pathfinders.db.AppointmentRepository repo = new com.the_pathfinders.db.AppointmentRepository();
+                List<com.the_pathfinders.db.AppointmentRepository.AppointmentDetails> appointments = repo.getPendingAppointments();
+
+                Platform.runLater(() -> {
+                    displayAppointments(appointments);
+                    updateAppointmentStats();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> showError("Failed to load appointments: " + e.getMessage()));
+            }
+        }).start();
+    }
+
+    @FXML
+    private void refreshAppointments() {
+        loadAppointments();
+    }
+
+    private void displayAppointments(List<com.the_pathfinders.db.AppointmentRepository.AppointmentDetails> appointments) {
+        appointmentsListContainer.getChildren().clear();
+
+        if (appointments.isEmpty()) {
+            appointmentsEmptyState.setVisible(true);
+            appointmentsEmptyState.setManaged(true);
+        } else {
+            appointmentsEmptyState.setVisible(false);
+            appointmentsEmptyState.setManaged(false);
+
+            for (com.the_pathfinders.db.AppointmentRepository.AppointmentDetails apt : appointments) {
+                VBox card = createAppointmentCard(apt);
+                appointmentsListContainer.getChildren().add(card);
+            }
+        }
+    }
+
+    private VBox createAppointmentCard(com.the_pathfinders.db.AppointmentRepository.AppointmentDetails apt) {
+        VBox card = new VBox(15);
+        card.getStyleClass().add("appointment-card");
+        card.setPadding(new Insets(20));
+
+        // Header with status badge
+        HBox header = new HBox(15);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        Label statusBadge = new Label("🔔 NEW");
+        statusBadge.getStyleClass().add("status-badge-pending");
+        statusBadge.setStyle("-fx-background-color: #fff3cd; -fx-text-fill: #856404; -fx-padding: 5 12; -fx-background-radius: 12; -fx-font-weight: bold; -fx-font-size: 11px;");
+
+        Label dateLabel = new Label("📅 " + apt.appointmentDate);
+        dateLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+        header.getChildren().addAll(statusBadge, dateLabel, spacer);
+
+        // Patient Info
+        VBox patientInfo = new VBox(8);
+        patientInfo.setStyle("-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 8;");
+
+        Label patientTitle = new Label("👤 Patient Information");
+        patientTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #495057;");
+
+        Label soulIdLabel = new Label("Soul ID: " + apt.soulId);
+        soulIdLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6c757d;");
+
+        Label soulNameLabel = new Label("Name: " + (apt.soulName != null ? apt.soulName : "N/A"));
+        soulNameLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6c757d;");
+
+        Label phoneLabel = new Label("📞 Phone: " + (apt.soulPhone != null ? apt.soulPhone : "N/A"));
+        phoneLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6c757d; -fx-font-weight: bold;");
+
+        patientInfo.getChildren().addAll(patientTitle, soulIdLabel, soulNameLabel, phoneLabel);
+
+        // Doctor Info
+        VBox doctorInfo = new VBox(8);
+        doctorInfo.setStyle("-fx-background-color: #e7f3ff; -fx-padding: 15; -fx-background-radius: 8;");
+
+        Label doctorTitle = new Label("👨‍⚕️ Doctor Information");
+        doctorTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #004085;");
+
+        Label doctorNameLabel = new Label("Dr. " + apt.doctorName);
+        doctorNameLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #004085; -fx-font-weight: bold;");
+
+        Label degreeLabel = new Label("Degree: " + apt.doctorDegree);
+        degreeLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #004085;");
+
+        Label doctorPhoneLabel = new Label("📞 " + apt.doctorPhone);
+        doctorPhoneLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #004085;");
+
+        Label hoursLabel = new Label("🕐 " + apt.consultingHours);
+        hoursLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #004085;");
+
+        doctorInfo.getChildren().addAll(doctorTitle, doctorNameLabel, degreeLabel, doctorPhoneLabel, hoursLabel);
+
+        // Action Buttons
+        HBox actionButtons = new HBox(15);
+        actionButtons.setAlignment(Pos.CENTER_RIGHT);
+
+        Button confirmBtn = new Button("✅ Confirm");
+        confirmBtn.getStyleClass().add("action-btn-confirm");
+        confirmBtn.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;");
+        confirmBtn.setOnAction(e -> confirmAppointment(apt.id));
+
+        Button rescheduleBtn = new Button("📅 Reschedule");
+        rescheduleBtn.getStyleClass().add("action-btn-reschedule");
+        rescheduleBtn.setStyle("-fx-background-color: #ffc107; -fx-text-fill: #212529; -fx-padding: 10 20; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;");
+        rescheduleBtn.setOnAction(e -> rescheduleAppointment(apt.id));
+
+        // Hover effects
+        confirmBtn.setOnMouseEntered(e -> confirmBtn.setStyle("-fx-background-color: #218838; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand; -fx-scale-x: 1.05; -fx-scale-y: 1.05;"));
+        confirmBtn.setOnMouseExited(e -> confirmBtn.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;"));
+
+        rescheduleBtn.setOnMouseEntered(e -> rescheduleBtn.setStyle("-fx-background-color: #e0a800; -fx-text-fill: #212529; -fx-padding: 10 20; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand; -fx-scale-x: 1.05; -fx-scale-y: 1.05;"));
+        rescheduleBtn.setOnMouseExited(e -> rescheduleBtn.setStyle("-fx-background-color: #ffc107; -fx-text-fill: #212529; -fx-padding: 10 20; -fx-background-radius: 8; -fx-font-weight: bold; -fx-cursor: hand;"));
+
+        actionButtons.getChildren().addAll(confirmBtn, rescheduleBtn);
+
+        // Add all sections to card
+        card.getChildren().addAll(header, patientInfo, doctorInfo, actionButtons);
+
+        // Add entrance animation
+        card.setOpacity(0);
+        card.setTranslateY(20);
+        FadeTransition fade = new FadeTransition(Duration.millis(300), card);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+
+        TranslateTransition slide = new TranslateTransition(Duration.millis(300), card);
+        slide.setFromY(20);
+        slide.setToY(0);
+
+        ParallelTransition animation = new ParallelTransition(fade, slide);
+        animation.play();
+
+        return card;
+    }
+
+    private void confirmAppointment(long appointmentId) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirm Appointment");
+        confirmation.setHeaderText("Confirm this appointment?");
+        confirmation.setContentText("This will mark the appointment as confirmed and send a confirmation message to the user.");
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            new Thread(() -> {
+                try {
+                    com.the_pathfinders.db.AppointmentRepository repo = new com.the_pathfinders.db.AppointmentRepository();
+
+                    // Get appointment details before confirming
+                    com.the_pathfinders.db.AppointmentRepository.AppointmentDetails details = repo.getAppointmentById(appointmentId);
+
+                    if (details != null) {
+                        // Update status
+                        boolean success = repo.updateAppointmentStatus(appointmentId, "CONFIRMED");
+
+                        if (success) {
+                            // Send confirmation message to user
+                            com.the_pathfinders.db.UserMessageRepository.sendAppointmentConfirmation(
+                                details.soulId,
+                                appointmentId,
+                                details.doctorName,
+                                details.appointmentDate
+                            );
+
+                            Platform.runLater(() -> {
+                                showSuccess("Appointment confirmed successfully!\nConfirmation message sent to user.");
+                                loadAppointments();
+                            });
+                        } else {
+                            Platform.runLater(() -> showError("Failed to confirm appointment"));
+                        }
+                    } else {
+                        Platform.runLater(() -> showError("Appointment not found"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Platform.runLater(() -> showError("Error: " + e.getMessage()));
+                }
+            }).start();
+        }
+    }
+
+    private void rescheduleAppointment(long appointmentId) {
+        // Create a custom dialog with date pickers
+        Dialog<java.util.List<String>> dialog = new Dialog<>();
+        dialog.setTitle("Request Reschedule");
+        dialog.setHeaderText("Select available dates for rescheduling");
+
+        VBox content = new VBox(15);
+        content.setPadding(new Insets(20));
+        content.setPrefWidth(550);
+
+        Label instructionLabel = new Label("Pick up to 3 alternative dates:");
+        instructionLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+        // Date picker 1
+        HBox date1Box = new HBox(10);
+        date1Box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        Label date1Label = new Label("Date 1:");
+        date1Label.setStyle("-fx-min-width: 60px;");
+        DatePicker datePicker1 = new DatePicker();
+        datePicker1.setPromptText("Select date");
+        datePicker1.setPrefWidth(150);
+
+        ComboBox<String> time1Combo = new ComboBox<>();
+        time1Combo.getItems().addAll(
+            "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+            "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
+        );
+        time1Combo.setPromptText("Select time");
+        time1Combo.setPrefWidth(120);
+
+        date1Box.getChildren().addAll(date1Label, datePicker1, time1Combo);
+
+        // Date picker 2
+        HBox date2Box = new HBox(10);
+        date2Box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        Label date2Label = new Label("Date 2:");
+        date2Label.setStyle("-fx-min-width: 60px;");
+        DatePicker datePicker2 = new DatePicker();
+        datePicker2.setPromptText("Select date");
+        datePicker2.setPrefWidth(150);
+
+        ComboBox<String> time2Combo = new ComboBox<>();
+        time2Combo.getItems().addAll(
+            "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+            "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
+        );
+        time2Combo.setPromptText("Select time");
+        time2Combo.setPrefWidth(120);
+
+        date2Box.getChildren().addAll(date2Label, datePicker2, time2Combo);
+
+        // Date picker 3
+        HBox date3Box = new HBox(10);
+        date3Box.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        Label date3Label = new Label("Date 3:");
+        date3Label.setStyle("-fx-min-width: 60px;");
+        DatePicker datePicker3 = new DatePicker();
+        datePicker3.setPromptText("Select date (optional)");
+        datePicker3.setPrefWidth(150);
+
+        ComboBox<String> time3Combo = new ComboBox<>();
+        time3Combo.getItems().addAll(
+            "09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+            "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
+        );
+        time3Combo.setPromptText("Select time");
+        time3Combo.setPrefWidth(120);
+
+        date3Box.getChildren().addAll(date3Label, datePicker3, time3Combo);
+
+        Separator separator = new Separator();
+
+        Label noteLabel = new Label("A professional reschedule request will be automatically generated and sent to the user.");
+        noteLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #666; -fx-font-style: italic;");
+        noteLabel.setWrapText(true);
+
+        content.getChildren().addAll(instructionLabel, date1Box, date2Box, date3Box, separator, noteLabel);
+
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Enable/disable OK button based on at least one date selected
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
+
+        // Listener to enable OK button when at least date 1 is selected
+        javafx.beans.value.ChangeListener<Object> validationListener = (obs, old, newVal) -> {
+            boolean hasDate1 = datePicker1.getValue() != null && time1Combo.getValue() != null;
+            okButton.setDisable(!hasDate1);
+        };
+
+        datePicker1.valueProperty().addListener(validationListener);
+        time1Combo.valueProperty().addListener(validationListener);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == ButtonType.OK) {
+                java.util.List<String> dates = new java.util.ArrayList<>();
+
+                // Add date 1 (required)
+                if (datePicker1.getValue() != null && time1Combo.getValue() != null) {
+                    dates.add(formatDate(datePicker1.getValue(), time1Combo.getValue()));
+                }
+
+                // Add date 2 (optional)
+                if (datePicker2.getValue() != null && time2Combo.getValue() != null) {
+                    dates.add(formatDate(datePicker2.getValue(), time2Combo.getValue()));
+                }
+
+                // Add date 3 (optional)
+                if (datePicker3.getValue() != null && time3Combo.getValue() != null) {
+                    dates.add(formatDate(datePicker3.getValue(), time3Combo.getValue()));
+                }
+
+                return dates;
+            }
+            return null;
+        });
+
+        Optional<java.util.List<String>> result = dialog.showAndWait();
+        result.ifPresent(selectedDates -> {
+            if (!selectedDates.isEmpty()) {
+                new Thread(() -> {
+                    try {
+                        com.the_pathfinders.db.AppointmentRepository repo = new com.the_pathfinders.db.AppointmentRepository();
+
+                        // Get appointment details
+                        com.the_pathfinders.db.AppointmentRepository.AppointmentDetails details = repo.getAppointmentById(appointmentId);
+
+                        if (details != null) {
+                            // Update status to RESCHEDULED
+                            boolean success = repo.updateAppointmentStatus(appointmentId, "RESCHEDULED");
+
+                            if (success) {
+                                // Format dates as bullet points
+                                StringBuilder availableDates = new StringBuilder();
+                                for (int i = 0; i < selectedDates.size(); i++) {
+                                    availableDates.append("• ").append(selectedDates.get(i));
+                                    if (i < selectedDates.size() - 1) {
+                                        availableDates.append("\n");
+                                    }
+                                }
+
+                                // Send reschedule request message to user
+                                com.the_pathfinders.db.UserMessageRepository.sendRescheduleRequest(
+                                    details.soulId,
+                                    appointmentId,
+                                    details.doctorName,
+                                    details.appointmentDate,
+                                    availableDates.toString()
+                                );
+
+                                Platform.runLater(() -> {
+                                    showSuccess("Reschedule request sent to user!\n\nAvailable dates:\n" + availableDates.toString());
+                                    loadAppointments();
+                                });
+                            } else {
+                                Platform.runLater(() -> showError("Failed to update appointment status"));
+                            }
+                        } else {
+                            Platform.runLater(() -> showError("Appointment not found"));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Platform.runLater(() -> showError("Error: " + e.getMessage()));
+                    }
+                }).start();
+            }
+        });
+    }
+
+    private String formatDate(java.time.LocalDate date, String time) {
+        // Format: "December 15, 2025 at 10:00 AM"
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+        return date.format(formatter) + " at " + time;
+    }
+
+    private void updateAppointmentStats() {
+        new Thread(() -> {
+            try {
+                com.the_pathfinders.db.AppointmentRepository repo = new com.the_pathfinders.db.AppointmentRepository();
+                List<com.the_pathfinders.db.AppointmentRepository.AppointmentDetails> allAppointments = repo.getAllAppointments();
+
+                long pending = allAppointments.stream().filter(a -> "PENDING".equals(a.status)).count();
+                long confirmed = allAppointments.stream().filter(a -> "CONFIRMED".equals(a.status)).count();
+                long total = allAppointments.size();
+
+                Platform.runLater(() -> {
+                    pendingAppointmentsCount.setText(String.valueOf(pending));
+                    confirmedAppointmentsCount.setText(String.valueOf(confirmed));
+                    totalAppointmentsCount.setText(String.valueOf(total));
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
