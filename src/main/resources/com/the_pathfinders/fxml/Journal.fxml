@@ -3,51 +3,106 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
 
-<VBox fx:id="root"
+<StackPane fx:id="mainContainer"
     xmlns="http://javafx.com/javafx/20"
     xmlns:fx="http://javafx.com/fxml/1"
     fx:controller="com.the_pathfinders.JournalController"
-    stylesheets="/com/the_pathfinders/css/Journal.css"
-    spacing="12"
-    style="-fx-padding: 16;">
+    stylesheets="/com/the_pathfinders/css/Journal.css">
 
-    <!-- Header -->
-    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="header">
-        <Label text="Create/Edit Journal" styleClass="title" />
-        <Region HBox.hgrow="ALWAYS" />
-    </HBox>
+    <!-- Main Journal Content -->
+    <VBox fx:id="root" spacing="15" styleClass="journal-main">
 
-    <!-- Controls: font, size, color, public/private toggle -->
-    <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 4 0 0 0;">
-        <Label text="Font:" />
-        <ComboBox fx:id="fontCombo" prefWidth="150" />
-        <Label text="Size:" />
-        <ComboBox fx:id="sizeCombo" prefWidth="80" />
-        <Label text="Color:" />
-        <ColorPicker fx:id="colorPicker" />
-        <Region HBox.hgrow="ALWAYS" />
-        <Label text="Visibility:" />
-        <HBox fx:id="visibilityToggle" styleClass="visibility-toggle" spacing="0" alignment="CENTER_LEFT">
-            <Button fx:id="publicBtn" text="Public" styleClass="toggle-btn-left" />
-            <Button fx:id="privateBtn" text="Private" styleClass="toggle-btn-right" />
+        <!-- Top Bar: Hamburger Menu + Public/Private Toggle -->
+        <HBox spacing="15" alignment="CENTER_LEFT" styleClass="top-bar">
+            <!-- Hamburger Menu Button -->
+            <Button fx:id="menuBtn" styleClass="menu-btn" onAction="#toggleMenu">
+                <graphic>
+                    <VBox spacing="4" alignment="CENTER" styleClass="hamburger-icon">
+                        <Line startX="0" endX="24" styleClass="hamburger-line" />
+                        <Line startX="0" endX="24" styleClass="hamburger-line" />
+                        <Line startX="0" endX="24" styleClass="hamburger-line" />
+                    </VBox>
+                </graphic>
+            </Button>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Public/Private Toggle -->
+            <Label text="Visibility:" styleClass="visibility-label" />
+            <HBox fx:id="visibilityToggle" styleClass="visibility-toggle" spacing="0" alignment="CENTER">
+                <Button fx:id="publicBtn" text="Public" styleClass="toggle-btn-left" />
+                <Button fx:id="privateBtn" text="Private" styleClass="toggle-btn-right" />
+            </HBox>
         </HBox>
-    </HBox>
-    <HBox alignment="CENTER_LEFT" spacing="8">
-        <Button fx:id="backBtn" text="← Back " styleClass="secondary-btn" />
-    </HBox>
 
-    <!-- Text area -->
-    <TextArea fx:id="textArea"
-        promptText="Write your thoughts here..."
-        wrapText="true"
-        VBox.vgrow="ALWAYS"
-        styleClass="text-area" />
+        <!-- Title Input -->
+        <TextField fx:id="titleField"
+            promptText="Enter journal title..."
+            styleClass="title-input" />
 
-    <!-- Bottom actions -->
-    <HBox spacing="8" alignment="CENTER_RIGHT">
-        <Region HBox.hgrow="ALWAYS" />
-        <Button fx:id="saveBtn" text="Save" styleClass="primary-btn" />
-    </HBox>
+        <!-- Text Area (Larger) -->
+        <TextArea fx:id="textArea"
+            promptText="Write your thoughts here..."
+            wrapText="true"
+            VBox.vgrow="ALWAYS"
+            styleClass="text-area" />
 
-</VBox>
+        <!-- Bottom Actions -->
+        <HBox spacing="12" alignment="CENTER_RIGHT" styleClass="bottom-bar">
+            <Button fx:id="backBtn" text="← Back" styleClass="secondary-btn" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="saveBtn" text="💾 Save Journal" styleClass="primary-btn" />
+        </HBox>
+
+    </VBox>
+
+    <!-- Overlay (to close menu when clicking outside) - BEHIND panel -->
+    <StackPane fx:id="menuOverlay" styleClass="menu-overlay" visible="false"
+               onMouseClicked="#closeMenuOnOverlay"
+               StackPane.alignment="CENTER"
+               mouseTransparent="false" />
+
+    <!-- Slide-Out Menu Panel (Initially Hidden) - ON TOP of overlay -->
+    <VBox fx:id="menuPanel" styleClass="menu-panel" visible="false" translateX="-320"
+          prefWidth="300" maxWidth="300" minWidth="300" alignment="TOP_LEFT" spacing="20"
+          StackPane.alignment="TOP_LEFT">
+
+        <!-- Menu Header -->
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="menu-header">
+            <Label text="⚙️ Settings" styleClass="menu-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="closeMenuBtn" text="✕" styleClass="close-menu-btn" onAction="#toggleMenu" />
+        </HBox>
+
+        <Separator />
+
+        <!-- Theme Selection -->
+        <VBox spacing="8">
+            <Label text="🎨 Theme" styleClass="menu-label" />
+            <ComboBox fx:id="themeCombo" prefWidth="260" styleClass="menu-combo" />
+        </VBox>
+
+        <!-- Font Selection -->
+        <VBox spacing="8">
+            <Label text="🖋️ Font Family" styleClass="menu-label" />
+            <ComboBox fx:id="fontCombo" prefWidth="260" styleClass="menu-combo" />
+        </VBox>
+
+        <!-- Font Size -->
+        <VBox spacing="8">
+            <Label text="📏 Font Size" styleClass="menu-label" />
+            <ComboBox fx:id="sizeCombo" prefWidth="260" styleClass="menu-combo" />
+        </VBox>
+
+        <!-- Font Color -->
+        <VBox spacing="8">
+            <Label text="🎨 Text Color" styleClass="menu-label" />
+            <ColorPicker fx:id="colorPicker" prefWidth="260" styleClass="menu-color-picker" />
+        </VBox>
+
+    </VBox>
+
+
+</StackPane>

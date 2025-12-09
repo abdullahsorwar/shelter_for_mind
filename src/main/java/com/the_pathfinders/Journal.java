@@ -8,6 +8,7 @@ import java.util.Objects;
 public class Journal {
     private String id;
     private String soulId;
+    private String title;
     private String text;
     private LocalDate entryDate;
     private LocalDateTime createdAt;
@@ -44,6 +45,9 @@ public class Journal {
 
     public String getSoulId() { return soulId; }
     public void setSoulId(String soulId) { this.soulId = soulId; }
+
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
     public String getText() { return text; }
     public void setText(String text) { this.text = text; }

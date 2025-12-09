@@ -1,33 +1,45 @@
 package com.the_pathfinders;
 
 import com.the_pathfinders.db.JournalRepository;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.util.Duration;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class JournalController {
 
+    @FXML private StackPane mainContainer;
     @FXML private VBox root;
+    @FXML private VBox menuPanel;
+    @FXML private StackPane menuOverlay;
     @FXML private TextArea textArea;
+    @FXML private TextField titleField;
     @FXML private Button saveBtn;
+    @FXML private Button menuBtn;
+    @FXML private Button closeMenuBtn;
     @FXML private ComboBox<String> fontCombo;
     @FXML private ComboBox<Integer> sizeCombo;
     @FXML private ColorPicker colorPicker;
     @FXML private Button backBtn;
     @FXML private Button publicBtn;
     @FXML private Button privateBtn;
+    @FXML private ComboBox<String> themeCombo;
 
     private String soulId = "";
     private JournalRepository journalRepo;
     private String currentJournalId = null;
     private boolean isPublic = true; // Default to public
+    private String currentTheme = "Default"; // Track current theme
+    private boolean menuOpen = false; // Track menu state
 
     public void setSoulId(String id) {
         this.soulId = id == null ? "" : id;
@@ -37,6 +49,25 @@ public class JournalController {
         // Initialize repository
         journalRepo = new JournalRepository();
         
+        System.out.println("🎨 JournalController initializing...");
+
+        // Apply default theme to mainContainer at startup
+        if (mainContainer != null) {
+            mainContainer.getStyleClass().add("theme-default");
+            System.out.println("✅ Default theme applied to mainContainer");
+            System.out.println("   MainContainer style classes: " + mainContainer.getStyleClass());
+        } else {
+            System.err.println("❌ ERROR: mainContainer is null during initialization!");
+        }
+
+        // Populate theme options
+        if (themeCombo != null) {
+            List<String> themes = Arrays.asList("Default", "Vintage", "Pastel", "Starry Night", "Lavender");
+            themeCombo.getItems().setAll(themes);
+            themeCombo.getSelectionModel().selectFirst();
+            themeCombo.setOnAction(e -> applyTheme(themeCombo.getSelectionModel().getSelectedItem()));
+        }
+
         // Populate font and size options
         List<String> fonts = Arrays.asList("System", "Segoe UI", "Arial", "Georgia", "Courier New");
         fontCombo.getItems().setAll(fonts);
@@ -101,6 +132,9 @@ public class JournalController {
             if (j != null) {
                 this.currentJournalId = j.getId();
                 // populate fields
+                if (titleField != null && j.getTitle() != null) {
+                    titleField.setText(j.getTitle());
+                }
                 this.textArea.setText(j.getText() == null ? "" : j.getText());
                 if (j.getFontFamily() != null) fontCombo.getSelectionModel().select(j.getFontFamily());
                 if (j.getFontSize() != null) sizeCombo.getSelectionModel().select(j.getFontSize());
@@ -211,6 +245,101 @@ public class JournalController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private void applyTheme(String theme) {
+        if (theme == null || mainContainer == null) {
+            System.err.println("ERROR: Cannot apply theme - theme=" + theme + ", mainContainer=" + mainContainer);
+            return;
+        }
+
+        currentTheme = theme;
+
+        // Remove all theme style classes from mainContainer
+        mainContainer.getStyleClass().removeAll("theme-default", "theme-vintage", "theme-pastel", "theme-starry", "theme-lavender");
+
+        // Add the selected theme class to mainContainer
+        String themeClass = "";
+        switch (theme) {
+            case "Vintage":
+                themeClass = "theme-vintage";
+                mainContainer.getStyleClass().add(themeClass);
+                break;
+            case "Pastel":
+                themeClass = "theme-pastel";
+                mainContainer.getStyleClass().add(themeClass);
+                break;
+            case "Starry Night":
+                themeClass = "theme-starry";
+                mainContainer.getStyleClass().add(themeClass);
+                break;
+            case "Lavender":
+                themeClass = "theme-lavender";
+                mainContainer.getStyleClass().add(themeClass);
+                break;
+            default:
+                themeClass = "theme-default";
+                mainContainer.getStyleClass().add(themeClass);
+                break;
+        }
+
+        System.out.println("✅ Theme applied: " + theme + " (class: " + themeClass + ")");
+        System.out.println("   MainContainer style classes: " + mainContainer.getStyleClass());
+    }
+
+    @FXML
+    private void toggleMenu() {
+        if (menuOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    }
+
+    private void openMenu() {
+        if (menuPanel == null || menuOverlay == null) return;
+
+        menuOpen = true;
+        menuPanel.setVisible(true);
+        menuOverlay.setVisible(true);
+
+        // Animate menu sliding in from left
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), menuPanel);
+        slideIn.setFromX(-320);
+        slideIn.setToX(0);
+        slideIn.play();
+
+        // Fade in overlay
+        menuOverlay.setOpacity(0);
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(Duration.millis(300), menuOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+    }
+
+    private void closeMenu() {
+        if (menuPanel == null || menuOverlay == null) return;
+
+        menuOpen = false;
+
+        // Animate menu sliding out to left
+        TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), menuPanel);
+        slideOut.setFromX(0);
+        slideOut.setToX(-320);
+        slideOut.setOnFinished(e -> menuPanel.setVisible(false));
+        slideOut.play();
+
+        // Fade out overlay
+        javafx.animation.FadeTransition fadeOut = new javafx.animation.FadeTransition(Duration.millis(300), menuOverlay);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> menuOverlay.setVisible(false));
+        fadeOut.play();
+    }
+
+    @FXML
+    private void closeMenuOnOverlay() {
+        closeMenu();
     }
 
     private void goBackToDashboard() {
