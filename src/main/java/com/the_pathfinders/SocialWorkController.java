@@ -54,6 +54,16 @@ public class SocialWorkController {
     @FXML private Button treeNationBtn;
     @FXML private Button oneTreePlantedBtn;
     @FXML private Button closeTreeOverlayBtn;
+    
+    // Donation Popup
+    @FXML private StackPane donationOverlay;
+    @FXML private VBox donationOverlayContentBox;
+    @FXML private ImageView donationIcon;
+    @FXML private Button jaagoBtn;
+    @FXML private Button mercyBtn;
+    @FXML private Button saveChildrenBtn;
+    @FXML private Button friendshipBtn;
+    @FXML private Button closeDonationOverlayBtn;
 
     // Browser Overlay
     @FXML private StackPane browserOverlay;
@@ -86,6 +96,12 @@ public class SocialWorkController {
     // Tree plantation URLs
     private static final String TREE_NATION_URL = "https://tree-nation.com/";
     private static final String ONE_TREE_PLANTED_URL = "https://onetreeplanted.org/";
+    
+    // Donation URLs
+    private static final String JAAGO_URL = "https://jaago.com.bd/";
+    private static final String MERCY_URL = "https://mwlimits.org/";
+    private static final String SAVE_CHILDREN_URL = "https://www.savethechildren.org/us/where-we-work/bangladesh";
+    private static final String FRIENDSHIP_URL = "https://friendship.ngo/donate/bangladesh/";
 
     public void setSoulId(String id) {
         this.soulId = id;
@@ -136,6 +152,23 @@ public class SocialWorkController {
         if (closeTreeOverlayBtn != null) {
             closeTreeOverlayBtn.setOnAction(e -> hideTreePlantationOverlay());
         }
+        
+        // Donation popup buttons
+        if (jaagoBtn != null) {
+            jaagoBtn.setOnAction(e -> openWebsite("JAAGO Foundation", JAAGO_URL));
+        }
+        if (mercyBtn != null) {
+            mercyBtn.setOnAction(e -> openWebsite("Mercy Without Limits", MERCY_URL));
+        }
+        if (saveChildrenBtn != null) {
+            saveChildrenBtn.setOnAction(e -> openWebsite("Save the Children", SAVE_CHILDREN_URL));
+        }
+        if (friendshipBtn != null) {
+            friendshipBtn.setOnAction(e -> openWebsite("Friendship NGO", FRIENDSHIP_URL));
+        }
+        if (closeDonationOverlayBtn != null) {
+            closeDonationOverlayBtn.setOnAction(e -> hideDonationOverlay());
+        }
 
         // Browser back button
         if (browserBackBtn != null) {
@@ -180,16 +213,22 @@ public class SocialWorkController {
     }
 
     private void onDonation() {
-        // TODO: Navigate to Donation page
-        System.out.println("Donation selected");
+        showDonationOverlay();
     }
     
     private void setQuestionIcon() {
         try {
-            if (questionIcon != null) {
-                URL iconUrl = getClass().getResource("/assets/icons/ques.png");
-                if (iconUrl != null) {
-                    questionIcon.setImage(new Image(iconUrl.toExternalForm(), 56, 56, true, true));
+            URL iconUrl = getClass().getResource("/assets/icons/ques.png");
+            if (iconUrl != null) {
+                Image quesImage = new Image(iconUrl.toExternalForm(), 56, 56, true, true);
+                if (questionIcon != null) {
+                    questionIcon.setImage(quesImage);
+                }
+                if (treeIcon != null) {
+                    treeIcon.setImage(quesImage);
+                }
+                if (donationIcon != null) {
+                    donationIcon.setImage(quesImage);
                 }
             }
         } catch (Exception ex) {
@@ -316,6 +355,66 @@ public class SocialWorkController {
         });
         fadeOut.play();
     }
+    
+    private void showDonationOverlay() {
+        if (donationOverlay == null || contentWrapper == null) return;
+
+        donationOverlay.setVisible(true);
+        donationOverlay.setManaged(true);
+
+        // Apply blur to content wrapper
+        GaussianBlur blur = new GaussianBlur(0);
+        contentWrapper.setEffect(blur);
+
+        Timeline blurTimeline = new Timeline(
+            new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 0)),
+            new KeyFrame(Duration.millis(280), new KeyValue(blur.radiusProperty(), 18))
+        );
+        blurTimeline.play();
+
+        // Fade in overlay
+        donationOverlay.setOpacity(0);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(240), donationOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        // Scale animation for content box
+        if (donationOverlayContentBox != null) {
+            donationOverlayContentBox.setScaleX(0.96);
+            donationOverlayContentBox.setScaleY(0.96);
+            ScaleTransition scaleIn = new ScaleTransition(Duration.millis(260), donationOverlayContentBox);
+            scaleIn.setFromX(0.96);
+            scaleIn.setFromY(0.96);
+            scaleIn.setToX(1);
+            scaleIn.setToY(1);
+            scaleIn.play();
+        }
+    }
+
+    private void hideDonationOverlay() {
+        if (donationOverlay == null || contentWrapper == null) return;
+
+        // Reverse blur
+        if (contentWrapper.getEffect() instanceof GaussianBlur blur) {
+            Timeline blurTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), blur.getRadius())),
+                new KeyFrame(Duration.millis(220), new KeyValue(blur.radiusProperty(), 0))
+            );
+            blurTimeline.setOnFinished(e -> contentWrapper.setEffect(null));
+            blurTimeline.play();
+        }
+
+        // Fade out overlay
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), donationOverlay);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            donationOverlay.setVisible(false);
+            donationOverlay.setManaged(false);
+        });
+        fadeOut.play();
+    }
 
     private void openWebsite(String title, String url) {
         // Hide blood donation overlay first if visible
@@ -326,6 +425,11 @@ public class SocialWorkController {
         // Hide tree plantation overlay first if visible
         if (treePlantationOverlay != null && treePlantationOverlay.isVisible()) {
             hideTreePlantationOverlay();
+        }
+        
+        // Hide donation overlay first if visible
+        if (donationOverlay != null && donationOverlay.isVisible()) {
+            hideDonationOverlay();
         }
 
         // Wait for overlay to hide, then show browser

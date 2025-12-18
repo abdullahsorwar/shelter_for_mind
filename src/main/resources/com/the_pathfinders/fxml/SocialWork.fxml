@@ -114,6 +114,26 @@
         </VBox>
     </StackPane>
 
+    <!-- Donation Popup Overlay -->
+    <StackPane fx:id="donationOverlay" visible="false" managed="false" styleClass="overlay-root">
+        <VBox fx:id="donationOverlayContentBox" spacing="24" alignment="CENTER" styleClass="donation-overlay-box">
+            <ImageView fx:id="donationIcon" fitWidth="56" fitHeight="56" preserveRatio="true" />
+            <Label text="Choose Donation Platform" styleClass="donation-overlay-title" />
+            <Label text="Select a platform to make a difference through your donation." wrapText="true" styleClass="donation-overlay-text" />
+
+            <!-- Four Buttons -->
+            <VBox spacing="16" alignment="CENTER">
+                <Button fx:id="jaagoBtn" text="JAAGO Foundation" styleClass="donation-option-btn" />
+                <Button fx:id="mercyBtn" text="Mercy Without Limits" styleClass="donation-option-btn" />
+                <Button fx:id="saveChildrenBtn" text="Save the Children" styleClass="donation-option-btn" />
+                <Button fx:id="friendshipBtn" text="Friendship NGO" styleClass="donation-option-btn" />
+            </VBox>
+
+            <!-- Close Button -->
+            <Button fx:id="closeDonationOverlayBtn" text="Close" styleClass="donation-overlay-close" />
+        </VBox>
+    </StackPane>
+
     <!-- Web Browser Overlay -->
     <StackPane fx:id="browserOverlay" visible="false" managed="false" styleClass="browser-overlay-root">
         <VBox spacing="0" alignment="TOP_CENTER" styleClass="browser-container" VBox.vgrow="ALWAYS">
