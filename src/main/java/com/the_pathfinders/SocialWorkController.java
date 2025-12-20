@@ -79,7 +79,8 @@ public class SocialWorkController {
 
     // Browser Overlay
     @FXML private StackPane browserOverlay;
-    @FXML private WebView webView;
+    @FXML private VBox browserContainer;
+    private WebView webView; // Lazy-loaded
     @FXML private Button browserBackBtn;
     @FXML private Label browserTitleLabel;
 
@@ -226,6 +227,29 @@ public class SocialWorkController {
         
         // Set question icon
         setQuestionIcon();
+
+        // Preload WebView asynchronously in background after UI is fully loaded
+        new Thread(() -> {
+            try {
+                // Small delay to ensure UI is fully rendered first
+                Thread.sleep(100);
+
+                // Queue WebView creation when UI thread is idle
+                Platform.runLater(() -> {
+                    if (browserContainer != null && webView == null) {
+                        webView = new WebView();
+                        javafx.scene.layout.VBox.setVgrow(webView, javafx.scene.layout.Priority.ALWAYS);
+                        browserContainer.getChildren().add(webView);
+                    }
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void initializeWebView() {
+        // Removed - WebView now initialized in initialize() method
     }
 
     private void goBack() {
@@ -543,36 +567,37 @@ public class SocialWorkController {
         }
 
         // Wait for overlay to hide, then show browser
-        Platform.runLater(() -> {
-            try {
-                Thread.sleep(250); // Wait for overlay animation to complete
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+        PauseTransition delay = new PauseTransition(Duration.millis(250));
+        delay.setOnFinished(e -> {
+            if (browserOverlay == null || browserContainer == null) return;
+
+            // WebView should already be initialized, but check just in case
+            if (webView == null) {
+                webView = new WebView();
+                javafx.scene.layout.VBox.setVgrow(webView, javafx.scene.layout.Priority.ALWAYS);
+                browserContainer.getChildren().add(webView);
+            }
+
+            // Set title
+            if (browserTitleLabel != null) {
+                browserTitleLabel.setText(title);
             }
             
-            Platform.runLater(() -> {
-                if (browserOverlay == null || webView == null) return;
-                
-                // Set title
-                if (browserTitleLabel != null) {
-                    browserTitleLabel.setText(title);
-                }
-                
-                // Load URL
-                webView.getEngine().load(url);
-                
-                // Show browser overlay
-                browserOverlay.setVisible(true);
-                browserOverlay.setManaged(true);
-                
-                // Fade in browser
-                browserOverlay.setOpacity(0);
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), browserOverlay);
-                fadeIn.setFromValue(0);
-                fadeIn.setToValue(1);
-                fadeIn.play();
-            });
+            // Load URL
+            webView.getEngine().load(url);
+            
+            // Show browser overlay
+            browserOverlay.setVisible(true);
+            browserOverlay.setManaged(true);
+            
+            // Fade in browser
+            browserOverlay.setOpacity(0);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), browserOverlay);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
         });
+        delay.play();
     }
     
     private void closeBrowser() {
