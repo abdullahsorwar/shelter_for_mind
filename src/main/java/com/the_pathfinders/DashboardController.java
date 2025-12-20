@@ -493,9 +493,8 @@ if (pomodoroBtn != null) {
     private void openSocialWork() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
         
-        // WebView must be created on FX thread, so we load on FX thread
-        // but we can still make it feel responsive by doing minimal work
-        javafx.application.Platform.runLater(() -> {
+        // Load in background thread to prevent UI freezing
+        new Thread(() -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SocialWork.fxml"));
                 Parent p = loader.load();
@@ -505,11 +504,16 @@ if (pomodoroBtn != null) {
                     controller.setSoulId(this.soulId == null ? "" : this.soulId);
                 }
 
-                root.getScene().setRoot(p);
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    if (root != null && root.getScene() != null) {
+                        root.getScene().setRoot(p);
+                    }
+                });
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        });
+        }).start();
     }
     private void showTranquilPopup() {
     if (tranquilOverlay == null) return;

@@ -136,14 +136,13 @@
 
     <!-- Web Browser Overlay -->
     <StackPane fx:id="browserOverlay" visible="false" managed="false" styleClass="browser-overlay-root">
-        <VBox spacing="0" alignment="TOP_CENTER" styleClass="browser-container" VBox.vgrow="ALWAYS">
+        <VBox fx:id="browserContainer" spacing="0" alignment="TOP_CENTER" styleClass="browser-container" VBox.vgrow="ALWAYS">
             <!-- Browser Header with Back Button -->
             <HBox spacing="12" alignment="CENTER_LEFT" styleClass="browser-header">
                 <Button fx:id="browserBackBtn" text="⟵ Back" styleClass="browser-back-btn" />
                 <Label fx:id="browserTitleLabel" text="" styleClass="browser-title" />
             </HBox>
-            <!-- WebView for browsing -->
-            <WebView fx:id="webView" VBox.vgrow="ALWAYS" />
+            <!-- WebView will be created lazily in the controller -->
         </VBox>
     </StackPane>
 
