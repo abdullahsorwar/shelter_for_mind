@@ -403,6 +403,84 @@
 }
 
 /* ========================================
+   SEMINAR POPUP OVERLAY (BLUE/YELLOW PALETTE)
+   ======================================== */
+
+.seminar-overlay-box {
+    -fx-background-color: linear-gradient(to bottom right, #fef9e7, #fff9db);
+    -fx-background-radius: 28;
+    -fx-border-color: #fbbf24;
+    -fx-border-width: 3;
+    -fx-border-radius: 28;
+    -fx-padding: 40 50 40 50;
+    -fx-max-width: 540;
+    -fx-min-width: 480;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 20, 0, 4, 4);
+}
+
+.seminar-overlay-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #92400e;
+    -fx-font-family: "Comic Sans MS", "Chalkboard", "Arial", sans-serif;
+}
+
+.seminar-overlay-text {
+    -fx-font-size: 15px;
+    -fx-text-fill: #b45309;
+    -fx-text-alignment: center;
+    -fx-font-family: "Comic Sans MS", "Arial", sans-serif;
+}
+
+/* Seminar Option Buttons (yellow/orange gradient) */
+.seminar-option-btn {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-min-width: 320;
+    -fx-pref-width: 320;
+    -fx-max-width: 320;
+    -fx-padding: 16 32 16 32;
+    -fx-background-color: linear-gradient(to right, #fbbf24, #fcd34d);
+    -fx-border-radius: 22;
+    -fx-background-radius: 22;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 2, 3);
+}
+
+.seminar-option-btn:hover {
+    -fx-background-color: linear-gradient(to right, #f59e0b, #fbbf24);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 12, 0, 3, 4);
+}
+
+.seminar-option-btn:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Close Button for Seminar Overlay */
+.seminar-overlay-close {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #b45309;
+    -fx-background-color: rgba(254, 249, 231, 0.8);
+    -fx-border-color: #fbbf24;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 24 8 24;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 1, 1);
+}
+
+.seminar-overlay-close:hover {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+}
+
+/* ========================================
    BROWSER OVERLAY
    ======================================== */
 

@@ -103,10 +103,12 @@
             <Label text="Choose Tree Plantation Platform" styleClass="tree-overlay-title" />
             <Label text="Select a platform to contribute to reforestation efforts." wrapText="true" styleClass="tree-overlay-text" />
 
-            <!-- Two Buttons -->
+            <!-- Three Buttons -->
             <VBox spacing="16" alignment="CENTER">
                 <Button fx:id="treeNationBtn" text="Tree Nation" styleClass="tree-option-btn" />
                 <Button fx:id="oneTreePlantedBtn" text="One Tree Planted" styleClass="tree-option-btn" />
+                <Button fx:id="teamTreesBtn" text="Team Trees" styleClass="tree-option-btn" />
+                <Button fx:id="plantTreeBtn" text ="Plant a Tree" styleClass="tree-option-btn" />
             </VBox>
 
             <!-- Close Button -->
@@ -131,6 +133,26 @@
 
             <!-- Close Button -->
             <Button fx:id="closeDonationOverlayBtn" text="Close" styleClass="donation-overlay-close" />
+        </VBox>
+    </StackPane>
+
+    <!-- Seminar Popup Overlay -->
+    <StackPane fx:id="seminarOverlay" visible="false" managed="false" styleClass="overlay-root">
+        <VBox fx:id="seminarOverlayContentBox" spacing="24" alignment="CENTER" styleClass="seminar-overlay-box">
+            <ImageView fx:id="seminarIcon" fitWidth="56" fitHeight="56" preserveRatio="true" />
+            <Label text="Choose Seminar Platform" styleClass="seminar-overlay-title" />
+            <Label text="Select a platform to explore mental health seminars and conferences." wrapText="true" styleClass="seminar-overlay-text" />
+
+            <!-- Four Buttons -->
+            <VBox spacing="16" alignment="CENTER">
+                <Button fx:id="allConferenceBtn" text="All Conference Alert" styleClass="seminar-option-btn" />
+                <Button fx:id="mentalHealthSummitBtn" text="Mental Health Summit" styleClass="seminar-option-btn" />
+                <Button fx:id="quillTherapyBtn" text="Quill Therapy Conferences" styleClass="seminar-option-btn" />
+                <Button fx:id="globallyMindedBtn" text="Globally Minded Events" styleClass="seminar-option-btn" />
+            </VBox>
+
+            <!-- Close Button -->
+            <Button fx:id="closeSeminarOverlayBtn" text="Close" styleClass="seminar-overlay-close" />
         </VBox>
     </StackPane>
 

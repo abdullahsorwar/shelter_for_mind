@@ -53,6 +53,8 @@ public class SocialWorkController {
     @FXML private ImageView treeIcon;
     @FXML private Button treeNationBtn;
     @FXML private Button oneTreePlantedBtn;
+    @FXML private Button teamTreesBtn;
+    @FXML private Button plantTreeBtn;
     @FXML private Button closeTreeOverlayBtn;
     
     // Donation Popup
@@ -64,6 +66,16 @@ public class SocialWorkController {
     @FXML private Button saveChildrenBtn;
     @FXML private Button friendshipBtn;
     @FXML private Button closeDonationOverlayBtn;
+
+    // Seminar Popup
+    @FXML private StackPane seminarOverlay;
+    @FXML private VBox seminarOverlayContentBox;
+    @FXML private ImageView seminarIcon;
+    @FXML private Button allConferenceBtn;
+    @FXML private Button mentalHealthSummitBtn;
+    @FXML private Button quillTherapyBtn;
+    @FXML private Button globallyMindedBtn;
+    @FXML private Button closeSeminarOverlayBtn;
 
     // Browser Overlay
     @FXML private StackPane browserOverlay;
@@ -96,12 +108,20 @@ public class SocialWorkController {
     // Tree plantation URLs
     private static final String TREE_NATION_URL = "https://tree-nation.com/";
     private static final String ONE_TREE_PLANTED_URL = "https://onetreeplanted.org/";
-    
+    private static final String TEAM_TREES_URL = "https://teamtrees.org/#planting-projects";
+    private static final String PLANT_A_TREE_URL = "https://plantatreeproject.com/";
+
     // Donation URLs
     private static final String JAAGO_URL = "https://jaago.com.bd/";
     private static final String MERCY_URL = "https://mwlimits.org/";
     private static final String SAVE_CHILDREN_URL = "https://www.savethechildren.org/us/where-we-work/bangladesh";
     private static final String FRIENDSHIP_URL = "https://friendship.ngo/donate/bangladesh/";
+
+    // Seminar URLs
+    private static final String ALL_CONFERENCE_URL = "https://www.allconferencealert.com/mental-health.html";
+    private static final String MENTAL_HEALTH_SUMMIT_URL = "https://mentalhealth.global-summit.com/";
+    private static final String QUILL_THERAPY_URL = "https://quilltherapysolutions.com/conferences/";
+    private static final String GLOBALLY_MINDED_URL = "https://www.globallyminded.org/home/global-mental-health-events-list/";
 
     public void setSoulId(String id) {
         this.soulId = id;
@@ -149,6 +169,12 @@ public class SocialWorkController {
         if (oneTreePlantedBtn != null) {
             oneTreePlantedBtn.setOnAction(e -> openWebsite("One Tree Planted", ONE_TREE_PLANTED_URL));
         }
+        if (teamTreesBtn != null) {
+            teamTreesBtn.setOnAction(e -> openWebsite("Team Trees", TEAM_TREES_URL));
+        }
+        if (plantTreeBtn != null) {
+            plantTreeBtn.setOnAction (e -> openWebsite("Plant A Tree Project", PLANT_A_TREE_URL));
+        }
         if (closeTreeOverlayBtn != null) {
             closeTreeOverlayBtn.setOnAction(e -> hideTreePlantationOverlay());
         }
@@ -168,6 +194,23 @@ public class SocialWorkController {
         }
         if (closeDonationOverlayBtn != null) {
             closeDonationOverlayBtn.setOnAction(e -> hideDonationOverlay());
+        }
+
+        // Seminar popup buttons
+        if (allConferenceBtn != null) {
+            allConferenceBtn.setOnAction(e -> openWebsite("All Conference Alert", ALL_CONFERENCE_URL));
+        }
+        if (mentalHealthSummitBtn != null) {
+            mentalHealthSummitBtn.setOnAction(e -> openWebsite("Mental Health Summit", MENTAL_HEALTH_SUMMIT_URL));
+        }
+        if (quillTherapyBtn != null) {
+            quillTherapyBtn.setOnAction(e -> openWebsite("Quill Therapy Conferences", QUILL_THERAPY_URL));
+        }
+        if (globallyMindedBtn != null) {
+            globallyMindedBtn.setOnAction(e -> openWebsite("Globally Minded Events", GLOBALLY_MINDED_URL));
+        }
+        if (closeSeminarOverlayBtn != null) {
+            closeSeminarOverlayBtn.setOnAction(e -> hideSeminarOverlay());
         }
 
         // Browser back button
@@ -208,8 +251,7 @@ public class SocialWorkController {
     }
 
     private void onSeminar() {
-        // TODO: Navigate to Seminar page
-        System.out.println("Seminar selected");
+        showSeminarOverlay();
     }
 
     private void onDonation() {
@@ -229,6 +271,9 @@ public class SocialWorkController {
                 }
                 if (donationIcon != null) {
                     donationIcon.setImage(quesImage);
+                }
+                if (seminarIcon != null) {
+                    seminarIcon.setImage(quesImage);
                 }
             }
         } catch (Exception ex) {
@@ -416,6 +461,66 @@ public class SocialWorkController {
         fadeOut.play();
     }
 
+    private void showSeminarOverlay() {
+        if (seminarOverlay == null || contentWrapper == null) return;
+
+        seminarOverlay.setVisible(true);
+        seminarOverlay.setManaged(true);
+
+        // Apply blur to content wrapper
+        GaussianBlur blur = new GaussianBlur(0);
+        contentWrapper.setEffect(blur);
+
+        Timeline blurTimeline = new Timeline(
+            new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), 0)),
+            new KeyFrame(Duration.millis(280), new KeyValue(blur.radiusProperty(), 18))
+        );
+        blurTimeline.play();
+
+        // Fade in overlay
+        seminarOverlay.setOpacity(0);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(240), seminarOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        // Scale animation for content box
+        if (seminarOverlayContentBox != null) {
+            seminarOverlayContentBox.setScaleX(0.96);
+            seminarOverlayContentBox.setScaleY(0.96);
+            ScaleTransition scaleIn = new ScaleTransition(Duration.millis(260), seminarOverlayContentBox);
+            scaleIn.setFromX(0.96);
+            scaleIn.setFromY(0.96);
+            scaleIn.setToX(1);
+            scaleIn.setToY(1);
+            scaleIn.play();
+        }
+    }
+
+    private void hideSeminarOverlay() {
+        if (seminarOverlay == null || contentWrapper == null) return;
+
+        // Reverse blur
+        if (contentWrapper.getEffect() instanceof GaussianBlur blur) {
+            Timeline blurTimeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(blur.radiusProperty(), blur.getRadius())),
+                new KeyFrame(Duration.millis(220), new KeyValue(blur.radiusProperty(), 0))
+            );
+            blurTimeline.setOnFinished(e -> contentWrapper.setEffect(null));
+            blurTimeline.play();
+        }
+
+        // Fade out overlay
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), seminarOverlay);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setOnFinished(e -> {
+            seminarOverlay.setVisible(false);
+            seminarOverlay.setManaged(false);
+        });
+        fadeOut.play();
+    }
+
     private void openWebsite(String title, String url) {
         // Hide blood donation overlay first if visible
         if (bloodDonationOverlay != null && bloodDonationOverlay.isVisible()) {
@@ -430,6 +535,11 @@ public class SocialWorkController {
         // Hide donation overlay first if visible
         if (donationOverlay != null && donationOverlay.isVisible()) {
             hideDonationOverlay();
+        }
+
+        // Hide seminar overlay first if visible
+        if (seminarOverlay != null && seminarOverlay.isVisible()) {
+            hideSeminarOverlay();
         }
 
         // Wait for overlay to hide, then show browser
