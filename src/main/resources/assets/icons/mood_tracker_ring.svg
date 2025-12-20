@@ -1,0 +1,39 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer ring segments -->
+  <g>
+    <!-- Segment 1: Light Pink/Peach -->
+    <path d="M 60 10 A 50 50 0 0 1 95.355 24.645 L 77.778 42.222 A 25 25 0 0 0 60 35 Z" fill="#FFD6D6"/>
+    
+    <!-- Segment 2: Yellow -->
+    <path d="M 95.355 24.645 A 50 50 0 0 1 110 60 L 85 60 A 25 25 0 0 0 77.778 42.222 Z" fill="#FFD93D"/>
+    
+    <!-- Segment 3: Light Green -->
+    <path d="M 110 60 A 50 50 0 0 1 95.355 95.355 L 77.778 77.778 A 25 25 0 0 0 85 60 Z" fill="#B8E6B8"/>
+    
+    <!-- Segment 4: Teal -->
+    <path d="M 95.355 95.355 A 50 50 0 0 1 60 110 L 60 85 A 25 25 0 0 0 77.778 77.778 Z" fill="#6DD5D5"/>
+    
+    <!-- Segment 5: Orange -->
+    <path d="M 60 110 A 50 50 0 0 1 24.645 95.355 L 42.222 77.778 A 25 25 0 0 0 60 85 Z" fill="#FFA559"/>
+    
+    <!-- Segment 6: Red -->
+    <path d="M 24.645 95.355 A 50 50 0 0 1 10 60 L 35 60 A 25 25 0 0 0 42.222 77.778 Z" fill="#FF6B6B"/>
+    
+    <!-- Segment 7: Hot Pink -->
+    <path d="M 10 60 A 50 50 0 0 1 24.645 24.645 L 42.222 42.222 A 25 25 0 0 0 35 60 Z" fill="#FF69B4"/>
+    
+    <!-- Segment 8: Lavender -->
+    <path d="M 24.645 24.645 A 50 50 0 0 1 60 10 L 60 35 A 25 25 0 0 0 42.222 42.222 Z" fill="#C5A3FF"/>
+  </g>
+  
+  <!-- White center circle -->
+  <circle cx="60" cy="60" r="30" fill="white" opacity="0.95"/>
+  
+  <!-- Subtle shadow effect -->
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1" filter="url(#shadow)"/>
+</svg>

@@ -49,6 +49,8 @@ public class DashboardController {
     @FXML private Label userLabel;
     @FXML private ImageView userImage;
     @FXML private ImageView logoImage;
+    
+    private VideoManager videoManager;
     @FXML private VBox userDropdown;
     @FXML private Rectangle bgRect;
     @FXML private Rectangle vignetteRect;
@@ -156,7 +158,17 @@ public class DashboardController {
     }
 
     public void initialize() {
-        setLogo();
+        // Initialize background video
+        videoManager = VideoManager.getInstance();
+        if (videoManager.isInitialized()) {
+            videoManager.attachToPane(root);
+        } else {
+            videoManager.initializeWithRetry(
+                3,
+                msg -> videoManager.attachToPane(root),
+                err -> System.err.println("Failed to initialize video: " + err)
+            );
+        }
         
         // Ensure user image is visible and clickable
         if (userImage != null) {
@@ -220,10 +232,11 @@ public class DashboardController {
         }
         if (blogBtn != null) blogBtn.setOnAction(e -> openBlogs());
         if (moodBtn != null) moodBtn.setOnAction(e -> openToDo());
-        if (moodTrackerBtn != null) moodTrackerBtn.setOnAction(e -> {
-            System.out.println("Mood tracker button clicked!");
-            showMoodTrackerPopup();
-        });
+        if (moodTrackerBtn != null) {
+            // Remove button action - click will be handled by inner donut only
+            // Create the colorful donut ring design
+            setupMoodTrackerButtonGraphic();
+        }
 
         // Initialize mood tracker popup
         initializeMoodTracker();
@@ -401,33 +414,10 @@ if (pomodoroBtn != null) {
             vignetteRect.setFill(gradient);
         }
 
+        // Hide bgRect to show video background
         try {
             if (bgRect != null) {
-                bgRect.widthProperty().bind(root.widthProperty());
-                bgRect.heightProperty().bind(root.heightProperty());
-                Color[] colors = new Color[] { Color.web("#E9D5FF"), Color.web("#D1FAE5"), Color.web("#FFE7D9") };
-                
-                // Start with first color
-                bgRect.setFill(colors[0]);
-                
-                // Create smooth infinite loop through all colors
-                final int[] currentIndex = {0};
-                FillTransition[] ft = {null};
-                
-                ft[0] = new FillTransition(Duration.seconds(6), bgRect);
-                ft[0].setFromValue(colors[0]);
-                ft[0].setToValue(colors[1]);
-                
-                ft[0].setOnFinished(e -> {
-                    currentIndex[0] = (currentIndex[0] + 1) % colors.length;
-                    int nextIndex = (currentIndex[0] + 1) % colors.length;
-                    
-                    ft[0].setFromValue(colors[currentIndex[0]]);
-                    ft[0].setToValue(colors[nextIndex]);
-                    ft[0].playFromStart();
-                });
-                
-                ft[0].play();
+                bgRect.setVisible(false);
             }
         } catch (Exception ignored) {}
     }
@@ -667,6 +657,88 @@ private void loadPage(String path) {
         } catch (Exception ignored) {}
     }
 
+    private void setupMoodTrackerButtonGraphic() {
+        try {
+            // Create a StackPane to layer the images and text
+            StackPane buttonGraphic = new StackPane();
+            buttonGraphic.setPrefSize(200, 200); // Size matches inner donut display size
+            buttonGraphic.setPickOnBounds(false); // Only respond to opaque pixels
+            
+            // Load outer arc image - LARGER than inner for the ring effect
+            URL outerArcUrl = getClass().getResource("/assets/images/outer_arc.png");
+            ImageView outerArcView = null;
+            if (outerArcUrl != null) {
+                outerArcView = new ImageView(new Image(outerArcUrl.toExternalForm()));
+                outerArcView.setFitWidth(480); // Even larger outer ring
+                outerArcView.setFitHeight(480);
+                outerArcView.setPreserveRatio(true);
+                outerArcView.setSmooth(true);
+                outerArcView.setPickOnBounds(false); // Only respond to opaque pixels
+                outerArcView.setMouseTransparent(true); // Don't block inner donut clicks
+                buttonGraphic.getChildren().add(outerArcView);
+            }
+            
+            // Load inner donut image - 578x578 trimmed image scaled to 200x200
+            URL innerDonutUrl = getClass().getResource("/assets/images/inner_donut.png");
+            ImageView innerDonutView = null;
+            if (innerDonutUrl != null) {
+                innerDonutView = new ImageView(new Image(innerDonutUrl.toExternalForm()));
+                innerDonutView.setFitWidth(200); // Exact match to StackPane size
+                innerDonutView.setFitHeight(200);
+                innerDonutView.setPreserveRatio(true);
+                innerDonutView.setSmooth(true);
+                innerDonutView.setPickOnBounds(false); // Only detect clicks on opaque pixels
+                innerDonutView.setTranslateY(-8); // Shift up to align with outer circle
+                innerDonutView.setTranslateX(-2); // Shift left slightly for better centering
+                innerDonutView.setMouseTransparent(false); // Ensure it can receive mouse events
+                innerDonutView.setCursor(javafx.scene.Cursor.HAND); // Hand cursor only on inner donut
+                buttonGraphic.getChildren().add(innerDonutView);
+                
+                // Add smooth pop-up transition on hover for inner donut only
+                // Apply hover to the imageView itself, not the button
+                final ImageView finalInnerDonutView = innerDonutView;
+                ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), finalInnerDonutView);
+                scaleUp.setToX(1.1);
+                scaleUp.setToY(1.1);
+                
+                ScaleTransition scaleDown = new ScaleTransition(Duration.millis(200), finalInnerDonutView);
+                scaleDown.setToX(1.0);
+                scaleDown.setToY(1.0);
+                
+                // Attach hover events to the inner donut imageView, not the button
+                finalInnerDonutView.setOnMouseEntered(e -> {
+                    scaleUp.playFromStart();
+                    e.consume(); // Consume event to prevent button from receiving it
+                });
+                finalInnerDonutView.setOnMouseExited(e -> {
+                    scaleDown.playFromStart();
+                    e.consume();
+                });
+                
+                // Attach click event to inner donut only - open assessment
+                finalInnerDonutView.setOnMouseClicked(e -> {
+                    System.out.println("Inner donut clicked!");
+                    showMoodTrackerPopup();
+                    e.consume(); // Consume event to prevent button from receiving it
+                });
+            }
+            
+            // No text label needed - image has text built-in
+            
+            // Set the graphic to the button and clear any default text
+            moodTrackerBtn.setGraphic(buttonGraphic);
+            moodTrackerBtn.setText(""); // Clear text to avoid overlay
+            moodTrackerBtn.setContentDisplay(javafx.scene.control.ContentDisplay.GRAPHIC_ONLY);
+            moodTrackerBtn.setPrefSize(200, 200); // Match inner donut size
+            moodTrackerBtn.setPickOnBounds(false); // Don't respond to bounding box
+            // No shape set - button doesn't handle clicks, only ImageView does
+            
+        } catch (Exception e) {
+            System.err.println("Error creating mood tracker button graphic: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void updateGreeting() {
         int h = LocalTime.now().getHour();
         String g;
@@ -880,9 +952,18 @@ private void loadPage(String path) {
     }
 
     private void handleMusicToggle() {
-        boolean enableMusic = musicToggle != null && musicToggle.isSelected();
-        MusicManager.setBackgroundMusicEnabled(enableMusic);
-        updateMusicToggleText();
+        if (musicToggle != null) {
+            boolean enableMusic = musicToggle.isSelected();
+            MusicManager.setBackgroundMusicEnabled(enableMusic);
+            updateMusicToggleText();
+            
+            // Apply the change immediately
+            if (enableMusic) {
+                MusicManager.playBackgroundMusic();
+            } else {
+                MusicManager.stopBackgroundMusic();
+            }
+        }
     }
 
     private void updateMusicToggleText() {

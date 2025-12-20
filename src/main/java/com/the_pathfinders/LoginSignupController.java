@@ -296,6 +296,45 @@ public class LoginSignupController implements Initializable {
     // Load dashboard.fxml, set user context and swap scene root
     private void openDashboard(String id, String name) {
         try {
+            // Initialize video in background thread before loading dashboard
+            VideoManager videoManager = VideoManager.getInstance();
+            
+            if (!videoManager.isInitialized()) {
+                // Show loading indicator (optional)
+                javafx.application.Platform.runLater(() -> {
+                    if (lblLoginStatus != null) {
+                        lblLoginStatus.setText("Loading...");
+                        lblLoginStatus.setStyle("-fx-text-fill: #3498db;");
+                    }
+                });
+                
+                // Load video in background thread
+                new Thread(() -> {
+                    videoManager.initializeWithRetry(
+                        3,
+                        msg -> {
+                            // Video loaded successfully - now open dashboard
+                            javafx.application.Platform.runLater(() -> loadDashboardUI(id, name));
+                        },
+                        err -> {
+                            // Video failed - still open dashboard (fallback)
+                            System.err.println("Video load failed, opening dashboard anyway: " + err);
+                            javafx.application.Platform.runLater(() -> loadDashboardUI(id, name));
+                        }
+                    );
+                }).start();
+            } else {
+                // Video already loaded
+                loadDashboardUI(id, name);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            setErr(lblLoginStatus, "Failed to open dashboard: " + ex.getMessage());
+        }
+    }
+    
+    private void loadDashboardUI(String id, String name) {
+        try {
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml"));
             javafx.scene.Parent dashRoot = loader.load();
             Object controller = loader.getController();
