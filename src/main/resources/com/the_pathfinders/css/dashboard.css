@@ -216,8 +216,7 @@
 
 /* ========== Journaling Popup Overlay Styles ========== */
 .journaling-overlay-root {
-	-fx-background-color: rgba(0, 0, 0, 0.45);
-}
+	-fx-background-color: rgba(0, 0, 0, 0.45);	-fx-mouse-transparent: false;}
 
 /* Mood Tracker Circle Button - Colorful Segmented Ring Design */
 .mood-tracker-circle {

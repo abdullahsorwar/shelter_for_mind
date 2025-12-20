@@ -492,19 +492,24 @@ if (pomodoroBtn != null) {
     }
     private void openSocialWork() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SocialWork.fxml"));
-            Parent p = loader.load();
+        
+        // WebView must be created on FX thread, so we load on FX thread
+        // but we can still make it feel responsive by doing minimal work
+        javafx.application.Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SocialWork.fxml"));
+                Parent p = loader.load();
 
-            SocialWorkController controller = loader.getController();
-            if (controller != null) {
-                controller.setSoulId(this.soulId == null ? "" : this.soulId);
+                SocialWorkController controller = loader.getController();
+                if (controller != null) {
+                    controller.setSoulId(this.soulId == null ? "" : this.soulId);
+                }
+
+                root.getScene().setRoot(p);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-
-            root.getScene().setRoot(p);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        });
     }
     private void showTranquilPopup() {
     if (tranquilOverlay == null) return;
@@ -534,26 +539,34 @@ private void hideTranquilPopup() {
 private void loadPage(String path) {
     System.out.println("loadPage called with path: " + path);
     com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-    try {
-        System.out.println("Getting resource for: " + path);
-        java.net.URL resourceUrl = getClass().getResource(path);
-        System.out.println("Resource URL: " + resourceUrl);
-        
-        if (resourceUrl == null) {
-            System.err.println("ERROR: Resource not found at path: " + path);
-            return;
+    
+    // Load in background thread to prevent UI freezing
+    new Thread(() -> {
+        try {
+            System.out.println("Getting resource for: " + path);
+            java.net.URL resourceUrl = getClass().getResource(path);
+            System.out.println("Resource URL: " + resourceUrl);
+            
+            if (resourceUrl == null) {
+                System.err.println("ERROR: Resource not found at path: " + path);
+                return;
+            }
+            
+            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            System.out.println("Loading FXML...");
+            Parent p = loader.load();
+            System.out.println("FXML loaded successfully, setting scene root...");
+            
+            // Update UI on JavaFX thread
+            javafx.application.Platform.runLater(() -> {
+                root.getScene().setRoot(p);
+                System.out.println("Scene root set successfully!");
+            });
+        } catch (Exception ex) {
+            System.err.println("ERROR in loadPage: " + ex.getMessage());
+            ex.printStackTrace();
         }
-        
-        FXMLLoader loader = new FXMLLoader(resourceUrl);
-        System.out.println("Loading FXML...");
-        Parent p = loader.load();
-        System.out.println("FXML loaded successfully, setting scene root...");
-        root.getScene().setRoot(p);
-        System.out.println("Scene root set successfully!");
-    } catch (Exception ex) {
-        System.err.println("ERROR in loadPage: " + ex.getMessage());
-        ex.printStackTrace();
-    }
+    }).start();
 } 
 
 
@@ -562,56 +575,69 @@ private void loadPage(String path) {
 
     private void openToDo() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-        try {
-            System.out.println("=== Opening ToDo page ===");
-            URL fxmlUrl = getClass().getResource("/com/the_pathfinders/fxml/ToDo.fxml");
-            System.out.println("FXML URL: " + fxmlUrl);
+        
+        // Load in background thread to prevent UI freezing
+        new Thread(() -> {
+            try {
+                System.out.println("=== Opening ToDo page ===");
+                URL fxmlUrl = getClass().getResource("/com/the_pathfinders/fxml/ToDo.fxml");
+                System.out.println("FXML URL: " + fxmlUrl);
 
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            Parent p = loader.load();
-            System.out.println("FXML loaded successfully");
+                FXMLLoader loader = new FXMLLoader(fxmlUrl);
+                Parent p = loader.load();
+                System.out.println("FXML loaded successfully");
 
-            ToDoController controller = loader.getController();
-            if (controller != null) {
-                controller.setSoulId(this.soulId == null ? "" : this.soulId);
+                ToDoController controller = loader.getController();
+                if (controller != null) {
+                    controller.setSoulId(this.soulId == null ? "" : this.soulId);
+                }
+                System.out.println("Controller: " + controller);
+
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    if (root != null && root.getScene() != null) {
+                        System.out.println("Setting scene root...");
+                        root.getScene().setRoot(p);
+                        System.out.println("Scene root set successfully");
+                    } else {
+                        System.err.println("ERROR: root or scene is null!");
+                    }
+                });
+            } catch (Exception ex) {
+                System.err.println("ERROR in openToDo:");
+                ex.printStackTrace();
             }
-            System.out.println("Controller: " + controller);
-
-            // The FXML already has the stylesheet reference, just set the root
-            if (root != null && root.getScene() != null) {
-                System.out.println("Setting scene root...");
-                root.getScene().setRoot(p);
-                System.out.println("Scene root set successfully");
-            } else {
-                System.err.println("ERROR: root or scene is null!");
-            }
-        } catch (Exception ex) {
-            System.err.println("ERROR in openToDo:");
-            ex.printStackTrace();
-        }
+        }).start();
     }
 
     private void openSeekHelp() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SeekHelp.fxml"));
-            Parent p = loader.load();
+        
+        // Load in background thread to prevent UI freezing
+        new Thread(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/SeekHelp.fxml"));
+                Parent p = loader.load();
 
-            SeekHelpController controller = loader.getController();
-            if (controller != null) {
-                controller.setSoulId(this.soulId == null ? "" : this.soulId);
-            }
+                SeekHelpController controller = loader.getController();
+                if (controller != null) {
+                    controller.setSoulId(this.soulId == null ? "" : this.soulId);
+                }
 
-            var scene = root != null ? root.getScene() : (insightsBtn != null ? insightsBtn.getScene() : null);
-            if (scene != null) {
-                scene.setRoot(p);
-            } else {
-                System.err.println("SeekHelp navigation failed: scene is null");
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    var scene = root != null ? root.getScene() : (insightsBtn != null ? insightsBtn.getScene() : null);
+                    if (scene != null) {
+                        scene.setRoot(p);
+                    } else {
+                        System.err.println("SeekHelp navigation failed: scene is null");
+                    }
+                });
+            } catch (Exception ex) {
+                System.err.println("SeekHelp navigation error:");
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            System.err.println("SeekHelp navigation error:");
-            ex.printStackTrace();
-        }
+        }).start();
     }
 
 
@@ -866,45 +892,63 @@ private void loadPage(String path) {
     
     private void openMessages() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/user_messages.fxml"));
-            Parent messagesRoot = loader.load();
-            Object controller = loader.getController();
-            if (controller instanceof UserMessagesController umc) {
-                umc.setSoulId(this.soulId);
+        
+        // Load in background thread to prevent UI freezing
+        new Thread(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/user_messages.fxml"));
+                Parent messagesRoot = loader.load();
+                Object controller = loader.getController();
+                if (controller instanceof UserMessagesController umc) {
+                    umc.setSoulId(this.soulId);
+                }
+                
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    if (root != null && root.getScene() != null) {
+                        root.getScene().setRoot(messagesRoot);
+                    }
+                });
+            } catch (Exception ex) { 
+                ex.printStackTrace();
+                javafx.application.Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to load messages page: " + ex.getMessage());
+                    alert.showAndWait();
+                });
             }
-            if (root != null && root.getScene() != null) {
-                root.getScene().setRoot(messagesRoot);
-            }
-        } catch (Exception ex) { 
-            ex.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to load messages page: " + ex.getMessage());
-            alert.showAndWait();
-        }
+        }).start();
     }
 
     private void openProfile() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-        try {
-            System.out.println("Opening profile for soulId: " + this.soulId);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/profile.fxml"));
-            Parent profileRoot = loader.load();
-            Object controller = loader.getController();
-            if (controller instanceof ProfileController pc) {
-                if (this.soulId == null || this.soulId.isEmpty()) {
-                    System.err.println("WARNING: soulId is empty in openProfile!");
+        
+        // Load in background thread to prevent UI freezing
+        new Thread(() -> {
+            try {
+                System.out.println("Opening profile for soulId: " + this.soulId);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/profile.fxml"));
+                Parent profileRoot = loader.load();
+                Object controller = loader.getController();
+                if (controller instanceof ProfileController pc) {
+                    if (this.soulId == null || this.soulId.isEmpty()) {
+                        System.err.println("WARNING: soulId is empty in openProfile!");
+                    }
+                    pc.setSoulId(this.soulId);
+                    System.out.println("Set soulId in ProfileController: " + this.soulId);
+                    pc.onShown();
                 }
-                pc.setSoulId(this.soulId);
-                System.out.println("Set soulId in ProfileController: " + this.soulId);
-                pc.onShown();
-            }
-            if (root != null && root.getScene() != null) {
-                root.getScene().setRoot(profileRoot);
-            }
-        } catch (Exception ex) { ex.printStackTrace(); }
+                
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    if (root != null && root.getScene() != null) {
+                        root.getScene().setRoot(profileRoot);
+                    }
+                });
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }).start();
     }
 
     private void onLogout() {
@@ -935,45 +979,69 @@ private void loadPage(String path) {
 
     private void openPrivateJournals() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/private_journals_view.fxml"));
-            Parent p = loader.load();
-            Object controller = loader.getController();
-            if (controller instanceof PrivateJournalsController pc) pc.setSoulId(this.soulId);
-            if (root != null && root.getScene() != null) root.getScene().setRoot(p);
-        } catch (Exception ex) { ex.printStackTrace(); }
+        
+        // Load in background thread to prevent UI freezing
+        new Thread(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/private_journals_view.fxml"));
+                Parent p = loader.load();
+                Object controller = loader.getController();
+                if (controller instanceof PrivateJournalsController pc) pc.setSoulId(this.soulId);
+                
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    if (root != null && root.getScene() != null) root.getScene().setRoot(p);
+                });
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }).start();
     }
 
     private void openPublicJournals() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/public_journals_view.fxml"));
-            Parent p = loader.load();
-            Object controller = loader.getController();
-            if (controller != null) {
-                try {
-                    Method m = controller.getClass().getMethod("setSoulId", String.class);
-                    m.invoke(controller, this.soulId == null ? "" : this.soulId);
-                } catch (NoSuchMethodException ignored) {}
-            }
-            if (root != null && root.getScene() != null) root.getScene().setRoot(p);
-        } catch (Exception ex) { ex.printStackTrace(); }
+        
+        // Load in background thread to prevent UI freezing
+        new Thread(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/public_journals_view.fxml"));
+                Parent p = loader.load();
+                Object controller = loader.getController();
+                if (controller != null) {
+                    try {
+                        Method m = controller.getClass().getMethod("setSoulId", String.class);
+                        m.invoke(controller, this.soulId == null ? "" : this.soulId);
+                    } catch (NoSuchMethodException ignored) {}
+                }
+                
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    if (root != null && root.getScene() != null) root.getScene().setRoot(p);
+                });
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }).start();
     }
 
     private void openBlogs() {
         com.the_pathfinders.util.ActivityTracker.updateActivity(this.soulId);
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/blog.fxml"));
-            Parent p = loader.load();
-            Object controller = loader.getController();
-            if (controller != null) {
-                try {
-                    Method m = controller.getClass().getMethod("setSoulId", String.class);
-                    m.invoke(controller, this.soulId == null ? "" : this.soulId);
-                } catch (NoSuchMethodException ignored) {}
-            }
-            if (root != null && root.getScene() != null) root.getScene().setRoot(p);
-        } catch (Exception ex) { ex.printStackTrace(); }
+        
+        // Load in background thread to prevent UI freezing
+        new Thread(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/blog.fxml"));
+                Parent p = loader.load();
+                Object controller = loader.getController();
+                if (controller != null) {
+                    try {
+                        Method m = controller.getClass().getMethod("setSoulId", String.class);
+                        m.invoke(controller, this.soulId == null ? "" : this.soulId);
+                    } catch (NoSuchMethodException ignored) {}
+                }
+                
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    if (root != null && root.getScene() != null) root.getScene().setRoot(p);
+                });
+            } catch (Exception ex) { ex.printStackTrace(); }
+        }).start();
     }
 
     private void handleMusicToggle() {
