@@ -205,7 +205,7 @@
                 <Button fx:id="moodBackBtn" text="←" styleClass="back-btn"/>
                 <Label text="Assessment" styleClass="mood-title"/>
                 <javafx.scene.layout.Region HBox.hgrow="ALWAYS"/>
-                <Label text="4 OF 7" styleClass="progress-indicator-label"/>
+                <Label fx:id="moodProgressLabel" text="1 OF 5" styleClass="progress-indicator-label"/>
                 <Button fx:id="moodCloseBtn" text="✕" styleClass="close-btn"/>
             </HBox>
 

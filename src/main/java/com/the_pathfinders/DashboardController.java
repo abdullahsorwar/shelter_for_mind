@@ -106,6 +106,7 @@ public class DashboardController {
     @FXML private Button moodNextBtn;
     @FXML private Button moodSubmitBtn;
     @FXML private Button moodDoneBtn;
+    @FXML private Label moodProgressLabel;
     @FXML private javafx.scene.shape.Circle progress1, progress2, progress3, progress4, progress5;
     @FXML private ScrollPane moodScrollPane;
     @FXML private VBox moodQuestionsContainer;
@@ -1405,27 +1406,42 @@ private void loadPage(String path) {
             slider.setShowTickMarks(false);
             slider.setPrefHeight(260);
 
-            // Pre-select if already answered
+            // Check if already answered
             String savedAnswer = moodAnswers.get(String.valueOf(index));
-            if (savedAnswer != null) {
+            boolean hasAnswer = savedAnswer != null;
+
+            if (hasAnswer) {
+                // Pre-select saved answer
                 for (int i = 0; i < question.options.size(); i++) {
                     if (savedAnswer.equals(question.options.get(i))) {
                         slider.setValue(question.options.size() - i);
                         break;
                     }
                 }
+            } else {
+                // Start at middle position but don't save as answer
+                double middleValue = (question.options.size() + 1) / 2.0;
+                slider.setValue(middleValue);
             }
 
-            // Slider change listener
-            slider.valueProperty().addListener((obs, oldVal, newVal) -> {
-                int selectedIndex = question.options.size() - newVal.intValue();
-                if (selectedIndex >= 0 && selectedIndex < question.options.size()) {
-                    String option = question.options.get(selectedIndex);
-                    int score = question.scores[selectedIndex];
+            // Track if user has interacted with slider
+            final boolean[] userInteracted = {hasAnswer};
 
-                    moodAnswers.put(String.valueOf(currentMoodQuestion), option);
-                    moodAnswers.put(String.valueOf(currentMoodQuestion) + "_score", String.valueOf(score));
-                    moodAnswers.put(String.valueOf(currentMoodQuestion) + "_category", question.category);
+            // Slider change listener - only save when user actually interacts
+            slider.setOnMousePressed(e -> userInteracted[0] = true);
+            slider.setOnKeyPressed(e -> userInteracted[0] = true);
+
+            slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (userInteracted[0]) {
+                    int selectedIndex = question.options.size() - newVal.intValue();
+                    if (selectedIndex >= 0 && selectedIndex < question.options.size()) {
+                        String option = question.options.get(selectedIndex);
+                        int score = question.scores[selectedIndex];
+
+                        moodAnswers.put(String.valueOf(currentMoodQuestion), option);
+                        moodAnswers.put(String.valueOf(currentMoodQuestion) + "_score", String.valueOf(score));
+                        moodAnswers.put(String.valueOf(currentMoodQuestion) + "_category", question.category);
+                    }
                 }
             });
 
@@ -1438,6 +1454,11 @@ private void loadPage(String path) {
 
     private void updateMoodProgress() {
         if (progressCircles == null) return;
+
+        // Update the progress label text
+        if (moodProgressLabel != null && moodQuestions != null) {
+            moodProgressLabel.setText((currentMoodQuestion + 1) + " OF " + moodQuestions.size());
+        }
 
         // First remove active class from all circles
         for (Circle circle : progressCircles) {
