@@ -6,7 +6,7 @@
 
 /* Top-right user label */
 #userLabel {
-	-fx-text-fill: #4a4a4a;
+	-fx-text-fill: #ffffff;
 	-fx-font-size: 16px;
 	-fx-font-weight: bold;
 	-fx-font-family: "Segoe UI", "Poppins", sans-serif;

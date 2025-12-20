@@ -197,10 +197,35 @@ public class DashboardController {
             }
         } catch (Exception ignored) {}
 
+        System.out.println("=== Music Toggle Setup ===");
+        System.out.println("musicToggle is null: " + (musicToggle == null));
+        System.out.println("root children count: " + (root != null ? root.getChildren().size() : "null"));
+        if (root != null && root.getChildren().size() > 0) {
+            System.out.println("First child: " + root.getChildren().get(0).getClass().getSimpleName());
+            System.out.println("First child mouseTransparent: " + root.getChildren().get(0).isMouseTransparent());
+        }
+        
         if (musicToggle != null) {
+            System.out.println("musicToggle found, setting up...");
+            System.out.println("musicToggle disabled: " + musicToggle.isDisabled());
+            System.out.println("musicToggle visible: " + musicToggle.isVisible());
+            System.out.println("musicToggle parent: " + (musicToggle.getParent() != null ? musicToggle.getParent().getClass().getSimpleName() : "null"));
+            
             musicToggle.setSelected(MusicManager.isBackgroundMusicEnabled());
             updateMusicToggleText();
-            musicToggle.setOnAction(e -> handleMusicToggle());
+            musicToggle.setOnAction(e -> {
+                System.out.println(">>> MUSIC TOGGLE ACTION FIRED <<<");
+                handleMusicToggle();
+            });
+            
+            // Test direct click handler
+            musicToggle.setOnMouseClicked(e -> {
+                System.out.println(">>> MOUSE CLICKED ON TOGGLE <<<");
+            });
+            
+            System.out.println("musicToggle setup complete");
+        } else {
+            System.out.println("ERROR: musicToggle is NULL! Check FXML fx:id");
         }
 
         // Initialize journaling popup
@@ -637,7 +662,7 @@ private void loadPage(String path) {
             userLabel.setText(this.soulId);
             userLabel.setVisible(true);
             userLabel.setOpacity(1.0);
-            userLabel.setStyle("-fx-text-fill: #4a4a4a; -fx-font-size: 16px; -fx-font-weight: bold;");
+            // Removed inline style to allow CSS to apply (white color for visibility on video background)
         }
         
         // Track activity when dashboard loads
@@ -954,13 +979,18 @@ private void loadPage(String path) {
     private void handleMusicToggle() {
         if (musicToggle != null) {
             boolean enableMusic = musicToggle.isSelected();
+            System.out.println("Music toggle clicked: " + (enableMusic ? "ON" : "OFF"));
+            
+            // Set the preference first
             MusicManager.setBackgroundMusicEnabled(enableMusic);
             updateMusicToggleText();
             
-            // Apply the change immediately
+            // Apply the change
             if (enableMusic) {
+                System.out.println("Starting background music...");
                 MusicManager.playBackgroundMusic();
             } else {
+                System.out.println("Stopping background music...");
                 MusicManager.stopBackgroundMusic();
             }
         }

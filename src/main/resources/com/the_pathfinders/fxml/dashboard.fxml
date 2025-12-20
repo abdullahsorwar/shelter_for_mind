@@ -25,7 +25,7 @@
     <children>
         <!-- Background animated rectangle (fills window) -->
         <Rectangle fx:id="bgRect" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
-            AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" />
+            AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" mouseTransparent="true" />
 
         <!-- Vignette shadow effect from left edge -->
         <Rectangle fx:id="vignetteRect" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0"
@@ -39,12 +39,10 @@
         </VBox>
 
         <!-- Mood Tracker Button (Circle on left side) -->
-        <AnchorPane>
-            <Button fx:id="moodTrackerBtn" styleClass="mood-tracker-circle"
-                    prefWidth="200" prefHeight="200"
-                    AnchorPane.leftAnchor="75"
-                    AnchorPane.topAnchor="150"/>
-        </AnchorPane>
+        <Button fx:id="moodTrackerBtn" styleClass="mood-tracker-circle"
+                prefWidth="200" prefHeight="200"
+                AnchorPane.leftAnchor="75"
+                AnchorPane.topAnchor="150"/>
 
         <!-- Help Center Button (Bottom left corner) -->
         <Button fx:id="helpCenterBtn" text="?" styleClass="help-center-btn"
@@ -59,7 +57,7 @@
         <!-- Top-right user info -->
         <HBox alignment="CENTER" spacing="8" AnchorPane.rightAnchor="12" AnchorPane.topAnchor="12">
             <Label fx:id="userLabel" alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="149.0"
-                text="Logged" style="-fx-text-fill: #ffffff; -fx-font-size: 16px; -fx-font-weight: 600;"/>
+                text="Logged"/>
             <ImageView fx:id="userImage" fitHeight="50.0" fitWidth="50.0" preserveRatio="true" />
         </HBox>
 
