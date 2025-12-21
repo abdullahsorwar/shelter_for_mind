@@ -61,7 +61,7 @@ public class MoodTrackerController {
             "How many pending tasks do you have?",
             "stress",
             Arrays.asList("😱 Too Much", "😓 Much", "😌 A Little", "😊 None"),
-            new int[]{1, 2, 3, 4}
+            new int[]{1,2,3,4}
         ));
         questions.add(new QuestionData(
             "How would you rate your stress level today?",
@@ -266,7 +266,21 @@ public class MoodTrackerController {
             moodPieChart.getData().add(slice);
         }
 
-        scoreLabel.setText(String.format("Overall Mood Score: %.0f/100", moodScore));
+        // Add emoji based on mood score
+        String moodEmoji;
+        if (moodScore >= 80) {
+            moodEmoji = "😄"; // Excellent
+        } else if (moodScore >= 60) {
+            moodEmoji = "😊"; // Good
+        } else if (moodScore >= 40) {
+            moodEmoji = "😐"; // Fair
+        } else if (moodScore >= 20) {
+            moodEmoji = "😟"; // Poor
+        } else {
+            moodEmoji = "😢"; // Very Poor
+        }
+
+        scoreLabel.setText(String.format("%s Overall Mood Score: %.0f/100", moodEmoji, moodScore));
 
         // Generate summary
         String summary = generateSummary(moodScore, categoryScores, categoryCounts);
@@ -299,7 +313,7 @@ public class MoodTrackerController {
         StringBuilder summary = new StringBuilder();
 
         if (moodScore >= 75) {
-            summary.append("You're doing great! Your mood is positive and balanced. ");
+            summary.append("🎉 You're doing great! Your mood is positive and balanced. ");
         } else if (moodScore >= 50) {
             summary.append("Your mood is moderate. There's room for improvement. ");
         } else {
@@ -319,7 +333,7 @@ public class MoodTrackerController {
         }
 
         if (lowestCategory != null && lowestAverage < 2.5) {
-            summary.append("\n\nPay attention to your ").append(lowestCategory)
+            summary.append("\n\n⚠️ Pay attention to your ").append(lowestCategory)
                    .append(" - it seems to need extra care.");
         }
 

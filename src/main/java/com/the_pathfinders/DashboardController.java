@@ -1368,13 +1368,14 @@ private void loadPage(String path) {
             emojiBox.setAlignment(javafx.geometry.Pos.CENTER);
             emojiBox.setPrefWidth(60);
 
-            // Define emojis and colors
+            // Define emojis and colors (from best to worst)
             String[] emojis = {"😊", "🙂", "😐", "☹️", "😢"};
             String[] emojiStyles = {"emoji-excellent", "emoji-good", "emoji-fair", "emoji-poor", "emoji-worst"};
             String[] subLabels = {"Best", "Good", "Okay", "Not Great", "Worst"};
 
             // Create labels and emojis for each option (reverse order for top-to-bottom)
-            for (int i = question.options.size() - 1; i >= 0; i--) {
+            // Loop: i goes from last option to first (3→0), displayIndex goes from 0→3
+            for (int i = question.options.size() - 1, displayIndex = 0; i >= 0; i--, displayIndex++) {
                 // Option label
                 VBox optionLabelBox = new VBox(3);
                 optionLabelBox.getStyleClass().add("option-label-box");
@@ -1383,15 +1384,16 @@ private void loadPage(String path) {
                 Label mainLabel = new Label(question.options.get(i));
                 mainLabel.getStyleClass().add("option-main-label");
 
-                Label subLabel = new Label(i < subLabels.length ? subLabels[i] : "");
+                // Use displayIndex for sublabels so they show correctly (Best at top, Worst at bottom)
+                Label subLabel = new Label(displayIndex < subLabels.length ? subLabels[displayIndex] : "");
                 subLabel.getStyleClass().add("option-sub-label");
 
                 optionLabelBox.getChildren().addAll(mainLabel, subLabel);
                 labelsBox.getChildren().add(optionLabelBox);
 
-                // Emoji circle
-                Label emojiCircle = new Label(i < emojis.length ? emojis[i] : "");
-                emojiCircle.getStyleClass().addAll("emoji-circle", i < emojiStyles.length ? emojiStyles[i] : "");
+                // Emoji circle - use displayIndex so emojis show correctly (😊 at top, 😢 at bottom)
+                Label emojiCircle = new Label(displayIndex < emojis.length ? emojis[displayIndex] : "");
+                emojiCircle.getStyleClass().addAll("emoji-circle", displayIndex < emojiStyles.length ? emojiStyles[displayIndex] : "");
                 emojiBox.getChildren().add(emojiCircle);
             }
 
@@ -1412,9 +1414,10 @@ private void loadPage(String path) {
 
             if (hasAnswer) {
                 // Pre-select saved answer
+                // Fix: if answer is at index i, slider value should be i + 1
                 for (int i = 0; i < question.options.size(); i++) {
                     if (savedAnswer.equals(question.options.get(i))) {
-                        slider.setValue(question.options.size() - i);
+                        slider.setValue(i + 1);
                         break;
                     }
                 }
@@ -1433,7 +1436,10 @@ private void loadPage(String path) {
 
             slider.valueProperty().addListener((obs, oldVal, newVal) -> {
                 if (userInteracted[0]) {
-                    int selectedIndex = question.options.size() - newVal.intValue();
+                    // Fix: slider value maps directly to option index (top=best, bottom=worst)
+                    // Slider value 4 (top) should map to index 3 (last option, best score)
+                    // Slider value 1 (bottom) should map to index 0 (first option, worst score)
+                    int selectedIndex = newVal.intValue() - 1;
                     if (selectedIndex >= 0 && selectedIndex < question.options.size()) {
                         String option = question.options.get(selectedIndex);
                         int score = question.scores[selectedIndex];
