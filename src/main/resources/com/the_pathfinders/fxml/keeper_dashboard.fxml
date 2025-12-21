@@ -20,7 +20,7 @@
          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
             <image><Image url="@../../../assets/images/logo.png" /></image>
          </ImageView>
-         <Label text="Shelter of Mind" styleClass="app-title">
+         <Label text="Shelter for Mind" styleClass="app-title">
             <font><Font name="System Bold" size="18.0" /></font>
          </Label>
       </HBox>

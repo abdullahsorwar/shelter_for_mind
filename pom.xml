@@ -112,6 +112,10 @@
           <options>
             <option>--add-modules</option>
             <option>javafx.controls,javafx.fxml,javafx.media,javafx.web</option>
+            <option>--add-exports</option>
+            <option>javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED</option>
+            <option>--add-exports</option>
+            <option>javafx.graphics/com.sun.javafx.sg.prism.web=ALL-UNNAMED</option>
           </options>
         </configuration>
       </plugin>

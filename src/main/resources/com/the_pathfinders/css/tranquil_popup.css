@@ -2,7 +2,6 @@
 .overlay-dim {
     -fx-fill: rgba(0, 0, 0, 0.45);
     -fx-background-color: rgba(0, 0, 0, 0.45);
-    -fx-backdrop-filter: blur(10px);
 }
 
 /* Popup card */

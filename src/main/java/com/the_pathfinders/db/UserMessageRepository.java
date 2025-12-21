@@ -118,7 +118,7 @@ public class UserMessageRepository {
             "Your appointment with Dr. %s has been confirmed!\n\n" +
             "📅 Date: %s\n\n" +
             "Please arrive 10 minutes early. If you need to cancel or reschedule, please contact us as soon as possible.\n\n" +
-            "Thank you for choosing Shelter of Mind!",
+            "Thank you for choosing Shelter for Mind!",
             doctorName, appointmentDate
         );
 

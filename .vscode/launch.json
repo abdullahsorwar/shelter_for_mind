@@ -7,7 +7,7 @@
             "request": "launch",
             "mainClass": "com.the_pathfinders.App",
             "projectName": "shelter_of_mind",
-            "vmArgs": "--module-path ${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-controls\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-fxml\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-media\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-graphics\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-base\\21 --add-modules javafx.controls,javafx.fxml,javafx.media"
+            "vmArgs": "--module-path ${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-controls\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-fxml\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-media\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-web\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-graphics\\21;${env:USERPROFILE}\\.m2\\repository\\org\\openjfx\\javafx-base\\21 --add-modules javafx.controls,javafx.fxml,javafx.media,javafx.web --add-exports javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED --add-exports javafx.graphics/com.sun.javafx.sg.prism.web=ALL-UNNAMED"
         }
     ]
 }

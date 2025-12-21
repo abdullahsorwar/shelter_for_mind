@@ -400,7 +400,7 @@
                 <!-- Disclaimer -->
                 <VBox spacing="8" style="-fx-background-color: #ffebee; -fx-padding: 15; -fx-background-radius: 12;">
                     <Label text="⚠️ Disclaimer" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c62828;"/>
-                    <Label text="Shelter of Mind is not a crisis center. For immediate danger, contact your local emergency services." 
+                    <Label text="Shelter for Mind is not a crisis center. For immediate danger, contact your local emergency services." 
                         wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #d32f2f;"/>
                 </VBox>
 
