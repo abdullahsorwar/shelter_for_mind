@@ -35,10 +35,17 @@ public class JournalUtils {
         long minutes = seconds / 60;
         long hours = minutes / 60;
         long days = hours / 24;
-        if (days > 0) return days + (days == 1 ? " day ago" : " days ago");
-        if (hours > 0) return hours + (hours == 1 ? " hour ago" : " hours ago");
-        if (minutes > 0) return minutes + (minutes == 1 ? " minute ago" : " minutes ago");
-        if (seconds > 0) return seconds + (seconds == 1 ? " second ago" : " seconds ago");
+        long weeks = days / 7;
+        long months = days / 30; // Approximate
+        long years = days / 365; // Approximate
+        
+        if (years > 0) return years == 1 ? "a year ago" : years + " years ago";
+        if (months > 0) return months == 1 ? "a month ago" : months + " months ago";
+        if (weeks > 0) return weeks == 1 ? "a week ago" : weeks + " weeks ago";
+        if (days > 0) return days == 1 ? "a day ago" : days + " days ago";
+        if (hours > 0) return hours == 1 ? "an hour ago" : hours + " hours ago";
+        if (minutes > 0) return minutes == 1 ? "a minute ago" : minutes + " minutes ago";
+        if (seconds > 0) return seconds == 1 ? "a second ago" : seconds + " seconds ago";
         return "just now";
     }
     

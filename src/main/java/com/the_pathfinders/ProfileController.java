@@ -138,9 +138,6 @@ public class ProfileController {
         if (savedBlogsMenuBtn != null) savedBlogsMenuBtn.setOnAction(e -> showSavedBlogs());
         if (achievementsMenuBtn != null) achievementsMenuBtn.setOnAction(e -> showAchievements());
 
-        // Listen for saved-blog changes so we can update badge dynamically
-        SavedBlogsManager.addListener(this::updateStarredBadge);
-
         // Keep mainArea left anchor in sync with sidePanel width (so it shrinks/expands)
         if (sidePanel != null && mainArea != null) {
             AnchorPane.setLeftAnchor(mainArea, sidePanel.getPrefWidth());
@@ -156,30 +153,14 @@ public class ProfileController {
         checkFirstTimeAndLoad();
         // Default page
         showBasicInfo();
-        updateStarredBadge();
     }
 
     private void updateStarredBadge() {
-        try {
-            int count = 0;
-            if (soulId != null && !soulId.isBlank()) {
-                java.util.Set<String> ids = savedBlogsManager.loadSavedBlogIds(soulId);
-                count = ids == null ? 0 : ids.size();
-            }
-            final int c = count;
-            Platform.runLater(() -> {
-                if (starredBadge != null) {
-                    if (c <= 0) {
-                        starredBadge.setVisible(false);
-                        starredBadge.setManaged(false);
-                    } else {
-                        starredBadge.setText(String.valueOf(c));
-                        starredBadge.setVisible(true);
-                        starredBadge.setManaged(true);
-                    }
-                }
-            });
-        } catch (Exception ignored) {}
+        // Badge removed - no longer displayed
+        if (starredBadge != null) {
+            starredBadge.setVisible(false);
+            starredBadge.setManaged(false);
+        }
     }
 
     private void loadProfileImage() {
