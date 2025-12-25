@@ -15,6 +15,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -167,6 +168,7 @@ public class DashboardController {
     private FadeTransition currentFadeOut = null;
     private ScaleTransition currentScaleUp = null;
     private ScaleTransition currentScaleDown = null;
+    private PauseTransition currentHoverDelay = null;
 
     private static class QuestionData {
         String question;
@@ -189,6 +191,53 @@ public class DashboardController {
                 if (root.getScene() != null && root.getScene().getWindow() != null) {
                     root.prefWidthProperty().bind(root.getScene().widthProperty());
                     root.prefHeightProperty().bind(root.getScene().heightProperty());
+                }
+            });
+            // Attach scene-level mouse handlers when scene becomes available
+            javafx.application.Platform.runLater(() -> {
+                if (root.getScene() != null) {
+                    var scene = root.getScene();
+                    scene.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_MOVED, ev -> {
+                        double sx = ev.getSceneX();
+                        double sy = ev.getSceneY();
+                        boolean overAny = false;
+                        List<Button> btns = Arrays.asList(journalBtn, blogBtn, moodBtn, insightsBtn, SocialWorkBtn, tranquilCornerBtn);
+                        for (Button b : btns) {
+                            if (b == null) continue;
+                            try {
+                                javafx.geometry.Bounds bounds = b.localToScene(b.getBoundsInLocal());
+                                if (bounds != null && bounds.contains(sx, sy)) {
+                                    overAny = true;
+                                    break;
+                                }
+                            } catch (Exception ignored) {}
+                        }
+                        if (!overAny) {
+                            // Pointer not over any button: force-hide all labels and clear hover state
+                            hideAllButtonHoverLabels();
+                            if (currentlyHoveredButton != null) {
+                                currentlyHoveredButton.setScaleX(1.0);
+                                currentlyHoveredButton.setScaleY(1.0);
+                                currentlyHoveredButton = null;
+                            }
+                            if (currentFadeIn != null) { currentFadeIn.stop(); currentFadeIn = null; }
+                            if (currentFadeOut != null) { currentFadeOut.stop(); currentFadeOut = null; }
+                            if (currentHoverDelay != null) { currentHoverDelay.stop(); currentHoverDelay = null; }
+                        }
+                    });
+
+                    // When pointer exits the scene, ensure labels are cleared
+                    scene.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_EXITED, ev -> {
+                        hideAllButtonHoverLabels();
+                        if (currentlyHoveredButton != null) {
+                            currentlyHoveredButton.setScaleX(1.0);
+                            currentlyHoveredButton.setScaleY(1.0);
+                            currentlyHoveredButton = null;
+                        }
+                        if (currentFadeIn != null) { currentFadeIn.stop(); currentFadeIn = null; }
+                        if (currentFadeOut != null) { currentFadeOut.stop(); currentFadeOut = null; }
+                        if (currentHoverDelay != null) { currentHoverDelay.stop(); currentHoverDelay = null; }
+                    });
                 }
             });
         }
@@ -842,7 +891,7 @@ private void loadPage(String path) {
 
         // Create a StackPane to overlay text on the image
         StackPane stackPane = new StackPane();
-        
+
         // Get the existing ImageView from the button's graphic
         ImageView imageView = (ImageView) button.getGraphic();
         if (imageView != null) {
@@ -858,41 +907,47 @@ private void loadPage(String path) {
             hoverLabel.setOpacity(0); // Initially invisible
             hoverLabel.setMouseTransparent(true); // Don't block button clicks
             hoverLabel.setViewOrder(-1); // Ensure it's on top
-            
+
             // Add image and label to StackPane
             stackPane.getChildren().addAll(imageView, hoverLabel);
             stackPane.setAlignment(Pos.CENTER);
             StackPane.setAlignment(hoverLabel, Pos.CENTER);
-            
+
             // Set the StackPane as the button graphic
             button.setGraphic(stackPane);
             button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-            
-            // Create fade transition for text - extremely fast fade out (0.1s)
+
+            // Create fade transitions for text
             FadeTransition fadeIn = new FadeTransition(Duration.millis(250), hoverLabel);
             fadeIn.setFromValue(0);
             fadeIn.setToValue(1);
-            
+            fadeIn.setOnFinished(ev -> hoverLabel.setOpacity(1.0));
+
             FadeTransition fadeOut = new FadeTransition(Duration.millis(100), hoverLabel); // 0.1s super fast
             fadeOut.setToValue(0);
-            
+            fadeOut.setOnFinished(ev -> hoverLabel.setOpacity(0.0));
+
             // Create scale transition for button pop effect
             ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), button);
             scaleUp.setToX(1.05);
             scaleUp.setToY(1.05);
-            
+
             ScaleTransition scaleDown = new ScaleTransition(Duration.millis(200), button);
             scaleDown.setToX(1.0);
             scaleDown.setToY(1.0);
-            
+
             // Handle hover events - stop previous animations to prevent multiple displays
             button.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_ENTERED, e -> {
-                // Stop all previous animations immediately
+                // Always hide other labels immediately
+                hideAllButtonHoverLabels();
+
+                // Stop previous animations and any pending delay
                 if (currentFadeIn != null) currentFadeIn.stop();
                 if (currentFadeOut != null) currentFadeOut.stop();
                 if (currentScaleUp != null) currentScaleUp.stop();
                 if (currentScaleDown != null) currentScaleDown.stop();
-                
+                if (currentHoverDelay != null) { currentHoverDelay.stop(); currentHoverDelay = null; }
+
                 // If there was a previously hovered button, fade it out from current opacity
                 if (currentlyHoveredButton != null && currentlyHoveredButton != button) {
                     Button prevButton = currentlyHoveredButton;
@@ -900,57 +955,63 @@ private void loadPage(String path) {
                     if (prevGraphic instanceof StackPane) {
                         StackPane prevStack = (StackPane) prevGraphic;
                         if (prevStack.getChildren().size() > 1) {
-                    // Always hide all other button hover labels to prevent persistence
-                    hideAllButtonHoverLabels();
                             var prevLabel = prevStack.getChildren().get(1);
                             if (prevLabel instanceof Label) {
                                 Label label = (Label) prevLabel;
-                                // Get current opacity (relative to fade in progress)
                                 double currentOpacity = label.getOpacity();
                                 if (currentOpacity > 0) {
-                                    // Create a quick fade out from current opacity
                                     FadeTransition quickFade = new FadeTransition(Duration.millis(100), label);
                                     quickFade.setFromValue(currentOpacity);
                                     quickFade.setToValue(0);
+                                    quickFade.setOnFinished(ev -> label.setOpacity(0.0));
                                     quickFade.play();
                                 } else {
-                                    label.setOpacity(0);
+                                    label.setOpacity(0.0);
                                 }
                             }
                         }
                     }
-                    // Reset scale of previous button immediately
                     prevButton.setScaleX(1.0);
                     prevButton.setScaleY(1.0);
                 }
-                
-                // Update current button reference BEFORE starting new animations
+
+                // Update current references
                 currentlyHoveredButton = button;
                 currentFadeIn = fadeIn;
                 currentFadeOut = fadeOut;
                 currentScaleUp = scaleUp;
                 currentScaleDown = scaleDown;
-                
-                // Start fade in from current opacity (in case re-entering quickly)
-                double currentOpacity = hoverLabel.getOpacity();
-                fadeIn.setFromValue(currentOpacity);
-                fadeIn.playFromStart();
-                scaleUp.playFromStart();
+
+                // Small delay to avoid flicker when moving quickly
+                PauseTransition hoverDelay = new PauseTransition(Duration.millis(80));
+                hoverDelay.setOnFinished(evt -> {
+                    if (currentlyHoveredButton == button) {
+                        double currentOpacity = hoverLabel.getOpacity();
+                        fadeIn.setFromValue(currentOpacity);
+                        fadeIn.playFromStart();
+                        scaleUp.playFromStart();
+                    }
+                });
+                currentHoverDelay = hoverDelay;
+                hoverDelay.playFromStart();
             });
-            
+
             button.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_EXITED, e -> {
-                // Fade out when exiting, but only clear reference after event loop
+                // Cancel any pending hover delay
+                if (currentHoverDelay != null) { currentHoverDelay.stop(); currentHoverDelay = null; }
+
                 if (currentlyHoveredButton == button) {
                     double currentOpacity = hoverLabel.getOpacity();
                     fadeOut.setFromValue(currentOpacity);
                     fadeOut.playFromStart();
                     scaleDown.playFromStart();
-                    // Use Platform.runLater to allow button-to-button transitions to work
                     javafx.application.Platform.runLater(() -> {
                         if (currentlyHoveredButton == button) {
                             currentlyHoveredButton = null;
                         }
                     });
+                } else {
+                    hoverLabel.setOpacity(0.0);
                 }
             });
         }
