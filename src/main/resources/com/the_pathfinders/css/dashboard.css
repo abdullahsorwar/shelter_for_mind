@@ -18,6 +18,9 @@
     -fx-pref-height: 160px; /* new height */
     -fx-min-width: 250px;   /* match pref-width */
     -fx-min-height: 160px;  /* match pref-height */
+    -fx-max-width: 250px;   /* lock max width */
+    -fx-max-height: 160px;  /* lock max height */
+    -fx-background-color: transparent;
     -fx-background-radius: 20px;
     -fx-border-radius: 20px;
     -fx-font-weight: 600;
@@ -26,13 +29,19 @@
 	-fx-font-family: "Comic Sans MS";
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 12, 0, 0, 3);
-    -fx-padding: 12px;
+    -fx-padding: 0;
 }
 
 
 .card-btn:hover {
 	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 20, 0.4, 0, 8);
 	-fx-cursor: hand;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 160px;
+    -fx-min-width: 250px;
+    -fx-min-height: 160px;
+    -fx-max-width: 250px;
+    -fx-max-height: 160px;
 }
 
 .music-toggle {
@@ -55,31 +64,6 @@
 
 .card-btn:pressed {
 	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0, 0, 2);
-}
-
-/* Pastel colors per button id */
-#journalBtn {
-	-fx-background-color: linear-gradient(to bottom right, #ffefe9, #ffdbe6);
-}
-
-#blogBtn {
-	-fx-background-color: linear-gradient(to bottom right, #f8eefc, #efe6fb);
-}
-
-#moodBtn {
-	-fx-background-color: linear-gradient(to bottom right, #e8fff6, #d1fff0);
-}
-
-#insightsBtn {
-	-fx-background-color: linear-gradient(to bottom right, #f3e8ff, #e7d4ff);
-}
-
-#SocialWorkBtn {
-	-fx-background-color: linear-gradient(to bottom right, #f5f5f7, #ececf2);
-}
-
-#tranquilCornerBtn {
-	-fx-background-color: linear-gradient(to bottom right, #ffe8e8, #ffd0d0);
 }
 
 /* Greeting label - larger, centered, upward positioned */

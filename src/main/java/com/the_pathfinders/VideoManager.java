@@ -141,11 +141,28 @@ public class VideoManager {
                 videoOverlay.setMouseTransparent(true);
             }
             
-            // Bind to root dimensions
+            // Unbind first if already bound (in case of reattachment)
+            bgView.fitWidthProperty().unbind();
+            bgView.fitHeightProperty().unbind();
+            videoOverlay.widthProperty().unbind();
+            videoOverlay.heightProperty().unbind();
+            
+            // Bind to root dimensions for dynamic resizing
             bgView.fitWidthProperty().bind(root.widthProperty());
             bgView.fitHeightProperty().bind(root.heightProperty());
             videoOverlay.widthProperty().bind(root.widthProperty());
             videoOverlay.heightProperty().bind(root.heightProperty());
+            
+            // Set anchor pane constraints to ensure full coverage
+            AnchorPane.setTopAnchor(bgView, 0.0);
+            AnchorPane.setBottomAnchor(bgView, 0.0);
+            AnchorPane.setLeftAnchor(bgView, 0.0);
+            AnchorPane.setRightAnchor(bgView, 0.0);
+            
+            AnchorPane.setTopAnchor(videoOverlay, 0.0);
+            AnchorPane.setBottomAnchor(videoOverlay, 0.0);
+            AnchorPane.setLeftAnchor(videoOverlay, 0.0);
+            AnchorPane.setRightAnchor(videoOverlay, 0.0);
             
             // Add to scene graph if not already present
             if (!root.getChildren().contains(bgView)) {

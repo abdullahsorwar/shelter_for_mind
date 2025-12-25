@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import java.net.URL?>
 
-<AnchorPane fx:id="root" prefHeight="600" prefWidth="900"
+<AnchorPane fx:id="root" prefWidth="900"
     stylesheets="/com/the_pathfinders/css/dashboard.css, /com/the_pathfinders/css/tranquil_popup.css, /com/the_pathfinders/css/MoodTracker.css" xmlns="http://javafx.com/javafx/25"
     xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.the_pathfinders.DashboardController">
     <children>
@@ -74,30 +74,78 @@
                 <!-- Row 1 -->
                 <HBox alignment="CENTER_RIGHT" spacing="16">
                     <children>
-                        <Button fx:id="journalBtn" text="STRAY THOUGHTS" styleClass="card-btn"
-                            prefWidth="250" prefHeight="160" wrapText="true" />
-                        <Button fx:id="blogBtn" text="MIND DRIFT" styleClass="card-btn"
-                            prefWidth="250" prefHeight="160" wrapText="true" />
+                        <Button fx:id="journalBtn" styleClass="card-btn"
+                            prefWidth="250" prefHeight="160" wrapText="true" contentDisplay="GRAPHIC_ONLY">
+                            <graphic>
+                                <ImageView fitWidth="250" fitHeight="160" preserveRatio="false" smooth="true">
+                                    <image>
+                                        <Image url="@/assets/images/B1.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="blogBtn" styleClass="card-btn"
+                            prefWidth="250" prefHeight="160" wrapText="true" contentDisplay="GRAPHIC_ONLY">
+                            <graphic>
+                                <ImageView fitWidth="250" fitHeight="160" preserveRatio="false" smooth="true">
+                                    <image>
+                                        <Image url="@/assets/images/B2.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </HBox>
 
                 <!-- Row 2 (shifted right for staggered look) -->
                 <HBox alignment="CENTER_RIGHT" spacing="16" style="-fx-translate-x: 80;">
                     <children>
-                        <Button fx:id="moodBtn" text="SIDEQUESTS" styleClass="card-btn"
-                            prefWidth="250" prefHeight="160" wrapText="true" />
-                        <Button fx:id="insightsBtn" text="SEEK HELP" styleClass="card-btn"
-                            prefWidth="250" prefHeight="160" wrapText="true" />
+                        <Button fx:id="moodBtn" styleClass="card-btn"
+                            prefWidth="250" prefHeight="160" wrapText="true" contentDisplay="GRAPHIC_ONLY">
+                            <graphic>
+                                <ImageView fitWidth="250" fitHeight="160" preserveRatio="false" smooth="true">
+                                    <image>
+                                        <Image url="@/assets/images/B3.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="insightsBtn" styleClass="card-btn"
+                            prefWidth="250" prefHeight="160" wrapText="true" contentDisplay="GRAPHIC_ONLY">
+                            <graphic>
+                                <ImageView fitWidth="250" fitHeight="160" preserveRatio="false" smooth="true">
+                                    <image>
+                                        <Image url="@/assets/images/B4.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </HBox>
 
                 <!-- Row 3 -->
                 <HBox alignment="CENTER_RIGHT" spacing="16">
                     <children>
-                        <Button fx:id="SocialWorkBtn" text="HOPE SEED" styleClass="card-btn"
-                            prefWidth="250" prefHeight="160" wrapText="true" />
-                        <Button fx:id="tranquilCornerBtn" text="TRANQUIL CORNER" styleClass="card-btn"
-                            prefWidth="250" prefHeight="160" wrapText="true" />
+                        <Button fx:id="SocialWorkBtn" styleClass="card-btn"
+                            prefWidth="250" prefHeight="160" wrapText="true" contentDisplay="GRAPHIC_ONLY">
+                            <graphic>
+                                <ImageView fitWidth="250" fitHeight="160" preserveRatio="false" smooth="true">
+                                    <image>
+                                        <Image url="@/assets/images/B5.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="tranquilCornerBtn" styleClass="card-btn"
+                            prefWidth="250" prefHeight="160" wrapText="true" contentDisplay="GRAPHIC_ONLY">
+                            <graphic>
+                                <ImageView fitWidth="250" fitHeight="160" preserveRatio="false" smooth="true">
+                                    <image>
+                                        <Image url="@/assets/images/B6.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
                     </children>
                 </HBox>
             </children>

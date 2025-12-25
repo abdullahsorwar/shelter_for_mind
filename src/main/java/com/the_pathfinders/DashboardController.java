@@ -22,6 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -143,6 +144,13 @@ public class DashboardController {
     private Map<String, String> moodAnswers;
     private MoodTrackerRepository moodRepository;
     private FadeTransition moodTrackerFadeTransition; // Track the current animation
+    
+    // Track button hover states to prevent multiple simultaneous displays
+    private Button currentlyHoveredButton = null;
+    private FadeTransition currentFadeIn = null;
+    private FadeTransition currentFadeOut = null;
+    private ScaleTransition currentScaleUp = null;
+    private ScaleTransition currentScaleDown = null;
 
     private static class QuestionData {
         String question;
@@ -159,6 +167,16 @@ public class DashboardController {
     }
 
     public void initialize() {
+        // Ensure root pane fills the scene for proper video background coverage
+        if (root != null) {
+            javafx.application.Platform.runLater(() -> {
+                if (root.getScene() != null && root.getScene().getWindow() != null) {
+                    root.prefWidthProperty().bind(root.getScene().widthProperty());
+                    root.prefHeightProperty().bind(root.getScene().heightProperty());
+                }
+            });
+        }
+        
         // Initialize background video
         videoManager = VideoManager.getInstance();
         if (videoManager.isInitialized()) {
@@ -263,6 +281,14 @@ public class DashboardController {
             // Create the colorful donut ring design
             setupMoodTrackerButtonGraphic();
         }
+
+        // Setup hover effects for all buttons with images
+        setupButtonHoverEffect(journalBtn, "STRAY THOUGHTS");
+        setupButtonHoverEffect(blogBtn, "MIND DRIFT");
+        setupButtonHoverEffect(moodBtn, "SIDEQUESTS");
+        setupButtonHoverEffect(insightsBtn, "SEEK HELP");
+        setupButtonHoverEffect(SocialWorkBtn, "HOPE SEED");
+        setupButtonHoverEffect(tranquilCornerBtn, "TRANQUIL CORNER");
 
         // Initialize mood tracker popup
         initializeMoodTracker();
@@ -792,6 +818,127 @@ private void loadPage(String path) {
         } catch (Exception e) {
             System.err.println("Error creating mood tracker button graphic: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private void setupButtonHoverEffect(Button button, String labelText) {
+        if (button == null) return;
+
+        // Create a StackPane to overlay text on the image
+        StackPane stackPane = new StackPane();
+        
+        // Get the existing ImageView from the button's graphic
+        ImageView imageView = (ImageView) button.getGraphic();
+        if (imageView != null) {
+            // Create text label for hover - black text with white shadow, no background
+            Label hoverLabel = new Label(labelText);
+            hoverLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: 700; " +
+                              "-fx-text-fill: #1f2937; " +
+                              "-fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.95), 6, 0.9, 0, 0); " +
+                              "-fx-padding: 8 16;");
+            hoverLabel.setWrapText(true);
+            hoverLabel.setAlignment(Pos.CENTER);
+            hoverLabel.setMaxWidth(220);
+            hoverLabel.setOpacity(0); // Initially invisible
+            hoverLabel.setMouseTransparent(true); // Don't block button clicks
+            hoverLabel.setViewOrder(-1); // Ensure it's on top
+            
+            // Add image and label to StackPane
+            stackPane.getChildren().addAll(imageView, hoverLabel);
+            stackPane.setAlignment(Pos.CENTER);
+            StackPane.setAlignment(hoverLabel, Pos.CENTER);
+            
+            // Set the StackPane as the button graphic
+            button.setGraphic(stackPane);
+            button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            
+            // Create fade transition for text - extremely fast fade out (0.1s)
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(250), hoverLabel);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(100), hoverLabel); // 0.1s super fast
+            fadeOut.setToValue(0);
+            
+            // Create scale transition for button pop effect
+            ScaleTransition scaleUp = new ScaleTransition(Duration.millis(200), button);
+            scaleUp.setToX(1.05);
+            scaleUp.setToY(1.05);
+            
+            ScaleTransition scaleDown = new ScaleTransition(Duration.millis(200), button);
+            scaleDown.setToX(1.0);
+            scaleDown.setToY(1.0);
+            
+            // Handle hover events - stop previous animations to prevent multiple displays
+            button.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_ENTERED, e -> {
+                // Stop all previous animations immediately
+                if (currentFadeIn != null) currentFadeIn.stop();
+                if (currentFadeOut != null) currentFadeOut.stop();
+                if (currentScaleUp != null) currentScaleUp.stop();
+                if (currentScaleDown != null) currentScaleDown.stop();
+                
+                // If there was a previously hovered button, fade it out from current opacity
+                if (currentlyHoveredButton != null && currentlyHoveredButton != button) {
+                    Button prevButton = currentlyHoveredButton;
+                    var prevGraphic = prevButton.getGraphic();
+                    if (prevGraphic instanceof StackPane) {
+                        StackPane prevStack = (StackPane) prevGraphic;
+                        if (prevStack.getChildren().size() > 1) {
+                            var prevLabel = prevStack.getChildren().get(1);
+                            if (prevLabel instanceof Label) {
+                                Label label = (Label) prevLabel;
+                                // Get current opacity (relative to fade in progress)
+                                double currentOpacity = label.getOpacity();
+                                if (currentOpacity > 0) {
+                                    // Create a quick fade out from current opacity
+                                    FadeTransition quickFade = new FadeTransition(Duration.millis(100), label);
+                                    quickFade.setFromValue(currentOpacity);
+                                    quickFade.setToValue(0);
+                                    quickFade.play();
+                                } else {
+                                    label.setOpacity(0);
+                                }
+                            }
+                        }
+                    }
+                    // Reset scale of previous button immediately
+                    prevButton.setScaleX(1.0);
+                    prevButton.setScaleY(1.0);
+                }
+                
+                // Update current button reference BEFORE starting new animations
+                currentlyHoveredButton = button;
+                currentFadeIn = fadeIn;
+                currentFadeOut = fadeOut;
+                currentScaleUp = scaleUp;
+                currentScaleDown = scaleDown;
+                
+                // Start fade in from current opacity (in case re-entering quickly)
+                double currentOpacity = hoverLabel.getOpacity();
+                fadeIn.setFromValue(currentOpacity);
+                fadeIn.playFromStart();
+                scaleUp.playFromStart();
+            });
+            
+            button.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_EXITED, e -> {
+                // Check if we're exiting to empty space (not to another button)
+                // If currentlyHoveredButton is still this button, we're going to empty space
+                if (currentlyHoveredButton == button) {
+                    // Fade out from current opacity (relative to fade in progress)
+                    double currentOpacity = hoverLabel.getOpacity();
+                    fadeOut.setFromValue(currentOpacity);
+                    fadeOut.playFromStart();
+                    scaleDown.playFromStart();
+                    
+                    // Clear after a short delay to allow button-to-button transitions
+                    javafx.application.Platform.runLater(() -> {
+                        if (currentlyHoveredButton == button) {
+                            currentlyHoveredButton = null;
+                        }
+                    });
+                }
+                // If currentlyHoveredButton is different, another button's MOUSE_ENTERED already handled it
+            });
         }
     }
 
