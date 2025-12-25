@@ -46,6 +46,22 @@ import javafx.util.Duration;
 
 public class DashboardController {
 
+    // Utility: Hide all button hover labels immediately
+    private void hideAllButtonHoverLabels() {
+        List<Button> buttons = Arrays.asList(journalBtn, blogBtn, moodBtn, insightsBtn, SocialWorkBtn, tranquilCornerBtn);
+        for (Button btn : buttons) {
+            if (btn != null && btn.getGraphic() instanceof StackPane) {
+                StackPane stack = (StackPane) btn.getGraphic();
+                if (stack.getChildren().size() > 1) {
+                    var label = stack.getChildren().get(1);
+                    if (label instanceof Label) {
+                        ((Label) label).setOpacity(0);
+                    }
+                }
+            }
+        }
+    }
+
     @FXML private AnchorPane root;
     @FXML private Label userLabel;
     @FXML private ImageView userImage;
@@ -884,6 +900,8 @@ private void loadPage(String path) {
                     if (prevGraphic instanceof StackPane) {
                         StackPane prevStack = (StackPane) prevGraphic;
                         if (prevStack.getChildren().size() > 1) {
+                    // Always hide all other button hover labels to prevent persistence
+                    hideAllButtonHoverLabels();
                             var prevLabel = prevStack.getChildren().get(1);
                             if (prevLabel instanceof Label) {
                                 Label label = (Label) prevLabel;
@@ -921,16 +939,18 @@ private void loadPage(String path) {
             });
             
             button.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_EXITED, e -> {
-                // Always fade out when exiting, and immediately clear reference
+                // Fade out when exiting, but only clear reference after event loop
                 if (currentlyHoveredButton == button) {
-                    // Fade out from current opacity (relative to fade in progress)
                     double currentOpacity = hoverLabel.getOpacity();
                     fadeOut.setFromValue(currentOpacity);
                     fadeOut.playFromStart();
                     scaleDown.playFromStart();
-                    
-                    // Clear immediately - no delay
-                    currentlyHoveredButton = null;
+                    // Use Platform.runLater to allow button-to-button transitions to work
+                    javafx.application.Platform.runLater(() -> {
+                        if (currentlyHoveredButton == button) {
+                            currentlyHoveredButton = null;
+                        }
+                    });
                 }
             });
         }
