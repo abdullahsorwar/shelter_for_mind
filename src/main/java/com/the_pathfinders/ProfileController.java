@@ -36,7 +36,6 @@ public class ProfileController {
     @FXML private VBox menuItems;
     @FXML private Button basicInfoMenuBtn;
     @FXML private Button journalsMenuBtn;
-    @FXML private Button achievementsMenuBtn;
     @FXML private AnchorPane mainArea;
     @FXML private HBox headerBox;
     @FXML private ImageView profileImage;
@@ -55,7 +54,6 @@ public class ProfileController {
     @FXML private VBox savedBlogsList;
     @FXML private VBox savedJournalsPage;
     @FXML private VBox savedJournalsList;
-    @FXML private VBox achievementsPage;
 
     // Menu buttons
     @FXML private Button savedJournalsMenuBtn;
@@ -131,12 +129,28 @@ public class ProfileController {
         }
         if (overlayYesBtn != null) overlayYesBtn.setOnAction(e -> onFirstTimeYes());
         if (overlayNoBtn != null) overlayNoBtn.setOnAction(e -> onFirstTimeNo());
-        if (menuBtn != null) menuBtn.setOnAction(e -> toggleSidePanel());
+        if (menuBtn != null) {
+            menuBtn.setOnAction(e -> toggleSidePanel());
+            // Replace text with menu icon
+            try {
+                java.net.URL iconUrl = getClass().getResource("/assets/icons/menu.png");
+                if (iconUrl != null) {
+                    javafx.scene.image.Image menuImage = new javafx.scene.image.Image(iconUrl.toExternalForm());
+                    javafx.scene.image.ImageView menuIcon = new javafx.scene.image.ImageView(menuImage);
+                    menuIcon.setFitWidth(24);
+                    menuIcon.setFitHeight(24);
+                    menuIcon.setPreserveRatio(true);
+                    menuBtn.setGraphic(menuIcon);
+                    menuBtn.setText("");
+                }
+            } catch (Exception ex) {
+                System.err.println("Could not load menu icon: " + ex.getMessage());
+            }
+        }
         if (basicInfoMenuBtn != null) basicInfoMenuBtn.setOnAction(e -> showBasicInfo());
         if (journalsMenuBtn != null) journalsMenuBtn.setOnAction(e -> showJournals());
         if (savedJournalsMenuBtn != null) savedJournalsMenuBtn.setOnAction(e -> showSavedJournals());
         if (savedBlogsMenuBtn != null) savedBlogsMenuBtn.setOnAction(e -> showSavedBlogs());
-        if (achievementsMenuBtn != null) achievementsMenuBtn.setOnAction(e -> showAchievements());
 
         // Keep mainArea left anchor in sync with sidePanel width (so it shrinks/expands)
         if (sidePanel != null && mainArea != null) {
@@ -892,27 +906,27 @@ public class ProfileController {
 
     private void showBasicInfo() {
         if (subtitleLabel != null) subtitleLabel.setText("Basic Information");
-        setPageVisibility(true, false, false, false, false);
+        setPageVisibility(true, false, false, false);
         if (editInfoBtn != null) { editInfoBtn.setVisible(true); editInfoBtn.setManaged(true); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(true); saveInfoBtn.setManaged(true); }
     }
     private void showJournals() {
         if (subtitleLabel != null) subtitleLabel.setText("Journal");
-        setPageVisibility(false, true, false, false, false);
+        setPageVisibility(false, true, false, false);
         loadJournals();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
     private void showSavedBlogs() {
         if (subtitleLabel != null) subtitleLabel.setText("Starred Blogs");
-        setPageVisibility(false, false, true, false, false);
+        setPageVisibility(false, false, true, false);
         loadSavedBlogs();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
     private void showSavedJournals() {
         if (subtitleLabel != null) subtitleLabel.setText("Starred Journals");
-        setPageVisibility(false, false, false, true, false);
+        setPageVisibility(false, false, false, true);
         loadSavedJournals();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
@@ -920,19 +934,12 @@ public class ProfileController {
     public void showStarredJournalsSection() {
         showSavedJournals();
     }
-    private void showAchievements() {
-        if (subtitleLabel != null) subtitleLabel.setText("Achievements");
-        setPageVisibility(false, false, false, false, false);
-        if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
-        if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
-    }
 
-    private void setPageVisibility(boolean basic, boolean journal, boolean savedBlogs, boolean savedJournals, boolean achievement) {
+    private void setPageVisibility(boolean basic, boolean journal, boolean savedBlogs, boolean savedJournals) {
         if (basicInfoScroll != null) { basicInfoScroll.setVisible(basic); basicInfoScroll.setManaged(basic); }
         if (journalsPage != null) { journalsPage.setVisible(journal); journalsPage.setManaged(journal); }
         if (savedBlogsPage != null) { savedBlogsPage.setVisible(savedBlogs); savedBlogsPage.setManaged(savedBlogs); }
         if (savedJournalsPage != null) { savedJournalsPage.setVisible(savedJournals); savedJournalsPage.setManaged(savedJournals); }
-        if (achievementsPage != null) { achievementsPage.setVisible(achievement); achievementsPage.setManaged(achievement); }
     }
 
     private void loadAndDisplaySafetyPlan() {

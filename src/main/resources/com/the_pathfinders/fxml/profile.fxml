@@ -17,7 +17,6 @@
                                 <Button fx:id="journalsMenuBtn" text="Published Journals" styleClass="menu-item" />
                                 <Button fx:id="savedJournalsMenuBtn" text="Starred Journals" styleClass="menu-item" />
                                 <Button fx:id="savedBlogsMenuBtn" text="Starred Blogs" styleClass="menu-item" />
-                                <Button fx:id="achievementsMenuBtn" text="Achievements" styleClass="menu-item" />
                             </children>
                         </VBox>
                     </children>
@@ -79,12 +78,6 @@
                                                 <VBox fx:id="savedJournalsList" spacing="10" />
                                             </content>
                                         </ScrollPane>
-                                    </children>
-                                </VBox>
-                                <!-- Achievements Page -->
-                                <VBox fx:id="achievementsPage" alignment="CENTER" spacing="16" visible="false" managed="false">
-                                    <children>
-                                        <Label text="Coming soon" styleClass="coming-soon" />
                                     </children>
                                 </VBox>
                             </children>

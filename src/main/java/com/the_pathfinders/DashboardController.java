@@ -921,8 +921,7 @@ private void loadPage(String path) {
             });
             
             button.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_EXITED, e -> {
-                // Check if we're exiting to empty space (not to another button)
-                // If currentlyHoveredButton is still this button, we're going to empty space
+                // Always fade out when exiting, and immediately clear reference
                 if (currentlyHoveredButton == button) {
                     // Fade out from current opacity (relative to fade in progress)
                     double currentOpacity = hoverLabel.getOpacity();
@@ -930,14 +929,9 @@ private void loadPage(String path) {
                     fadeOut.playFromStart();
                     scaleDown.playFromStart();
                     
-                    // Clear after a short delay to allow button-to-button transitions
-                    javafx.application.Platform.runLater(() -> {
-                        if (currentlyHoveredButton == button) {
-                            currentlyHoveredButton = null;
-                        }
-                    });
+                    // Clear immediately - no delay
+                    currentlyHoveredButton = null;
                 }
-                // If currentlyHoveredButton is different, another button's MOUSE_ENTERED already handled it
             });
         }
     }

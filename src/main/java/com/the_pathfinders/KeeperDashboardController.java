@@ -41,7 +41,6 @@ public class KeeperDashboardController implements Initializable {
     @FXML private Button soulModerationBtn;
     @FXML private Button journalModerationBtn;
     @FXML private Button appointmentBtn;
-    @FXML private Button achievementBtn;
     @FXML private ImageView keeperProfileImage;
     @FXML private Label keeperNameLabel;
     @FXML private Label keeperIdLabel;
@@ -277,13 +276,6 @@ public class KeeperDashboardController implements Initializable {
         switchContent("Appointment", "appointments");
         setActiveNavButton(appointmentBtn);
         loadAppointments();
-    }
-    
-    @FXML
-    private void showAchievement() {
-        switchContent("Achievement", "other");
-        setActiveNavButton(achievementBtn);
-        placeholderText.setText("Achievement - Coming Soon");
     }
     
     private void switchContent(String title, String paneToShow) {

@@ -57,11 +57,6 @@
                      <Button fx:id="appointmentBtn" mnemonicParsing="false" onAction="#showAppointment" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="📅 Appointment" alignment="CENTER_LEFT">
                         <font><Font size="14.0" /></font>
                      </Button>
-                     
-                     <!-- Achievement -->
-                     <Button fx:id="achievementBtn" mnemonicParsing="false" onAction="#showAchievement" prefHeight="50.0" prefWidth="280.0" styleClass="nav-button" text="🏆 Achievement" alignment="CENTER_LEFT">
-                        <font><Font size="14.0" /></font>
-                     </Button>
                   </children>
                </VBox>
                
