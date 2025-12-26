@@ -26,6 +26,8 @@ public class VideoManager {
     private boolean initialized = false;
     private boolean initFailed = false;
     private AtomicBoolean isInitializing = new AtomicBoolean(false);
+    // Guards to avoid adding duplicate size listeners
+    private boolean sizeListenersAdded = false;
     
     private VideoManager() {}
     
@@ -132,6 +134,10 @@ public class VideoManager {
                 bgView.setSmooth(true);
                 bgView.setCache(true);
                 bgView.setMouseTransparent(true);
+                // Let us manage sizing manually to avoid AnchorPane layout races
+                bgView.setManaged(false);
+                bgView.setLayoutX(0);
+                bgView.setLayoutY(0);
             }
             
             // Create overlay if not exists
@@ -139,6 +145,9 @@ public class VideoManager {
                 videoOverlay = new Rectangle();
                 videoOverlay.setFill(Color.rgb(6, 8, 12, 0.30));
                 videoOverlay.setMouseTransparent(true);
+                videoOverlay.setManaged(false);
+                videoOverlay.setLayoutX(0);
+                videoOverlay.setLayoutY(0);
             }
             
             // Unbind first if already bound (in case of reattachment)
@@ -147,11 +156,84 @@ public class VideoManager {
             videoOverlay.widthProperty().unbind();
             videoOverlay.heightProperty().unbind();
             
-            // Bind to root dimensions for dynamic resizing
-            bgView.fitWidthProperty().bind(root.widthProperty());
-            bgView.fitHeightProperty().bind(root.heightProperty());
-            videoOverlay.widthProperty().bind(root.widthProperty());
-            videoOverlay.heightProperty().bind(root.heightProperty());
+            // We'll set fit sizes directly and listen for changes to avoid binding conflicts
+            bgView.setFitWidth(root.getWidth());
+            bgView.setFitHeight(root.getHeight());
+            videoOverlay.setWidth(root.getWidth());
+            videoOverlay.setHeight(root.getHeight());
+
+            if (!sizeListenersAdded) {
+                sizeListenersAdded = true;
+                // React to root size changes
+                root.widthProperty().addListener((obs, oldV, newV) -> {
+                    Platform.runLater(() -> {
+                        if (bgView != null) bgView.setFitWidth(newV.doubleValue());
+                        if (videoOverlay != null) videoOverlay.setWidth(newV.doubleValue());
+                    });
+                });
+                root.heightProperty().addListener((obs, oldV, newV) -> {
+                    Platform.runLater(() -> {
+                        if (bgView != null) bgView.setFitHeight(newV.doubleValue());
+                        if (videoOverlay != null) videoOverlay.setHeight(newV.doubleValue());
+                    });
+                });
+            }
+
+            // If scene is already present, prefer binding to scene size (ensures fullscreen on maximize)
+            if (root.getScene() != null) {
+                try { bgView.fitWidthProperty().unbind(); } catch (Exception ignored) {}
+                try { bgView.fitHeightProperty().unbind(); } catch (Exception ignored) {}
+                try { videoOverlay.widthProperty().unbind(); } catch (Exception ignored) {}
+                try { videoOverlay.heightProperty().unbind(); } catch (Exception ignored) {}
+                bgView.fitWidthProperty().bind(root.getScene().widthProperty());
+                bgView.fitHeightProperty().bind(root.getScene().heightProperty());
+                videoOverlay.widthProperty().bind(root.getScene().widthProperty());
+                videoOverlay.heightProperty().bind(root.getScene().heightProperty());
+            }
+
+            // Also listen for the scene to become available later and rebind to it
+            root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                Platform.runLater(() -> {
+                    if (newScene != null) {
+                        try { bgView.fitWidthProperty().unbind(); } catch (Exception ignored) {}
+                        try { bgView.fitHeightProperty().unbind(); } catch (Exception ignored) {}
+                        try { videoOverlay.widthProperty().unbind(); } catch (Exception ignored) {}
+                        try { videoOverlay.heightProperty().unbind(); } catch (Exception ignored) {}
+                        // Also listen to scene size changes so maximizing/restoring is handled
+                        Platform.runLater(() -> {
+                            if (newScene != null) {
+                                double w = newScene.getWidth();
+                                double h = newScene.getHeight();
+                                bgView.setFitWidth(w);
+                                bgView.setFitHeight(h);
+                                videoOverlay.setWidth(w);
+                                videoOverlay.setHeight(h);
+                                newScene.widthProperty().addListener((o, ov, nv) -> {
+                                    Platform.runLater(() -> {
+                                        if (bgView != null) bgView.setFitWidth(nv.doubleValue());
+                                        if (videoOverlay != null) videoOverlay.setWidth(nv.doubleValue());
+                                    });
+                                });
+                                newScene.heightProperty().addListener((o, ov, nv) -> {
+                                    Platform.runLater(() -> {
+                                        if (bgView != null) bgView.setFitHeight(nv.doubleValue());
+                                        if (videoOverlay != null) videoOverlay.setHeight(nv.doubleValue());
+                                    });
+                                });
+                            }
+                        });
+                    } else {
+                        try { bgView.fitWidthProperty().unbind(); } catch (Exception ignored) {}
+                        try { bgView.fitHeightProperty().unbind(); } catch (Exception ignored) {}
+                        try { videoOverlay.widthProperty().unbind(); } catch (Exception ignored) {}
+                        try { videoOverlay.heightProperty().unbind(); } catch (Exception ignored) {}
+                        bgView.fitWidthProperty().bind(root.widthProperty());
+                        bgView.fitHeightProperty().bind(root.heightProperty());
+                        videoOverlay.widthProperty().bind(root.widthProperty());
+                        videoOverlay.heightProperty().bind(root.heightProperty());
+                    }
+                });
+            });
             
             // Set anchor pane constraints to ensure full coverage
             AnchorPane.setTopAnchor(bgView, 0.0);
