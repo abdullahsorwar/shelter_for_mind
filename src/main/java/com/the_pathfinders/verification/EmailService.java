@@ -241,7 +241,6 @@ public class EmailService {
     }
     
     public static void notifyExistingKeepersOfNewSignup(String newKeeperEmail, String newKeeperId) {
-        // TODO: Implement this to notify existing keepers via email
         // For now, just log it
         System.out.println("New keeper signup pending approval: " + newKeeperId + " (" + newKeeperEmail + ")");
         System.out.println("Existing keepers should be notified through the admin dashboard.");
