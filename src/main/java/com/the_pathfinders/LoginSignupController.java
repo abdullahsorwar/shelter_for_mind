@@ -73,6 +73,16 @@ public class LoginSignupController implements Initializable {
             }
         } catch (Exception ignored) {}
 
+        // Ensure stylesheet is loaded (fallback if FXML failed to attach it)
+        try {
+            if (root != null) {
+                java.net.URL css = getClass().getResource("/com/the_pathfinders/css/login_signup.css");
+                if (css != null && !root.getStylesheets().contains(css.toExternalForm())) {
+                    root.getStylesheets().add(css.toExternalForm());
+                }
+            }
+        } catch (Exception ignored) {}
+
         // Create minimal animated background
         createMinimalAnimatedBackground();
 
@@ -114,6 +124,14 @@ public class LoginSignupController implements Initializable {
         btnLoginSubmit.setPrefSize(220, 50);
         btnSubmit.setPrefSize(220, 50);
 
+        // Ensure primary-button style class is present (defensive)
+        try {
+            if (btnLoginSubmit != null && !btnLoginSubmit.getStyleClass().contains("primary-button"))
+                btnLoginSubmit.getStyleClass().add("primary-button");
+            if (btnSubmit != null && !btnSubmit.getStyleClass().contains("primary-button"))
+                btnSubmit.getStyleClass().add("primary-button");
+        } catch (Exception ignored) {}
+
     // Initial visibility: show login primary button by default, hide signup primary button
     if (btnLoginSubmit != null) { btnLoginSubmit.setVisible(true); btnLoginSubmit.setManaged(true); }
     if (btnSubmit != null) { btnSubmit.setVisible(false); btnSubmit.setManaged(false); }
@@ -123,6 +141,8 @@ public class LoginSignupController implements Initializable {
         // Reserve space for messages so layout never jumps
         lblLoginStatus.setMinHeight(18);
         lblSubmitStatus.setMinHeight(18);
+
+        // (debug prints removed)
 
 
     }
@@ -379,6 +399,21 @@ public class LoginSignupController implements Initializable {
             }
         } catch (Exception e) {
             System.err.println("Failed to load background image: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleBack() {
+        try {
+            // When returning to initial page, skip the intro animation
+            InitialController.setSkipIntro(true);
+            // Detach or cleanup local video usage
+            dispose();
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/initial.fxml"));
+            javafx.scene.Parent initialRoot = loader.load();
+            if (root != null && root.getScene() != null) root.getScene().setRoot(initialRoot);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
     

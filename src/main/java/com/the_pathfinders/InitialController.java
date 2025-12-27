@@ -34,6 +34,11 @@ public class InitialController implements Initializable {
     @FXML private javafx.scene.text.Text pleaseWaitText;
     
     private boolean videoReady = false;
+    private static boolean skipIntro = false;
+
+    public static void setSkipIntro(boolean skip) {
+        skipIntro = skip;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -76,13 +81,17 @@ public class InitialController implements Initializable {
             // Recenter when content's layout size changes (avoid boundsInParent to prevent feedback loop)
             contentPane.layoutBoundsProperty().addListener((o, ov, nv) -> centerContent());
             
-            // Delay intro animation until after scene is fully rendered
-            // This prevents stuttering during initialization
+            // Delay intro animation until after scene is fully rendered (or skip if requested)
             Platform.runLater(() -> {
-                // Add a delay to ensure everything is rendered
-                PauseTransition initialDelay = new PauseTransition(Duration.millis(500));
-                initialDelay.setOnFinished(e -> playIntroSequence());
-                initialDelay.play();
+                if (skipIntro) {
+                    applyFinalState();
+                    skipIntro = false;
+                } else {
+                    // Add a delay to ensure everything is rendered
+                    PauseTransition initialDelay = new PauseTransition(Duration.millis(500));
+                    initialDelay.setOnFinished(e -> playIntroSequence());
+                    initialDelay.play();
+                }
             });
         });
 
@@ -269,6 +278,45 @@ public class InitialController implements Initializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Immediately set all visual nodes to their final (post-intro) state
+     * so the initial page appears as if the intro already ran.
+     */
+    private void applyFinalState() {
+        try {
+            if (whiteOverlay != null) {
+                whiteOverlay.setOpacity(0.0);
+                whiteOverlay.setMouseTransparent(true);
+            }
+
+            if (logoImage != null) {
+                logoImage.setOpacity(1.0);
+                logoImage.setScaleX(1.0);
+                logoImage.setScaleY(1.0);
+            }
+            if (loginAsText != null) {
+                loginAsText.setOpacity(1.0);
+                loginAsText.setScaleX(1.0);
+                loginAsText.setScaleY(1.0);
+            }
+            if (buttonsPane != null) {
+                buttonsPane.setOpacity(1.0);
+                buttonsPane.setScaleX(1.0);
+                buttonsPane.setScaleY(1.0);
+            }
+            if (soulImage != null) {
+                soulImage.setOpacity(1.0);
+                soulImage.setScaleX(1.0);
+                soulImage.setScaleY(1.0);
+            }
+            if (keeperImage != null) {
+                keeperImage.setOpacity(1.0);
+                keeperImage.setScaleX(1.0);
+                keeperImage.setScaleY(1.0);
+            }
+        } catch (Exception ignored) {}
     }
 
     private void trySetImage(ImageView iv, String... paths) {

@@ -251,6 +251,23 @@
     -fx-effect: dropshadow(gaussian, rgba(20,40,80,0.55), 20, 0.4, 0, 4);
 }
 
+/* Back capsule button (small, bottom-right) */
+.back-capsule {
+    -fx-background-color: linear-gradient(to right, #4a90e2, #6366f1);
+    -fx-background-radius: 24;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-padding: 8 14;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-radius: 24;
+}
+.back-capsule:hover {
+    -fx-background-color: linear-gradient(to right, #5b9df0, #7a7efc);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
 /* ---------------------------------------------------------
    Quick notes on animating the theme (JavaFX limitation)
    ------------------------------------------------------

@@ -156,3 +156,20 @@
 .text {
     -fx-font-smoothing-type: lcd;
 }
+
+/* Back capsule button for admin/login page */
+.back-capsule {
+    -fx-background-color: linear-gradient(to right, #FF9A8B, #7CDFD9);
+    -fx-background-radius: 20;
+    -fx-text-fill: #111;
+    -fx-font-weight: 700;
+    -fx-padding: 6 12;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-radius: 20;
+}
+.back-capsule:hover {
+    -fx-background-color: linear-gradient(to right, #FF8A7B, #6CCFC9);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}

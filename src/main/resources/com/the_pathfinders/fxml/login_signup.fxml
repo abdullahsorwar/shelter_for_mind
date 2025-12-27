@@ -112,5 +112,8 @@
                 </VBox>
             </children>
         </StackPane>
-    </children>
-</AnchorPane>
+        <!-- Back capsule button (bottom-right) -->
+        <Button fx:id="backButton" onAction="#handleBack" text="Back" styleClass="back-capsule"
+            AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="12.0" />
+        </children>
+    </AnchorPane>

@@ -44,6 +44,7 @@ public class AdminLoginController implements Initializable {
     
     // Theme toggle
     @FXML private Button themeToggleButton;
+    @FXML private Button backButton;
     private boolean isSignupMode = false;
 
     @Override
@@ -82,9 +83,35 @@ public class AdminLoginController implements Initializable {
         
         // Bind theme toggle button to window top-right corner
         bindThemeButtonToTopRight();
+        bindBackButtonToBottomRight();
         
         // Add entrance animation
         playEntranceAnimation();
+    }
+
+    private void bindBackButtonToBottomRight() {
+        root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null && backButton != null) {
+                backButton.layoutXProperty().bind(
+                    newScene.widthProperty().subtract(backButton.widthProperty()).subtract(12)
+                );
+                backButton.layoutYProperty().bind(
+                    newScene.heightProperty().subtract(backButton.heightProperty()).subtract(12)
+                );
+            }
+        });
+    }
+
+    @FXML
+    private void handleBack() {
+        try {
+            InitialController.setSkipIntro(true);
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/initial.fxml"));
+            javafx.scene.Parent initialRoot = loader.load();
+            if (root != null && root.getScene() != null) root.getScene().setRoot(initialRoot);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     private void bindThemeButtonToTopRight() {
