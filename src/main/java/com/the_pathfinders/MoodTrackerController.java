@@ -8,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.chart.PieChart;
 import javafx.util.Duration;
-import javafx.geometry.Pos;
 
 import java.util.*;
 

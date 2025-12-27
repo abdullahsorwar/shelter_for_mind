@@ -38,7 +38,6 @@ public class JournalController {
     private JournalRepository journalRepo;
     private String currentJournalId = null;
     private boolean isPublic = true; // Default to public
-    private String currentTheme = "Default"; // Track current theme
     private boolean menuOpen = false; // Track menu state
 
     public void setSoulId(String id) {
@@ -252,8 +251,6 @@ public class JournalController {
             System.err.println("ERROR: Cannot apply theme - theme=" + theme + ", mainContainer=" + mainContainer);
             return;
         }
-
-        currentTheme = theme;
 
         // Remove all theme style classes from mainContainer
         mainContainer.getStyleClass().removeAll("theme-default", "theme-vintage", "theme-pastel", "theme-starry", "theme-lavender");

@@ -8,9 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.GaussianBlur;
 import javafx.util.Duration;
 import javafx.geometry.Pos;
 
@@ -42,12 +40,10 @@ public class GratitudeGardenController {
     private static class GratitudeFlower {
         String message;
         StackPane flowerNode;
-        Label messageLabel;
         
         GratitudeFlower(String message, StackPane node, Label label) {
             this.message = message;
             this.flowerNode = node;
-            this.messageLabel = label;
         }
     }
 

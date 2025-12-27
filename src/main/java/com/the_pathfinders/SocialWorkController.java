@@ -248,10 +248,6 @@ public class SocialWorkController {
         }).start();
     }
 
-    private void initializeWebView() {
-        // Removed - WebView now initialized in initialize() method
-    }
-
     private void goBack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml"));

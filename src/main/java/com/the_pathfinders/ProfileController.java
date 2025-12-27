@@ -169,14 +169,6 @@ public class ProfileController {
         showBasicInfo();
     }
 
-    private void updateStarredBadge() {
-        // Badge removed - no longer displayed
-        if (starredBadge != null) {
-            starredBadge.setVisible(false);
-            starredBadge.setManaged(false);
-        }
-    }
-
     private void loadProfileImage() {
         try {
             URL u = getClass().getResource("/com/the_pathfinders/" + soulId + ".jpg");
