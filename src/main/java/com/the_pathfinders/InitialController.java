@@ -36,13 +36,21 @@ public class InitialController implements Initializable {
     private boolean videoReady = false;
     private static boolean skipIntro = false;
     // Minimum fade-in time for "please wait" in milliseconds (configurable)
-    private double pleaseWaitMinMs = 300.0;
+    // Set to 2000 ms (fixed fade-in)
+    private double pleaseWaitMinMs = 2000.0;
     // Actual randomized fade duration (ms) computed when showing the text
     private long pleaseWaitFadeDurationMs = 0;
     // Timestamp when pleaseWait was shown
     private long pleaseWaitShownAt = 0;
     // Guard to prevent multiple concurrent please-wait sequences
     private boolean pleaseWaitInProgress = false;
+    // Keep references to running transitions so we can stop them for a clean handoff
+    private FadeTransition currentFadeIn = null;
+    private FadeTransition currentFadeOut = null;
+    // Ping-pong loop control
+    private boolean pingPongRunning = false;
+    private boolean atLeastOneFadeInCompleted = false;
+    private Runnable pendingAfter = null;
 
     public static void setSkipIntro(boolean skip) {
         skipIntro = skip;
@@ -111,7 +119,7 @@ public class InitialController implements Initializable {
             keeperImage.setOnMouseClicked(e -> onKeeperClick());
         }
     }
-    
+
     private void onSoulClick() {
         // Always show please-wait on click, then proceed.
         showPleaseWait();
@@ -123,21 +131,21 @@ public class InitialController implements Initializable {
             initializeBackgroundVideo();
         }
     }
-    
+
     private void initializeBackgroundVideo() {
         VideoManager videoManager = VideoManager.getInstance();
-        
+
         // If already initialized, set ready and wait for the please-wait transition
         if (videoManager.isInitialized()) {
             videoReady = true;
             hidePleaseWaitAndRun(() -> goToLoginSignup());
             return;
         }
-        
+
         // Show "Please wait..." message (idempotent)
         showPleaseWait();
-        
-        // Initialize with 5 retry attempts
+
+        // Initialize with 500 retry attempts
         videoManager.initializeWithRetry(
             500, // max retries
             (successMsg) -> {
@@ -159,41 +167,131 @@ public class InitialController implements Initializable {
     }
     
     private void showPleaseWait() {
-        if (pleaseWaitText == null || pleaseWaitInProgress) return;
+        if (pleaseWaitText == null) return;
+        // If a fade-out is running, stop it so fade-in is clear
+        if (currentFadeOut != null) {
+            currentFadeOut.stop();
+            currentFadeOut = null;
+        }
+        // If already in progress, do nothing (ping-pong already running)
+        if (pleaseWaitInProgress) return;
         pleaseWaitInProgress = true;
-
-        // Fixed fade-in duration (do not randomize) — keep minimum stable
+        atLeastOneFadeInCompleted = false;
+        pingPongRunning = true;
         pleaseWaitFadeDurationMs = (long) pleaseWaitMinMs;
         pleaseWaitShownAt = System.currentTimeMillis();
 
-        // Ensure starting opacity is 0 so the fade-in is visible
-        try {
-            pleaseWaitText.setOpacity(0.0);
-        } catch (Exception ignored) {}
+        startPingPongLoop();
+    }
 
-        FadeTransition fade = new FadeTransition(Duration.millis(pleaseWaitFadeDurationMs), pleaseWaitText);
-        fade.setToValue(1.0);
-        fade.setInterpolator(Interpolator.EASE_BOTH);
-        fade.setOnFinished(e -> {
-            // keep visible until hide is requested by caller
+    private void startPingPongLoop() {
+        // Initial fixed fade-in (2000ms)
+        Platform.runLater(() -> {
+            try { pleaseWaitText.setOpacity(0.0); } catch (Exception ignored) {}
+            if (currentFadeIn != null) currentFadeIn.stop();
+            currentFadeIn = new FadeTransition(Duration.millis(pleaseWaitFadeDurationMs), pleaseWaitText);
+            currentFadeIn.setFromValue(0.0);
+            currentFadeIn.setToValue(1.0);
+            currentFadeIn.setInterpolator(Interpolator.EASE_BOTH);
+            currentFadeIn.setOnFinished(e -> {
+                currentFadeIn = null;
+                atLeastOneFadeInCompleted = true;
+                // If someone requested hide before first fade-in completed, honor it now
+                if (pendingAfter != null) {
+                    Runnable a = pendingAfter;
+                    pendingAfter = null;
+                    hidePleaseWait(a);
+                    return;
+                }
+                // Continue ping-pong cycles while running
+                if (pingPongRunning) {
+                    schedulePingPongCycle();
+                }
+            });
+            currentFadeIn.play();
         });
-        fade.play();
+    }
+
+    private void schedulePingPongCycle() {
+        // Fade-out (random 1-2s)
+        if (!pingPongRunning) return;
+        long outMs = 1000 + (long) (Math.random() * 1000.0);
+        Platform.runLater(() -> {
+            if (currentFadeOut != null) currentFadeOut.stop();
+            currentFadeOut = new FadeTransition(Duration.millis(outMs), pleaseWaitText);
+            currentFadeOut.setFromValue(1.0);
+            currentFadeOut.setToValue(0.0);
+            currentFadeOut.setInterpolator(Interpolator.EASE_BOTH);
+            currentFadeOut.setOnFinished(ev -> {
+                currentFadeOut = null;
+                if (!pingPongRunning) return;
+                // Fade-in next (random base 2s + 0..5s)
+                long inMs = 2000 + (long) (Math.random() * 5000.0);
+                if (currentFadeIn != null) currentFadeIn.stop();
+                currentFadeIn = new FadeTransition(Duration.millis(inMs), pleaseWaitText);
+                currentFadeIn.setFromValue(0.0);
+                currentFadeIn.setToValue(1.0);
+                currentFadeIn.setInterpolator(Interpolator.EASE_BOTH);
+                currentFadeIn.setOnFinished(e2 -> {
+                    currentFadeIn = null;
+                    atLeastOneFadeInCompleted = true;
+                    // If hide was requested while cycling, perform it now
+                    if (pendingAfter != null) {
+                        Runnable a = pendingAfter;
+                        pendingAfter = null;
+                        hidePleaseWait(a);
+                        return;
+                    }
+                    // Continue cycles
+                    if (pingPongRunning) schedulePingPongCycle();
+                });
+                currentFadeIn.play();
+            });
+            currentFadeOut.play();
+        });
     }
     
     private void hidePleaseWait() {
-        if (pleaseWaitText == null) return;
-        long fadeOutMs = (long) (pleaseWaitMinMs + Math.random() * 3000.0);
-        // Ensure fade out is perceptible
-        fadeOutMs = Math.max(400, fadeOutMs);
-        FadeTransition fade = new FadeTransition(Duration.millis(fadeOutMs), pleaseWaitText);
-        fade.setToValue(0.0);
-        fade.setInterpolator(Interpolator.EASE_BOTH);
-        fade.setOnFinished(e -> {
-            pleaseWaitInProgress = false;
-            // reset shown timestamp so next show is fresh
-            pleaseWaitShownAt = 0;
+        hidePleaseWait(null);
+    }
+
+    /**
+     * Hide please-wait with an optional action to run after the fade-out completes.
+     */
+    private void hidePleaseWait(Runnable after) {
+        if (pleaseWaitText == null) {
+            if (after != null) Platform.runLater(after);
+            return;
+        }
+        // Stop the ping-pong loop so we can perform final fade-out
+        pingPongRunning = false;
+        // If a fade is currently running, stop it to ensure a clean final fade-out
+        if (currentFadeOut != null) {
+            currentFadeOut.stop();
+            currentFadeOut = null;
+        }
+        // Start final fade-out immediately (random 1-2s)
+        Platform.runLater(() -> {
+            try { pleaseWaitText.setOpacity(1.0); } catch (Exception ignored) {}
+            long fadeOutMs = 1000 + (long) (Math.random() * 1000.0);
+            fadeOutMs = Math.max(800, fadeOutMs);
+            if (currentFadeOut != null) currentFadeOut.stop();
+            FadeTransition fade = new FadeTransition(Duration.millis(fadeOutMs), pleaseWaitText);
+            fade.setFromValue(1.0);
+            fade.setToValue(0.0);
+            fade.setInterpolator(Interpolator.EASE_BOTH);
+            fade.setOnFinished(e -> {
+                currentFadeOut = null;
+                pleaseWaitInProgress = false;
+                pleaseWaitShownAt = 0;
+                try { pleaseWaitText.setOpacity(0.0); } catch (Exception ignored) {}
+            });
+            currentFadeOut = fade;
+            fade.play();
+            // Run follow-up action immediately when fade-out starts
+            if (after != null) Platform.runLater(after);
         });
-        fade.play();
+        
     }
 
     /**
@@ -211,17 +309,11 @@ public class InitialController implements Initializable {
         long remaining = pleaseWaitFadeDurationMs - elapsed;
         if (pleaseWaitShownAt == 0) remaining = pleaseWaitFadeDurationMs;
         if (remaining <= 0) {
-            // Enough time already elapsed, hide immediately then run
-            Platform.runLater(() -> {
-                hidePleaseWait();
-                if (after != null) after.run();
-            });
+            // Enough time already elapsed, hide immediately then run after fade finishes
+            Platform.runLater(() -> hidePleaseWait(after));
         } else {
             PauseTransition wait = new PauseTransition(Duration.millis(remaining));
-            wait.setOnFinished(ev -> {
-                hidePleaseWait();
-                if (after != null) after.run();
-            });
+            wait.setOnFinished(ev -> hidePleaseWait(after));
             wait.play();
         }
     }
