@@ -104,17 +104,17 @@ public class JournalController {
         this.isPublic = publicState;
         
         if (publicBtn != null && privateBtn != null) {
+            // Normalize classes first to avoid duplicates caused by repeated clicks
+            publicBtn.getStyleClass().removeAll("toggle-active", "toggle-inactive");
+            privateBtn.getStyleClass().removeAll("toggle-active", "toggle-inactive");
+
             if (publicState) {
                 // Public is active
-                publicBtn.getStyleClass().remove("toggle-inactive");
                 publicBtn.getStyleClass().add("toggle-active");
-                privateBtn.getStyleClass().remove("toggle-active");
                 privateBtn.getStyleClass().add("toggle-inactive");
             } else {
                 // Private is active
-                privateBtn.getStyleClass().remove("toggle-inactive");
                 privateBtn.getStyleClass().add("toggle-active");
-                publicBtn.getStyleClass().remove("toggle-active");
                 publicBtn.getStyleClass().add("toggle-inactive");
             }
         }
