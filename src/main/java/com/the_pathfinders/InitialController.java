@@ -35,6 +35,14 @@ public class InitialController implements Initializable {
     
     private boolean videoReady = false;
     private static boolean skipIntro = false;
+    // Minimum fade-in time for "please wait" in milliseconds (configurable)
+    private double pleaseWaitMinMs = 300.0;
+    // Actual randomized fade duration (ms) computed when showing the text
+    private long pleaseWaitFadeDurationMs = 0;
+    // Timestamp when pleaseWait was shown
+    private long pleaseWaitShownAt = 0;
+    // Guard to prevent multiple concurrent please-wait sequences
+    private boolean pleaseWaitInProgress = false;
 
     public static void setSkipIntro(boolean skip) {
         skipIntro = skip;
@@ -100,30 +108,33 @@ public class InitialController implements Initializable {
             soulImage.setOnMouseClicked(e -> onSoulClick());
         }
         if (keeperImage != null) {
-            keeperImage.setOnMouseClicked(e -> goToAdminLogin());
+            keeperImage.setOnMouseClicked(e -> onKeeperClick());
         }
     }
     
     private void onSoulClick() {
-        // Start video initialization on first click
-        if (!videoReady) {
-            initializeBackgroundVideo();
+        // Always show please-wait on click, then proceed.
+        showPleaseWait();
+        VideoManager videoManager = VideoManager.getInstance();
+        if (videoManager.isInitialized()) {
+            videoReady = true;
+            hidePleaseWaitAndRun(() -> goToLoginSignup());
         } else {
-            goToLoginSignup();
+            initializeBackgroundVideo();
         }
     }
     
     private void initializeBackgroundVideo() {
         VideoManager videoManager = VideoManager.getInstance();
         
-        // If already initialized, proceed immediately
+        // If already initialized, set ready and wait for the please-wait transition
         if (videoManager.isInitialized()) {
             videoReady = true;
-            goToLoginSignup();
+            hidePleaseWaitAndRun(() -> goToLoginSignup());
             return;
         }
         
-        // Show "Please wait..." message
+        // Show "Please wait..." message (idempotent)
         showPleaseWait();
         
         // Initialize with 5 retry attempts
@@ -132,34 +143,93 @@ public class InitialController implements Initializable {
             (successMsg) -> {
                 // On success
                 System.out.println("Video initialization succeeded: " + successMsg);
-                videoReady = true;
-                hidePleaseWait();
-                goToLoginSignup();
+                // Wait for the please-wait fade-in to complete before navigating
+                hidePleaseWaitAndRun(() -> {
+                    videoReady = true;
+                    goToLoginSignup();
+                });
             },
             (failureMsg) -> {
                 // On failure - still navigate but without video
                 System.err.println("Video initialization failed: " + failureMsg);
                 videoReady = true; // Allow navigation anyway
-                hidePleaseWait();
-                goToLoginSignup();
+                hidePleaseWaitAndRun(() -> goToLoginSignup());
             }
         );
     }
     
     private void showPleaseWait() {
-        if (pleaseWaitText != null) {
-            FadeTransition fade = new FadeTransition(Duration.millis(300), pleaseWaitText);
-            fade.setToValue(1.0);
-            fade.play();
-        }
+        if (pleaseWaitText == null || pleaseWaitInProgress) return;
+        pleaseWaitInProgress = true;
+
+        // Fixed fade-in duration (do not randomize) — keep minimum stable
+        pleaseWaitFadeDurationMs = (long) pleaseWaitMinMs;
+        pleaseWaitShownAt = System.currentTimeMillis();
+
+        // Ensure starting opacity is 0 so the fade-in is visible
+        try {
+            pleaseWaitText.setOpacity(0.0);
+        } catch (Exception ignored) {}
+
+        FadeTransition fade = new FadeTransition(Duration.millis(pleaseWaitFadeDurationMs), pleaseWaitText);
+        fade.setToValue(1.0);
+        fade.setInterpolator(Interpolator.EASE_BOTH);
+        fade.setOnFinished(e -> {
+            // keep visible until hide is requested by caller
+        });
+        fade.play();
     }
     
     private void hidePleaseWait() {
-        if (pleaseWaitText != null) {
-            FadeTransition fade = new FadeTransition(Duration.millis(300), pleaseWaitText);
-            fade.setToValue(0.0);
-            fade.play();
+        if (pleaseWaitText == null) return;
+        long fadeOutMs = (long) (pleaseWaitMinMs + Math.random() * 3000.0);
+        // Ensure fade out is perceptible
+        fadeOutMs = Math.max(400, fadeOutMs);
+        FadeTransition fade = new FadeTransition(Duration.millis(fadeOutMs), pleaseWaitText);
+        fade.setToValue(0.0);
+        fade.setInterpolator(Interpolator.EASE_BOTH);
+        fade.setOnFinished(e -> {
+            pleaseWaitInProgress = false;
+            // reset shown timestamp so next show is fresh
+            pleaseWaitShownAt = 0;
+        });
+        fade.play();
+    }
+
+    /**
+     * Ensures the please-wait text is visible for at least the randomized fade-in
+     * duration before hiding it and optionally running a follow-up action.
+     */
+    private void hidePleaseWaitAndRun(Runnable after) {
+        if (pleaseWaitText == null) {
+            if (after != null) Platform.runLater(after);
+            return;
         }
+
+        long now = System.currentTimeMillis();
+        long elapsed = (pleaseWaitShownAt > 0) ? (now - pleaseWaitShownAt) : 0;
+        long remaining = pleaseWaitFadeDurationMs - elapsed;
+        if (pleaseWaitShownAt == 0) remaining = pleaseWaitFadeDurationMs;
+        if (remaining <= 0) {
+            // Enough time already elapsed, hide immediately then run
+            Platform.runLater(() -> {
+                hidePleaseWait();
+                if (after != null) after.run();
+            });
+        } else {
+            PauseTransition wait = new PauseTransition(Duration.millis(remaining));
+            wait.setOnFinished(ev -> {
+                hidePleaseWait();
+                if (after != null) after.run();
+            });
+            wait.play();
+        }
+    }
+
+    private void onKeeperClick() {
+        if (pleaseWaitInProgress) return;
+        showPleaseWait();
+        hidePleaseWaitAndRun(() -> goToAdminLogin());
     }
 
     private void centerContent() {
