@@ -115,7 +115,7 @@ public class UserMessageRepository {
     public static void sendAppointmentConfirmation(String soulId, long appointmentId, String doctorName, String appointmentDate) throws SQLException {
         String subject = "✅ Appointment Confirmed";
         String message = String.format(
-            "Your appointment with Dr. %s has been confirmed!\n\n" +
+            "Your appointment with %s has been confirmed!\n\n" +
             "📅 Date: %s\n\n" +
             "Please arrive 10 minutes early. If you need to cancel or reschedule, please contact us as soon as possible.\n\n" +
             "Thank you for choosing Shelter for Mind!",
@@ -129,7 +129,7 @@ public class UserMessageRepository {
     public static void sendRescheduleRequest(String soulId, long appointmentId, String doctorName, String currentDate, String availableDates) throws SQLException {
         String subject = "📅 Appointment Reschedule Request";
         String message = String.format(
-            "Your appointment with Dr. %s scheduled for %s needs to be rescheduled.\n\n" +
+            "Your appointment with %s scheduled for %s needs to be rescheduled.\n\n" +
             "Available dates:\n%s\n\n" +
             "Please contact us or book a new appointment with one of the available dates above.\n\n" +
             "We apologize for any inconvenience.",

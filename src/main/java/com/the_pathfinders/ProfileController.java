@@ -1,6 +1,7 @@
 package com.the_pathfinders;
 
 import com.the_pathfinders.db.JournalRepository;
+import com.the_pathfinders.db.MoodTrackerRepository;
 import com.the_pathfinders.db.SoulInfoRepository;
 import com.the_pathfinders.db.SoulInfoRepository.SoulInfo;
 import com.the_pathfinders.util.JournalUtils;
@@ -54,10 +55,13 @@ public class ProfileController {
     @FXML private VBox savedBlogsList;
     @FXML private VBox savedJournalsPage;
     @FXML private VBox savedJournalsList;
+    @FXML private VBox moodAnalysisPage;
+    @FXML private VBox moodAnalysisList;
 
     // Menu buttons
     @FXML private Button savedJournalsMenuBtn;
     @FXML private Button savedBlogsMenuBtn;
+    @FXML private Button moodAnalysisMenuBtn;
 
     // Edit/save controls
     @FXML private Button editInfoBtn;
@@ -74,6 +78,7 @@ public class ProfileController {
     private String soulId;
     private final SoulInfoRepository soulInfoRepo = new SoulInfoRepository();
     private final JournalRepository journalRepo = new JournalRepository();
+    private final MoodTrackerRepository moodTrackerRepo = new MoodTrackerRepository();
     private final SavedBlogsManager savedBlogsManager = new SavedBlogsManager();
     private final SavedJournalsManager savedJournalsManager = new SavedJournalsManager();
     private SoulInfo currentInfo;
@@ -151,6 +156,7 @@ public class ProfileController {
         if (journalsMenuBtn != null) journalsMenuBtn.setOnAction(e -> showJournals());
         if (savedJournalsMenuBtn != null) savedJournalsMenuBtn.setOnAction(e -> showSavedJournals());
         if (savedBlogsMenuBtn != null) savedBlogsMenuBtn.setOnAction(e -> showSavedBlogs());
+        if (moodAnalysisMenuBtn != null) moodAnalysisMenuBtn.setOnAction(e -> showMoodAnalysis());
 
         // Keep mainArea left anchor in sync with sidePanel width (so it shrinks/expands)
         if (sidePanel != null && mainArea != null) {
@@ -766,6 +772,220 @@ public class ProfileController {
         return outerBox;
     }
 
+    private void loadMoodAnalysis() {
+        if (moodAnalysisList == null) return;
+
+        moodAnalysisList.getChildren().clear();
+
+        // Add header with description
+        Label headerLabel = new Label("📊 Your Mood History");
+        headerLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-padding: 0 0 10 0;");
+
+        Label descLabel = new Label("Track your emotional wellness journey - Last 10 mood assessments");
+        descLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8c8d; -fx-padding: 0 0 20 0;");
+        descLabel.setWrapText(true);
+
+        moodAnalysisList.getChildren().addAll(headerLabel, descLabel);
+
+        new Thread(() -> {
+            try {
+                // Get last 10 mood entries
+                List<MoodTrackerRepository.MoodEntry> entries = moodTrackerRepo.getMoodHistory(soulId, 10);
+
+                Platform.runLater(() -> {
+                    if (entries.isEmpty()) {
+                        Label noDataLabel = new Label("No mood data available yet.\nComplete a mood tracker assessment to see your analysis here!");
+                        noDataLabel.setStyle("-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-padding: 30; -fx-font-size: 14px; -fx-text-alignment: center;");
+                        noDataLabel.setWrapText(true);
+                        noDataLabel.setAlignment(javafx.geometry.Pos.CENTER);
+                        noDataLabel.setMaxWidth(Double.MAX_VALUE);
+                        moodAnalysisList.getChildren().add(noDataLabel);
+                        return;
+                    }
+
+                    // Display each mood entry
+                    int count = 1;
+                    for (MoodTrackerRepository.MoodEntry entry : entries) {
+                        VBox entryBox = createMoodEntryBox(entry, count++);
+                        moodAnalysisList.getChildren().add(entryBox);
+                    }
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() -> {
+                    Label errorLabel = new Label("Failed to load mood analysis: " + ex.getMessage());
+                    errorLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-style: italic; -fx-padding: 20;");
+                    moodAnalysisList.getChildren().add(errorLabel);
+                });
+            }
+        }).start();
+    }
+
+    private VBox createMoodEntryBox(MoodTrackerRepository.MoodEntry entry, int number) {
+        VBox outerBox = new VBox(12);
+        outerBox.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1; " +
+                         "-fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 16; " +
+                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+
+        // Header with entry number and date
+        HBox headerBox = new HBox(10);
+        headerBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        Label numberLabel = new Label("#" + number);
+        numberLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #3498db; " +
+                            "-fx-background-color: #ebf5fb; -fx-padding: 5 10; -fx-background-radius: 15;");
+
+        Label dateLabel = new Label(entry.getCreatedAt() != null ?
+                                    entry.getCreatedAt().format(java.time.format.DateTimeFormatter.ofPattern("MMM dd, yyyy - hh:mm a")) :
+                                    "Unknown date");
+        dateLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8c8d;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+        // Overall mood score with emoji
+        String moodEmoji = getMoodEmoji(entry.getMoodScore());
+        String moodText = getMoodText(entry.getMoodScore());
+        Label overallLabel = new Label(moodEmoji + " " + moodText);
+        overallLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: " + getMoodColor(entry.getMoodScore()) + ";");
+
+        headerBox.getChildren().addAll(numberLabel, dateLabel, spacer, overallLabel);
+
+        // Overall mood score bar
+        VBox scoreBox = new VBox(8);
+        scoreBox.setStyle("-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 8;");
+
+        Label scoreTitle = new Label("Overall Mood Score");
+        scoreTitle.setStyle("-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #2c3e50;");
+
+        HBox scoreBar = createScoreBar(entry.getMoodScore(), 100);
+
+        scoreBox.getChildren().addAll(scoreTitle, scoreBar);
+
+        // Category breakdown
+        Label categoriesTitle = new Label("Category Breakdown");
+        categoriesTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #2c3e50; -fx-padding: 8 0 4 0;");
+
+        VBox categoriesBox = new VBox(10);
+
+        // Calculate max score for categories (assuming 5 questions max per category, each worth 5 points)
+        int maxCategoryScore = 25;
+
+        if (entry.getStressScore() > 0) {
+            categoriesBox.getChildren().add(createCategoryRow("😓 Stress", entry.getStressScore(), maxCategoryScore, "#e74c3c"));
+        }
+        if (entry.getAnxietyScore() > 0) {
+            categoriesBox.getChildren().add(createCategoryRow("😰 Anxiety", entry.getAnxietyScore(), maxCategoryScore, "#f39c12"));
+        }
+        if (entry.getEnergyScore() > 0) {
+            categoriesBox.getChildren().add(createCategoryRow("⚡ Energy", entry.getEnergyScore(), maxCategoryScore, "#3498db"));
+        }
+        if (entry.getSleepScore() > 0) {
+            categoriesBox.getChildren().add(createCategoryRow("😴 Sleep", entry.getSleepScore(), maxCategoryScore, "#9b59b6"));
+        }
+        if (entry.getSocialScore() > 0) {
+            categoriesBox.getChildren().add(createCategoryRow("👥 Social", entry.getSocialScore(), maxCategoryScore, "#1abc9c"));
+        }
+
+        outerBox.getChildren().addAll(headerBox, scoreBox, categoriesTitle, categoriesBox);
+
+        return outerBox;
+    }
+
+    private HBox createScoreBar(int score, int maxScore) {
+        HBox container = new HBox(10);
+        container.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        // Progress bar
+        StackPane barContainer = new StackPane();
+        barContainer.setStyle("-fx-background-color: #ecf0f1; -fx-background-radius: 10;");
+        barContainer.setPrefHeight(30);
+        barContainer.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(barContainer, javafx.scene.layout.Priority.ALWAYS);
+
+        // Filled portion
+        Region filledBar = new Region();
+        double percentage = (score / (double) maxScore) * 100;
+        filledBar.setStyle("-fx-background-color: " + getMoodColor(score) + "; -fx-background-radius: 10;");
+        filledBar.setPrefHeight(30);
+        filledBar.prefWidthProperty().bind(barContainer.widthProperty().multiply(percentage / 100.0));
+        StackPane.setAlignment(filledBar, javafx.geometry.Pos.CENTER_LEFT);
+
+        // Score text
+        Label scoreText = new Label(score + "/" + maxScore);
+        scoreText.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0, 0, 1);");
+
+        barContainer.getChildren().addAll(filledBar, scoreText);
+
+        // Percentage label
+        Label percentLabel = new Label(String.format("%.0f%%", percentage));
+        percentLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-min-width: 50;");
+
+        container.getChildren().addAll(barContainer, percentLabel);
+
+        return container;
+    }
+
+    private VBox createCategoryRow(String categoryName, int score, int maxScore, String color) {
+        VBox row = new VBox(5);
+
+        HBox labelBox = new HBox();
+        labelBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        Label nameLabel = new Label(categoryName);
+        nameLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 500; -fx-text-fill: #34495e;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+
+        double percentage = (score / (double) maxScore) * 100;
+        Label percentLabel = new Label(String.format("%.0f%%", percentage));
+        percentLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #7f8c8d;");
+
+        labelBox.getChildren().addAll(nameLabel, spacer, percentLabel);
+
+        // Mini progress bar
+        StackPane miniBar = new StackPane();
+        miniBar.setStyle("-fx-background-color: #ecf0f1; -fx-background-radius: 5;");
+        miniBar.setPrefHeight(8);
+
+        Region filled = new Region();
+        filled.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 5;");
+        filled.setPrefHeight(8);
+        filled.prefWidthProperty().bind(miniBar.widthProperty().multiply(percentage / 100.0));
+        StackPane.setAlignment(filled, javafx.geometry.Pos.CENTER_LEFT);
+
+        miniBar.getChildren().add(filled);
+
+        row.getChildren().addAll(labelBox, miniBar);
+
+        return row;
+    }
+
+    private String getMoodEmoji(int score) {
+        if (score >= 80) return "😄";
+        if (score >= 60) return "😊";
+        if (score >= 40) return "😐";
+        if (score >= 20) return "😟";
+        return "😢";
+    }
+
+    private String getMoodText(int score) {
+        if (score >= 80) return "Excellent";
+        if (score >= 60) return "Good";
+        if (score >= 40) return "Fair";
+        if (score >= 20) return "Poor";
+        return "Very Poor";
+    }
+
+    private String getMoodColor(int score) {
+        if (score >= 80) return "#27ae60";
+        if (score >= 60) return "#52c41a";
+        if (score >= 40) return "#f1c40f";
+        if (score >= 20) return "#f39c12";
+        return "#e74c3c";
+    }
+
     private VBox createJournalBox(com.the_pathfinders.Journal journal) {
         // Outer box (gray background)
         VBox outerBox = new VBox();
@@ -898,28 +1118,35 @@ public class ProfileController {
 
     private void showBasicInfo() {
         if (subtitleLabel != null) subtitleLabel.setText("Basic Information");
-        setPageVisibility(true, false, false, false);
+        setPageVisibility(true, false, false, false, false);
         if (editInfoBtn != null) { editInfoBtn.setVisible(true); editInfoBtn.setManaged(true); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(true); saveInfoBtn.setManaged(true); }
     }
     private void showJournals() {
         if (subtitleLabel != null) subtitleLabel.setText("Journal");
-        setPageVisibility(false, true, false, false);
+        setPageVisibility(false, true, false, false, false);
         loadJournals();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
     private void showSavedBlogs() {
         if (subtitleLabel != null) subtitleLabel.setText("Starred Blogs");
-        setPageVisibility(false, false, true, false);
+        setPageVisibility(false, false, true, false, false);
         loadSavedBlogs();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
     private void showSavedJournals() {
         if (subtitleLabel != null) subtitleLabel.setText("Starred Journals");
-        setPageVisibility(false, false, false, true);
+        setPageVisibility(false, false, false, true, false);
         loadSavedJournals();
+        if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
+        if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
+    }
+    private void showMoodAnalysis() {
+        if (subtitleLabel != null) subtitleLabel.setText("Mood Analysis");
+        setPageVisibility(false, false, false, false, true);
+        loadMoodAnalysis();
         if (editInfoBtn != null) { editInfoBtn.setVisible(false); editInfoBtn.setManaged(false); }
         if (saveInfoBtn != null) { saveInfoBtn.setVisible(false); saveInfoBtn.setManaged(false); }
     }
@@ -927,11 +1154,12 @@ public class ProfileController {
         showSavedJournals();
     }
 
-    private void setPageVisibility(boolean basic, boolean journal, boolean savedBlogs, boolean savedJournals) {
+    private void setPageVisibility(boolean basic, boolean journal, boolean savedBlogs, boolean savedJournals, boolean moodAnalysis) {
         if (basicInfoScroll != null) { basicInfoScroll.setVisible(basic); basicInfoScroll.setManaged(basic); }
         if (journalsPage != null) { journalsPage.setVisible(journal); journalsPage.setManaged(journal); }
         if (savedBlogsPage != null) { savedBlogsPage.setVisible(savedBlogs); savedBlogsPage.setManaged(savedBlogs); }
         if (savedJournalsPage != null) { savedJournalsPage.setVisible(savedJournals); savedJournalsPage.setManaged(savedJournals); }
+        if (moodAnalysisPage != null) { moodAnalysisPage.setVisible(moodAnalysis); moodAnalysisPage.setManaged(moodAnalysis); }
     }
 
     private void loadAndDisplaySafetyPlan() {

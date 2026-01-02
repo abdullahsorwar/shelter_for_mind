@@ -1112,7 +1112,7 @@ public class KeeperDashboardController implements Initializable {
         Label doctorTitle = new Label("👨‍⚕️ Doctor Information");
         doctorTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #004085;");
 
-        Label doctorNameLabel = new Label("Dr. " + apt.doctorName);
+        Label doctorNameLabel = new Label(apt.doctorName);
         doctorNameLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #004085; -fx-font-weight: bold;");
 
         Label degreeLabel = new Label("Degree: " + apt.doctorDegree);

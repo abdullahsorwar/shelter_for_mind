@@ -17,6 +17,7 @@
                                 <Button fx:id="journalsMenuBtn" text="Published Journals" styleClass="menu-item" />
                                 <Button fx:id="savedJournalsMenuBtn" text="Starred Journals" styleClass="menu-item" />
                                 <Button fx:id="savedBlogsMenuBtn" text="Starred Blogs" styleClass="menu-item" />
+                                <Button fx:id="moodAnalysisMenuBtn" text="Mood Analysis" styleClass="menu-item" />
                             </children>
                         </VBox>
                     </children>
@@ -76,6 +77,16 @@
                                         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="saved-journals-scroll">
                                             <content>
                                                 <VBox fx:id="savedJournalsList" spacing="10" />
+                                            </content>
+                                        </ScrollPane>
+                                    </children>
+                                </VBox>
+                                <!-- Mood Analysis Page -->
+                                <VBox fx:id="moodAnalysisPage" spacing="12" visible="false" managed="false">
+                                    <children>
+                                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" styleClass="mood-analysis-scroll">
+                                            <content>
+                                                <VBox fx:id="moodAnalysisList" spacing="15" />
                                             </content>
                                         </ScrollPane>
                                     </children>
