@@ -77,9 +77,11 @@
                 <!-- RIGHT SIDE - All Controls -->
                 <VBox spacing="20" alignment="TOP_CENTER" prefWidth="450">
                     
-                    <!-- Back Button -->
-                    <HBox alignment="TOP_LEFT">
+                    <!-- Back Button and Music Toggle -->
+                    <HBox alignment="TOP_LEFT" spacing="10">
                         <Button fx:id="backBtn" text="← Back" styleClass="back-btn"/>
+                        <ToggleButton fx:id="musicToggle" text="🎵" styleClass="music-toggle-btn" 
+                                      prefWidth="45" prefHeight="35" selected="true"/>
                     </HBox>
                     
                     <!-- Session Settings -->

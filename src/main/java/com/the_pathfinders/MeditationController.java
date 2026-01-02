@@ -18,6 +18,7 @@ import java.util.Map;
 public class MeditationController {
 
     @FXML private Button backBtn;
+    @FXML private ToggleButton musicToggle;
     @FXML private Label sessionTitle;
     @FXML private Label timerLabel;
     @FXML private Label guidedText;
@@ -71,6 +72,7 @@ public class MeditationController {
         MusicManager.pauseBackgroundMusic();
         
         setupBackButton();
+        setupMusicToggle();
         setupSessionTypes();
         setupDurations();
         setupAmbientSounds();
@@ -89,11 +91,52 @@ public class MeditationController {
         }
     }
 
+    private void setupMusicToggle() {
+        if (musicToggle != null) {
+            // Set initial state based on current music state
+            musicToggle.setSelected(MusicManager.isBackgroundMusicEnabled());
+            updateMusicToggleStyle();
+            
+            musicToggle.setOnAction(e -> {
+                boolean isEnabled = musicToggle.isSelected();
+                MusicManager.setBackgroundMusicEnabled(isEnabled);
+                updateMusicToggleStyle();
+            });
+        }
+    }
+    
+    private void updateMusicToggleStyle() {
+        if (musicToggle != null) {
+            if (musicToggle.isSelected()) {
+                musicToggle.setStyle("-fx-background-color: #4CAF50; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-background-radius: 8; " +
+                                    "-fx-font-size: 18px; " +
+                                    "-fx-cursor: hand; " +
+                                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);");
+            } else {
+                musicToggle.setStyle("-fx-background-color: #757575; " +
+                                    "-fx-text-fill: white; " +
+                                    "-fx-background-radius: 8; " +
+                                    "-fx-font-size: 18px; " +
+                                    "-fx-cursor: hand; " +
+                                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);");
+            }
+        }
+    }
+
     private void goBack() {
         try {
             stopSession();
+            // Stop all ambient sounds and reset toggles
+            soundPlayers.forEach((toggle, player) -> {
+                player.stop();
+                toggle.setSelected(false);
+            });
             // Resume background music when leaving meditation
-            MusicManager.playBackgroundMusic();
+            if (MusicManager.isBackgroundMusicEnabled()) {
+                MusicManager.playBackgroundMusic();
+            }
             FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/the_pathfinders/fxml/dashboard.fxml")
             );
@@ -149,10 +192,10 @@ public class MeditationController {
             soundPlayers.forEach((toggle, player) -> {
                 toggle.setOnAction(e -> {
                     if (toggle.isSelected()) {
-                        // Stop all other sounds for smooth transition
+                        // Pause all other sounds for smooth transition
                         soundPlayers.forEach((otherToggle, otherPlayer) -> {
                             if (otherToggle != toggle) {
-                                otherPlayer.stop();
+                                otherPlayer.pause();
                                 otherToggle.setSelected(false);
                             }
                         });
@@ -160,7 +203,8 @@ public class MeditationController {
                         player.play();
                         updateVolume(player);
                     } else {
-                        player.stop();
+                        // Pause instead of stop for smooth resuming
+                        player.pause();
                     }
                 });
             });
@@ -466,12 +510,11 @@ public class MeditationController {
         if (guidedTextAnimation != null) guidedTextAnimation.stop();
         if (timerAnimation != null) timerAnimation.stop();
         
-        soundPlayers.values().forEach(player -> {
+        // Properly stop all ambient sounds
+        soundPlayers.forEach((toggle, player) -> {
             player.stop();
+            toggle.setSelected(false);
         });
-        
-        // Reset toggles
-        soundPlayers.keySet().forEach(toggle -> toggle.setSelected(false));
         
         elapsedSeconds = 0;
         textIndex = 0;
