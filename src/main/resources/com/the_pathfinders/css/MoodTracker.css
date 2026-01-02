@@ -103,6 +103,146 @@
     -fx-text-alignment: center;
 }
 
+/* Horizontal Radio Buttons Container */
+.radio-buttons-container {
+    -fx-spacing: 15px;
+    -fx-alignment: center;
+    -fx-padding: 20px 0;
+}
+
+/* Base Radio Button Style */
+.horizontal-radio {
+    -fx-cursor: hand;
+}
+
+.horizontal-radio > .radio {
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-border-width: 3px;
+    -fx-border-color: #e0e0e0;
+    -fx-background-color: white;
+}
+
+.horizontal-radio:selected > .radio {
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+}
+
+.horizontal-radio > .radio > .dot {
+    -fx-background-radius: 50%;
+    -fx-background-insets: 0;
+}
+
+/* Size Variations - Larger on sides, smaller in middle */
+.radio-large > .radio {
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-max-width: 50px;
+    -fx-max-height: 50px;
+}
+
+.radio-large > .radio > .dot {
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-max-width: 50px;
+    -fx-max-height: 50px;
+}
+
+.radio-medium > .radio {
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+}
+
+.radio-medium > .radio > .dot {
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+}
+
+.radio-small > .radio {
+    -fx-pref-width: 35px;
+    -fx-pref-height: 35px;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-max-width: 35px;
+    -fx-max-height: 35px;
+}
+
+.radio-small > .radio > .dot {
+    -fx-pref-width: 35px;
+    -fx-pref-height: 35px;
+    -fx-min-width: 35px;
+    -fx-min-height: 35px;
+    -fx-max-width: 35px;
+    -fx-max-height: 35px;
+}
+
+/* Color Variations - Bad to Good */
+.radio-color-1:selected > .radio > .dot {
+    -fx-background-color: #e74c3c; /* Red - Bad */
+}
+
+.radio-color-2:selected > .radio > .dot {
+    -fx-background-color: #f39c12; /* Orange - Not Great */
+}
+
+.radio-color-3:selected > .radio > .dot {
+    -fx-background-color: #f1c40f; /* Yellow - Moderate */
+}
+
+.radio-color-4:selected > .radio > .dot {
+    -fx-background-color: #52c41a; /* Light Green - Good */
+}
+
+.radio-color-5:selected > .radio > .dot {
+    -fx-background-color: #27ae60; /* Dark Green - Excellent */
+}
+
+/* Hover effects */
+.horizontal-radio:hover > .radio {
+    -fx-border-color: #b0b0b0;
+}
+
+.radio-color-1:hover > .radio {
+    -fx-background-color: rgba(231, 76, 60, 0.1);
+}
+
+.radio-color-2:hover > .radio {
+    -fx-background-color: rgba(243, 156, 18, 0.1);
+}
+
+.radio-color-3:hover > .radio {
+    -fx-background-color: rgba(241, 196, 15, 0.1);
+}
+
+.radio-color-4:hover > .radio {
+    -fx-background-color: rgba(82, 196, 26, 0.1);
+}
+
+.radio-color-5:hover > .radio {
+    -fx-background-color: rgba(39, 174, 96, 0.1);
+}
+
+/* Radio Button Labels */
+.radio-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #666666;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
 .slider-container {
     -fx-spacing: 0;
     -fx-alignment: center;

@@ -54,37 +54,37 @@ public class MoodTrackerController {
         answers = new HashMap<>();
         repository = new MoodTrackerRepository();
 
-        // Initialize questions with emojis
+        // Initialize questions with 5 options
         questions = new ArrayList<>();
         questions.add(new QuestionData(
             "How many pending tasks do you have?",
             "stress",
-            Arrays.asList("😱 Too Much", "😓 Much", "😌 A Little", "😊 None"),
-            new int[]{1,2,3,4}
+            Arrays.asList("Too Much", "Much", "Moderate", "A Little", "None"),
+            new int[]{1, 2, 3, 4, 5}
         ));
         questions.add(new QuestionData(
             "How would you rate your stress level today?",
             "stress",
-            Arrays.asList("😤 Very High", "😣 High", "😐 Moderate", "😌 Low"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Very High", "High", "Moderate", "Low", "Very Low"),
+            new int[]{1, 2, 3, 4, 5}
         ));
         questions.add(new QuestionData(
             "How anxious do you feel right now?",
             "anxiety",
-            Arrays.asList("😰 Very Anxious", "😟 Anxious", "😕 Slightly Anxious", "😊 Calm"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Very Anxious", "Anxious", "Moderate", "Slightly Anxious", "Calm"),
+            new int[]{1, 2, 3, 4, 5}
         ));
         questions.add(new QuestionData(
             "How is your energy level today?",
             "energy",
-            Arrays.asList("😴 Very Low", "😪 Low", "🙂 Moderate", "🤩 High"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Very Low", "Low", "Moderate", "High", "Very High"),
+            new int[]{1, 2, 3, 4, 5}
         ));
         questions.add(new QuestionData(
             "How well did you sleep last night?",
             "sleep",
-            Arrays.asList("😫 Very Poor", "😞 Poor", "😐 Fair", "😴 Good"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Very Poor", "Poor", "Fair", "Good", "Excellent"),
+            new int[]{1, 2, 3, 4, 5}
         ));
 
         loadQuestion(0);
@@ -101,7 +101,7 @@ public class MoodTrackerController {
         if (index >= 0 && index < questions.size()) {
             QuestionData question = questions.get(index);
 
-            VBox questionBox = new VBox(15);
+            VBox questionBox = new VBox(20);
             questionBox.getStyleClass().add("question-box");
 
             Label questionLabel = new Label(question.question);
@@ -110,10 +110,41 @@ public class MoodTrackerController {
 
             ToggleGroup toggleGroup = new ToggleGroup();
 
+            // Create horizontal layout for radio buttons
+            javafx.scene.layout.HBox optionsContainer = new javafx.scene.layout.HBox(15);
+            optionsContainer.setAlignment(javafx.geometry.Pos.CENTER);
+            optionsContainer.getStyleClass().add("radio-buttons-container");
+
             for (int i = 0; i < question.options.size(); i++) {
-                RadioButton radio = new RadioButton(question.options.get(i));
-                radio.getStyleClass().add("answer-radio");
+                RadioButton radio = new RadioButton();
+                radio.getStyleClass().add("horizontal-radio");
+
+                // Add specific style class based on position (for sizing variation)
+                if (i == 0 || i == 4) {
+                    radio.getStyleClass().add("radio-large"); // First and last are larger
+                } else if (i == 1 || i == 3) {
+                    radio.getStyleClass().add("radio-medium"); // Second and fourth are medium
+                } else {
+                    radio.getStyleClass().add("radio-small"); // Middle is smallest
+                }
+
+                // Add color class based on position
+                String[] colorClasses = {"radio-color-1", "radio-color-2", "radio-color-3", "radio-color-4", "radio-color-5"};
+                radio.getStyleClass().add(colorClasses[i]);
+
                 radio.setToggleGroup(toggleGroup);
+
+                // Create label below radio button
+                Label optionLabel = new Label(question.options.get(i));
+                optionLabel.getStyleClass().add("radio-label");
+                optionLabel.setWrapText(true);
+                optionLabel.setMaxWidth(80);
+                optionLabel.setAlignment(javafx.geometry.Pos.CENTER);
+
+                // Wrap radio and label in VBox
+                VBox radioWrapper = new VBox(8);
+                radioWrapper.setAlignment(javafx.geometry.Pos.CENTER);
+                radioWrapper.getChildren().addAll(radio, optionLabel);
 
                 // Pre-select if already answered
                 String savedAnswer = answers.get(String.valueOf(index));
@@ -129,10 +160,10 @@ public class MoodTrackerController {
                     answers.put(String.valueOf(currentQuestionIndex) + "_category", question.category);
                 });
 
-                questionBox.getChildren().add(radio);
+                optionsContainer.getChildren().add(radioWrapper);
             }
 
-            questionBox.getChildren().add(0, questionLabel);
+            questionBox.getChildren().addAll(questionLabel, optionsContainer);
             questionsContainer.getChildren().add(questionBox);
         }
     }
@@ -221,7 +252,7 @@ public class MoodTrackerController {
         }
 
         // Calculate overall mood score (0-100)
-        int totalPossibleScore = questions.size() * 4; // max score per question is 4
+        int totalPossibleScore = questions.size() * 5; // max score per question is 5
         int actualScore = 0;
         for (int i = 0; i < questions.size(); i++) {
             String scoreKey = i + "_score";

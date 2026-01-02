@@ -24,9 +24,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.chart.PieChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -1419,37 +1421,37 @@ private void loadPage(String path) {
             progressCircles = new ArrayList<>();
         }
 
-        // Initialize questions
+        // Initialize questions with 5 options
         moodQuestions = new ArrayList<>();
         moodQuestions.add(new QuestionData(
             "How many pending tasks do you have?",
             "stress",
-            Arrays.asList("Too Much", "Much", "A Little", "None"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Too Much", "Much", "Moderate", "A Little", "None"),
+            new int[]{1, 2, 3, 4, 5}
         ));
         moodQuestions.add(new QuestionData(
             "How would you rate your stress level today?",
             "stress",
-            Arrays.asList("Very High", "High", "Moderate", "Low"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Very High", "High", "Moderate", "Low", "Very Low"),
+            new int[]{1, 2, 3, 4, 5}
         ));
         moodQuestions.add(new QuestionData(
             "How anxious do you feel right now?",
             "anxiety",
-            Arrays.asList("Very Anxious", "Anxious", "Slightly Anxious", "Calm"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Very Anxious", "Anxious", "Moderate", "Slightly Anxious", "Calm"),
+            new int[]{1, 2, 3, 4, 5}
         ));
         moodQuestions.add(new QuestionData(
             "How is your energy level today?",
             "energy",
-            Arrays.asList("Very Low", "Low", "Moderate", "High"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Very Low", "Low", "Moderate", "High", "Very High"),
+            new int[]{1, 2, 3, 4, 5}
         ));
         moodQuestions.add(new QuestionData(
             "How well did you sleep last night?",
             "sleep",
-            Arrays.asList("Very Poor", "Poor", "Fair", "Good"),
-            new int[]{1, 2, 3, 4}
+            Arrays.asList("Very Poor", "Poor", "Fair", "Good", "Excellent"),
+            new int[]{1, 2, 3, 4, 5}
         ));
 
         // Setup button handlers
@@ -1562,117 +1564,69 @@ private void loadPage(String path) {
         if (index >= 0 && index < moodQuestions.size()) {
             QuestionData question = moodQuestions.get(index);
 
-            VBox questionBox = new VBox(30);
+            VBox questionBox = new VBox(20);
             questionBox.getStyleClass().add("question-box");
 
-            // Question label
             Label questionLabel = new Label(question.question);
             questionLabel.getStyleClass().add("question-label");
             questionLabel.setWrapText(true);
-            questionLabel.setMaxWidth(Double.MAX_VALUE);
-            questionLabel.setAlignment(javafx.geometry.Pos.CENTER);
 
-            // Create slider container with labels and emojis
-            HBox sliderContainer = new HBox(20);
-            sliderContainer.getStyleClass().add("slider-container");
-            sliderContainer.setAlignment(javafx.geometry.Pos.CENTER);
+            ToggleGroup toggleGroup = new ToggleGroup();
 
-            // Left side - option labels
-            VBox labelsBox = new VBox(0);
-            labelsBox.setAlignment(javafx.geometry.Pos.CENTER);
-            labelsBox.setPrefWidth(130);
+            // Create horizontal layout for radio buttons
+            HBox optionsContainer = new HBox(15);
+            optionsContainer.setAlignment(javafx.geometry.Pos.CENTER);
+            optionsContainer.getStyleClass().add("radio-buttons-container");
 
-            // Right side - emoji circles
-            VBox emojiBox = new VBox(0);
-            emojiBox.setAlignment(javafx.geometry.Pos.CENTER);
-            emojiBox.setPrefWidth(60);
+            for (int i = 0; i < question.options.size(); i++) {
+                RadioButton radio = new RadioButton();
+                radio.getStyleClass().add("horizontal-radio");
 
-            // Define emojis and colors (from best to worst)
-            String[] emojis = {"😊", "🙂", "😐", "☹️", "😢"};
-            String[] emojiStyles = {"emoji-excellent", "emoji-good", "emoji-fair", "emoji-poor", "emoji-worst"};
-            String[] subLabels = {"Best", "Good", "Okay", "Not Great", "Worst"};
+                // Add specific style class based on position (for sizing variation)
+                if (i == 0 || i == 4) {
+                    radio.getStyleClass().add("radio-large"); // First and last are larger
+                } else if (i == 1 || i == 3) {
+                    radio.getStyleClass().add("radio-medium"); // Second and fourth are medium
+                } else {
+                    radio.getStyleClass().add("radio-small"); // Middle is smallest
+                }
 
-            // Create labels and emojis for each option (reverse order for top-to-bottom)
-            // Loop: i goes from last option to first (3→0), displayIndex goes from 0→3
-            for (int i = question.options.size() - 1, displayIndex = 0; i >= 0; i--, displayIndex++) {
-                // Option label
-                VBox optionLabelBox = new VBox(3);
-                optionLabelBox.getStyleClass().add("option-label-box");
-                optionLabelBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+                // Add color class based on position
+                String[] colorClasses = {"radio-color-1", "radio-color-2", "radio-color-3", "radio-color-4", "radio-color-5"};
+                radio.getStyleClass().add(colorClasses[i]);
 
-                Label mainLabel = new Label(question.options.get(i));
-                mainLabel.getStyleClass().add("option-main-label");
+                radio.setToggleGroup(toggleGroup);
 
-                // Use displayIndex for sublabels so they show correctly (Best at top, Worst at bottom)
-                Label subLabel = new Label(displayIndex < subLabels.length ? subLabels[displayIndex] : "");
-                subLabel.getStyleClass().add("option-sub-label");
+                // Create label below radio button
+                Label optionLabel = new Label(question.options.get(i));
+                optionLabel.getStyleClass().add("radio-label");
+                optionLabel.setWrapText(true);
+                optionLabel.setMaxWidth(80);
+                optionLabel.setAlignment(javafx.geometry.Pos.CENTER);
 
-                optionLabelBox.getChildren().addAll(mainLabel, subLabel);
-                labelsBox.getChildren().add(optionLabelBox);
+                // Wrap radio and label in VBox
+                VBox radioWrapper = new VBox(8);
+                radioWrapper.setAlignment(javafx.geometry.Pos.CENTER);
+                radioWrapper.getChildren().addAll(radio, optionLabel);
 
-                // Emoji circle - use displayIndex so emojis show correctly (😊 at top, 😢 at bottom)
-                Label emojiCircle = new Label(displayIndex < emojis.length ? emojis[displayIndex] : "");
-                emojiCircle.getStyleClass().addAll("emoji-circle", displayIndex < emojiStyles.length ? emojiStyles[displayIndex] : "");
-                emojiBox.getChildren().add(emojiCircle);
+                // Pre-select if already answered
+                String savedAnswer = moodAnswers.get(String.valueOf(index));
+                if (savedAnswer != null && savedAnswer.equals(question.options.get(i))) {
+                    radio.setSelected(true);
+                }
+
+                final int score = question.scores[i];
+                final String option = question.options.get(i);
+                radio.setOnAction(e -> {
+                    moodAnswers.put(String.valueOf(currentMoodQuestion), option);
+                    moodAnswers.put(String.valueOf(currentMoodQuestion) + "_score", String.valueOf(score));
+                    moodAnswers.put(String.valueOf(currentMoodQuestion) + "_category", question.category);
+                });
+
+                optionsContainer.getChildren().add(radioWrapper);
             }
 
-            // Create vertical slider
-            Slider slider = new Slider(1, question.options.size(), question.options.size());
-            slider.setOrientation(javafx.geometry.Orientation.VERTICAL);
-            slider.getStyleClass().add("mood-slider");
-            slider.setMajorTickUnit(1);
-            slider.setMinorTickCount(0);
-            slider.setSnapToTicks(true);
-            slider.setShowTickLabels(false);
-            slider.setShowTickMarks(false);
-            slider.setPrefHeight(260);
-
-            // Check if already answered
-            String savedAnswer = moodAnswers.get(String.valueOf(index));
-            boolean hasAnswer = savedAnswer != null;
-
-            if (hasAnswer) {
-                // Pre-select saved answer
-                // Fix: if answer is at index i, slider value should be i + 1
-                for (int i = 0; i < question.options.size(); i++) {
-                    if (savedAnswer.equals(question.options.get(i))) {
-                        slider.setValue(i + 1);
-                        break;
-                    }
-                }
-            } else {
-                // Start at middle position but don't save as answer
-                double middleValue = (question.options.size() + 1) / 2.0;
-                slider.setValue(middleValue);
-            }
-
-            // Track if user has interacted with slider
-            final boolean[] userInteracted = {hasAnswer};
-
-            // Slider change listener - only save when user actually interacts
-            slider.setOnMousePressed(e -> userInteracted[0] = true);
-            slider.setOnKeyPressed(e -> userInteracted[0] = true);
-
-            slider.valueProperty().addListener((obs, oldVal, newVal) -> {
-                if (userInteracted[0]) {
-                    // Fix: slider value maps directly to option index (top=best, bottom=worst)
-                    // Slider value 4 (top) should map to index 3 (last option, best score)
-                    // Slider value 1 (bottom) should map to index 0 (first option, worst score)
-                    int selectedIndex = newVal.intValue() - 1;
-                    if (selectedIndex >= 0 && selectedIndex < question.options.size()) {
-                        String option = question.options.get(selectedIndex);
-                        int score = question.scores[selectedIndex];
-
-                        moodAnswers.put(String.valueOf(currentMoodQuestion), option);
-                        moodAnswers.put(String.valueOf(currentMoodQuestion) + "_score", String.valueOf(score));
-                        moodAnswers.put(String.valueOf(currentMoodQuestion) + "_category", question.category);
-                    }
-                }
-            });
-
-            sliderContainer.getChildren().addAll(labelsBox, slider, emojiBox);
-
-            questionBox.getChildren().addAll(questionLabel, sliderContainer);
+            questionBox.getChildren().addAll(questionLabel, optionsContainer);
             moodQuestionsContainer.getChildren().add(questionBox);
         }
     }
@@ -1780,7 +1734,7 @@ private void loadPage(String path) {
         }
 
         // Calculate overall mood score
-        int totalPossibleScore = moodQuestions.size() * 4;
+        int totalPossibleScore = moodQuestions.size() * 5; // max score per question is 5
         int actualScore = 0;
         for (int i = 0; i < moodQuestions.size(); i++) {
             String scoreKey = i + "_score";
