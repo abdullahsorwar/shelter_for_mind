@@ -326,7 +326,7 @@
                     style="-fx-background-color: linear-gradient(to right, #e8f5e9, #c8e6c9); -fx-background-radius: 20; -fx-border-radius: 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
                     <graphic>
                         <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10;">
-                            <Label text="🛠️" style="-fx-font-size: 32px;"/>
+                            <Label text="🛠️" style="-fx-font-size: 32px; -fx-font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                             <VBox spacing="5">
                                 <Label text="Technical Support" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
                                 <Label text="App issues, bugs, or technical problems" style="-fx-font-size: 12px; -fx-text-fill: #558b2f;"/>
@@ -341,7 +341,7 @@
                     style="-fx-background-color: linear-gradient(to right, #ffebee, #ffcdd2); -fx-background-radius: 20; -fx-border-radius: 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
                     <graphic>
                         <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10;">
-                            <Label text="🚨" style="-fx-font-size: 32px;"/>
+                            <Label text="🚨" style="-fx-font-size: 32px; -fx-font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                             <VBox spacing="5">
                                 <Label text="Emergency Hotlines" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #c62828;"/>
                                 <Label text="Immediate help, crisis support services" style="-fx-font-size: 12px; -fx-text-fill: #d32f2f;"/>
@@ -371,7 +371,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="15">
                     <Button fx:id="techSupportBackBtn" text="←" style="-fx-font-size: 20px; -fx-background-color: transparent; -fx-cursor: hand;"/>
                     <VBox spacing="5">
-                        <Label text="📧 Developer Support" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                    <Label text="👨‍💻 Developer Support" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2e7d32; -fx-font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                         <Label text="If the app behaves unexpectedly, freezes, or shows incorrect data — we're here." 
                             wrapText="true" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
                     </VBox>
@@ -383,7 +383,7 @@
                         <!-- Email 1 -->
                         <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 12;">
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Label text="📧" style="-fx-font-size: 16px;"/>
+                                <Label text="📧" style="-fx-font-size: 16px; -fx-font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                                 <Label fx:id="email1Label" text="raisatabassum2023115989@cs.du.ac.bd" 
                                     style="-fx-font-size: 13px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
                             </HBox>
@@ -392,7 +392,7 @@
                         <!-- Email 2 -->
                         <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 12;">
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Label text="📧" style="-fx-font-size: 16px;"/>
+                                <Label text="📧" style="-fx-font-size: 16px; -fx-font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                                 <Label fx:id="email2Label" text="mdabdullah-2023715965@cs.du.ac.bd" 
                                     style="-fx-font-size: 13px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
                             </HBox>
@@ -401,7 +401,7 @@
                         <!-- Email 3 -->
                         <VBox spacing="8" style="-fx-background-color: #f1f8f4; -fx-padding: 15; -fx-background-radius: 12;">
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Label text="📧" style="-fx-font-size: 16px;"/>
+                                <Label text="📧" style="-fx-font-size: 16px; -fx-font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                                 <Label fx:id="email3Label" text="the.pathfinders.dev@gmail.com" 
                                     style="-fx-font-size: 13px; -fx-text-fill: #1565c0; -fx-underline: true; -fx-cursor: hand;"/>
                             </HBox>
@@ -411,7 +411,7 @@
 
                 <!-- Before Contacting Section -->
                 <VBox spacing="10" style="-fx-background-color: #fff3e0; -fx-padding: 20; -fx-background-radius: 12;">
-                    <Label text="💡 Before contacting us, try:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e65100;"/>
+                    <Label text="💡 Before contacting us, try:" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e65100; -fx-font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                     <VBox spacing="5" style="-fx-padding-left: 20;">
                         <Label text="• Restarting the application" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
                         <Label text="• Checking your internet connection" style="-fx-font-size: 13px; -fx-text-fill: #424242;"/>
@@ -439,7 +439,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="15">
                     <Button fx:id="emergencyBackBtn" text="←" style="-fx-font-size: 20px; -fx-background-color: transparent; -fx-cursor: hand;"/>
                     <VBox spacing="5">
-                        <Label text="🔥 Emergency Hotlines" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #c62828;"/>
+                        <Label text="🔥 Emergency Hotlines" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #c62828; -fx-font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                         <Label text="If you feel unsafe or need immediate help, call a hotline now." 
                             wrapText="true" style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
                     </VBox>
@@ -447,7 +447,7 @@
 
                 <!-- Disclaimer -->
                 <VBox spacing="8" style="-fx-background-color: #ffebee; -fx-padding: 15; -fx-background-radius: 12;">
-                    <Label text="⚠️ Disclaimer" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c62828;"/>
+                    <Label text="⚠️ Disclaimer" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c62828; -fx-font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                     <Label text="Shelter for Mind is not a crisis center. For immediate danger, contact your local emergency services." 
                         wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #d32f2f;"/>
                 </VBox>
@@ -459,7 +459,7 @@
 
                 <!-- Create Safety Plan Button -->
                 <Button fx:id="createSafetyPlanBtn" text="🛡️ Create Your Safety Plan" 
-                    style="-fx-background-color: linear-gradient(to right, #66bb6a, #43a047); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);"
+                    style="-fx-background-color: linear-gradient(to right, #66bb6a, #43a047); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 30; -fx-background-radius: 25; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2); -fx-font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"
                     prefWidth="280"/>
 
                 <!-- Close Button -->
@@ -482,7 +482,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="15">
                     <Button fx:id="safetyPlanBackBtn" text="←" style="-fx-font-size: 20px; -fx-background-color: transparent; -fx-cursor: hand;"/>
                     <VBox spacing="5">
-                        <Label text="🛡️ Create Your Safety Plan" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2e7d32;"/>
+                        <Label text="🛡️ Create Your Safety Plan" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2e7d32; -fx-font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"/>
                         <Label text="Plan ahead for moments when you need support" 
                             wrapText="true" style="-fx-font-size: 12px; -fx-text-fill: #666;"/>
                     </VBox>
@@ -525,7 +525,7 @@
                 <!-- Action Buttons -->
                 <HBox spacing="15" alignment="CENTER">
                     <Button fx:id="saveSafetyPlanBtn" text="💾 Save Safety Plan" 
-                        style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 12 25; -fx-background-radius: 25; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);"
+                        style="-fx-background-color: #2e7d32; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 12 25; -fx-background-radius: 25; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2); -fx-font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;"
                         prefWidth="180"/>
                     <Button fx:id="cancelSafetyPlanBtn" text="Cancel" 
                         style="-fx-background-color: #e0e0e0; -fx-text-fill: #424242; -fx-font-weight: bold; -fx-font-size: 13px; -fx-padding: 12 25; -fx-background-radius: 25; -fx-cursor: hand;"

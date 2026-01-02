@@ -15,8 +15,6 @@
         <Label fx:id="pageTitle" text="Mental Wellness 🧠" styleClass="page-title" 
                style="-fx-font-size: 14px; -fx-font-weight: 600;" wrapText="false" minWidth="100" maxWidth="200" />
         <Region HBox.hgrow="ALWAYS" minWidth="10" />
-        <TextField fx:id="searchBar" promptText="Search..." styleClass="search-bar" 
-                   minWidth="100" prefWidth="200" maxWidth="300" HBox.hgrow="SOMETIMES" />
     </HBox>
 
     <!-- Main Content Area -->

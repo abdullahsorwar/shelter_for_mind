@@ -2028,7 +2028,7 @@ private void loadPage(String path) {
         header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         
         Label emojiLabel = new Label(emoji);
-        emojiLabel.setStyle("-fx-font-size: 24px;");
+        emojiLabel.setStyle("-fx-font-size: 24px; -fx-font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;");
         
         VBox textBox = new VBox(3);
         Label serviceLabel = new Label(service);

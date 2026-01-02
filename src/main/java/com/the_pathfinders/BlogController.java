@@ -149,7 +149,10 @@ public class BlogController {
 
     @FXML
     public void initialize() {
-        if (pageTitle != null) pageTitle.setText("Mental Wellness Library 🧠");
+        if (pageTitle != null) {
+            pageTitle.setText("Mental Wellness Library 🧠");
+            pageTitle.setStyle(pageTitle.getStyle() + " -fx-font-family: 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;");
+        }
         
         savedBlogsManager = new SavedBlogsManager();
         
@@ -161,9 +164,6 @@ public class BlogController {
         
         // Setup side panel
         setupSidePanel();
-        
-        // Setup search
-        setupSearch();
         
         // Back button
         if (backBtn != null) backBtn.setOnAction(e -> goBackToDashboard());
@@ -226,7 +226,7 @@ public class BlogController {
             header.setAlignment(Pos.CENTER_LEFT);
             
             Label emoji = new Label(section.emoji);
-            emoji.setStyle("-fx-font-size: 24px;");
+            emoji.setStyle("-fx-font-size: 24px; -fx-font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;");
             
             VBox titleBox = new VBox(5);
             Label title = new Label(section.title);
