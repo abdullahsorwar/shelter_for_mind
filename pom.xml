@@ -129,6 +129,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
+              <classpathPrefix>./</classpathPrefix>
               <mainClass>${main.class}</mainClass>
             </manifest>
           </archive>
@@ -140,12 +141,16 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.5.3</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
         <executions>
           <execution>
             <id>shade</id>
             <phase>package</phase>
             <goals><goal>shade</goal></goals>
             <configuration>
+              <skip>true</skip>
               <createDependencyReducedPom>false</createDependencyReducedPom>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -155,6 +160,29 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      
+      <!-- JPackage Plugin for creating installers -->
+      <plugin>
+        <groupId>org.panteleyev</groupId>
+        <artifactId>jpackage-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <configuration>
+          <name>ShelterForMind</name>
+          <appVersion>${project.version}</appVersion>
+          <vendor>the_pathfinders</vendor>
+          <destination>target/installer</destination>
+          <module>shelter_of_mind/${main.class}</module>
+          <runtimeImage>target/shelter_of_mind</runtimeImage>
+          <javaOptions>
+            <option>-Dfile.encoding=UTF-8</option>
+          </javaOptions>
+          <icon>logo_new.png</icon>
+          <winDirChooser>true</winDirChooser>
+          <winMenu>true</winMenu>
+          <winShortcut>true</winShortcut>
+          <linuxShortcut>true</linuxShortcut>
+        </configuration>
       </plugin>
     </plugins>
   </build>
