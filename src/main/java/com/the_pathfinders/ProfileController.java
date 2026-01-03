@@ -779,10 +779,10 @@ public class ProfileController {
 
         // Add header with description
         Label headerLabel = new Label("📊 Your Mood History");
-        headerLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-padding: 0 0 10 0;");
+        headerLabel.getStyleClass().add("mood-header");
 
         Label descLabel = new Label("Track your emotional wellness journey - Last 10 mood assessments");
-        descLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8c8d; -fx-padding: 0 0 20 0;");
+        descLabel.getStyleClass().add("mood-desc");
         descLabel.setWrapText(true);
 
         moodAnalysisList.getChildren().addAll(headerLabel, descLabel);
@@ -795,7 +795,7 @@ public class ProfileController {
                 Platform.runLater(() -> {
                     if (entries.isEmpty()) {
                         Label noDataLabel = new Label("No mood data available yet.\nComplete a mood tracker assessment to see your analysis here!");
-                        noDataLabel.setStyle("-fx-text-fill: #95a5a6; -fx-font-style: italic; -fx-padding: 30; -fx-font-size: 14px; -fx-text-alignment: center;");
+                        noDataLabel.getStyleClass().add("mood-no-data");
                         noDataLabel.setWrapText(true);
                         noDataLabel.setAlignment(javafx.geometry.Pos.CENTER);
                         noDataLabel.setMaxWidth(Double.MAX_VALUE);
@@ -823,22 +823,27 @@ public class ProfileController {
 
     private VBox createMoodEntryBox(MoodTrackerRepository.MoodEntry entry, int number) {
         VBox outerBox = new VBox(12);
-        outerBox.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1; " +
-                         "-fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 16; " +
-                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+        outerBox.getStyleClass().add("mood-entry-box");
+        
+        // Add fade-in animation
+        outerBox.setOpacity(0);
+        javafx.animation.FadeTransition fadeIn = new javafx.animation.FadeTransition(javafx.util.Duration.millis(400), outerBox);
+        fadeIn.setFromValue(0.0);
+        fadeIn.setToValue(1.0);
+        fadeIn.setDelay(javafx.util.Duration.millis(number * 50));
+        fadeIn.play();
 
         // Header with entry number and date
         HBox headerBox = new HBox(10);
         headerBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         Label numberLabel = new Label("#" + number);
-        numberLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #3498db; " +
-                            "-fx-background-color: #ebf5fb; -fx-padding: 5 10; -fx-background-radius: 15;");
+        numberLabel.getStyleClass().add("mood-number-label");
 
         Label dateLabel = new Label(entry.getCreatedAt() != null ?
                                     entry.getCreatedAt().format(java.time.format.DateTimeFormatter.ofPattern("MMM dd, yyyy - hh:mm a")) :
                                     "Unknown date");
-        dateLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #7f8c8d;");
+        dateLabel.getStyleClass().add("mood-date-label");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
@@ -847,16 +852,18 @@ public class ProfileController {
         String moodEmoji = getMoodEmoji(entry.getMoodScore());
         String moodText = getMoodText(entry.getMoodScore());
         Label overallLabel = new Label(moodEmoji + " " + moodText);
-        overallLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: " + getMoodColor(entry.getMoodScore()) + ";");
+        overallLabel.getStyleClass().add("mood-overall-label");
+        String moodColor = getMoodColor(entry.getMoodScore());
+        overallLabel.setStyle("-fx-text-fill: " + moodColor + "; -fx-background-color: " + moodColor + "20;");
 
         headerBox.getChildren().addAll(numberLabel, dateLabel, spacer, overallLabel);
 
         // Overall mood score bar
         VBox scoreBox = new VBox(8);
-        scoreBox.setStyle("-fx-background-color: #f8f9fa; -fx-padding: 12; -fx-background-radius: 8;");
+        scoreBox.getStyleClass().add("mood-score-box");
 
         Label scoreTitle = new Label("Overall Mood Score");
-        scoreTitle.setStyle("-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #2c3e50;");
+        scoreTitle.getStyleClass().add("mood-score-title");
 
         HBox scoreBar = createScoreBar(entry.getMoodScore(), 100);
 
@@ -864,7 +871,7 @@ public class ProfileController {
 
         // Category breakdown
         Label categoriesTitle = new Label("Category Breakdown");
-        categoriesTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #2c3e50; -fx-padding: 8 0 4 0;");
+        categoriesTitle.getStyleClass().add("mood-categories-title");
 
         VBox categoriesBox = new VBox(10);
 
@@ -898,28 +905,32 @@ public class ProfileController {
 
         // Progress bar
         StackPane barContainer = new StackPane();
-        barContainer.setStyle("-fx-background-color: #ecf0f1; -fx-background-radius: 10;");
-        barContainer.setPrefHeight(30);
+        barContainer.getStyleClass().add("mood-score-bar-container");
+        barContainer.setPrefHeight(32);
         barContainer.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(barContainer, javafx.scene.layout.Priority.ALWAYS);
 
         // Filled portion
         Region filledBar = new Region();
         double percentage = (score / (double) maxScore) * 100;
-        filledBar.setStyle("-fx-background-color: " + getMoodColor(score) + "; -fx-background-radius: 10;");
-        filledBar.setPrefHeight(30);
+        String moodColor = getMoodColor(score);
+        filledBar.setStyle("-fx-background-color: linear-gradient(to right, " + moodColor + ", " + 
+                          adjustColorBrightness(moodColor, 1.2) + "); " +
+                          "-fx-background-radius: 12; " +
+                          "-fx-effect: dropshadow(gaussian, " + moodColor + "40, 6, 0, 0, 0);");
+        filledBar.setPrefHeight(32);
         filledBar.prefWidthProperty().bind(barContainer.widthProperty().multiply(percentage / 100.0));
         StackPane.setAlignment(filledBar, javafx.geometry.Pos.CENTER_LEFT);
 
         // Score text
         Label scoreText = new Label(score + "/" + maxScore);
-        scoreText.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0, 0, 1);");
+        scoreText.getStyleClass().add("mood-score-text");
 
         barContainer.getChildren().addAll(filledBar, scoreText);
 
         // Percentage label
         Label percentLabel = new Label(String.format("%.0f%%", percentage));
-        percentLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-min-width: 50;");
+        percentLabel.getStyleClass().add("mood-percent-label");
 
         container.getChildren().addAll(barContainer, percentLabel);
 
@@ -927,31 +938,36 @@ public class ProfileController {
     }
 
     private VBox createCategoryRow(String categoryName, int score, int maxScore, String color) {
-        VBox row = new VBox(5);
+        VBox row = new VBox(6);
+        row.getStyleClass().add("mood-category-row");
 
         HBox labelBox = new HBox();
         labelBox.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         Label nameLabel = new Label(categoryName);
-        nameLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 500; -fx-text-fill: #34495e;");
+        nameLabel.getStyleClass().add("mood-category-name");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
         double percentage = (score / (double) maxScore) * 100;
         Label percentLabel = new Label(String.format("%.0f%%", percentage));
-        percentLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #7f8c8d;");
+        percentLabel.getStyleClass().add("mood-category-percent");
+        percentLabel.setStyle("-fx-text-fill: " + color + ";");
 
         labelBox.getChildren().addAll(nameLabel, spacer, percentLabel);
 
         // Mini progress bar
         StackPane miniBar = new StackPane();
-        miniBar.setStyle("-fx-background-color: #ecf0f1; -fx-background-radius: 5;");
-        miniBar.setPrefHeight(8);
+        miniBar.getStyleClass().add("mood-mini-bar");
+        miniBar.setPrefHeight(10);
 
         Region filled = new Region();
-        filled.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 5;");
-        filled.setPrefHeight(8);
+        filled.setStyle("-fx-background-color: linear-gradient(to right, " + color + ", " + 
+                       adjustColorBrightness(color, 1.15) + "); " +
+                       "-fx-background-radius: 6; " +
+                       "-fx-effect: dropshadow(gaussian, " + color + "30, 4, 0, 0, 0);");
+        filled.setPrefHeight(10);
         filled.prefWidthProperty().bind(miniBar.widthProperty().multiply(percentage / 100.0));
         StackPane.setAlignment(filled, javafx.geometry.Pos.CENTER_LEFT);
 
@@ -960,6 +976,22 @@ public class ProfileController {
         row.getChildren().addAll(labelBox, miniBar);
 
         return row;
+    }
+    
+    private String adjustColorBrightness(String hexColor, double factor) {
+        try {
+            int r = Integer.parseInt(hexColor.substring(1, 3), 16);
+            int g = Integer.parseInt(hexColor.substring(3, 5), 16);
+            int b = Integer.parseInt(hexColor.substring(5, 7), 16);
+            
+            r = Math.min(255, (int)(r * factor));
+            g = Math.min(255, (int)(g * factor));
+            b = Math.min(255, (int)(b * factor));
+            
+            return String.format("#%02x%02x%02x", r, g, b);
+        } catch (Exception e) {
+            return hexColor;
+        }
     }
 
     private String getMoodEmoji(int score) {
