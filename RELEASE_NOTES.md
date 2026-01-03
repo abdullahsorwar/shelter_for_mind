@@ -168,7 +168,7 @@ For detailed installation instructions, see the [README](https://github.com/abdu
 - GITHUB_RELEASE.md - Release guidelines
 - CONTRIBUTING.md - Contribution guide
 - CHANGELOG.md - Version history
-- LICENSE - MIT License
+- LICENSE - GNU GPL-3.0 License
 
 ---
 
@@ -272,7 +272,7 @@ This project was developed by passionate students from the University of Dhaka:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/abdullahsorwar/shelter-for-mind/blob/main/LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](https://github.com/abdullahsorwar/shelter-for-mind/blob/main/LICENSE) file for details.
 
 ---
 
