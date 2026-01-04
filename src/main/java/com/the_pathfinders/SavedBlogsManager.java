@@ -5,7 +5,7 @@ import java.nio.file.*;
 import java.util.*;
 
 public class SavedBlogsManager {
-    private static final String SAVED_BLOGS_DIR = "data/saved_blogs";
+    private static final String SAVED_BLOGS_DIR = getAppDataDirectory();
     private static final java.util.List<Runnable> listeners = new java.util.ArrayList<>();
 
     public SavedBlogsManager() {
@@ -15,6 +15,15 @@ public class SavedBlogsManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get the application data directory for saved blogs
+     */
+    private static String getAppDataDirectory() {
+        String userHome = System.getProperty("user.home");
+        String appDataDir = userHome + File.separator + ".shelter_for_mind" + File.separator + "saved_blogs";
+        return appDataDir;
     }
 
     /**

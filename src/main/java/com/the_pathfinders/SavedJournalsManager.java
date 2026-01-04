@@ -5,7 +5,7 @@ import java.nio.file.*;
 import java.util.*;
 
 public class SavedJournalsManager {
-    private static final String SAVED_JOURNALS_DIR = "data/saved_journals";
+    private static final String SAVED_JOURNALS_DIR = getAppDataDirectory();
     private static final java.util.List<Runnable> listeners = new java.util.ArrayList<>();
 
     public SavedJournalsManager() {
@@ -15,6 +15,15 @@ public class SavedJournalsManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Get the application data directory for saved journals
+     */
+    private static String getAppDataDirectory() {
+        String userHome = System.getProperty("user.home");
+        String appDataDir = userHome + File.separator + ".shelter_for_mind" + File.separator + "saved_journals";
+        return appDataDir;
     }
 
     /**

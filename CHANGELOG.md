@@ -15,6 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integration with wearable devices
 - AI-powered mood insights
 
+## [1.0.1] - 2026-01-04
+
+### Fixed
+- 🐛 **Critical Fix**: Blog content now properly included in packaged installer
+  - Moved blog data files to resources directory for JAR packaging
+  - Changed file loading from filesystem to classpath resources
+  - Blogs are now accessible in installed application
+  
+- 📁 **Data Storage**: User data now saved to proper application directory
+  - Saved journals and blogs now stored in `~/.shelter_for_mind/`
+  - Ensures write permissions in installed applications
+  - Data persists across app updates
+
 ## [1.0.0] - 2026-01-03
 
 ### Added
@@ -80,7 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-- **1.0.0** (2026-01-03) - Initial Release
+- **1.0.0** (2026-01-03)
 
 ---
 

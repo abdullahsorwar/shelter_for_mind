@@ -75,7 +75,7 @@ fi
 # Step 4: Copy main JAR
 echo ""
 echo "Step 4: Copying main JAR to libs folder..."
-cp target/shelter_of_mind-1.0.jar target/libs/
+cp target/shelter_of_mind-1.0.1.jar target/libs/
 if [ $? -ne 0 ]; then
     echo "JAR copy failed!"
     exit 1
@@ -85,9 +85,9 @@ fi
 echo ""
 echo "Step 5: Creating ${INSTALLER_TYPE} installer with full Java runtime..."
 if [ "${INSTALLER_TYPE}" = "dmg" ]; then
-    jpackage --input target/libs --name "Shelter for Mind" --main-jar shelter_of_mind-1.0.jar --main-class com.the_pathfinders.Launcher --type dmg --app-version 1.0 --vendor "the_pathfinders" --description "Mental Health and Wellness Platform" --icon logo_testing.png --mac-package-name "Shelter for Mind" --java-options "-Dfile.encoding=UTF-8" --runtime-image "$JAVA_HOME"
+    jpackage --input target/libs --name "Shelter for Mind" --main-jar shelter_of_mind-1.0.1.jar --main-class com.the_pathfinders.Launcher --type dmg --app-version 1.0.1 --vendor "the_pathfinders" --description "Mental Health and Wellness Platform" --icon logo_testing.png --mac-package-name "Shelter for Mind" --java-options "-Dfile.encoding=UTF-8" --runtime-image "$JAVA_HOME"
 else
-    jpackage --input target/libs --name "shelter-for-mind" --main-jar shelter_of_mind-1.0.jar --main-class com.the_pathfinders.Launcher --type deb --app-version 1.0 --vendor "the_pathfinders" --description "Mental Health and Wellness Platform" --icon logo_testing.png --linux-shortcut --java-options "-Dfile.encoding=UTF-8" --runtime-image "$JAVA_HOME"
+    jpackage --input target/libs --name "shelter-for-mind" --main-jar shelter_of_mind-1.0.1.jar --main-class com.the_pathfinders.Launcher --type deb --app-version 1.0.1 --vendor "the_pathfinders" --description "Mental Health and Wellness Platform" --icon logo_testing.png --linux-shortcut --java-options "-Dfile.encoding=UTF-8" --runtime-image "$JAVA_HOME"
 fi
 if [ $? -ne 0 ]; then
     echo "JPackage failed!"
