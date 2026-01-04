@@ -89,7 +89,7 @@ Our mission is to make mental health support accessible, private, and empowering
 ### Quick Install
 
 #### Windows
-1. Download `ShelterForMind-1.0.msi` from [Releases](https://github.com/abdullahsorwar/shelter-for-mind/releases)
+1. Download `ShelterForMind-1.0.msi` from [Releases](https://github.com/abdullahsorwar/shelter_for_mind/releases)
 2. Double-click the installer
 3. Follow the installation wizard
 4. Launch from Start Menu or Desktop shortcut
@@ -97,10 +97,10 @@ Our mission is to make mental health support accessible, private, and empowering
 #### Linux (Debian/Ubuntu)
 ```bash
 # Download the .deb file
-wget https://github.com/abdullahsorwar/shelter-for-mind/releases/download/v1.0.0/shelter-for-mind_1.0-1_amd64.deb
+wget https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.0/shelter-for-mind_1.0_amd64.deb
 
 # Install
-sudo dpkg -i shelter-for-mind_1.0-1_amd64.deb
+sudo dpkg -i shelter-for-mind_1.0_amd64.deb
 
 # For media playback support (optional - background music and videos):
 sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav
@@ -110,21 +110,6 @@ shelter-for-mind
 ```
 
 **Note**: The app works fully without GStreamer, but background music and breathing exercise videos will not play.
-
-#### Linux (Red Hat/Fedora/CentOS)
-```bash
-# Download the .rpm file
-wget https://github.com/abdullahsorwar/shelter-for-mind/releases/download/v1.0.0/shelter-for-mind-1.0-1.x86_64.rpm
-
-# Install
-sudo rpm -i shelter-for-mind-1.0-1.x86_64.rpm
-
-# For media playback support (optional):
-sudo dnf install gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-libav
-
-# Launch
-shelter-for-mind
-```
 
 ## 🚀 Usage
 
@@ -167,8 +152,8 @@ shelter-for-mind
 ### Clone Repository
 
 ```bash
-git clone https://github.com/abdullahsorwar/shelter-for-mind.git
-cd shelter-for-mind
+git clone https://github.com/abdullahsorwar/shelter_for_mind.git
+cd shelter_for_mind
 ```
 
 ### Build and Run
