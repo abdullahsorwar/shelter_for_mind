@@ -1,4 +1,4 @@
-# 🌟 Shelter For Mind
+# 🌟 Shelter for Mind
 
 <div align="center">
 
@@ -11,7 +11,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue.svg)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
-[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Building](#-building-from-source) • [Contributing](#-contributing) • [About](#-about-the-developers)
+[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Contributing](#-contributing) • [About](#-about-the-developers)
 
 </div>
 
@@ -19,7 +19,7 @@
 
 ## 📖 About
 
-**Shelter For Mind** is a comprehensive mental health and wellness application designed to help individuals track their emotional well-being, journal their thoughts, access mental health resources, and engage in calming activities. Built with JavaFX and PostgreSQL, this application provides a secure, private, and user-friendly platform for mental wellness.
+**Shelter for Mind** is a comprehensive mental health and wellness application designed to help individuals track their emotional well-being, journal their thoughts, access mental health resources, and engage in calming activities. Built with JavaFX and PostgreSQL, this application provides a secure, private, and user-friendly platform for mental wellness.
 
 ### 🎯 Mission
 
@@ -94,12 +94,6 @@ Our mission is to make mental health support accessible, private, and empowering
 3. Follow the installation wizard
 4. Launch from Start Menu or Desktop shortcut
 
-#### macOS
-1. Download `ShelterForMind-1.0.dmg` from [Releases](https://github.com/abdullahsorwar/shelter-for-mind/releases)
-2. Open the DMG file
-3. Drag "Shelter For Mind" to Applications folder
-4. Launch from Applications or Spotlight
-
 #### Linux (Debian/Ubuntu)
 ```bash
 # Download the .deb file
@@ -130,21 +124,6 @@ sudo dnf install gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-good gstr
 
 # Launch
 shelter-for-mind
-```
-
-### Database Setup
-
-1. Install PostgreSQL from https://www.postgresql.org/download/
-2. Create a database:
-```sql
-CREATE DATABASE shelter_for_mind;
-```
-3. Update `src/main/resources/db.properties` with your credentials:
-```properties
-db.url=jdbc:postgresql://localhost:5432/shelter_for_mind
-db.user=abdullahsorwar
-db.password=your_password
-db.driver=org.postgresql.Driver
 ```
 
 ## 🚀 Usage
@@ -330,13 +309,13 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 ## 📞 Support & Contact
 
-- **Issues**: [GitHub Issues](https://github.com/abdullahsorwar/shelter-for-mind/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/abdullahsorwar/shelter-for-mind/discussions)
+- **Issues**: [GitHub Issues](https://github.com/abdullahsorwar/shelter_for_mind/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/abdullahsorwar/shelter_for_mind/discussions)
 - **Email**: See developer contacts below
 
 ## 🌟 About the Developers
 
-**Shelter For Mind** is proudly developed by **the_pathfinders** team from the Department of Computer Science and Engineering, University of Dhaka.
+**Shelter for Mind** is proudly developed by **the_pathfinders** team from the Department of Computer Science and Engineering, University of Dhaka.
 
 ### Development Team
 
