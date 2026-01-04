@@ -166,24 +166,6 @@ mvn clean package
 mvn javafx:run
 ```
 
-### Create Installers
-
-See [BUILD_INSTALLERS.md](BUILD_INSTALLERS.md) for detailed instructions on creating platform-specific installers.
-
-```bash
-# Build custom runtime
-mvn javafx:jlink
-
-# Create installer (Windows MSI)
-mvn jpackage:jpackage -Djpackage.type=msi
-
-# Create installer (macOS DMG)
-mvn jpackage:jpackage -Djpackage.type=dmg
-
-# Create installer (Linux DEB)
-mvn jpackage:jpackage -Djpackage.type=deb
-```
-
 ## 🏗️ Project Structure
 
 ```
