@@ -355,6 +355,6 @@ We are passionate computer science students dedicated to leveraging technology f
 
 If you find this project helpful, please consider giving it a ⭐!
 
-[Report Bug](https://github.com/abdullahsorwar/shelter-for-mind/issues) • [Request Feature](https://github.com/abdullahsorwar/shelter-for-mind/issues) • [Documentation](https://github.com/abdullahsorwar/shelter-for-mind/wiki)
+[Report Bug](https://github.com/abdullahsorwar/shelter_for_mind/issues) • [Request Feature](https://github.com/abdullahsorwar/shelter_for_mind/issues) • [Documentation](https://github.com/abdullahsorwar/shelter_for_mind/wiki)
 
 </div>
