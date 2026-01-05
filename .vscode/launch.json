@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launcher",
+            "request": "launch",
+            "mainClass": "com.the_pathfinders.Launcher",
+            "projectName": "shelter_of_mind"
+        },
+        {
+            "type": "java",
             "name": "Launch App with JavaFX",
             "request": "launch",
             "mainClass": "com.the_pathfinders.App",
