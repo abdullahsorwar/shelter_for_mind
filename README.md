@@ -96,10 +96,10 @@ Our mission is to make mental health support accessible, private, and empowering
 #### Linux (Debian/Ubuntu) Quick Install
 ```bash
 # Download the .deb file
-wget https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.0/shelter-for-mind_1.0_amd64.deb
+wget https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.2/shelter-for-mind_1.0.2_amd64.deb
 
 # Install
-sudo dpkg -i shelter-for-mind_1.0_amd64.deb
+sudo dpkg -i shelter-for-mind_1.0.2_amd64.deb
 
 # For media playback support (optional - background music and videos):
 sudo apt-get install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav
@@ -320,3 +320,4 @@ If you find this project helpful, please consider giving it a ⭐!
 
 
 </div>
+
