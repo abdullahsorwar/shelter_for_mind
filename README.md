@@ -90,8 +90,8 @@ Our mission is to make mental health support accessible, private, and empowering
 
 | Platform | Installer |
 |----------|-----------|
-| **Windows** | [Download](https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.1/Shelter.for.Mind-1.0.1.msi) |
-| **Linux (Debian/Ubuntu)** | [Download](https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.0/shelter-for-mind_1.0_amd64.deb) |
+| **Windows** | [Download](https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.1/Shelter.for.Mind-1.0.2.msi) |
+| **Linux (Debian/Ubuntu)** | [Download](https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.0/shelter-for-mind_1.0.2_amd64.deb) |
 
 #### Linux (Debian/Ubuntu) Quick Install
 ```bash
