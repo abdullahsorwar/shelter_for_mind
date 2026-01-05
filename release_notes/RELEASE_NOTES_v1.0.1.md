@@ -76,4 +76,4 @@ Thank you to our users for reporting the blog access issue. Your feedback helps 
 
 ---
 
-**Previous Release:** [v1.0.0](RELEASE_NOTES.md) - January 3, 2026
+**Previous Release:** [v1.0.0](https://github.com/abdullahsorwar/shelter_for_mind/releases/v1.0.0) - January 3, 2026

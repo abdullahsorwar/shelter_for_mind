@@ -103,8 +103,6 @@ sudo dnf install gstreamer1 gstreamer1-plugins-base gstreamer1-plugins-good gstr
 
 **Note**: Linux version requires GStreamer for media playback (background music and videos). All other features work without it.
 
-For detailed installation instructions, see the [BUILD_INSTALLERS.md](https://github.com/abdullahsorwar/shelter_for_mind/blob/v1.0.0/BUILD_INSTALLERS.md).
-
 ---
 
 ## 🚀 Getting Started
@@ -151,14 +149,6 @@ For detailed installation instructions, see the [BUILD_INSTALLERS.md](https://gi
 - Sample data for testing
 - User guide and documentation
 
-### Documentation
-- README.md - Complete project overview
-- BUILD_INSTALLERS.md - How to build installers
-- GITHUB_RELEASE.md - Release guidelines
-- CONTRIBUTING.md - Contribution guide
-- CHANGELOG.md - Version history
-- LICENSE - GNU GPL-3.0 License
-
 ---
 
 ## 🐛 Known Issues
@@ -203,10 +193,9 @@ See [CONTRIBUTING.md](https://github.com/abdullahsorwar/shelter_for_mind/blob/ma
 ## 💬 Community & Support
 
 ### Get Help
-- 📖 [Documentation](https://github.com/abdullahsorwar/shelter_for_mind/wiki)
-- 💬 [Discussions](https://github.com/abdullahsorwar/shelter_for_mind/discussions)
+- 📖 [Documentation](https://github.com/abdullahsorwar/shelter_for_mind)
 - 🐛 [Issues](https://github.com/abdullahsorwar/shelter_for_mind/issues)
-- 📧 [Email Team](mailto:salwa-2023015953@cs.du.ac.bd)
+- 📧 [Email Team](mailto:the.pathfinders.dev@gmail.com)
 
 ### Stay Connected
 - ⭐ Star us on GitHub
@@ -288,6 +277,6 @@ sha256sum ShelterForMind-1.0.dmg
 
 ---
 
-**Full Changelog**: https://github.com/abdullahsorwar/shelter_for_mind/commits/v1.0.0
+[Full Changelog](https://github.com/abdullahsorwar/shelter_for_mind/commits/v1.0.0)
 
 </div>
