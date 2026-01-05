@@ -184,10 +184,10 @@ public class MeditationController {
 
     private void setupAmbientSounds() {
         try {
-            soundPlayers.put(rainSoundBtn, loadSound("rain.mp4"));
-            soundPlayers.put(oceanSoundBtn, loadSound("ocean.mp4"));
-            soundPlayers.put(forestSoundBtn, loadSound("storm.mp4"));
-            soundPlayers.put(bowlSoundBtn, loadSound("waterfall.mp4"));
+            soundPlayers.put(rainSoundBtn, loadSound("rain.wav"));
+            soundPlayers.put(oceanSoundBtn, loadSound("ocean.wav"));
+            soundPlayers.put(forestSoundBtn, loadSound("storm.wav"));
+            soundPlayers.put(bowlSoundBtn, loadSound("waterfall.wav"));
 
             soundPlayers.forEach((toggle, player) -> {
                 toggle.setOnAction(e -> {

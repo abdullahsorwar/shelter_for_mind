@@ -311,3 +311,11 @@ If you find this project helpful, please consider giving it a ⭐!
 [Report Bug](https://github.com/abdullahsorwar/shelter_for_mind/issues) • [Request Feature](https://github.com/abdullahsorwar/shelter_for_mind/issues) • [Documentation](https://github.com/abdullahsorwar/shelter_for_mind/wiki)
 
 </div>
+
+---
+
+<div align="center">
+
+[**Full Changelog**](https://github.com/abdullahsorwar/shelter_for_mind/blob/main/release_notes/CHANGELOG.md)
+
+</div>

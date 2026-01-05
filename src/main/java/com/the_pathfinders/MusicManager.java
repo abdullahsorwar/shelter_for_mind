@@ -24,7 +24,7 @@ public class MusicManager {
             Thread loadThread = new Thread(() -> {
                 try {
                     System.out.println("  - Creating Media object (background thread)...");
-                    String musicFile = MusicManager.class.getResource("/assets/audio/bg_music.mp3").toExternalForm();
+                    String musicFile = MusicManager.class.getResource("/assets/audio/bg_music.wav").toExternalForm();
                     Media sound = new Media(musicFile);
                     
                     System.out.println("  - Creating MediaPlayer on JavaFX thread...");

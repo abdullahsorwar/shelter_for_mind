@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integration with wearable devices
 - AI-powered mood insights
 
+## [1.0.2] - 2026-01-05
+
+### Fixed
+- Linux media playback compatibility (audio converted to WAV format)
+- Dashboard background disappearing when navigating between menus
+- Video playback fallback to static image on unsupported platforms
+
 ## [1.0.1] - 2026-01-04
 
 ### Fixed
@@ -34,10 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical
 - JavaFX 21, PostgreSQL, HikariCP, JavaMail, Maven
 - JPackage installer support
-
-## Version History
-
-- **1.0.0** (2026-01-03)
 
 ---
 
