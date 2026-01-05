@@ -282,33 +282,6 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 
 **Shelter for Mind** is proudly developed by **the_pathfinders** team from the Department of Computer Science and Engineering, University of Dhaka.
 
-### Development Team
-
-<table>
-  <tr>
-    <td align="center">
-      <img src="https://via.placeholder.com/100" width="100px;" alt="Salwa Baki"/><br />
-      <sub><b>Salwa Baki</b></sub><br />
-      <a href="mailto:salwa-2023015953@cs.du.ac.bd">Email</a>
-    </td>
-    <td align="center">
-      <img src="https://github.com/abdullahsorwar/shelter_for_mind/blob/main/src/main/resources/assets/keeper_img/abdullah790.jpg" width="100px;" alt="Md. Abdullah Bin Sorwar Chowdhury"/><br />
-      <sub><b>Md. Abdullah Bin Sorwar Chowdhury</b></sub><br />
-      <a href="mailto:mdabdullah-2023715965@cs.du.ac.bd">Email</a>
-    </td>
-    <td align="center">
-      <img src="https://via.placeholder.com/100" width="100px;" alt="Raisa Tabassum Payal"/><br />
-      <sub><b>Raisa Tabassum Payal</b></sub><br />
-      <a href="mailto:raisatabassum-2023115989@cs.du.ac.bd">Email</a>
-    </td>
-    <td align="center">
-      <img src="https://via.placeholder.com/100" width="100px;" alt="Arnob Saha"/><br />
-      <sub><b>Arnob Saha</b></sub><br />
-      <a href="mailto:arnob-2023015999@cs.du.ac.bd">Email</a>
-    </td>
-  </tr>
-</table>
-
 ### Contact Information
 
 | Developer | Email |
