@@ -86,15 +86,14 @@ Our mission is to make mental health support accessible, private, and empowering
 - **Database**: PostgreSQL 15+ (for backend)
 - **Java**: JDK 21 (bundled with installers)
 
-### Quick Install
+### Installers
 
-#### Windows
-1. Download `ShelterForMind-1.0.msi` from [Releases](https://github.com/abdullahsorwar/shelter_for_mind/releases)
-2. Double-click the installer
-3. Follow the installation wizard
-4. Launch from Start Menu or Desktop shortcut
+| Platform | Installer |
+|----------|-----------|
+| **Windows** | [Download](https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.1/Shelter.for.Mind-1.0.1.msi) |
+| **Linux (Debian/Ubuntu)** | [Download](https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.0/shelter-for-mind_1.0_amd64.deb) |
 
-#### Linux (Debian/Ubuntu)
+#### Linux (Debian/Ubuntu) Quick Install
 ```bash
 # Download the .deb file
 wget https://github.com/abdullahsorwar/shelter_for_mind/releases/download/v1.0.0/shelter-for-mind_1.0_amd64.deb
@@ -277,7 +276,6 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
 ## 📞 Support & Contact
 
 - **Issues**: [GitHub Issues](https://github.com/abdullahsorwar/shelter_for_mind/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/abdullahsorwar/shelter_for_mind/discussions)
 - **Email**: See developer contacts below
 
 ## 🌟 About the Developers
@@ -291,22 +289,22 @@ This project is licensed under the GNU General Public License v3.0 - see the [LI
     <td align="center">
       <img src="https://via.placeholder.com/100" width="100px;" alt="Salwa Baki"/><br />
       <sub><b>Salwa Baki</b></sub><br />
-      <a href="mailto:salwa-2023015953@cs.du.ac.bd">📧 Email</a>
+      <a href="mailto:salwa-2023015953@cs.du.ac.bd">Email</a>
     </td>
     <td align="center">
-      <img src="https://via.placeholder.com/100" width="100px;" alt="Md. Abdullah Bin Sorwar Chowdhury"/><br />
+      <img src="https://github.com/abdullahsorwar/shelter_for_mind/blob/main/src/main/resources/assets/keeper_img/abdullah790.jpg" width="100px;" alt="Md. Abdullah Bin Sorwar Chowdhury"/><br />
       <sub><b>Md. Abdullah Bin Sorwar Chowdhury</b></sub><br />
-      <a href="mailto:mdabdullah-2023715965@cs.du.ac.bd">📧 Email</a>
+      <a href="mailto:mdabdullah-2023715965@cs.du.ac.bd">Email</a>
     </td>
     <td align="center">
       <img src="https://via.placeholder.com/100" width="100px;" alt="Raisa Tabassum Payal"/><br />
       <sub><b>Raisa Tabassum Payal</b></sub><br />
-      <a href="mailto:raisatabassum-2023115989@cs.du.ac.bd">📧 Email</a>
+      <a href="mailto:raisatabassum-2023115989@cs.du.ac.bd">Email</a>
     </td>
     <td align="center">
       <img src="https://via.placeholder.com/100" width="100px;" alt="Arnob Saha"/><br />
       <sub><b>Arnob Saha</b></sub><br />
-      <a href="mailto:arnob-2023015999@cs.du.ac.bd">📧 Email</a>
+      <a href="mailto:arnob-2023015999@cs.du.ac.bd">Email</a>
     </td>
   </tr>
 </table>
