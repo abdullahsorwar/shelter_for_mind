@@ -87,6 +87,14 @@ public class AdminLoginController implements Initializable {
         
         // Add entrance animation
         playEntranceAnimation();
+        
+        // Keep password fields synchronized to avoid adding listeners repeatedly
+        if (keeperPasswordVisibleField != null && keeperPasswordField != null) {
+            keeperPasswordVisibleField.textProperty().bindBidirectional(keeperPasswordField.textProperty());
+            // Ensure initial visibility: masked field shown by default
+            keeperPasswordVisibleField.setVisible(false);
+            keeperPasswordField.setVisible(true);
+        }
     }
 
     private void bindBackButtonToBottomRight() {

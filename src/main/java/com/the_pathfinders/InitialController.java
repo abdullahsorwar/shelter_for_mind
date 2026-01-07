@@ -16,6 +16,8 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.swing.Action;
+
 public class InitialController implements Initializable {
 
     @FXML private Pane root;
