@@ -1,3 +1,26 @@
 target/
 release/
 installers/
+
+# Encrypted configuration and sensitive files
+config/db.enc
+config/.keyfile
+config/*_plain.properties
+config/*_production.properties
+config/db_credentials.properties
+config/README.md
+config/IMPLEMENTATION_SUMMARY.md
+*.enc
+.keyfile
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS files
+.DS_Store
+Thumbs.db

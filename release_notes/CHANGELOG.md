@@ -15,6 +15,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integration with wearable devices
 - AI-powered mood insights
 
+## [1.0.3] - 2026-01-10
+
+### Security
+- **CRITICAL**: Removed hardcoded database credentials from source code
+- Implemented AES-256-CBC encryption for database configuration
+- Added PBKDF2 key derivation with 65,536 iterations for enhanced security
+- Created encrypted configuration system (`config/db.enc`)
+- Added encryption/decryption utilities for credential management
+
+### Added
+- `EncryptedConfig.java` utility for secure configuration management
+- Automated encryption scripts (`encrypt-config.bat`, `encrypt-config.sh`)
+- Configuration validation with clear error messages
+- Graceful fallback to template properties file
+- Optional keyfile support for enhanced master password security
+
+### Changed
+- Database credentials now loaded from encrypted `config/db.enc` file
+- Updated `DB.java` to use dynamic configuration loading
+- Converted `db.properties` to template-only format (no real credentials)
+- Updated `.gitignore` to exclude sensitive configuration files
+- Modified installer scripts to package encrypted configuration
+
+### Fixed
+- Database password no longer visible in Git history or source code
+- Prevented accidental credential commits with .gitignore rules
+
 ## [1.0.2] - 2026-01-05
 
 ### Fixed

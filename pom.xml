@@ -5,7 +5,7 @@
 
   <groupId>com.the_pathfinders</groupId>
   <artifactId>shelter_of_mind</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -83,6 +83,14 @@
       <!-- ensure FXML/images in src/main/resources are included -->
       <resource>
         <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+      <!-- Include encrypted config from project root -->
+      <resource>
+        <directory>.</directory>
+        <includes>
+          <include>config/db.enc</include>
+        </includes>
         <filtering>false</filtering>
       </resource>
     </resources>
