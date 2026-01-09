@@ -61,10 +61,15 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("Shelter for Mind");
         
-        // Set app icon
+        // Set app icons - window icon and taskbar icon
         try {
-            Image icon = new Image(getClass().getResourceAsStream("/assets/images/logo.png"));
-            stage.getIcons().add(icon);
+            // Window icon (title bar)
+            Image windowIcon = new Image(getClass().getResourceAsStream("/assets/images/shelter_for_mind.png"));
+            stage.getIcons().add(windowIcon);
+            
+            // Taskbar icon (add smaller size for better taskbar appearance)
+            Image taskbarIcon = new Image(getClass().getResourceAsStream("/assets/images/logo_taskbar.png"));
+            stage.getIcons().add(taskbarIcon);
         } catch (Exception e) {
             System.err.println("Could not load app icon: " + e.getMessage());
         }

@@ -1,10 +1,10 @@
-# Shelter For Mind v1.0.2 - Linux Compatibility Fix
+# Shelter For Mind v1.0.2 - Linux Compatibility Fix and Mac Installer Addition
 
 **Release Date:** January 5, 2026
 
 ## 🐧 Linux Media Playback Fix
 
-This release addresses media playback issues on Linux systems and improves cross-platform compatibility.
+This release addresses media playback issues on Linux systems and improves cross-platform compatibility. Also, this version includes the mac version of the app.
 
 ---
 
@@ -48,6 +48,7 @@ This release addresses media playback issues on Linux systems and improves cross
 
 - ✅ **Windows:** Full video and audio support
 - ✅ **Linux:** Audio works perfectly, static background image fallback
+- ✅ **Mac:** Newly Added
 
 ---
 

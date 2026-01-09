@@ -68,8 +68,11 @@ public class LoginSignupController implements Initializable {
             URL a = getClass().getResource("/assets/images/shelter_of_mind.png");
             a = getClass().getResource("/assets/images/logo_testing.png");
             if (a != null) {
-                Image img = new Image(a.toExternalForm(), 360, 360, true, true);
+                // Scale down 972x972px logo to 120px (1.2x from original 100px)
+                Image img = new Image(a.toExternalForm(), 120, 120, true, true);
                 logoImage.setImage(img);
+                logoImage.setFitHeight(120);
+                logoImage.setFitWidth(120);
             }
         } catch (Exception ignored) {}
 

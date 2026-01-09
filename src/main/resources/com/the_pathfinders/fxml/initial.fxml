@@ -26,7 +26,7 @@
             <!-- Logo block -->
             <Pane fx:id="logoBlock" layoutX="253.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="logoImage" fitHeight="376.0" fitWidth="408.0" layoutX="-96.0" layoutY="-88.0" opacity="0.0" preserveRatio="true" scaleX="0.85" scaleY="0.85">
+                  <ImageView fx:id="logoImage" fitHeight="300.0" fitWidth="300.0" layoutX="-50.0" layoutY="-50.0" opacity="0.0" preserveRatio="true" scaleX="1.0" scaleY="1.0">
                     <image><Image url="@../../../assets/images/logo_testing.png" /></image>
                   </ImageView>
 

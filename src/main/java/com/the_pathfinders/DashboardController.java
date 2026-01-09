@@ -1160,7 +1160,8 @@ public class DashboardController {
             URL u = getClass().getResource("/assets/images/shelter_of_mind.svg");
             u = getClass().getResource("/assets/images/logo_testing.png");
             if (u != null && logoImage != null) {
-                Image img = new Image(u.toExternalForm(), 0, 0, true, true);
+                // Scale down 972x972px logo - keep at 100px for dashboard
+                Image img = new Image(u.toExternalForm(), 100, 100, true, true);
                 logoImage.setImage(img);
                 logoImage.setFitWidth(100);
                 logoImage.setFitHeight(100);

@@ -30,8 +30,8 @@
                 prefWidth="400.0" styleClass="subtext" text="A place for refreshing the soul"
                 textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER" />
             <!-- Logo on top -->
-            <ImageView fx:id="logoImage" fitHeight="115.0" fitWidth="115.0" preserveRatio="true"
-                scaleX="1.5" scaleY="1.5" StackPane.alignment="TOP_CENTER" />
+            <ImageView fx:id="logoImage" fitHeight="120.0" fitWidth="120.0" preserveRatio="true"
+                scaleX="1.0" scaleY="1.0" StackPane.alignment="TOP_CENTER" />
         </StackPane>
 
         <!-- Music toggle (top-left) -->

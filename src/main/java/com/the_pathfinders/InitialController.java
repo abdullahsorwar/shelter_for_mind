@@ -74,6 +74,12 @@ public class InitialController implements Initializable {
             "/logo_testing.png");
 
         Platform.runLater(() -> {
+            // Scale down the 972x972px logo to fit within bounds
+            logoImage.setFitHeight(300);
+            logoImage.setFitWidth(300);
+            logoImage.setSmooth(true);
+            logoImage.setCache(true);
+            
             // Root grows with window
             root.prefWidthProperty().bind(root.getScene().widthProperty());
             root.prefHeightProperty().bind(root.getScene().heightProperty());
