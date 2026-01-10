@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Shelter For Mind Logo](https://github.com/abdullahsorwar/shelter_for_mind/blob/main/src/main/resources/assets/images/shelter_of_mind.png)
+![Shelter For Mind Logo](https://github.com/abdullahsorwar/shelter_for_mind/blob/main/src/main/resources/assets/images/shelter_for_mind.png)
 
 **Your Companion for Mental Health and Wellness**
 
