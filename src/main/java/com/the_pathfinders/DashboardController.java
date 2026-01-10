@@ -1145,9 +1145,9 @@ public class DashboardController {
         String g;
         if (h > 6 && h < 12) {
             g = "Good Morning 🌞 Have a good day!";
-        } else if (h < 18) {
+        } else if (h >= 12 && h < 18) {
             g = "Good Afternoon ☀️ Did you eat?";
-        } else if (h < 22) {
+        } else if (h >= 18 && h < 22) {
             g = "Good Evening — ready to unwind? 🌙";
         } else {
             g = "Good Night 🌌 Time to sleep..";
