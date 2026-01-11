@@ -83,10 +83,12 @@ Our mission is to make mental health support accessible, private, and empowering
 - **Operating System**: Windows 10/11, macOS 10.14+, or Linux
 - **RAM**: 1GB minimum, 2GB recommended
 - **Disk Space**: 200MB for application
-- **Database**: PostgreSQL 15+ (for backend)
-- **Java**: JDK 21 (bundled with installers)
+- **Java**: Not required! (bundled with installers)
+- **Database**: Hosted remotely - no local setup needed!
 
-### Installers
+### Installers (Recommended - No Dependencies Required!)
+
+Download and run the installer for your platform. Everything is bundled - no Java, Maven, or database setup needed!
 
 | Platform | Installer |
 |----------|-----------|
@@ -140,14 +142,17 @@ shelter-for-mind
 - 🧘 **Regular Practice**: Use calm activities during stress
 - 📊 **Track Progress**: Review your mood history monthly
 
-## 🛠️ Building from Source
+## 🛠️ Building from Source (For Developers)
+
+**Note**: If you just want to use the app, download the installer above instead!
 
 ### Prerequisites
 
 - JDK 21 or higher
 - Apache Maven 3.6+
-- PostgreSQL 15+
 - Git
+
+**Note**: PostgreSQL is NOT needed - database is hosted remotely!
 
 ### Clone Repository
 
@@ -215,9 +220,10 @@ mvn clean test jacoco:report
 
 ### Backend
 - **Java 21**: Core application logic
-- **PostgreSQL**: Database management
+- **PostgreSQL**: Remote database management
 - **HikariCP**: Connection pooling
 - **BCrypt**: Password encryption
+- **Encrypted Config**: Secure credential storage
 
 ### Communication
 - **JavaMail**: Email verification system
