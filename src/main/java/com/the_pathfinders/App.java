@@ -70,7 +70,7 @@ public class App extends Application {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/the_pathfinders/fxml/initial.fxml"));
                         Parent root = loader.load();
 
-                        Scene scene = new Scene(root);
+                        Scene scene = new Scene(root, 1280, 720);
                         stage.setScene(scene);
                         stage.setTitle("Shelter for Mind");
                         
@@ -95,10 +95,11 @@ public class App extends Application {
                         // Close splash screen before showing main window
                         splash.close();
                         
-                        // Manually calculate center position
+                        // Manually calculate center position (same logic as splash screen)
                         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
                         double centerX = (screenBounds.getWidth() - 1280) / 2;
                         double centerY = (screenBounds.getHeight() - 720) / 2;
+                        
                         stage.setX(centerX);
                         stage.setY(centerY);
                         
