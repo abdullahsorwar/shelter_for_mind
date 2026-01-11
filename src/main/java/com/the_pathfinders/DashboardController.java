@@ -259,6 +259,9 @@ public class DashboardController {
                 if (root.getScene() != null && root.getScene().getWindow() != null) {
                     root.prefWidthProperty().bind(root.getScene().widthProperty());
                     root.prefHeightProperty().bind(root.getScene().heightProperty());
+                    
+                    // Add responsive positioning
+                    setupResponsiveLayout();
                 }
             });
             // Attach scene-level mouse handlers when scene becomes available
@@ -915,6 +918,43 @@ public class DashboardController {
                 userImage.setOpacity(1.0);
             }
         } catch (Exception ignored) {
+        }
+    }
+
+    private void setupResponsiveLayout() {
+        // Listen to scene width and height changes
+        if (root.getScene() != null) {
+            var scene = root.getScene();
+            
+            // Add listener for window resize
+            javafx.beans.value.ChangeListener<Number> resizeListener = (obs, oldVal, newVal) -> {
+                updateElementPositions();
+            };
+            
+            scene.widthProperty().addListener(resizeListener);
+            scene.heightProperty().addListener(resizeListener);
+            
+            // Initial positioning
+            updateElementPositions();
+        }
+    }
+    
+    private void updateElementPositions() {
+        if (root.getScene() == null) return;
+        
+        double sceneWidth = root.getScene().getWidth();
+        double sceneHeight = root.getScene().getHeight();
+        
+        // Update mood tracker button position (left side, relative to window)
+        if (moodTrackerBtn != null) {
+            AnchorPane.setLeftAnchor(moodTrackerBtn, sceneWidth * 0.08);
+            AnchorPane.setTopAnchor(moodTrackerBtn, sceneHeight * 0.21);
+        }
+        
+        // Update button cards box position (right-aligned)
+        if (buttonCardsBox != null) {
+            AnchorPane.setRightAnchor(buttonCardsBox, Math.max(50, sceneWidth * 0.08));
+            AnchorPane.setTopAnchor(buttonCardsBox, sceneHeight * 0.17);
         }
     }
 

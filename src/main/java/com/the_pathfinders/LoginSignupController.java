@@ -31,6 +31,7 @@ public class LoginSignupController implements Initializable {
 
     /* Tabs + border */
     @FXML private StackPane tabStack;
+    @FXML private StackPane formStack;
     @FXML private HBox menuBar;
     @FXML private Button loginBtn, signUpBtn;
 
@@ -200,19 +201,34 @@ public class LoginSignupController implements Initializable {
         // Clear all form fields and error messages
         clearAllFields();
 
-        // Show/Hide forms (centered; button slot fixed)
-        boolean showSignup = !isLoginSelected;
-        signupForm.setVisible(showSignup); signupForm.setManaged(showSignup);
-        loginForm.setVisible(!showSignup); loginForm.setManaged(!showSignup);
+        // Fade out the form
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), formStack);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        
+        fadeOut.setOnFinished(e -> {
+            // Show/Hide forms (centered; button slot fixed)
+            boolean showSignup = !isLoginSelected;
+            signupForm.setVisible(showSignup); signupForm.setManaged(showSignup);
+            loginForm.setVisible(!showSignup); loginForm.setManaged(!showSignup);
 
-        // Toggle which primary button is visible at the bottom and which status label is shown
-        if (btnLoginSubmit != null) { btnLoginSubmit.setVisible(isLoginSelected); btnLoginSubmit.setManaged(isLoginSelected); }
-        if (btnSubmit != null) { btnSubmit.setVisible(!isLoginSelected); btnSubmit.setManaged(!isLoginSelected); }
-        if (lblLoginStatus != null) { lblLoginStatus.setVisible(isLoginSelected); lblLoginStatus.setManaged(isLoginSelected); }
-        if (lblSubmitStatus != null) { lblSubmitStatus.setVisible(!isLoginSelected); lblSubmitStatus.setManaged(!isLoginSelected); }
+            // Toggle which primary button is visible at the bottom and which status label is shown
+            if (btnLoginSubmit != null) { btnLoginSubmit.setVisible(isLoginSelected); btnLoginSubmit.setManaged(isLoginSelected); }
+            if (btnSubmit != null) { btnSubmit.setVisible(!isLoginSelected); btnSubmit.setManaged(!isLoginSelected); }
+            if (lblLoginStatus != null) { lblLoginStatus.setVisible(isLoginSelected); lblLoginStatus.setManaged(isLoginSelected); }
+            if (lblSubmitStatus != null) { lblSubmitStatus.setVisible(!isLoginSelected); lblSubmitStatus.setManaged(!isLoginSelected); }
 
-        // Update css classes (glow) to reflect active tab
-        updateActiveStyles();
+            // Update css classes (glow) to reflect active tab
+            updateActiveStyles();
+            
+            // Fade in the form
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), formStack);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        });
+        
+        fadeOut.play();
     }
 
     /* ---------- Show/Hide password fields ---------- */

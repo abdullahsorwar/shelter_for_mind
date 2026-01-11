@@ -15,15 +15,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integration with wearable devices
 - AI-powered mood insights
 
+## [1.0.4] - 2026-01-11
+
+### Added
+- Smooth fade transitions when switching login/signup forms
+- Responsive dashboard layout that scales with window size
+
+### Fixed
+- Dashboard buttons now maintain correct positions when resizing
+- Application window properly centers on screen at startup
+- Profile submenus now have consistent flat design (removed shadows)
+- Hidden scrollbars in profile sections for cleaner appearance
+
 ## [1.0.3] - 2026-01-10
 
 ### Security
-- **CRITICAL**: Removed hardcoded database credentials from source code
+- Removed hardcoded database credentials from source code
 - Implemented AES-256-CBC encryption for database configuration
-
-### Fixed
-- Database password no longer visible in Git history or source code
-- Prevented accidental credential commits with .gitignore rules
 
 ## [1.0.2] - 2026-01-05
 

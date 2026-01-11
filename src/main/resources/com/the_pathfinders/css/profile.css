@@ -9,17 +9,15 @@
 .subtitle { -fx-text-fill: #6b7280; }
 
 .outer-box {
-  -fx-background-color: rgba(255,255,255,0.6);
+  -fx-background-color: transparent;
   -fx-background-radius: 16;
   -fx-padding: 16;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 6);
 }
 
 .inner-box {
-  -fx-background-color: linear-gradient(to bottom right, #c7d9dd, #eef1d1);
+  -fx-background-color: transparent;
   -fx-background-radius: 12;
   -fx-padding: 16;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.16), 10, 0, 0, 4);
 }
 
 .section-header { -fx-font-weight: 700; -fx-text-fill: #334155; }
@@ -27,11 +25,35 @@
 .info-scroll, .journals-scroll { -fx-background-color: transparent; -fx-padding: 8 0 0 0; }
 .info-scroll { -fx-pref-height: 420; -fx-max-height: 450; }
 
+/* Make scroll pane viewports transparent */
+.basic-info-scroll > .viewport,
+.journals-scroll > .viewport,
+.saved-blogs-scroll > .viewport,
+.saved-journals-scroll > .viewport {
+  -fx-background-color: transparent;
+}
+
+/* Hide scrollbars */
+.basic-info-scroll .scroll-bar:vertical,
+.journals-scroll .scroll-bar:vertical,
+.saved-blogs-scroll .scroll-bar:vertical,
+.saved-journals-scroll .scroll-bar:vertical {
+  -fx-opacity: 0;
+  -fx-pref-width: 0;
+}
+
+.basic-info-scroll .scroll-bar:horizontal,
+.journals-scroll .scroll-bar:horizontal,
+.saved-blogs-scroll .scroll-bar:horizontal,
+.saved-journals-scroll .scroll-bar:horizontal {
+  -fx-opacity: 0;
+  -fx-pref-height: 0;
+}
+
 .info-item {
   -fx-background-color: linear-gradient(to bottom right, #adb2d4, #c7d9dd);
   -fx-background-radius: 10;
   -fx-padding: 12;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 3);
 }
 .info-attr { -fx-font-weight: 700; -fx-text-fill: #111827; -fx-font-size: 14px; }
 
@@ -191,13 +213,13 @@
 .menu-item { -fx-background-color: transparent; -fx-text-fill: #1f2937; -fx-alignment: CENTER_LEFT; }
 .menu-item:hover { -fx-background-color: rgba(255,255,255,0.5); }
 
-.main-area { -fx-background-color: white; }
+.main-area { -fx-background-color: transparent; }
 .header-title { -fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #111827; }
 .header-subtitle { -fx-text-fill: #6b7280; }
 .pages-container, .basic-info-scroll, .journals-scroll { -fx-background-color: transparent; }
 
 /* Journal box styles */
-.journal-outer-box { -fx-background-color: #d0d0d0; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3); }
+.journal-outer-box { -fx-background-color: #d0d0d0; -fx-background-radius: 15; }
 .journal-inner-box {
   -fx-background-color: rgba(255,255,255,0.85);
   -fx-background-radius: 12;
