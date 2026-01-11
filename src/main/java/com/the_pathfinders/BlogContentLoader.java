@@ -28,6 +28,7 @@ public class BlogContentLoader {
     }
 
     private static String slugify(String s) {
-        return s.toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("(^-|-$)", "");
+        // Remove apostrophes first to handle cases like "Alzheimer's" -> "alzheimer"
+        return s.replaceAll("['']", "").toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("(^-|-$)", "");
     }
 }
