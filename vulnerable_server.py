@@ -20,11 +20,10 @@ Then upload images via:
 import os
 import sys
 import tempfile
-from flask import Flask, request, render_template_string, jsonify
 
 # Check if Flask is installed
 try:
-    from flask import Flask
+    from flask import Flask, request, render_template_string, jsonify
 except ImportError:
     print("Flask is required. Install with: pip install Flask")
     sys.exit(1)
@@ -166,6 +165,12 @@ def upload_file():
         # VULNERABLE CODE - DO NOT USE IN PRODUCTION!
         # This uses os.popen() which executes commands in a shell
         # allowing command injection through filename or EXIF data
+        # 
+        # NOTE: Even single quotes don't fully protect against injection!
+        # If the filepath or EXIF data contains: ' followed by shell metacharacters
+        # Example: filename like: image.jpg' ; cat flag.txt ; echo '
+        # The command becomes: exiftool -Artist 'image.jpg' ; cat flag.txt ; echo '' 2>/dev/null
+        # This executes the injected command!
         
         # Method 1: Extract Artist field (VULNERABLE to command injection)
         cmd = f"exiftool -Artist '{filepath}' 2>/dev/null || echo 'exiftool not installed'"
