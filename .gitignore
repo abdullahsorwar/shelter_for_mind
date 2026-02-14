@@ -24,3 +24,11 @@ config/IMPLEMENTATION_SUMMARY.md
 # OS files
 .DS_Store
 Thumbs.db
+
+# Exploit artifacts (generated during testing)
+exploit.jpg
+exploit_*.jpg
+flag.txt
+response.txt
+__pycache__/
+*.pyc
