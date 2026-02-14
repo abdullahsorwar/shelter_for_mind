@@ -280,4 +280,8 @@ if __name__ == '__main__':
     print(f"[*] Test flag location: {flag_path}\n")
     
     # Run the server
+    # NOTE: debug=True is INTENTIONALLY used for educational purposes only
+    # This vulnerable server is for LOCAL TESTING ONLY
+    # NEVER expose this to the internet or use in production!
+    # Debug mode allows detailed error messages for learning
     app.run(debug=True, host='0.0.0.0', port=5000)
